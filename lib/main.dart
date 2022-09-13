@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/router.dart';
 
 void main() {
@@ -15,7 +16,7 @@ void main() {
   if (Platform.isAndroid || Platform.isIOS) {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
