@@ -30,7 +30,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Container(
             height: 48,
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(30)),
@@ -40,21 +40,20 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     onPressed: () => onMenuBtnTap(_scaffoldKey),
                     icon: const Icon(Icons.menu)),
                 const Expanded(
-                    child: Padding(
-                  padding: EdgeInsets.only(left: 12),
-                  child: Text(
-                    "搜索书籍",
-                    style: TextStyle(fontSize: 16),
-                  ),
+                    child: Text(
+                  "搜索书籍",
+                  style: TextStyle(fontSize: 16),
                 )),
                 ClipOval(
+                    child: InkWell(
                   child: CachedNetworkImage(
                     imageUrl:
                         "https://avatars.githubusercontent.com/u/6316115?v=4",
                     width: 32,
                     height: 32,
                   ),
-                )
+                  onTap: () => dialogBuilder(context),
+                ))
               ],
             ),
           )
@@ -66,7 +65,11 @@ class _HomeViewState extends ConsumerState<HomeView> {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).viewPadding.top + 16,
+                  bottom: 16,
+                  left: 20,
+                  right: 20),
               margin: const EdgeInsets.only(bottom: 16),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
@@ -78,42 +81,48 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               .outline
                               .withOpacity(0.1)))),
               child: Text(
-                "Wenku8",
-                style: Theme.of(context)
-                    .textTheme
-                    .headline6
-                    ?.copyWith(color: Theme.of(context).colorScheme.primary),
+                "wenku8",
+                style: Theme.of(context).textTheme.headline6?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
             ),
             ListTile(
-              shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                topRight: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              )),
-              tileColor: Theme.of(context).colorScheme.outline.withOpacity(0.1),
-              leading: const Icon(Icons.favorite_border),
-              title: Text(
-                "收藏",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(30),
+                  bottomRight: Radius.circular(30),
+                )),
+                tileColor:
+                    Theme.of(context).colorScheme.outline.withOpacity(0.1),
+                leading: const Icon(Icons.favorite_border),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "收藏",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.search),
-              title: Text(
-                "搜索",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.search),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "搜索",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.history),
-              title: Text(
-                "历史",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.history),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "历史",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             Container(
               margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
               child: Text(
@@ -125,53 +134,65 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "点击榜",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "点击榜",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "推荐榜",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "推荐榜",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "收藏榜",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "收藏榜",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "字数榜",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "字数榜",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "完结榜",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "完结榜",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.label_outline),
-              title: Text(
-                "新入库",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.label_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "新入库",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Divider(
@@ -181,21 +202,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.settings_outlined),
-              title: Text(
-                "设置",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.settings_outlined),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "设置",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
             ListTile(
-              tileColor: Colors.transparent,
-              leading: const Icon(Icons.help_outline),
-              title: Text(
-                "帮助与反馈",
-                style: Theme.of(context).textTheme.bodyText2,
-              ),
-            ),
+                tileColor: Colors.transparent,
+                leading: const Icon(Icons.help_outline),
+                title: Transform.translate(
+                  offset: const Offset(-16, -1),
+                  child: Text(
+                    "帮助与反馈",
+                    style: Theme.of(context).textTheme.bodyText2,
+                  ),
+                )),
           ]),
         ),
       ),
@@ -206,3 +231,25 @@ class _HomeViewState extends ConsumerState<HomeView> {
 Function onMenuBtnTap = (GlobalKey<ScaffoldState> key) {
   key.currentState?.openDrawer();
 };
+
+Future<void> dialogBuilder(BuildContext context) {
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return Transform.translate(
+        offset: Offset(0, -(MediaQuery.of(context).size.height) / 2 + 170),
+        child: AlertDialog(
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(8.0))),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 0),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width - 80,
+              child: const Text('A dialog is a type of modal window that\n'
+                  'appears in front of app content to\n'
+                  'provide critical information, or prompt\n'
+                  'for a decision to be made.'),
+            )),
+      );
+    },
+  );
+}
