@@ -4,8 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wenku8x/http/api.dart';
-import 'package:wenku8x/utils/log.dart';
+import 'package:wenku8x/modals/case_book.dart';
 import 'package:wenku8x/views/home/home_model.dart';
 
 class HomeView extends StatefulHookConsumerWidget {
@@ -19,7 +18,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
-    final drawerVisible = ref.watch(drawerToggleProvider);
+    final List<CaseBook> booksList = ref.watch(booksListProvider);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -123,66 +122,71 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Expanded(
               child: EasyRefresh(
                   onRefresh: () async {
-                    var res = await API.getShelfBookList();
-                    Log.d(res);
+                    ref.read(booksListProvider.notifier).loadBooks();
                   },
-                  child: ListView(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                "https://img.wenku8.com/image/2/2065/2065s.jpg",
-                            width: 72,
-                            height: 110,
-                          ),
-                          Expanded(
-                              child: Container(
-                            height: 96,
-                            padding: const EdgeInsets.only(left: 14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Text(
-                                  "末日时在做什么？有没有空？可以来拯救吗？（終末なにしてますか？忙しいですか？救ってもらっていいですか？）",
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground),
-                                ),
-                                Text(
-                                  "枯野瑛 / 已完结",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground
-                                          .withOpacity(0.5)),
-                                ),
-                                Text(
-                                  "短篇 特典 正在绽放的花儿们 - a little flower crown -",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onBackground
-                                          .withOpacity(0.5)),
-                                )
-                              ],
+                  child: ListView.builder(
+                    itemCount: booksList.length,
+                    itemBuilder: (context, index) {
+                      final CaseBook book = booksList[index];
+                      return InkWell(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          child: Row(children: [
+                            CachedNetworkImage(
+                              imageUrl: book.cover,
+                              width: 72,
+                              height: 110,
                             ),
-                          ))
-                        ]),
-                      )
-                    ],
+                            Expanded(
+                                child: Container(
+                              height: 96,
+                              padding: const EdgeInsets.only(left: 14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    book.bookName,
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground),
+                                  ),
+                                  Text(
+                                    "上次更新：${book.updateTime}",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.5)),
+                                  ),
+                                  Text(
+                                    book.lastRead ?? "",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onBackground
+                                            .withOpacity(0.5)),
+                                  )
+                                ],
+                              ),
+                            ))
+                          ]),
+                        ),
+                        onTap: () {},
+                      );
+                    },
                   )))
         ],
       ),
