@@ -8,6 +8,9 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
+import 'package:xml/xml.dart';
+
+import '../utils/log.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
@@ -37,5 +40,38 @@ class Ajax {
 
   static String _encrypt(String param) {
     return convert.base64Encode(convert.utf8.encode(param));
+  }
+
+  static Future<dynamic> post(String param, {bool isXml = true}) async {
+    // 判断是否是登陆请求
+    bool isLogin = param.contains("action=login");
+    FormData formData = FormData.fromMap({
+      "appver": _APPVER,
+      "request": _encrypt(param),
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    });
+    Log.d({
+      "appver": _APPVER,
+      "request": _encrypt(param),
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    }, "请求参数");
+    var res = await _client.post("", data: formData);
+    if (isXml) {
+      try {
+        return XmlDocument.parse(res.data.toString());
+      } catch (err) {
+        Log.e("请求失败，结果为：${res.data}");
+        if (res.data == "4") {
+          Log.e("登录失败");
+        }
+        return null;
+      }
+    } else {
+      if (isLogin) {
+        return res.data.toString() == "1";
+      } else {
+        return res.data.toString();
+      }
+    }
   }
 }

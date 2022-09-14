@@ -37,7 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
   go_router: ^4.4.1
-  hooks_riverpod: ^1.0.4
+  hooks_riverpod: ^2.0.0-dev.9
   flutter_hooks: ^0.18.5+1
   dio: ^4.0.6
   dio_cookie_manager: ^2.0.0
@@ -46,6 +46,7 @@ dependencies:
   logger: ^1.1.0
   xml: ^6.1.0
   path_provider: ^2.0.11
+  easy_refresh: ^3.0.4+2
 
 dev_dependencies:
   flutter_test:

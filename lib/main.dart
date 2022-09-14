@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,6 +18,25 @@ void main() async {
   if (Platform.isAndroid || Platform.isIOS) {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
+  EasyRefresh.defaultHeaderBuilder = () => const ClassicHeader(
+      dragText: "下拉刷新",
+      armedText: "释放开始",
+      readyText: "刷新中……",
+      processingText: "刷新中",
+      processedText: "成功了",
+      noMoreText: "没有更多",
+      failedText: "失败了",
+      messageText: "最后更新于 %T");
+  EasyRefresh.defaultFooterBuilder = () => const ClassicFooter(
+        dragText: '上拉加载',
+        armedText: '释放开始',
+        readyText: '加载中...',
+        processingText: '加载中...',
+        processedText: '成功了',
+        noMoreText: '没有更多',
+        failedText: '失败了',
+        messageText: '最后更新于 %T',
+      );
   await Ajax.init();
   runApp(const ProviderScope(child: MyApp()));
 }
