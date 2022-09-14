@@ -29,7 +29,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         children: [
           Container(
             height: 48,
-            margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+            margin:
+                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
@@ -52,10 +53,119 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     width: 32,
                     height: 32,
                   ),
-                  onTap: () => dialogBuilder(context),
+                  onTap: () => customDialog(context),
                 ))
               ],
             ),
+          ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                    onPressed: () {},
+                    child: Row(
+                      children: [
+                        Text(
+                          "排序方式：最近阅读",
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.7),
+                              fontSize: 13),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Icon(
+                            Icons.swap_horiz,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.6),
+                          ),
+                        )
+                      ],
+                    )),
+                TextButton(
+                    onPressed: () {},
+                    child: Row(
+                      children: [
+                        Text(
+                          "视图：列表",
+                          style: TextStyle(
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.7),
+                              fontSize: 13),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 4),
+                          child: Icon(
+                            Icons.calendar_view_month,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.6),
+                          ),
+                        )
+                      ],
+                    ))
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(children: [
+              CachedNetworkImage(
+                imageUrl: "https://img.wenku8.com/image/2/2065/2065s.jpg",
+                width: 72,
+                height: 110,
+              ),
+              Expanded(
+                  child: Container(
+                height: 96,
+                padding: const EdgeInsets.only(left: 14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Text(
+                      "末日时在做什么？有没有空？可以来拯救吗？（終末なにしてますか？忙しいですか？救ってもらっていいですか？）",
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).colorScheme.onBackground),
+                    ),
+                    Text(
+                      "枯野瑛 / 已完结",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)),
+                    ),
+                    Text(
+                      "短篇 特典 正在绽放的花儿们 - a little flower crown -",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)),
+                    )
+                  ],
+                ),
+              ))
+            ]),
           )
         ],
       ),
@@ -84,6 +194,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 "wenku8",
                 style: Theme.of(context).textTheme.headline6?.copyWith(
                       color: Theme.of(context).colorScheme.primary,
+                      fontFamily: "Optima",
                     ),
               ),
             ),
@@ -249,6 +360,236 @@ Future<void> dialogBuilder(BuildContext context) {
                   'provide critical information, or prompt\n'
                   'for a decision to be made.'),
             )),
+      );
+    },
+  );
+}
+
+customDialog(BuildContext context) {
+  var numberDialog = Align(
+    alignment: const Alignment(0, -1),
+    child: Material(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+      child: Container(
+        width: MediaQuery.of(context).size.width - 40,
+        padding: const EdgeInsets.all(0.0),
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
+                child: Stack(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "wenku8",
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontFamily: "Optima",
+                              color: Theme.of(context).colorScheme.primary),
+                        )
+                      ],
+                    ),
+                    const InkWell(
+                      child: Icon(Icons.close),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(bottom: 18, left: 18, right: 18),
+                child: Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: ClipOval(
+                        child: InkWell(
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            "https://avatars.githubusercontent.com/u/6316115?v=4",
+                        width: 42,
+                        height: 42,
+                      ),
+                      onTap: () => customDialog(context),
+                    )),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "沚水",
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        Text(
+                          "UID 118943745",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                            width: 1.0,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.4)),
+                      ),
+                      onPressed: () {},
+                      child: const Text("签到"))
+                ]),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(
+                            width: 0.4,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withOpacity(0.8)),
+                        top: BorderSide(
+                            width: 0.4,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withOpacity(0.8)))),
+                child: Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 26, right: 26),
+                    child: Icon(
+                      Icons.filter_drama,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  ),
+                  Text(
+                    "共有 12345 经验值",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  )
+                ]),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                child: Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 26, right: 26),
+                    child: Icon(
+                      Icons.invert_colors,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  ),
+                  Text(
+                    "切换颜色模式",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  )
+                ]),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                    border: Border(
+                  bottom: BorderSide(
+                      width: 0.4,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .outline
+                          .withOpacity(0.8)),
+                )),
+                child: Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 26, right: 26),
+                    child: Icon(
+                      Icons.error_outline,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  ),
+                  Text(
+                    "退出登录",
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onBackground
+                          .withOpacity(0.7),
+                    ),
+                  )
+                ]),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "隐私权政策",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.7)),
+                      )),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      "·",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  TextButton(
+                      onPressed: () {},
+                      child: Text("问题反馈",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.7))))
+                ]),
+              )
+            ]),
+      ),
+    ),
+  );
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        margin: const EdgeInsets.only(top: 80),
+        child: numberDialog,
       );
     },
   );
