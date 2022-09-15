@@ -21,6 +21,6 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
   BookListNotifier() : super([]);
   void loadBooks() async {
     var res = await API.getShelfBookList();
-    state = [...state, ...res];
+    state = res;
   }
 }

@@ -9,6 +9,7 @@ class CaseBook {
   int page;
   final String cover;
   String? lastRead;
+  String lastChapter;
 
   CaseBook(
     this.bookName,
@@ -17,7 +18,8 @@ class CaseBook {
     this.cIndex,
     this.page,
     this.cover,
-    this.updateTime, {
+    this.updateTime,
+    this.lastChapter, {
     this.lastRead,
   });
 
@@ -31,6 +33,7 @@ class CaseBook {
       'cover': cover,
       'updateTime': updateTime,
       'lastRead': lastRead,
+      'lastChapter': lastChapter
     };
   }
 
@@ -43,6 +46,7 @@ class CaseBook {
       map['page'] ?? 0,
       map['cover'] ?? '',
       map['updateTime'] ?? '',
+      map['lastChapter'] ?? '',
       lastRead: map['lastRead'],
     );
   }

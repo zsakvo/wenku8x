@@ -131,21 +131,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       return InkWell(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 12),
+                              horizontal: 20, vertical: 8),
                           child: Row(children: [
                             CachedNetworkImage(
                               imageUrl: book.cover,
-                              width: 72,
-                              height: 110,
+                              width: 64,
+                              height: 86,
+                              fit: BoxFit.cover,
                             ),
                             Expanded(
                                 child: Container(
-                              height: 96,
+                              height: 88,
                               padding: const EdgeInsets.only(left: 14),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     book.bookName,
@@ -169,7 +170,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             .withOpacity(0.5)),
                                   ),
                                   Text(
-                                    book.lastRead ?? "",
+                                    "最新章节：${book.lastChapter}",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(

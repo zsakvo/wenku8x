@@ -33,6 +33,7 @@ class API {
           0,
           Util.getCover(aid),
           element.getAttribute("date")!,
+          ec[3].innerText,
         );
         books.add(cb);
       }
