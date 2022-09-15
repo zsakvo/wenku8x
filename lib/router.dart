@@ -3,6 +3,8 @@ import 'package:wenku8x/views/home/home_view.dart';
 import 'package:wenku8x/views/login/login_view.dart';
 import 'package:wenku8x/views/rank/rank_view.dart';
 
+import 'views/book_detail/book_detail_view.dart';
+
 class AppPages {
   static GoRouter router = GoRouter(
     routes: [
@@ -19,6 +21,13 @@ class AppPages {
         builder: (context, state) {
           final type = state.params['type']!;
           return RankView(type);
+        },
+      ),
+      GoRoute(
+        path: '/book_detail/:aid',
+        builder: (context, state) {
+          final aid = state.params['aid']!;
+          return BookDetailView(aid);
         },
       ),
     ],

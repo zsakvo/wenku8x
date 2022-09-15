@@ -103,7 +103,9 @@ class _RankViewState extends ConsumerState<RankView> {
                   ))
                 ]),
               ),
-              onTap: () {},
+              onTap: () {
+                GoRouter.of(context).push("/book_detail/${book.aid}");
+              },
             );
           },
         ),
