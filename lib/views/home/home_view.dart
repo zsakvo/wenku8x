@@ -35,7 +35,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Container(
             height: 48,
             margin: EdgeInsets.only(
-                left: 20.r, right: 20.r, top: 20.r, bottom: 4.r),
+                left: 20.w, right: 20.w, top: 20.w, bottom: 4.w),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
@@ -64,7 +64,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 14.r, vertical: 12.r),
+            margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -133,7 +133,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       return InkWell(
                         child: Container(
                           padding: EdgeInsets.symmetric(
-                              horizontal: 24.r, vertical: 12.r),
+                              horizontal: 24.w, vertical: 12.w),
                           child: Row(children: [
                             CachedNetworkImage(
                               imageUrl: book.cover,
@@ -191,9 +191,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
               padding: EdgeInsets.only(
                   top: MediaQuery.of(context).viewPadding.top + 16,
                   bottom: 16,
-                  left: 20,
-                  right: 20),
-              margin: const EdgeInsets.only(bottom: 16),
+                  left: 32.w,
+                  right: 32.w),
+              margin: EdgeInsets.only(bottom: 16.w),
               alignment: Alignment.centerLeft,
               decoration: BoxDecoration(
                   border: Border(
@@ -248,7 +248,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   ),
                 )),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
+              margin: EdgeInsets.symmetric(vertical: 14.w, horizontal: 32.w),
               child: Text(
                 "排行榜单",
                 style: TextStyle(
@@ -261,7 +261,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
                 onTap: () {
-                  GoRouter.of(context).push("/rank/time");
+                  GoRouter.of(context).push("/rank/lastupdate");
                 },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
@@ -455,7 +455,7 @@ customDialog(BuildContext context) {
                   OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        minimumSize: Size(120.r, 68.r),
+                        minimumSize: Size(112.w, 56.w),
                         side: BorderSide(
                             width: 1.0,
                             color: Theme.of(context)
@@ -569,13 +569,13 @@ customDialog(BuildContext context) {
                 ]),
               ),
               Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.r),
+                padding: EdgeInsets.symmetric(vertical: 4.w),
                 child:
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   TextButton(
                       style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(180.r, 60.h)),
+                          minimumSize: Size(164.w, 60.w)),
                       onPressed: () {},
                       child: Text(
                         "隐私权政策",
@@ -596,7 +596,7 @@ customDialog(BuildContext context) {
                   TextButton(
                       style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(160.r, 60.r)),
+                          minimumSize: Size(140.w, 60.w)),
                       onPressed: () {},
                       child: Text("问题反馈",
                           style: TextStyle(

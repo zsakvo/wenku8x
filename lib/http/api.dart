@@ -1,6 +1,8 @@
 import 'package:xml/xml.dart';
 
 import '../modals/case_book.dart';
+import '../modals/list_book.dart';
+import '../utils/log.dart';
 import '../utils/util.dart';
 import 'ajax.dart';
 
@@ -39,5 +41,31 @@ class API {
       }
     }
     return books;
+  }
+
+  static Future<List<ListBook>> getNovelList(String sorter, int page) async {
+    List<ListBook> list = [];
+    XmlDocument? res =
+        await Ajax.post("action=novellist&sort=$sorter&page=$page&t=0");
+    if (res != null) {
+      //  当最后一页的时候取出的节点数目为零……
+      //  此时直接获取 RanksController 实例设置末页即可
+      res.findAllElements("item").forEach((element) {
+        Log.d(element.toString());
+        var elements =
+            element.children.where((p0) => p0.toString().length > 2).toList();
+        list.add(ListBook(
+            aid: element.getAttribute("aid")!,
+            title: elements[0].innerText,
+            hits: elements[1].getAttribute("value").toString(),
+            push: elements[2].getAttribute("value").toString(),
+            fav: elements[3].getAttribute("value").toString(),
+            author: elements[4].getAttribute("value").toString(),
+            status: elements[5].getAttribute("value").toString(),
+            lastUpdate: elements[6].getAttribute("value").toString(),
+            intro: elements[7].innerText.replaceAll("\n", "")));
+      });
+    }
+    return list;
   }
 }
