@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/http/ajax.dart';
 import 'package:wenku8x/router.dart';
@@ -52,21 +53,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      return MaterialApp.router(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-          useMaterial3: true,
-        ),
-        darkTheme: ThemeData(
-          colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-          useMaterial3: true,
-        ),
-        routeInformationProvider: AppPages.router.routeInformationProvider,
-        routeInformationParser: AppPages.router.routeInformationParser,
-        routerDelegate: AppPages.router.routerDelegate,
-      );
-    });
+    return ScreenUtilInit(
+        designSize: const Size(750, 1334),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        builder: (context, child) {
+          return DynamicColorBuilder(
+              builder: (lightColorScheme, darkColorScheme) {
+            return MaterialApp.router(
+              theme: ThemeData(
+                colorScheme: lightColorScheme ?? _defaultLightColorScheme,
+                useMaterial3: true,
+              ),
+              darkTheme: ThemeData(
+                colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
+                useMaterial3: true,
+              ),
+              routeInformationProvider:
+                  AppPages.router.routeInformationProvider,
+              routeInformationParser: AppPages.router.routeInformationParser,
+              routerDelegate: AppPages.router.routerDelegate,
+            );
+          });
+        });
   }
 }

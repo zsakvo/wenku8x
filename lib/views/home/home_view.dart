@@ -7,6 +7,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/modals/case_book.dart';
 import 'package:wenku8x/views/home/home_model.dart';
 
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class HomeView extends StatefulHookConsumerWidget {
   const HomeView({Key? key}) : super(key: key);
 
@@ -32,8 +34,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         children: [
           Container(
             height: 48,
-            margin:
-                const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 4),
+            margin: EdgeInsets.only(
+                left: 20.r, right: 20.r, top: 20.r, bottom: 4.r),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
@@ -62,7 +64,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+            margin: EdgeInsets.symmetric(horizontal: 14.r, vertical: 12.r),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -130,8 +132,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                       final CaseBook book = booksList[index];
                       return InkWell(
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 8),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 24.r, vertical: 12.r),
                           child: Row(children: [
                             CachedNetworkImage(
                               imageUrl: book.cover,
@@ -146,7 +148,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
                                     book.bookName,
@@ -159,19 +161,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             .onBackground),
                                   ),
                                   Text(
-                                    "上次更新：${book.updateTime}",
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.5)),
-                                  ),
-                                  Text(
-                                    "最新章节：${book.lastChapter}",
-                                    maxLines: 1,
+                                    "上次更新：${book.updateTime}\n最新章节：${book.lastChapter}",
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                         fontSize: 13,
@@ -460,22 +451,20 @@ customDialog(BuildContext context) {
                   ),
                   OutlinedButton(
                       style: OutlinedButton.styleFrom(
-                          padding: EdgeInsets.zero,
-                          minimumSize: const Size(60, 30),
-                          side: BorderSide(
-                              width: 1.0,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withOpacity(0.4)),
-                          textStyle: const TextStyle(fontSize: 13),
-                          maximumSize: const Size(72, 40)),
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size(120.r, 68.r),
+                        side: BorderSide(
+                            width: 1.0,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.4)),
+                        textStyle: TextStyle(fontSize: 20.sp),
+                      ),
                       onPressed: () {
                         GoRouter.of(context).go('/login');
                       },
-                      child: const Text(
-                        "签到",
-                      ))
+                      child: const Text("签到"))
                 ]),
               ),
               Container(
@@ -576,41 +565,45 @@ customDialog(BuildContext context) {
                   )
                 ]),
               ),
-              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                TextButton(
-                    style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(96, 30)),
-                    onPressed: () {},
-                    child: Text(
-                      "隐私权政策",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.7)),
-                    )),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
-                  child: Text(
-                    "·",
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                ),
-                TextButton(
-                    style: OutlinedButton.styleFrom(
-                        padding: EdgeInsets.zero,
-                        minimumSize: const Size(96, 30)),
-                    onPressed: () {},
-                    child: Text("问题反馈",
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.r),
+                child:
+                    Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  TextButton(
+                      style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(180.r, 60.h)),
+                      onPressed: () {},
+                      child: Text(
+                        "隐私权政策",
                         style: TextStyle(
-                            fontSize: 12,
+                            fontSize: 20.sp,
                             color: Theme.of(context)
                                 .colorScheme
                                 .onBackground
-                                .withOpacity(0.7))))
-              ])
+                                .withOpacity(0.7)),
+                      )),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12),
+                    child: Text(
+                      "·",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  TextButton(
+                      style: OutlinedButton.styleFrom(
+                          padding: EdgeInsets.zero,
+                          minimumSize: Size(160.r, 60.r)),
+                      onPressed: () {},
+                      child: Text("问题反馈",
+                          style: TextStyle(
+                              fontSize: 20.sp,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onBackground
+                                  .withOpacity(0.7))))
+                ]),
+              )
             ]),
       ),
     ),
