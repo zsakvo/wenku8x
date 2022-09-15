@@ -5,6 +5,8 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
@@ -63,6 +65,14 @@ class Ajax {
         Log.e("请求失败，结果为：${res.data}");
         if (res.data == "4") {
           Log.e("登录失败");
+          Fluttertoast.showToast(
+              msg: "登录失败",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.CENTER,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.red,
+              textColor: Colors.white,
+              fontSize: 16.0);
         }
         return null;
       }

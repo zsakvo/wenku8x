@@ -48,6 +48,7 @@ dependencies:
   path_provider: ^2.0.11
   easy_refresh: ^3.0.4+2
   flutter_screenutil: ^5.5.4
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

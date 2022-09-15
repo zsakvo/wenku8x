@@ -124,7 +124,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Expanded(
               child: EasyRefresh(
                   onRefresh: () async {
-                    ref.read(booksListProvider.notifier).loadBooks();
+                    ref.read(booksListProvider.notifier).refresh();
                   },
                   child: ListView.builder(
                     itemCount: booksList.length,
@@ -248,7 +248,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   ),
                 )),
             Container(
-              margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+              margin: const EdgeInsets.symmetric(vertical: 14, horizontal: 20),
               child: Text(
                 "排行榜单",
                 style: TextStyle(
@@ -260,6 +260,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/time");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
