@@ -12,6 +12,7 @@ class BookMeta {
   final String? lastUpdate;
   final String? bookLength;
   final String? latestSection;
+  final String? intro;
 
   BookMeta(
       {this.aid,
@@ -26,7 +27,8 @@ class BookMeta {
       this.status,
       this.lastUpdate,
       this.bookLength,
-      this.latestSection});
+      this.latestSection,
+      this.intro});
 
   set value(BookMeta value) {}
 }

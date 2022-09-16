@@ -1,17 +1,17 @@
-// ignore_for_file: non_constant_identifier_names, constant_identifier_names, unused_field, unused_element
+// ignore_for_file: non_constant_identifier_names, constant_identifier_names, unused_field, unused_element, use_build_context_synchronously
 
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
 import 'package:xml/xml.dart';
 
+import '../service/navigation.dart';
+import '../utils/flash.dart';
 import '../utils/log.dart';
 
 class Ajax {
@@ -64,15 +64,8 @@ class Ajax {
       } catch (err) {
         Log.e("请求失败，结果为：${res.data}");
         if (res.data == "4") {
-          Log.e("登录失败");
-          Fluttertoast.showToast(
-              msg: "登录失败",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.CENTER,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.red,
-              textColor: Colors.white,
-              fontSize: 16.0);
+          showErrorToast(
+              NavigationService.navigatorKey.currentContext, "鉴权信息失效，请重新登陆账户");
         }
         return null;
       }

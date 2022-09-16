@@ -15,7 +15,19 @@ class DrawerToggle extends StateNotifier<bool> {
   void toogle() => !state;
 }
 
-final bookMetaProvider =
+final appBarTitleProvider =
+    StateNotifierProvider<AppBarTitleNotifier, String>((ref) {
+  return AppBarTitleNotifier();
+});
+
+class AppBarTitleNotifier extends StateNotifier<String> {
+  AppBarTitleNotifier() : super("");
+  setTitle(title) {
+    state = title;
+  }
+}
+
+final bookMetaProvider1 =
     StateNotifierProvider<BookMetaNotifier, BookMeta>((ref) {
   return BookMetaNotifier();
 });
@@ -62,3 +74,32 @@ class BookIntroNotifier extends StateNotifier<String> {
     state = res;
   }
 }
+
+final bookMetaProvider =
+    FutureProvider.family<BookMeta, dynamic>((ref, aid) async {
+  var meta = await API.getNovelFullMeta(aid);
+  var intro = await API.getNovelFullIntro(aid);
+  List<XmlNode> elements = [];
+  if (meta != null) {
+    for (var element in meta.children[2].children) {
+      if (element.toString().length > 2) elements.add(element);
+    }
+    return BookMeta(
+        aid: aid,
+        title: elements[0].innerText,
+        author: elements[1].getAttribute("value").toString(),
+        dayHits: elements[2].getAttribute("value").toString(),
+        totalHits: elements[3].getAttribute("value").toString(),
+        push: elements[4].getAttribute("value").toString(),
+        fav: elements[5].getAttribute("value").toString(),
+        pressId: elements[6].getAttribute("sid").toString(),
+        pressValue: elements[6].getAttribute("value").toString(),
+        status: elements[7].getAttribute("value").toString(),
+        lastUpdate: elements[9].getAttribute("value").toString(),
+        bookLength: elements[8].getAttribute("value").toString(),
+        latestSection: elements[10].innerText,
+        intro: intro);
+  } else {
+    throw Exception("资源请求失败");
+  }
+});

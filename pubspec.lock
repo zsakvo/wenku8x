@@ -127,6 +127,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.1.4"
+  flash:
+    dependency: "direct main"
+    description:
+      name: flash
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.3+3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -184,19 +191,12 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  fluttertoast:
-    dependency: "direct main"
-    description:
-      name: fluttertoast
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "8.0.9"
   go_router:
     dependency: "direct main"
     description:
-      name: go_router
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "modules/go_router"
+      relative: true
+    source: path
     version: "4.4.1"
   hooks_riverpod:
     dependency: "direct main"

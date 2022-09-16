@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/http/ajax.dart';
 import 'package:wenku8x/router.dart';
+import 'package:wenku8x/utils/scroll.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -73,6 +74,7 @@ class MyApp extends StatelessWidget {
                   AppPages.router.routeInformationProvider,
               routeInformationParser: AppPages.router.routeInformationParser,
               routerDelegate: AppPages.router.routerDelegate,
+              scrollBehavior: CustScroll(),
             );
           });
         });

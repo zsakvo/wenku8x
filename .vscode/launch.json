@@ -1,0 +1,37 @@
+{
+  // 使用 IntelliSense 了解相关属性。 
+  // 悬停以查看现有属性的描述。
+  // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "wenku8x",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "wenku8x (profile mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "profile"
+    },
+    {
+      "name": "wenku8x (release mode)",
+      "request": "launch",
+      "type": "dart",
+      "flutterMode": "release"
+    },
+    {
+      "name": "go_router-4.4.1",
+      "cwd": "modules/go_router-4.4.1",
+      "request": "launch",
+      "type": "dart"
+    },
+    {
+      "name": "example",
+      "cwd": "modules/go_router-4.4.1/example",
+      "request": "launch",
+      "type": "dart"
+    }
+  ]
+}
