@@ -189,6 +189,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.search),
+                onTap: () {
+                  GoRouter.of(context).push("/search");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(

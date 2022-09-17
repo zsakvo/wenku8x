@@ -84,4 +84,16 @@ class API {
     XmlDocument? res = await Ajax.post("action=book&do=list&aid=$aid&t=0");
     return res;
   }
+
+  static Future<XmlDocument?> searchNovelByNovelName(String bookName) async {
+    XmlDocument? res = await Ajax.post(
+        "action=search&searchtype=articlename&searchkey=$bookName&t=0");
+    return res;
+  }
+
+  static Future<XmlDocument?> searchNovelByAuthorName(String author) async {
+    XmlDocument? res = await Ajax.post(
+        "action=search&searchtype=author&searchkey=$author&t=0");
+    return res;
+  }
 }
