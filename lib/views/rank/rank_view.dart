@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +6,8 @@ import 'package:wenku8x/modals/list_book.dart';
 import 'package:wenku8x/utils/constant.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wenku8x/utils/log.dart';
+import 'package:wenku8x/widgets/list_book.dart';
 
 import 'rank_model.dart';
 
@@ -28,6 +29,7 @@ class _RankViewState extends ConsumerState<RankView> {
   @override
   Widget build(BuildContext context) {
     final type = widget.type;
+    Log.d(type);
     final List<ListBook> booksList = ref.watch(booksListProvider);
 
     return Scaffold(
@@ -57,56 +59,17 @@ class _RankViewState extends ConsumerState<RankView> {
         onLoad: () =>
             ref.read(booksListProvider.notifier).loadMore(widget.type),
         child: ListView.builder(
+          itemExtent: 230.w,
           itemCount: booksList.length,
           itemBuilder: (context, index) {
             ListBook book = booksList[index];
-            return InkWell(
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.w),
-                child: Row(children: [
-                  CachedNetworkImage(
-                    imageUrl: book.cover,
-                    width: 64,
-                    height: 86,
-                    fit: BoxFit.cover,
-                  ),
-                  Expanded(
-                      child: Container(
-                    height: 92,
-                    padding: const EdgeInsets.only(left: 14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Text(
-                          book.title,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 28.sp,
-                              color:
-                                  Theme.of(context).colorScheme.onBackground),
-                        ),
-                        Text(
-                          "上次更新：${book.lastUpdate}\n${book.author} / ${book.status}",
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              fontSize: 22.sp,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.5)),
-                        )
-                      ],
-                    ),
-                  ))
-                ]),
-              ),
-              onTap: () {
-                GoRouter.of(context).push("/book_detail/${book.aid}");
-              },
-            );
+            return ListBookTile(context,
+                cover: book.cover,
+                name: book.title,
+                desc1: "${book.author} / ${book.status}",
+                desc2: "上次更新：${book.lastUpdate}", onTap: () {
+              GoRouter.of(context).push("/book_detail/${book.aid}");
+            });
           },
         ),
       ),

@@ -2,7 +2,6 @@ import 'package:xml/xml.dart';
 
 import '../modals/case_book.dart';
 import '../modals/list_book.dart';
-import '../utils/log.dart';
 import '../utils/util.dart';
 import 'ajax.dart';
 
@@ -51,7 +50,6 @@ class API {
       //  当最后一页的时候取出的节点数目为零……
       //  此时直接获取 RanksController 实例设置末页即可
       res.findAllElements("item").forEach((element) {
-        Log.d(element.toString());
         var elements =
             element.children.where((p0) => p0.toString().length > 2).toList();
         list.add(ListBook(
@@ -80,5 +78,10 @@ class API {
     var res =
         await Ajax.post("action=book&do=intro&aid=$aid&t=0", isXml: false);
     return res.toString();
+  }
+
+  static Future<XmlDocument?> getNovelIndex(String aid) async {
+    XmlDocument? res = await Ajax.post("action=book&do=list&aid=$aid&t=0");
+    return res;
   }
 }

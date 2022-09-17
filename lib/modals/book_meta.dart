@@ -1,3 +1,5 @@
+import 'package:wenku8x/utils/util.dart';
+
 class BookMeta {
   final String? aid;
   final String? title;
@@ -31,4 +33,8 @@ class BookMeta {
       this.intro});
 
   set value(BookMeta value) {}
+
+  String get cover {
+    return Util.getCover(aid!);
+  }
 }

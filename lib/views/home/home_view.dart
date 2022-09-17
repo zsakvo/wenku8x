@@ -8,6 +8,7 @@ import 'package:wenku8x/modals/case_book.dart';
 import 'package:wenku8x/views/home/home_model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wenku8x/widgets/list_book.dart';
 
 class HomeView extends StatefulHookConsumerWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -79,7 +80,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   .colorScheme
                                   .onBackground
                                   .withOpacity(0.7),
-                              fontSize: 13),
+                              fontSize: 24.sp),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),
@@ -104,7 +105,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                   .colorScheme
                                   .onBackground
                                   .withOpacity(0.7),
-                              fontSize: 13),
+                              fontSize: 24.sp),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 4),
@@ -127,57 +128,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     ref.read(booksListProvider.notifier).refresh();
                   },
                   child: ListView.builder(
+                    itemExtent: 230.w,
                     itemCount: booksList.length,
                     itemBuilder: (context, index) {
                       final CaseBook book = booksList[index];
-                      return InkWell(
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 24.w, vertical: 12.w),
-                          child: Row(children: [
-                            CachedNetworkImage(
-                              imageUrl: book.cover,
-                              width: 64,
-                              height: 86,
-                              fit: BoxFit.cover,
-                            ),
-                            Expanded(
-                                child: Container(
-                              height: 88,
-                              padding: const EdgeInsets.only(left: 14),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Text(
-                                    book.bookName,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground),
-                                  ),
-                                  Text(
-                                    "上次更新：${book.updateTime}\n最新章节：${book.lastChapter}",
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground
-                                            .withOpacity(0.5)),
-                                  )
-                                ],
-                              ),
-                            ))
-                          ]),
-                        ),
-                        onTap: () {},
-                      );
+                      return ListBookTile(context,
+                          cover: book.cover,
+                          name: book.bookName,
+                          desc1: "更新时间：${book.updateTime}",
+                          desc2: "最新章节：${book.lastChapter}");
                     },
                   )))
         ],
@@ -261,7 +220,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
                 onTap: () {
-                  GoRouter.of(context).push("/rank/lastupdate");
+                  GoRouter.of(context).push("/rank/allvisit");
                 },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
@@ -273,6 +232,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/allvote");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
@@ -283,6 +245,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/allvisit");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
@@ -293,6 +258,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/size");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
@@ -303,6 +271,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/fullflag");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
@@ -313,6 +284,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.label_outline),
+                onTap: () {
+                  GoRouter.of(context).push("/rank/postdate");
+                },
                 title: Transform.translate(
                   offset: const Offset(-16, -1),
                   child: Text(
