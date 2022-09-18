@@ -41,27 +41,32 @@ class _HomeViewState extends ConsumerState<HomeView> {
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(30)),
-            child: Row(
-              children: [
-                IconButton(
-                    onPressed: () => onMenuBtnTap(_scaffoldKey),
-                    icon: const Icon(Icons.menu)),
-                const Expanded(
-                    child: Text(
-                  "搜索书籍",
-                  style: TextStyle(fontSize: 16),
-                )),
-                ClipOval(
-                    child: InkWell(
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        "https://avatars.githubusercontent.com/u/6316115?v=4",
-                    width: 32,
-                    height: 32,
-                  ),
-                  onTap: () => customDialog(context),
-                ))
-              ],
+            child: InkWell(
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: () => onMenuBtnTap(_scaffoldKey),
+                      icon: const Icon(Icons.menu)),
+                  const Expanded(
+                      child: Text(
+                    "搜索书籍",
+                    style: TextStyle(fontSize: 16),
+                  )),
+                  ClipOval(
+                      child: InkWell(
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://avatars.githubusercontent.com/u/6316115?v=4",
+                      width: 32,
+                      height: 32,
+                    ),
+                    onTap: () => customDialog(context),
+                  ))
+                ],
+              ),
+              onTap: () {
+                GoRouter.of(context).push("/search");
+              },
             ),
           ),
           Container(
@@ -124,6 +129,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           ),
           Expanded(
               child: EasyRefresh(
+                  refreshOnStart: true,
                   onRefresh: () async {
                     ref.read(booksListProvider.notifier).refresh();
                   },

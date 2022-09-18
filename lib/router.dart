@@ -4,6 +4,7 @@ import 'package:wenku8x/views/home/home_view.dart';
 import 'package:wenku8x/views/login/login_view.dart';
 import 'package:wenku8x/views/rank/rank_view.dart';
 import 'package:wenku8x/views/search/search_view.dart';
+import 'package:wenku8x/views/search_result/search_result_view.dart';
 
 import 'views/book_detail/book_detail_view.dart';
 
@@ -22,6 +23,13 @@ class AppPages {
       GoRoute(
         path: '/search',
         builder: (context, state) => const SearchView(),
+      ),
+      GoRoute(
+        path: '/search_result/:keyword',
+        builder: (context, state) {
+          final keyword = state.params['keyword']!;
+          return SearchResultView(keyword);
+        },
       ),
       GoRoute(
         path: '/rank/:type',

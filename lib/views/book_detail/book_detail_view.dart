@@ -70,7 +70,7 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                   CachedNetworkImage(
                     imageUrl: meta.cover,
                     width: 160.w,
-                    height: 240.w,
+                    height: 220.w,
                     fit: BoxFit.cover,
                   ),
                   Expanded(

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/utils/log.dart';
 
 class SearchView extends StatefulHookConsumerWidget {
   const SearchView({Key? key}) : super(key: key);
@@ -12,6 +14,8 @@ class SearchView extends StatefulHookConsumerWidget {
 class _SearchViewState extends ConsumerState<SearchView> {
   @override
   Widget build(BuildContext context) {
+    TextEditingController searchController = useTextEditingController();
+    FocusNode focusNode = useFocusNode();
     return Scaffold(
       appBar: AppBar(
         backgroundColor:
@@ -23,12 +27,19 @@ class _SearchViewState extends ConsumerState<SearchView> {
           },
         ),
         title: TextField(
+          autofocus: true,
+          controller: searchController,
           textInputAction: TextInputAction.search,
-          decoration: const InputDecoration(
-              border: OutlineInputBorder(borderSide: BorderSide.none),
+          decoration: InputDecoration(
+              suffixIcon: IconButton(
+                  onPressed: () {
+                    searchController.clear();
+                  },
+                  icon: const Icon(Icons.clear)),
+              border: const OutlineInputBorder(borderSide: BorderSide.none),
               hintText: "搜索书籍或作者"),
           onSubmitted: (value) {
-            print("search" + value);
+            GoRouter.of(context).push("/search_result/$value");
           },
         ),
       ),
