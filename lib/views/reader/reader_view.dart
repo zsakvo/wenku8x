@@ -19,39 +19,28 @@ class _ReaderViewState extends ConsumerState<ReaderView>
   Widget build(BuildContext context) {
     final AsyncValue<List<Chapter>> catalog =
         ref.watch(catalogProvider(widget.aid));
+    final List<Widget> chapters = ref.watch(chaptersProvider);
     return Material(
         child: catalog.when(
       data: (data) {
-        final AsyncValue<List<Widget>> content =
-            ref.watch(readerProvider(this));
-        return content.when(
-            data: (data) {
-              return GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    const SizedBox(
-                      width: double.infinity,
-                      height: double.infinity,
-                    ),
-                    ...data,
-                  ],
-                ),
-                onTapUp: (detail) {
-                  // Log.d(detail);
-                  onPageTap(detail, context, ref);
-                },
-              );
-            },
-            error: (error, stackTrace) => Text(error.toString()),
-            loading: () => Container(
-                alignment: Alignment.center,
-                child: SizedBox(
-                  width: 84.w,
-                  height: 84.w,
-                  child: const CircularProgressIndicator(),
-                )));
+        ref.watch(readerProvider(this));
+        return GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              const SizedBox(
+                width: double.infinity,
+                height: double.infinity,
+              ),
+              ...chapters,
+            ],
+          ),
+          onTapUp: (detail) {
+            // Log.d(detail);
+            onPageTap(detail, context, ref);
+          },
+        );
       },
       error: (error, stackTrace) => Text(error.toString()),
       loading: () => Container(

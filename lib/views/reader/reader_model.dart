@@ -9,6 +9,8 @@ import 'novel_text.dart';
 
 List<AnimationController> novelControllers = [];
 
+int currentPage = 0;
+
 final catalogProvider =
     FutureProvider.autoDispose.family<List<Chapter>, dynamic>((ref, aid) async {
   List<Chapter> chapters = [];
@@ -50,7 +52,9 @@ class CurrentNotifier extends StateNotifier<Current?> {
         aid: aid,
         cid: cid,
         page: page,
+        pages: 0,
         cIndex: cIndex,
+        fetch: false,
         chapterName: chapterName);
   }
 
@@ -80,38 +84,62 @@ final config = TextConfig(
     fontColor: const Color(0xff010203),
     backgroundColor: const Color(0xfff0f0f0));
 
-final readerProvider =
-    FutureProvider.family<List<Widget>, dynamic>((ref, context) async {
-  final current = ref.watch(currentProvider) as Current;
+fetchChapterContent(
+    {required Current current,
+    required TickerProvider tickerProvider,
+    required Ref ref}) async {
   var res = await API.getNovelContent(current.aid, current.cid) as String;
   List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
   var novelText = NovelText(res,
       config: config,
       chapterName: current.chapterName!,
       bookName: "乐园杂音",
-      tickerProvider: context, splitter: (res) {
-    Log.d(arr);
+      tickerProvider: tickerProvider, splitter: (res) {
     arr.removeRange(0, 2);
     return arr;
   }, getCuttentPage: () {
     return current.page;
   });
-  novelControllers = novelText.controllers;
-  return novelText.pages;
-  // return [Text("2333")];
+  var controllers = novelText.controllers;
+  var pages = novelText.pages;
+  novelControllers.addAll(controllers);
+  ref.read(chaptersProvider.notifier).add(pages);
+}
+
+final readerProvider =
+    FutureProvider.family<List<Widget>, dynamic>((ref, context) async {
+  final current = ref.watch(currentProvider) as Current;
+  fetchChapterContent(current: current, tickerProvider: context, ref: ref);
+  return [];
 });
+
+final chaptersProvider =
+    StateNotifierProvider<ChaptersNotifier, List<Widget>>((ref) {
+  return ChaptersNotifier();
+});
+
+class ChaptersNotifier extends StateNotifier<List<Widget>> {
+  ChaptersNotifier() : super([]);
+  add(List<Widget> chapters) {
+    state = [...state, ...chapters];
+  }
+}
 
 class Current {
   String aid;
   String cid;
   int page;
+  int pages;
   int cIndex;
   String? chapterName;
+  bool fetch;
   Current(
       {required this.aid,
       required this.cid,
       required this.page,
+      required this.pages,
       required this.cIndex,
+      required this.fetch,
       this.chapterName});
 
   setAid(arg) {
