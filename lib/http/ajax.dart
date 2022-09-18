@@ -54,7 +54,7 @@ class Ajax {
     });
     Log.d({
       "appver": _APPVER,
-      "request": _encrypt(param),
+      "request": param,
       "timetoken": DateTime.now().millisecondsSinceEpoch
     }, "请求参数");
     var res = await _client.post("", data: formData);

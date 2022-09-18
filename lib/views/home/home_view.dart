@@ -36,7 +36,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
           Container(
             height: 48,
             margin: EdgeInsets.only(
-                left: 20.w, right: 20.w, top: 20.w, bottom: 4.w),
+                left: 20.w, right: 20.w, top: 20.w, bottom: 24.w),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
@@ -70,12 +70,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.w),
+            margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 0.w),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                     onPressed: () {},
+                    style: TextButton.styleFrom(
+                        minimumSize: Size(100.w, 50.w),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: EdgeInsets.only(left: 20.w)),
                     child: Row(
                       children: [
                         Text(
@@ -101,6 +105,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     )),
                 TextButton(
                     onPressed: () {},
+                    style: TextButton.styleFrom(
+                        minimumSize: Size(120.w, 50.w),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: EdgeInsets.only(left: 20.w)),
                     child: Row(
                       children: [
                         Text(
@@ -142,7 +150,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                           cover: book.cover,
                           name: book.bookName,
                           desc1: "更新时间：${book.updateTime}",
-                          desc2: "最新章节：${book.lastChapter}");
+                          desc2: "最新章节：${book.lastChapter}", onTap: () {
+                        GoRouter.of(context).push("/reader/${book.aid}");
+                      });
                     },
                   )))
         ],

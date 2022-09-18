@@ -96,4 +96,9 @@ class API {
         "action=search&searchtype=author&searchkey=$author&t=0");
     return res;
   }
+
+  static getNovelContent(String aid, String cid) async {
+    return await Ajax.post("action=book&do=text&aid=$aid&cid=$cid&t=0",
+        isXml: false);
+  }
 }
