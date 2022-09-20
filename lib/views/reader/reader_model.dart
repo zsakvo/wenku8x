@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:wenku8x/utils/log.dart';
-
 import '../../http/api.dart';
 import '../../modals/chapter.dart';
 import 'novel_text.dart';
@@ -36,7 +34,7 @@ final catalogProvider =
         .read(currentProvider.notifier)
         .set(aid, chapters[0].cid, 0, 0, chapters[0].name);
   } else {
-    Exception("目录读取失败");
+    throw Exception("目录读取失败");
   }
   return chapters;
 });

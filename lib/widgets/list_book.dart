@@ -1,4 +1,4 @@
-// ignore_for_file: non_constant_identifier_names
+// ignore_for_file: non_constant_identifier_names, prefer_const_constructors
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,18 +19,18 @@ Widget ListBookTile(context,
   }
   return InkWell(
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 32.w, vertical: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
       child: Row(children: [
         CachedNetworkImage(
           imageUrl: cover,
-          width: 124.w,
-          height: 180.w,
+          width: 72,
+          height: 100,
           fit: BoxFit.cover,
         ),
         Expanded(
             child: Container(
-          height: 180.w,
-          padding: EdgeInsets.only(left: 32.w),
+          height: 100,
+          padding: const EdgeInsets.only(left: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: desc3 != null

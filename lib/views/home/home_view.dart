@@ -35,8 +35,8 @@ class _HomeViewState extends ConsumerState<HomeView> {
         children: [
           Container(
             height: 48,
-            margin: EdgeInsets.only(
-                left: 20.w, right: 20.w, top: 20.w, bottom: 24.w),
+            margin:
+                const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 10),
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
@@ -70,16 +70,16 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           Container(
-            margin: EdgeInsets.symmetric(horizontal: 14.w, vertical: 0.w),
+            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
-                        minimumSize: Size(100.w, 50.w),
+                        minimumSize: const Size(82, 36),
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.only(left: 20.w)),
+                        padding: const EdgeInsets.only(left: 12, right: 12)),
                     child: Row(
                       children: [
                         Text(
@@ -103,35 +103,35 @@ class _HomeViewState extends ConsumerState<HomeView> {
                         )
                       ],
                     )),
-                TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                        minimumSize: Size(120.w, 50.w),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        padding: EdgeInsets.only(left: 20.w)),
-                    child: Row(
-                      children: [
-                        Text(
-                          "视图：列表",
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onBackground
-                                  .withOpacity(0.7),
-                              fontSize: 24.sp),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4),
-                          child: Icon(
-                            Icons.calendar_view_month,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onBackground
-                                .withOpacity(0.6),
-                          ),
-                        )
-                      ],
-                    ))
+                // TextButton(
+                //     onPressed: () {},
+                //     style: TextButton.styleFrom(
+                //         minimumSize: Size(120.w, 50.w),
+                //         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                //         padding: EdgeInsets.only(left: 20.w)),
+                //     child: Row(
+                //       children: [
+                //         Text(
+                //           "视图：列表",
+                //           style: TextStyle(
+                //               color: Theme.of(context)
+                //                   .colorScheme
+                //                   .onBackground
+                //                   .withOpacity(0.7),
+                //               fontSize: 24.sp),
+                //         ),
+                //         Padding(
+                //           padding: const EdgeInsets.only(left: 4),
+                //           child: Icon(
+                //             Icons.calendar_view_month,
+                //             color: Theme.of(context)
+                //                 .colorScheme
+                //                 .onBackground
+                //                 .withOpacity(0.6),
+                //           ),
+                //         )
+                //       ],
+                //     ))
               ],
             ),
           ),
@@ -142,7 +142,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     ref.read(booksListProvider.notifier).refresh();
                   },
                   child: ListView.builder(
-                    itemExtent: 230.w,
+                    itemExtent: 120,
                     itemCount: booksList.length,
                     itemBuilder: (context, index) {
                       final CaseBook book = booksList[index];
@@ -448,7 +448,7 @@ customDialog(BuildContext context) {
                   OutlinedButton(
                       style: OutlinedButton.styleFrom(
                         padding: EdgeInsets.zero,
-                        minimumSize: Size(112.w, 56.w),
+                        minimumSize: const Size(64, 32),
                         side: BorderSide(
                             width: 1.0,
                             color: Theme.of(context)
@@ -568,7 +568,7 @@ customDialog(BuildContext context) {
                   TextButton(
                       style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(164.w, 60.w)),
+                          minimumSize: const Size(100, 32)),
                       onPressed: () {},
                       child: Text(
                         "隐私权政策",
@@ -589,7 +589,7 @@ customDialog(BuildContext context) {
                   TextButton(
                       style: OutlinedButton.styleFrom(
                           padding: EdgeInsets.zero,
-                          minimumSize: Size(140.w, 60.w)),
+                          minimumSize: const Size(100, 32)),
                       onPressed: () {},
                       child: Text("问题反馈",
                           style: TextStyle(
