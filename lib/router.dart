@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:wenku8x/service/navigation.dart';
 import 'package:wenku8x/views/home/home_view.dart';
 import 'package:wenku8x/views/login/login_view.dart';
+import 'package:wenku8x/views/preference/preference_view.dart';
 import 'package:wenku8x/views/rank/rank_view.dart';
 import 'package:wenku8x/views/reader/reader_view.dart';
 import 'package:wenku8x/views/search/search_view.dart';
@@ -52,6 +53,10 @@ class AppPages {
           final aid = state.params['aid']!;
           return ReaderView(aid);
         },
+      ),
+      GoRoute(
+        path: '/preference',
+        builder: (context, state) => const PreferenceView(),
       ),
     ],
   );

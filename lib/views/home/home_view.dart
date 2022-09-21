@@ -322,15 +322,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
               ),
             ),
             ListTile(
-                tileColor: Colors.transparent,
-                leading: const Icon(Icons.settings_outlined),
-                title: Transform.translate(
-                  offset: const Offset(-16, -1),
-                  child: Text(
-                    "设置",
-                    style: Theme.of(context).textTheme.bodyText2,
-                  ),
-                )),
+              tileColor: Colors.transparent,
+              leading: const Icon(Icons.settings_outlined),
+              title: Transform.translate(
+                offset: const Offset(-16, -1),
+                child: Text(
+                  "设置",
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+              ),
+              onTap: () {
+                GoRouter.of(context).push("/preference");
+              },
+            ),
             ListTile(
                 tileColor: Colors.transparent,
                 leading: const Icon(Icons.help_outline),
