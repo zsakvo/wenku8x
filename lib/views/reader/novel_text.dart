@@ -35,7 +35,7 @@ class NovelText {
   final Function splitter;
 
   // 获取当前页函数
-  final Function getCuttentPage;
+  final Function getCurrentPage;
 
   final _pages = <TextPage>[];
 
@@ -45,7 +45,7 @@ class NovelText {
       required this.chapterName,
       required this.bookName,
       required this.tickerProvider,
-      required this.getCuttentPage,
+      required this.getCurrentPage,
       this.splitter = _splitParagraphs}) {
     final paragraphs = splitter(text);
     final size = ui.window.physicalSize / ui.window.devicePixelRatio;
@@ -231,13 +231,21 @@ class NovelText {
               index: i,
               textPage: _pages[i],
               controller: _controllers[i],
-              getCurrentPage: getCuttentPage),
+              getCurrentPage: getCurrentPage),
         )
     ].reversed.toList();
   }
 
   // 获取全部的控制器
   List<AnimationController> get controllers => _controllers;
+
+  List get chapters {
+    final arr = [];
+    for (var i = 0; i < _pages.length; i++) {
+      arr.add({'text': pages[i], 'ctrl': controllers[i]});
+    }
+    return arr;
+  }
 
   // 默认的段落分割函数
   static List<String> _splitParagraphs(String text) {

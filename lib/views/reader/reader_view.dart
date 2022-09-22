@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/modals/chapter.dart';
+import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/reader/reader_model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../current.dart';
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
@@ -17,13 +20,17 @@ class _ReaderViewState extends ConsumerState<ReaderView>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    ref.listen<Current>(currentProvider, (Current? oldValue, Current newValue) {
+      currentListener(oldValue, newValue, this, ref);
+    });
     final AsyncValue<List<Chapter>> catalog =
         ref.watch(catalogProvider(widget.aid));
-    final List<Widget> chapters = ref.watch(chaptersProvider);
+    final List<dynamic> chapters = ref.watch(chaptersProvider);
+    Log.d("重构了哦");
     return Material(
         child: catalog.when(
       data: (data) {
-        ref.watch(readerProvider(this));
+        // ref.watch(readerProvider(this));
         return GestureDetector(
           behavior: HitTestBehavior.opaque,
           child: Stack(
@@ -33,7 +40,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
                 width: double.infinity,
                 height: double.infinity,
               ),
-              ...chapters,
+              ...(chapters.map((c) => c["text"]).toList()),
             ],
           ),
           onTapUp: (detail) {
