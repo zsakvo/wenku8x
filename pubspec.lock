@@ -404,10 +404,10 @@ packages:
   settings_ui:
     dependency: "direct main"
     description:
-      name: settings_ui
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.2"
+      path: "modules/settings_ui"
+      relative: true
+    source: path
+    version: "2.0.3"
   sky_engine:
     dependency: transitive
     description: flutter

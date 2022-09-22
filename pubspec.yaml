@@ -51,7 +51,8 @@ dependencies:
   flutter_screenutil: ^5.5.4
   flash: ^2.0.3+3
   flutter_displaymode: ^0.3.2
-  settings_ui: ^2.0.2
+  settings_ui: 
+    path: modules/settings_ui
 
 dev_dependencies:
   flutter_test:

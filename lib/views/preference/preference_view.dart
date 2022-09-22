@@ -14,7 +14,9 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         centerTitle: false,
         title: const Text("设置"),
         leading: IconButton(
@@ -28,18 +30,18 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
         platform: DevicePlatform.android,
         sections: [
           SettingsSection(
-            title: Text('Common'),
+            title: const Text('平台特性'),
             tiles: <SettingsTile>[
               SettingsTile.navigation(
-                leading: Icon(Icons.language),
-                title: Text('Language'),
-                value: Text('English'),
+                leading: const Icon(Icons.disabled_visible),
+                title: const Text('帧率与分辨率'),
+                value: const Text('默认'),
               ),
               SettingsTile.switchTile(
                 onToggle: (value) {},
                 initialValue: true,
-                leading: Icon(Icons.format_paint),
-                title: Text('Enable custom theme'),
+                leading: const Icon(Icons.color_lens_outlined),
+                title: const Text('主题色跟随系统'),
               ),
             ],
           ),
