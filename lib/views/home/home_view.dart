@@ -42,6 +42,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(30)),
             child: InkWell(
+              hoverColor: Colors.transparent,
+              splashColor: Colors.transparent,
+              highlightColor: Colors.transparent,
               child: Row(
                 children: [
                   IconButton(
@@ -54,6 +57,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                   )),
                   ClipOval(
                       child: InkWell(
+                    borderRadius: BorderRadius.circular(50),
                     child: CachedNetworkImage(
                       imageUrl:
                           "https://avatars.githubusercontent.com/u/6316115?v=4",
@@ -420,6 +424,8 @@ customDialog(BuildContext context) {
                     padding: const EdgeInsets.only(right: 16),
                     child: ClipOval(
                         child: InkWell(
+                      splashColor: Colors.transparent,
+                      highlightColor: Colors.transparent,
                       child: CachedNetworkImage(
                         imageUrl:
                             "https://avatars.githubusercontent.com/u/6316115?v=4",

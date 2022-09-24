@@ -12,6 +12,7 @@ class Current {
   int cIndex;
   String? chapterName;
   AnimationController? controller;
+  final dynamic chapter;
 
   Current(
       {this.aid,
@@ -21,11 +22,12 @@ class Current {
       required this.pages,
       required this.cIndex,
       this.chapterName,
-      this.controller});
+      this.controller,
+      this.chapter});
 
   @override
   String toString() {
-    return 'Current(aid: $aid, cid: $cid, nextCid: $nextCid, page: $page, pages: $pages, cIndex: $cIndex, chapterName: $chapterName, controller: $controller)';
+    return 'Current(aid: $aid, cid: $cid, nextCid: $nextCid, page: $page, pages: $pages, cIndex: $cIndex, chapterName: $chapterName, controller: $controller, chapter: $chapter)';
   }
 
   factory Current.fromMap(Map<String, dynamic> data) => Current(
@@ -37,6 +39,7 @@ class Current {
         cIndex: data['cIndex'] as int,
         chapterName: data['chapterName'] as String?,
         controller: data['controller'] as AnimationController?,
+        chapter: data['chapter'] as dynamic,
       );
 
   Map<String, dynamic> toMap() => {
@@ -47,7 +50,8 @@ class Current {
         'pages': pages,
         'cIndex': cIndex,
         'chapterName': chapterName,
-        'controller': controller
+        'controller': controller,
+        'chapter': chapter
       };
 
   /// `dart:convert`
@@ -62,26 +66,26 @@ class Current {
   /// Converts [Current] to a JSON string.
   String toJson() => json.encode(toMap());
 
-  Current copyWith({
-    String? aid,
-    String? cid,
-    String? nextCid,
-    int? page,
-    int? pages,
-    int? cIndex,
-    String? chapterName,
-    AnimationController? controller,
-  }) {
+  Current copyWith(
+      {String? aid,
+      String? cid,
+      String? nextCid,
+      int? page,
+      int? pages,
+      int? cIndex,
+      String? chapterName,
+      AnimationController? controller,
+      dynamic chapter}) {
     return Current(
-      aid: aid ?? this.aid,
-      cid: cid ?? this.cid,
-      nextCid: nextCid ?? this.nextCid,
-      page: page ?? this.page,
-      pages: pages ?? this.pages,
-      cIndex: cIndex ?? this.cIndex,
-      chapterName: chapterName ?? this.chapterName,
-      controller: controller ?? this.controller,
-    );
+        aid: aid ?? this.aid,
+        cid: cid ?? this.cid,
+        nextCid: nextCid ?? this.nextCid,
+        page: page ?? this.page,
+        pages: pages ?? this.pages,
+        cIndex: cIndex ?? this.cIndex,
+        chapterName: chapterName ?? this.chapterName,
+        controller: controller ?? this.controller,
+        chapter: chapter ?? this.chapter);
   }
 
   @override
@@ -100,5 +104,6 @@ class Current {
       pages.hashCode ^
       cIndex.hashCode ^
       chapterName.hashCode ^
-      controller.hashCode;
+      controller.hashCode ^
+      chapter.hashCode;
 }

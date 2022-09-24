@@ -45,6 +45,22 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               ),
             ],
           ),
+          SettingsSection(
+            title: const Text('程序设置'),
+            tiles: <SettingsTile>[
+              SettingsTile.navigation(
+                leading: const Icon(Icons.delete_outline),
+                title: const Text('清理缓存'),
+                value: const Text('已缓存 100MB'),
+              ),
+              SettingsTile.switchTile(
+                onToggle: (value) {},
+                initialValue: true,
+                leading: const Icon(Icons.swap_horiz_outlined),
+                title: const Text('简繁转换'),
+              ),
+            ],
+          ),
         ],
       ),
     );

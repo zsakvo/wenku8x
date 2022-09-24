@@ -62,13 +62,15 @@ class CurrentNotifier extends StateNotifier<Current> {
   Current get value => state;
 
   previous() {
-    novelControllers[state.page].forward();
+    // novelControllers[state.page].forward();
+    state.chapter["ctrl"].forward();
     // state.page--;
     state = state.copyWith(page: state.page - 1);
   }
 
   next() {
-    novelControllers[state.page].reverse();
+    // novelControllers[state.page].reverse();
+    state.chapter["ctrl"].reverse();
     // state.page++;
     state = state.copyWith(page: state.page + 1);
     Log.d(novelControllers, 'ctrls');
