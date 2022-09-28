@@ -179,6 +179,7 @@ class ChaptersNotifier extends StateNotifier<List<dynamic>> {
 onPageTap(detail, context, WidgetRef ref) {
   final size = MediaQuery.of(context).size;
   final current = ref.read(currentProvider.notifier);
+
   if (detail.globalPosition.dx < size.width / 2) {
     current.previous();
     // novelControllers[currentPage].forward();
@@ -188,6 +189,17 @@ onPageTap(detail, context, WidgetRef ref) {
     // novelControllers[currentPage].reverse();
     // currentPage++;
   }
+}
+
+onPageTapB(context, detail, AnimationController controller) {
+  Log.d(detail, "detail");
+  final size = MediaQuery.of(context).size;
+  if (detail.globalPosition.dx < size.width / 2) {
+    controller.forward();
+  } else {
+    controller.reverse();
+  }
+  Log.d(controller, "controller");
 }
 
 currentListener(

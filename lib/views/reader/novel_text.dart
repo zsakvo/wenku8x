@@ -237,7 +237,7 @@ class NovelText {
   }
 
   // 获取全部的控制器
-  List<AnimationController> get controllers => _controllers;
+  List<AnimationController> get controllers => _controllers.reversed.toList();
 
   List get chapters {
     final arr = [];

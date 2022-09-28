@@ -31,22 +31,25 @@ class _ReaderViewState extends ConsumerState<ReaderView>
         child: catalog.when(
       data: (data) {
         // ref.watch(readerProvider(this));
-        return GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              const SizedBox(
-                width: double.infinity,
-                height: double.infinity,
-              ),
-              ...(chapters.map((c) => c["text"]).toList()),
-            ],
-          ),
-          onTapUp: (detail) {
-            // Log.d(detail);
-            onPageTap(detail, context, ref);
-          },
+        return Stack(
+          fit: StackFit.expand,
+          children: [
+            const SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+            ),
+            ...(chapters.map((chapter) {
+              var textWidget = chapter["text"];
+              var controller = chapter["ctrl"];
+              return GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                child: textWidget,
+                onTapUp: (detail) {
+                  onPageTapB(context, detail, controller);
+                },
+              );
+            }).toList()),
+          ],
         );
       },
       error: (error, stackTrace) => Text(error.toString()),
