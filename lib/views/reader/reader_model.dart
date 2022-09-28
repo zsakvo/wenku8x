@@ -69,6 +69,7 @@ class CurrentNotifier extends StateNotifier<Current> {
   }
 
   next() {
+    Log.d(state, "state");
     // novelControllers[state.page].reverse();
     state.chapter["ctrl"].reverse();
     // state.page++;
@@ -193,6 +194,7 @@ onPageTap(detail, context, WidgetRef ref) {
 
 onPageTapB(context, detail, AnimationController controller) {
   Log.d(detail, "detail");
+  Log.d(controller, "controller before");
   final size = MediaQuery.of(context).size;
   if (detail.globalPosition.dx < size.width / 2) {
     controller.forward();
