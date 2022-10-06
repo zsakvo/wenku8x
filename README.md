@@ -1,16 +1,7 @@
 # wenku8x
 
-A new Flutter project.
+一个基于 flutter 打造的第三方 轻小说文库 客户端。
 
-## Getting Started
+遵循 MD3 设计，支持 Material You 取色。
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+尚在开发中。。。
