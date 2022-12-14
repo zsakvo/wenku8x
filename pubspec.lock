@@ -348,10 +348,10 @@ packages:
   go_router:
     dependency: "direct main"
     description:
-      path: "modules/go_router"
-      relative: true
-    source: path
-    version: "4.4.1"
+      name: go_router
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "5.2.4"
   graphs:
     dependency: transitive
     description:

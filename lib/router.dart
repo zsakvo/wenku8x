@@ -12,11 +12,14 @@ import 'views/book_detail/book_detail_view.dart';
 
 class AppPages {
   static GoRouter router = GoRouter(
-    key: NavigationService.navigatorKey,
+    navigatorKey: NavigationService.navigatorKey,
     routes: [
       GoRoute(
         path: '/',
         builder: (context, state) => const HomeView(),
+        // redirect: (state) {
+
+        // },
       ),
       GoRoute(
         path: '/login',

@@ -39,8 +39,9 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   dynamic_color: ^1.5.4
-  go_router:
-    path: modules/go_router
+  # go_router:
+  #   path: modules/go_router
+  go_router: ^5.2.4
   hooks_riverpod: ^2.0.0-dev.9
   flutter_hooks: ^0.18.5+1
   dio: ^4.0.6
@@ -54,7 +55,7 @@ dependencies:
   flutter_screenutil: ^5.5.4
   flash: ^2.0.3+3
   flutter_displaymode: ^0.3.2
-  settings_ui: 
+  settings_ui:
     path: modules/settings_ui
 
 dev_dependencies:
