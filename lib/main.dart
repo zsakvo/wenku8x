@@ -9,15 +9,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/http/ajax.dart';
 import 'package:wenku8x/router.dart';
+import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
 import 'package:wenku8x/utils/scroll.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top]);
-  const systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+  const systemUiOverlayStyle =
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);
   if (Platform.isAndroid || Platform.isIOS) {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
@@ -46,11 +45,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static final _defaultLightColorScheme =
-      ColorScheme.fromSwatch(primarySwatch: Colors.blue);
+  static const _defaultLightColorScheme = lightColorScheme;
 
-  static final _defaultDarkColorScheme = ColorScheme.fromSwatch(
-      primarySwatch: Colors.blue, brightness: Brightness.dark);
+  static const _defaultDarkColorScheme = darkColorScheme;
   const MyApp({super.key});
 
   // This widget is the root of your application.
@@ -61,8 +58,7 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return DynamicColorBuilder(
-              builder: (lightColorScheme, darkColorScheme) {
+          return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
             return MaterialApp.router(
               theme: ThemeData(
                 colorScheme: lightColorScheme ?? _defaultLightColorScheme,
@@ -72,8 +68,7 @@ class MyApp extends StatelessWidget {
                 colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
                 useMaterial3: true,
               ),
-              routeInformationProvider:
-                  AppPages.router.routeInformationProvider,
+              routeInformationProvider: AppPages.router.routeInformationProvider,
               routeInformationParser: AppPages.router.routeInformationParser,
               routerDelegate: AppPages.router.routerDelegate,
               scrollBehavior: CustScroll(),
