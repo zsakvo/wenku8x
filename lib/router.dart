@@ -10,11 +10,12 @@ import 'package:wenku8x/views/home/home_view.dart';
 import 'package:wenku8x/views/login/login_view.dart';
 import 'package:wenku8x/views/preference/preference_view.dart';
 import 'package:wenku8x/views/rank/rank_view.dart';
-import 'package:wenku8x/views/reader/reader_view.dart';
+import 'package:wenku8x/views/reader.bak/reader_view.dart';
 import 'package:wenku8x/views/search/search_view.dart';
 import 'package:wenku8x/views/search_result/search_result_view.dart';
 
 import 'views/book_detail/book_detail_view.dart';
+import 'views/reader/reader_view.dart';
 
 class AppPages {
   static GoRouter router = GoRouter(
@@ -67,7 +68,9 @@ class AppPages {
         path: '/reader/:aid',
         builder: (context, state) {
           final aid = state.params['aid']!;
-          return ReaderView(aid);
+          return ReaderView(
+            aid: aid,
+          );
         },
       ),
       GoRoute(
