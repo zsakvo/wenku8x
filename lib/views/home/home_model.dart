@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/case_book.dart';
+import 'package:wenku8x/utils/log.dart';
 
 final drawerToggleProvider = StateNotifierProvider((ref) {
   return DrawerToggle();
@@ -12,8 +14,7 @@ class DrawerToggle extends StateNotifier<bool> {
   void toogle() => !state;
 }
 
-final booksListProvider =
-    StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
+final booksListProvider = StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
   return BookListNotifier();
 });
 
