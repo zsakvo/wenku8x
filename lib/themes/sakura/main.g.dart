@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'color_schemes.g.dart';
 
@@ -44,4 +43,4 @@ class Home extends StatelessWidget {
         floatingActionButton:
             FloatingActionButton(onPressed: () => {}, tooltip: 'Increment'));
   }
-}    
+}

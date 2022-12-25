@@ -26,8 +26,10 @@ class AppPages {
         builder: (context, state) => const HomeView(),
         redirect: (context, state) async {
           Directory appDocDir = await getApplicationDocumentsDirectory();
-          final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
-          final cookies = await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
+          final cookieJar =
+              PersistCookieJar(storage: FileStorage(appDocDir.path));
+          final cookies =
+              await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
           if (cookies.isNotEmpty) {
             return "/";
           } else {

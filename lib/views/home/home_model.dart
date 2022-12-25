@@ -14,7 +14,8 @@ class DrawerToggle extends StateNotifier<bool> {
   void toogle() => !state;
 }
 
-final booksListProvider = StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
+final booksListProvider =
+    StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
   return BookListNotifier();
 });
 

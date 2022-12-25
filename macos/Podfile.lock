@@ -1,10 +1,14 @@
 PODS:
   - dynamic_color (0.0.2):
     - FlutterMacOS
+  - flutter_inappwebview (0.0.1):
+    - FlutterMacOS
+    - OrderedSet (~> 5.0)
   - FlutterMacOS (1.0.0)
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
+  - OrderedSet (5.0.0)
   - path_provider_macos (0.0.1):
     - FlutterMacOS
   - sqflite (0.0.2):
@@ -13,6 +17,7 @@ PODS:
 
 DEPENDENCIES:
   - dynamic_color (from `Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos`)
+  - flutter_inappwebview (from `Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview/macos`)
   - FlutterMacOS (from `Flutter/ephemeral`)
   - path_provider_macos (from `Flutter/ephemeral/.symlinks/plugins/path_provider_macos/macos`)
   - sqflite (from `Flutter/ephemeral/.symlinks/plugins/sqflite/macos`)
@@ -20,10 +25,13 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - FMDB
+    - OrderedSet
 
 EXTERNAL SOURCES:
   dynamic_color:
     :path: Flutter/ephemeral/.symlinks/plugins/dynamic_color/macos
+  flutter_inappwebview:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_inappwebview/macos
   FlutterMacOS:
     :path: Flutter/ephemeral
   path_provider_macos:
@@ -33,8 +41,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   dynamic_color: 394d6a888650f8534e029b27d2f8bc5c64e44008
+  flutter_inappwebview: 62e949df616a9f6e1b0366326381f208c7fcad37
   FlutterMacOS: ae6af50a8ea7d6103d888583d46bd8328a7e9811
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
+  OrderedSet: aaeb196f7fef5a9edf55d89760da9176ad40b93c
   path_provider_macos: 3c0c3b4b0d4a76d2bf989a913c2de869c5641a19
   sqflite: a5789cceda41d54d23f31d6de539d65bb14100ea
 

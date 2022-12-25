@@ -1,5 +1,12 @@
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/modals/current.dart';
+import 'package:wenku8x/views/reader/reader_model.dart';
+
+import 'webview.dart';
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
@@ -12,9 +19,44 @@ class ReaderView extends StatefulHookConsumerWidget {
 class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    bool loading = ref.watch(loadingStatusProvider);
     return Material(
         child: Container(
-      child: Text(widget.aid),
-    ));
+            child: Stack(
+      children: [
+        Listener(
+            onPointerMove: onPointerMove,
+            onPointerUp: (event) => onPointerUp(event, ref),
+            onPointerDown: onPointerDown,
+            behavior: HitTestBehavior.translucent,
+            child: InAppWebView(
+              key: webViewKey,
+              onWebViewCreated: (c) => onWebViewCreated(c, context, ref, widget.aid),
+              onContentSizeChanged: (controller, newSize, oldSize) =>
+                  onContentSizeChanged(controller, newSize, oldSize, ref),
+              gestureRecognizers: {
+                Factory<OneSequenceGestureRecognizer>(
+                  () => LongPressGestureRecognizer(),
+                )
+              },
+              initialSettings: InAppWebViewSettings(
+                  pageZoom: 1,
+                  verticalScrollBarEnabled: false,
+                  horizontalScrollBarEnabled: false,
+                  disableHorizontalScroll: true,
+                  disableVerticalScroll: true),
+            )),
+        loading
+            ? Container(
+                color: const Color(0xffE0CE9D),
+                alignment: Alignment.center,
+                child: const SizedBox(
+                  width: 42,
+                  height: 42,
+                  child: CircularProgressIndicator(),
+                ))
+            : const SizedBox.shrink()
+      ],
+    )));
   }
 }

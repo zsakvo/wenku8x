@@ -74,7 +74,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ),
           ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

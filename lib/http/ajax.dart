@@ -16,7 +16,8 @@ import '../utils/log.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
-  static String UA = "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
+  static String UA =
+      "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
   static const String _APPVER = "1.13";
 
   ///超时时间
@@ -46,9 +47,16 @@ class Ajax {
   static Future<dynamic> post(String param, {bool isXml = true}) async {
     // 判断是否是登陆请求
     bool isLogin = param.contains("action=login");
-    FormData formData = FormData.fromMap(
-        {"appver": _APPVER, "request": _encrypt(param), "timetoken": DateTime.now().millisecondsSinceEpoch});
-    Log.d({"appver": _APPVER, "request": param, "timetoken": DateTime.now().millisecondsSinceEpoch}, "请求参数");
+    FormData formData = FormData.fromMap({
+      "appver": _APPVER,
+      "request": _encrypt(param),
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    });
+    Log.d({
+      "appver": _APPVER,
+      "request": param,
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    }, "请求参数");
     var res = await _client.post("", data: formData);
     if (isXml) {
       try {
@@ -56,7 +64,8 @@ class Ajax {
       } catch (err) {
         Log.e("请求失败，结果为：${res.data}");
         if (res.data == "4") {
-          showErrorToast(NavigationService.navigatorKey.currentContext, "鉴权信息失效，请重新登陆账户");
+          showErrorToast(
+              NavigationService.navigatorKey.currentContext, "鉴权信息失效，请重新登陆账户");
         }
         return null;
       }
