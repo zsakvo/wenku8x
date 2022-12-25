@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/modals/current.dart';
@@ -20,6 +21,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     bool loading = ref.watch(loadingStatusProvider);
+    var currentPage = useState(0);
     return Material(
         child: Container(
             child: Stack(
@@ -31,7 +33,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             behavior: HitTestBehavior.translucent,
             child: InAppWebView(
               key: webViewKey,
-              onWebViewCreated: (c) => onWebViewCreated(c, context, ref, widget.aid),
+              onWebViewCreated: (c) => onWebViewCreated(c, context, ref, widget.aid, currentPage),
               onContentSizeChanged: (controller, newSize, oldSize) =>
                   onContentSizeChanged(controller, newSize, oldSize, ref),
               gestureRecognizers: {

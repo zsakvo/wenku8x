@@ -14,9 +14,12 @@ late BuildContext mContext;
 
 int pageWidth = 0;
 double mDensityFixedWidth = 0.0, mDensityFixedHeight = 0.0;
+late ValueNotifier<int> currentPage;
 
-onWebViewCreated(InAppWebViewController webViewController, BuildContext context, WidgetRef ref, String aid) async {
+onWebViewCreated(InAppWebViewController webViewController, BuildContext context, WidgetRef ref, String aid,
+    ValueNotifier<int> page) async {
   wController = webViewController;
+  currentPage = page;
   mContext = context;
   final fileUrl = await ref.watch(contentProvider(aid).future);
   initReader(fileUrl);
@@ -67,7 +70,6 @@ onPointerDown(PointerDownEvent event) {
 
 double tapUpPos = 0.0;
 onPointerUp(PointerUpEvent event, WidgetRef ref) {
-  Current current = ref.read(currentStatusProvider);
   final currentNotifier = ref.read(currentStatusProvider.notifier);
   if (!gestureListener) return;
   tapUpPos = event.position.dx;
@@ -76,10 +78,18 @@ onPointerUp(PointerUpEvent event, WidgetRef ref) {
   double resAbs = res.abs();
   // Log.d(res);
   if (resAbs > distance) {
-    res < 0 ? currentNotifier.increasePage() : currentNotifier.decreasePage();
+    res < 0
+        ?
+        // currentNotifier.increasePage()
+        currentPage.value++
+        :
+        // currentNotifier.decreasePage();
+        currentPage.value--;
   }
+  Current current = currentNotifier.state;
+  Log.d(current, "zzz");
   Log.d("$pageWidth\n${current.page}", "???");
-  wController.scrollTo(x: (pageWidth * current.page!).round(), y: 0, animated: true);
+  wController.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
 }
 
 setPageWidth(params) {

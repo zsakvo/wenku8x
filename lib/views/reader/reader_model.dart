@@ -218,12 +218,12 @@ class CurrentStatusNotifier extends StateNotifier<Current> {
   }
 
   increasePage() {
+    state.copyWith(page: state.page! + 1);
     Log.d(state, "increaase");
-    state = state.copyWith(page: state.page! + 1);
   }
 
   decreasePage() {
+    state.copyWith(page: state.page! - 1);
     Log.d(state, "decreaase");
-    state = state.copyWith(page: state.page! - 1);
   }
 }
