@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -23,6 +25,7 @@ onWebViewCreated(InAppWebViewController webViewController, BuildContext context,
   mContext = context;
   final fileUrl = await ref.watch(contentProvider(aid).future);
   initReader(fileUrl);
+  mMargin[0] = MediaQuery.of(context).padding.top + 320;
   wController.addJavaScriptHandler(
       handlerName: "NotifySize",
       callback: (params) {
