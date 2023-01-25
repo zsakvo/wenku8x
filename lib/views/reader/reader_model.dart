@@ -39,7 +39,7 @@ initBookDir(String aid) async {
   if (!bookDir.existsSync()) bookDir.createSync();
 }
 
-const libsPath = "../../libs";
+const libsPath = "../../reader.js";
 const layoutStyle = 1;
 const flowStyle = 1;
 const currentTheme = "亚麻";
@@ -61,7 +61,7 @@ String getPageString(String title, content) {
   <title>$title</title>
 </head>
 <body>
-  <h3 class="title" style="padding:48px 0 18px 0;">$title</h3>
+  <h3 class="title" style="padding:28px 0 28px 0;">$title</h3>
   <div class="content">$content</div>
 </body>
 </html>
@@ -79,31 +79,29 @@ String getPageString(String title, content) {
     i = indexOf2 > -1 ? indexOf2 + 1 : 0;
   }
   String str = """
-        <script type='text/javascript' src='$libsPath/js/app.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/lib/rangy-core.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/lib/rangy-classapplier.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/lib/rangy-highlighter.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/lib/rangy-textrange.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/lib/webfontloader.js'></script>
-        <script type='text/javascript' src='$libsPath/js/epub.js'></script>
-        <script type='text/javascript' src='$libsPath/js/annotations.js' defer=''></script>
-        <script type='text/javascript' src='$libsPath/js/themes.js'></script>""";
+        <script type='text/javascript' src='$libsPath' defer=''></script>""";
+  // if (layoutStyle == 1) {
+  //   str =
+  //       "$str<link href='$libsPath/css/default.css' rel='stylesheet' type='text/css' data-exclude-from-footnote='true'></link>";
+  //   if (flowStyle == 2) {
+  //     str = "$str<link href='$libsPath/css/scrolled.css' rel='stylesheet' type='text/css'></link>";
+  //   }
+  // }
+  str = "$str<script type='text/javascript'>";
   if (layoutStyle == 1) {
-    str =
-        "$str<link href='$libsPath/css/default.css' rel='stylesheet' type='text/css' data-exclude-from-footnote='true'></link>";
-    if (flowStyle == 2) {
-      str = "$str<link href='$libsPath/css/scrolled.css' rel='stylesheet' type='text/css'></link>";
-    }
+    str = """${str}document.addEventListener('DOMContentLoaded', function() {   setTimeout(() => {
+          ReaderJs.setPageProperties({  topPos: 40,
+          bottomPos: 24,  layoutStyle: $layoutStyle,    flowStyle: $flowStyle,    tocAnchorList: [],    paperPageToAnchorMap: {},    apiLevel: ${23}, bookName:'测试书籍名称'});
+           ReaderJs.setMarginHorizontal(24);    ReaderJs.setMarginVertical(90);      /*ReaderJs.setFontSize($fontSize);*/      ReaderJs.setLineSpacing($mLineSpacing);   ReaderJs.setTextAlign($mTextAlign);
+     
+      ReaderThemes.set({
+          backgroundColor: "f7f1e8",
+          textColor: "black",
+          linkColor: "black"
+        });
+      })});</script>""";
   }
-  str =
-      "$str<script type='text/javascript'>LithiumJs.setPageProperties({    layoutStyle: $layoutStyle,    flowStyle: $flowStyle,    tocAnchorList: [],    paperPageToAnchorMap: {},    apiLevel: ${23},});";
-  if (layoutStyle == 1) {
-    str =
-        """${str}document.addEventListener('DOMContentLoaded', function() {   LithiumJs.setMargin(${mMargin.join(",")});       LithiumJs.setFontSize($fontSize);      LithiumJs.setLineSpacing($mLineSpacing);   LithiumJs.setTextAlign($mTextAlign); setTimeout(() => {
-       ${getThemeCode()}
-      })});""";
-  }
-  str = "$str</script><style type='text/css' id='__LithiumThemeStyle'></style>";
+  // str = "$str</script><style type='text/css' id='__LithiumThemeStyle'></style>";
   return pageStr.substring(0, i) + str + pageStr.substring(i);
 }
 
@@ -112,7 +110,7 @@ getThemeCode() {
   var textColor = ReaderThemes[currentTheme]!["textColor"]!.toRadixString(16).replaceAll("ff", "");
 
   return """
- LithiumThemes.set({
+ ReaderThemes.set({
           backgroundColor: "$bgColor",
           textColor: "$textColor",
           linkColor: "black"

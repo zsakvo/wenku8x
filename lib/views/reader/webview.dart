@@ -26,12 +26,18 @@ onWebViewCreated(InAppWebViewController webViewController, BuildContext context,
   final fileUrl = await ref.watch(contentProvider(aid).future);
   initReader(fileUrl);
   mMargin[0] = MediaQuery.of(context).padding.top + 320;
+  // wController.addJavaScriptHandler(
+  //     handlerName: "NotifySize",
+  //     callback: (params) {
+  //       Log.d(params, "notifySize");
+  //       ref.read(loadingStatusProvider.notifier).increase();
+  //       setPageWidth(params);
+  //     });
   wController.addJavaScriptHandler(
-      handlerName: "NotifySize",
+      handlerName: "onBookReady",
       callback: (params) {
-        Log.d(params, "notifySize");
-        ref.read(loadingStatusProvider.notifier).increase();
-        setPageWidth(params);
+        Log.d(params, "onBookReady");
+        ref.read(loadingStatusProvider.notifier).toggle();
       });
 }
 
