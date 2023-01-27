@@ -7,7 +7,7 @@ import Foundation
 
 import dynamic_color
 import flutter_inappwebview
-import path_provider_macos
+import path_provider_foundation
 import sqflite
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
