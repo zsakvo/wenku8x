@@ -26,17 +26,14 @@ onWebViewCreated(InAppWebViewController webViewController, BuildContext context,
   final fileUrl = await ref.watch(contentProvider(aid).future);
   initReader(fileUrl);
   mMargin[0] = MediaQuery.of(context).padding.top + 320;
-  // wController.addJavaScriptHandler(
-  //     handlerName: "NotifySize",
-  //     callback: (params) {
-  //       Log.d(params, "notifySize");
-  //       ref.read(loadingStatusProvider.notifier).increase();
-  //       setPageWidth(params);
-  //     });
+  wController.addJavaScriptHandler(
+      handlerName: "notifySize",
+      callback: (params) {
+        setPageWidth(params);
+      });
   wController.addJavaScriptHandler(
       handlerName: "onBookReady",
       callback: (params) {
-        Log.d(params, "onBookReady");
         ref.read(loadingStatusProvider.notifier).toggle();
       });
 }
@@ -86,23 +83,26 @@ onPointerUp(PointerUpEvent event, WidgetRef ref) {
   double res = (tapUpPos - tapDownPos);
   double resAbs = res.abs();
   // Log.d(res);
+  Log.d(resAbs, "resAbs");
+  Log.d(res, "res");
   if (resAbs > distance) {
-    res < 0
-        ?
-        // currentNotifier.increasePage()
-        currentPage.value++
-        :
-        // currentNotifier.decreasePage();
-        currentPage.value--;
+    if (res < 0) {
+      currentNotifier.increasePage();
+      // currentPage.value++;
+    } else {
+      currentNotifier.decreasePage();
+      // currentPage.value--;
+    }
   }
-  Current current = currentNotifier.state;
-  Log.d(current, "zzz");
-  Log.d("$pageWidth\n${current.page}", "???");
+  // Current current = currentNotifier.state;
+  Log.d(currentNotifier.state.page, "zzz");
+  // Log.d("$pageWidth\n${current.page}", "???");
   wController.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
 }
 
 setPageWidth(params) {
   // loadTmp++;
+  Log.d(params, "setpw");
   double pixelRatio = MediaQuery.of(mContext).devicePixelRatio;
   pageWidth = ((Platform.isIOS ? 1 : pixelRatio) * params[0]).round();
   final double notifyWidth = params[0] * 1.0;
