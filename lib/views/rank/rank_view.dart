@@ -30,30 +30,9 @@ class _RankViewState extends ConsumerState<RankView> {
   @override
   Widget build(BuildContext context) {
     final type = widget.type;
-    Log.d(type);
     final List<ListBook> booksList = ref.watch(booksListProvider);
 
     return Scaffold(
-      // appBar: AppBar(
-      //     leading: IconButton(
-      //       icon: Icon(
-      //         Icons.arrow_back,
-      //         size: 40.sp,
-      //       ),
-      //       onPressed: () {
-      //         GoRouter.of(context).pop();
-      //       },
-      //     ),
-      //     actions: [
-      //       IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-      //     ],
-      //     centerTitle: false,
-      //     title: Transform.translate(
-      //         offset: Offset(0, -2.sp),
-      //         child: Text(
-      //           RankMap[type]!,
-      //           style: TextStyle(fontSize: 32.sp),
-      //         ))),
       body: EasyRefresh(
           onRefresh: () => ref.read(booksListProvider.notifier).refresh(widget.type),
           onLoad: () => ref.read(booksListProvider.notifier).loadMore(widget.type),
