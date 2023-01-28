@@ -5,10 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/modals/case_book.dart';
+import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/home/home_model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wenku8x/widgets/list_book.dart';
+
+const ranks = [
+  {"icon": Icons.pan_tool_alt_outlined, "title": "点击"},
+  {"icon": Icons.thumb_up_alt_outlined, "title": "推荐"},
+  {"icon": Icons.file_open_outlined, "title": "收藏"},
+  {"icon": Icons.edit_road_outlined, "title": "字数"},
+  {"icon": Icons.school_outlined, "title": "完结"},
+  {"icon": Icons.av_timer_outlined, "title": "新书"},
+];
 
 class HomeView extends StatefulHookConsumerWidget {
   const HomeView({Key? key}) : super(key: key);
@@ -40,12 +50,18 @@ class _HomeViewState extends ConsumerState<HomeView> {
             SliverAppBar(
                 expandedHeight: 136,
                 pinned: true,
+                automaticallyImplyLeading: false,
                 actions: [
+                  // IconButton(
+                  //     onPressed: () {
+                  //       GoRouter.of(context).push("/preference");
+                  //     },
+                  //     icon: const Icon(Icons.settings)),
                   IconButton(
                       onPressed: () {
-                        GoRouter.of(context).push("/preference");
+                        _scaffoldKey.currentState!.openDrawer();
                       },
-                      icon: const Icon(Icons.settings))
+                      icon: Icon(Icons.menu))
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
@@ -72,6 +88,80 @@ class _HomeViewState extends ConsumerState<HomeView> {
                     .toList()))),
             const FooterLocator.sliver(),
           ])),
+      drawer: NavigationDrawer(
+        selectedIndex: -1,
+        onDestinationSelected: (value) {
+          Log.d(value, "vvvv");
+          switch (value) {
+            case 2:
+              GoRouter.of(context).push("/rank/allvisit");
+              break;
+            case 8:
+              GoRouter.of(context).push("/preference");
+              break;
+          }
+          _scaffoldKey.currentState!.closeDrawer();
+        },
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.fromLTRB(28, MediaQuery.of(context).padding.top + 16, 16, 10),
+            child: Text(
+              '常用',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          const NavigationDrawerDestination(
+            label: Text("搜索"),
+            icon: Icon(Icons.search),
+            selectedIcon: Icon(Icons.search),
+          ),
+          const NavigationDrawerDestination(
+            label: Text("历史"),
+            icon: Icon(Icons.settings_backup_restore),
+            selectedIcon: Icon(Icons.settings_backup_restore),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 8, 28, 8),
+            child: Divider(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              '排行',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          ...ranks
+              .map((rank) => NavigationDrawerDestination(
+                    label: Text(rank["title"].toString()),
+                    icon: Icon(rank["icon"] as IconData),
+                  ))
+              .toList(),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 8, 28, 8),
+            child: Divider(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.4),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
+            child: Text(
+              '应用',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+          ),
+          const NavigationDrawerDestination(
+            label: Text("设置"),
+            icon: Icon(Icons.settings_outlined),
+          ),
+          const NavigationDrawerDestination(
+            label: Text("关于"),
+            icon: Icon(Icons.help_outline),
+          ),
+        ],
+      ),
     );
   }
 }
