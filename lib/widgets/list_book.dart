@@ -19,7 +19,7 @@ Widget ListBookTile(context,
   }
   return InkWell(
     child: Container(
-      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(children: [
         CachedNetworkImage(
           imageUrl: cover,
@@ -33,22 +33,21 @@ Widget ListBookTile(context,
           padding: const EdgeInsets.only(left: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: desc3 != null
-                ? MainAxisAlignment.spaceBetween
-                : MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Expanded(
-                  child: Container(
+              Container(
                 alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(bottom: 16),
                 child: Text(
                   name,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                      fontSize: titleSize,
-                      color: Theme.of(context).colorScheme.onBackground),
+                    fontSize: titleSize,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                 ),
-              )),
+              ),
               Text(
                 desc1,
                 maxLines: 1,
@@ -56,10 +55,7 @@ Widget ListBookTile(context,
                 style: TextStyle(
                     fontSize: descSize,
                     height: 1.4,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5)),
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
               ),
               desc2 != null
                   ? Text(
@@ -69,10 +65,7 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5)),
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
                     )
                   : const SizedBox.shrink(),
               desc3 != null
@@ -83,10 +76,7 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5)),
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
                     )
                   : const SizedBox.shrink()
             ],

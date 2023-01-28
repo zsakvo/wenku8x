@@ -16,15 +16,14 @@ import 'package:wenku8x/utils/scroll.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
-      overlays: [SystemUiOverlay.top]);
-  const systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+  const systemUiOverlayStyle =
+      SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);
   if (Platform.isAndroid || Platform.isIOS) {
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
   EasyRefresh.defaultHeaderBuilder = () => const ClassicHeader(
+      position: IndicatorPosition.locator,
       dragText: "下拉刷新",
       armedText: "释放开始",
       readyText: "刷新中……",
@@ -34,6 +33,7 @@ void main() async {
       failedText: "失败了",
       messageText: "最后更新于 %T");
   EasyRefresh.defaultFooterBuilder = () => const ClassicFooter(
+        position: IndicatorPosition.locator,
         dragText: '上拉加载',
         armedText: '释放开始',
         readyText: '加载中...',
@@ -65,8 +65,7 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
-          return DynamicColorBuilder(
-              builder: (lightColorScheme, darkColorScheme) {
+          return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
             return MaterialApp.router(
               theme: ThemeData(
                 colorScheme: lightColorScheme ?? _defaultLightColorScheme,
@@ -76,8 +75,7 @@ class MyApp extends StatelessWidget {
                 colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
                 useMaterial3: true,
               ),
-              routeInformationProvider:
-                  AppPages.router.routeInformationProvider,
+              routeInformationProvider: AppPages.router.routeInformationProvider,
               routeInformationParser: AppPages.router.routeInformationParser,
               routerDelegate: AppPages.router.routerDelegate,
               scrollBehavior: CustScroll(),

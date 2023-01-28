@@ -60,6 +60,7 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+    namespace 'cc.zsakvo.wenku8x'
 }
 
 flutter {
