@@ -23,13 +23,13 @@ Widget ListBookTile(context,
       child: Row(children: [
         CachedNetworkImage(
           imageUrl: cover,
-          width: 72,
-          height: 100,
+          width: 76,
+          height: 110,
           fit: BoxFit.cover,
         ),
         Expanded(
             child: Container(
-          height: 100,
+          height: 110,
           padding: const EdgeInsets.only(left: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

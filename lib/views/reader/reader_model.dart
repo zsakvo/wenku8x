@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/modals/chapter.dart';
@@ -9,6 +10,11 @@ import 'package:wenku8x/utils/log.dart';
 
 import '../../http/api.dart';
 import '../../modals/current.dart';
+
+final loading = useState(true);
+final currentPage = useState(0);
+double statusBarHeight = 0.0;
+double bottomBarHeight = 0.0;
 
 final catalogProvider = FutureProvider.autoDispose.family<List<Chapter>, dynamic>(
   (ref, aid) async {
@@ -89,39 +95,30 @@ String getPageString(String title, content) {
   // }
   str = "$str<script type='text/javascript'>";
   if (layoutStyle == 1) {
-    str = """${str}document.addEventListener('DOMContentLoaded', function() {   setTimeout(() => {
-          ReaderJs.setPageProperties({  topPos: 40,
-          bottomPos: 24,  layoutStyle: $layoutStyle,    flowStyle: $flowStyle,    tocAnchorList: [],    paperPageToAnchorMap: {},    apiLevel: ${23}, bookName:'测试书籍名称'});
-           ReaderJs.setMarginHorizontal(24);    ReaderJs.setMarginVertical(90);      /*ReaderJs.setFontSize($fontSize);*/      ReaderJs.setLineSpacing($mLineSpacing);   ReaderJs.setTextAlign($mTextAlign);
-     
-      ReaderThemes.set({
-          backgroundColor: "f7f1e8",
-          textColor: "black",
-          linkColor: "black"
-        });
-      })});</script>""";
+    str = """$str
+    document.addEventListener('DOMContentLoaded', function () {
+      setTimeout(() => {
+        ReaderJs.initConfig({
+          layoutStyle: 1,
+          flowStyle: 1,
+          marginHorizontal: 18,
+          marginVertical: 18,
+          textAlign: 2,
+          lineSpacing: 1.4,
+          backgroundColor: 'f7f1e8',
+          textColor: 'black',
+          linkColor: 'black',
+          font: '',
+          topExtraHeight: $statusBarHeight,
+          bottomExtraHeight: $bottomBarHeight,
+          bookName: '狼与香辛料',
+          chapterName: "第一幕"
+        })
+      })
+    })</script>""";
   }
   // str = "$str</script><style type='text/css' id='__LithiumThemeStyle'></style>";
   return pageStr.substring(0, i) + str + pageStr.substring(i);
-}
-
-getThemeCode() {
-  var bgColor = ReaderThemes[currentTheme]!["backgroundColor"]!.toRadixString(16).replaceAll("ff", "");
-  var textColor = ReaderThemes[currentTheme]!["textColor"]!.toRadixString(16).replaceAll("ff", "");
-
-  return """
- ReaderThemes.set({
-          backgroundColor: "$bgColor",
-          textColor: "$textColor",
-          linkColor: "black"
-        });
-""";
-}
-
-buildCurrent(String aid, List<Chapter> catalog, ref) {
-  ref.read(currentStatusProvider.notifier).set(
-      Current.fromMap({"aid": aid, "page": 0, "cid": catalog[0].cid, "chapter": 0, "chapterName": catalog[0].name}));
-  Log.d(ref.read(currentStatusProvider));
 }
 
 final contentProvider = FutureProvider.autoDispose.family<String, dynamic>(
@@ -131,7 +128,7 @@ final contentProvider = FutureProvider.autoDispose.family<String, dynamic>(
     // });
     initBookDir(aid);
     final catalog = await ref.watch(catalogProvider(aid).future);
-    buildCurrent(aid, catalog, ref);
+    // buildCurrent(aid, catalog, ref);
     Log.d("message:$aid");
     catalog.take(3).forEach((element) {
       Log.d(element.json);
@@ -183,46 +180,3 @@ final ReaderThemes = {
     "indicatorColor": 0xffb0b0b0
   }
 };
-
-final loadingStatusProvider = StateNotifierProvider.autoDispose<LoadingStatus, bool>((ref) {
-  return LoadingStatus();
-});
-
-class LoadingStatus extends StateNotifier<bool> {
-  LoadingStatus() : super(true);
-  int count = 0;
-  void toggle() => state = !state;
-  void increase() {
-    count++;
-    Log.d(count, "计数");
-    if (count == 2) state = false;
-  }
-
-  void clear() {
-    count = 0;
-    state = true;
-  }
-}
-
-final currentStatusProvider = StateNotifierProvider.autoDispose<CurrentStatusNotifier, Current>(
-  (ref) {
-    return CurrentStatusNotifier();
-  },
-);
-
-class CurrentStatusNotifier extends StateNotifier<Current> {
-  CurrentStatusNotifier() : super(const Current(page: 0));
-  set(Current _current) {
-    state = _current;
-  }
-
-  increasePage() {
-    state.copyWith(page: state.page! + 1);
-    Log.d(state, "increaase");
-  }
-
-  decreasePage() {
-    state.copyWith(page: state.page! - 1);
-    Log.d(state, "decreaase");
-  }
-}

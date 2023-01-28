@@ -18,14 +18,17 @@ int pageWidth = 0;
 double mDensityFixedWidth = 0.0, mDensityFixedHeight = 0.0;
 late ValueNotifier<int> currentPage;
 
-onWebViewCreated(InAppWebViewController webViewController, BuildContext context, WidgetRef ref, String aid,
-    ValueNotifier<int> page) async {
+onWebViewCreated(
+  InAppWebViewController webViewController,
+  BuildContext context,
+  WidgetRef ref,
+  String aid,
+) async {
   wController = webViewController;
-  currentPage = page;
   mContext = context;
   final fileUrl = await ref.watch(contentProvider(aid).future);
   initReader(fileUrl);
-  mMargin[0] = MediaQuery.of(context).padding.top + 320;
+  // mMargin[0] = MediaQuery.of(context).padding.top + 320;
   wController.addJavaScriptHandler(
       handlerName: "notifySize",
       callback: (params) {
@@ -34,7 +37,8 @@ onWebViewCreated(InAppWebViewController webViewController, BuildContext context,
   wController.addJavaScriptHandler(
       handlerName: "onBookReady",
       callback: (params) {
-        ref.read(loadingStatusProvider.notifier).toggle();
+        // ref.read(loadingStatusProvider.notifier).toggle();
+        loading.value = false;
       });
 }
 
@@ -76,7 +80,7 @@ onPointerDown(PointerDownEvent event) {
 
 double tapUpPos = 0.0;
 onPointerUp(PointerUpEvent event, WidgetRef ref) {
-  final currentNotifier = ref.read(currentStatusProvider.notifier);
+  // final currentNotifier = ref.read(currentStatusProvider.notifier);
   if (!gestureListener) return;
   tapUpPos = event.position.dx;
   Log.d(tapUpPos, "tapUpPos");
@@ -87,15 +91,15 @@ onPointerUp(PointerUpEvent event, WidgetRef ref) {
   Log.d(res, "res");
   if (resAbs > distance) {
     if (res < 0) {
-      currentNotifier.increasePage();
-      // currentPage.value++;
+      // currentNotifier.increasePage();
+      currentPage.value++;
     } else {
-      currentNotifier.decreasePage();
-      // currentPage.value--;
+      // currentNotifier.decreasePage();
+      currentPage.value--;
     }
   }
   // Current current = currentNotifier.state;
-  Log.d(currentNotifier.state.page, "zzz");
+
   // Log.d("$pageWidth\n${current.page}", "???");
   wController.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
 }
