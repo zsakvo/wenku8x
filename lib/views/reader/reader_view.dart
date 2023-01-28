@@ -46,6 +46,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               },
               initialSettings: InAppWebViewSettings(
                   pageZoom: 1,
+                  userAgent: "ReaderJs/Client",
                   verticalScrollBarEnabled: false,
                   horizontalScrollBarEnabled: false,
                   disableHorizontalScroll: true,
