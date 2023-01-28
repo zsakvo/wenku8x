@@ -36,7 +36,7 @@ final catalogProvider = FutureProvider.autoDispose.family<List<Chapter>, dynamic
 initBookDir(String aid) async {
   final docDir = await getApplicationDocumentsDirectory();
   final bookDir = Directory("${docDir.path}/books/$aid");
-  if (!bookDir.existsSync()) bookDir.createSync();
+  if (!bookDir.existsSync()) bookDir.createSync(recursive: true);
 }
 
 const libsPath = "../../reader.js";
