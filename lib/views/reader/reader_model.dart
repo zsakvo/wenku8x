@@ -18,8 +18,12 @@ final loading = useState(true);
 int currentPage = 0;
 double statusBarHeight = 0.0;
 double bottomBarHeight = 0.0;
+late final Directory docDir;
 
 fetchCatalog(String aid) async {
+  docDir = await getApplicationDocumentsDirectory();
+  final dir = Directory("${docDir.path}/books/$aid");
+  if (!dir.existsSync()) dir.createSync(recursive: true);
   List<Chapter> chapters = [];
   var res = await API.getNovelIndex(aid);
   if (res != null) {
@@ -50,7 +54,6 @@ Future<String> fetchContent(String aid, String cid, String chapterName) async {
   arr.removeRange(0, 2);
   String content = arr.map((e) => """<p>$e</p>""").join("\n");
   String html = getPageString(chapterName, content);
-  final docDir = await getApplicationDocumentsDirectory();
   final file = File("${docDir.path}/books/$aid/$cid.html");
   file.writeAsStringSync(html);
   return "file://${file.path}";
