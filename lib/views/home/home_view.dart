@@ -107,7 +107,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             padding: EdgeInsets.fromLTRB(28, MediaQuery.of(context).padding.top + 16, 16, 10),
             child: Text(
               '常用',
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
           ),
           const NavigationDrawerDestination(
@@ -130,7 +130,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
             child: Text(
               '排行',
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
           ),
           ...ranks
@@ -149,7 +149,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
             padding: const EdgeInsets.fromLTRB(28, 16, 16, 10),
             child: Text(
               '应用',
-              style: Theme.of(context).textTheme.titleSmall,
+              style: Theme.of(context).textTheme.titleSmall?.copyWith(color: Theme.of(context).colorScheme.primary),
             ),
           ),
           const NavigationDrawerDestination(
