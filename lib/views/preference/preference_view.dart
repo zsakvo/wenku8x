@@ -22,8 +22,7 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(slivers: [
-        SliverAppBar(
-            expandedHeight: 140,
+        SliverAppBar.large(
             pinned: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),

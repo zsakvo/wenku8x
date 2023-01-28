@@ -47,21 +47,15 @@ class _HomeViewState extends ConsumerState<HomeView> {
             ref.read(booksListProvider.notifier).refresh();
           },
           child: CustomScrollView(slivers: [
-            SliverAppBar(
-                expandedHeight: 136,
+            SliverAppBar.large(
                 pinned: true,
                 automaticallyImplyLeading: false,
                 actions: [
-                  // IconButton(
-                  //     onPressed: () {
-                  //       GoRouter.of(context).push("/preference");
-                  //     },
-                  //     icon: const Icon(Icons.settings)),
                   IconButton(
                       onPressed: () {
                         _scaffoldKey.currentState!.openDrawer();
                       },
-                      icon: Icon(Icons.menu))
+                      icon: const Icon(Icons.menu))
                 ],
                 flexibleSpace: FlexibleSpaceBar(
                   title: Text(
@@ -96,6 +90,22 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case 2:
               GoRouter.of(context).push("/rank/allvisit");
               break;
+            case 3:
+              GoRouter.of(context).push("/rank/allvote");
+              break;
+            case 4:
+              GoRouter.of(context).push("/rank/allvisit");
+              break;
+            case 5:
+              GoRouter.of(context).push("/rank/size");
+              break;
+            case 6:
+              GoRouter.of(context).push("/rank/fullflag");
+              break;
+            case 7:
+              GoRouter.of(context).push("/rank/postdate");
+              break;
+
             case 8:
               GoRouter.of(context).push("/preference");
               break;
