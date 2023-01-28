@@ -26,8 +26,8 @@ onWebViewCreated(
 ) async {
   wController = webViewController;
   mContext = context;
-  final fileUrl = await ref.watch(contentProvider(aid).future);
-  initReader(fileUrl);
+  // final fileUrl = await ref.watch(contentProvider(aid).future);
+  // initReader(fileUrl);
   // mMargin[0] = MediaQuery.of(context).padding.top + 320;
   wController.addJavaScriptHandler(
       handlerName: "notifySize",

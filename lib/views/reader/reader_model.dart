@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/modals/chapter.dart';
@@ -10,34 +11,53 @@ import 'package:wenku8x/utils/log.dart';
 
 import '../../http/api.dart';
 import '../../modals/current.dart';
+import 'webview.dart';
 
 final loading = useState(true);
 final currentPage = useState(0);
 double statusBarHeight = 0.0;
 double bottomBarHeight = 0.0;
 
-final catalogProvider = FutureProvider.autoDispose.family<List<Chapter>, dynamic>(
-  (ref, aid) async {
-    List<Chapter> chapters = [];
-    var res = await API.getNovelIndex(aid);
-    if (res != null) {
-      for (var element in res.children[2].children) {
-        if (element.toString().length > 2) {
-          int i = 0;
-          for (var node in element.children) {
-            if (node.toString().length > 2) {
-              if (i != 0) {
-                chapters.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
-              }
+fetchCatalog(String aid) async {
+  List<Chapter> chapters = [];
+  var res = await API.getNovelIndex(aid);
+  if (res != null) {
+    for (var element in res.children[2].children) {
+      if (element.toString().length > 2) {
+        int i = 0;
+        for (var node in element.children) {
+          if (node.toString().length > 2) {
+            if (i != 0) {
+              chapters.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
             }
-            i++;
           }
+          i++;
         }
       }
     }
-    return chapters;
-  },
-);
+    chapters.take(3).forEach((element) {
+      Log.d(element.json);
+    });
+    var uri = await fetchContent(aid, chapters[0].cid, chapters[0].name);
+    setReader(uri);
+  }
+}
+
+Future<String> fetchContent(String aid, String cid, String chapterName) async {
+  var res = await API.getNovelContent(aid, cid);
+  List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
+  arr.removeRange(0, 2);
+  String content = arr.map((e) => """<p>$e</p>""").join("\n");
+  String html = getPageString(chapterName, content);
+  final docDir = await getApplicationDocumentsDirectory();
+  final file = File("${docDir.path}/books/$aid/$cid.html");
+  file.writeAsStringSync(html);
+  return "file://${file.path}";
+}
+
+setReader(String fileUrl) {
+  wController.loadUrl(urlRequest: URLRequest(url: WebUri(fileUrl)));
+}
 
 initBookDir(String aid) async {
   final docDir = await getApplicationDocumentsDirectory();
@@ -120,33 +140,6 @@ String getPageString(String title, content) {
   // str = "$str</script><style type='text/css' id='__LithiumThemeStyle'></style>";
   return pageStr.substring(0, i) + str + pageStr.substring(i);
 }
-
-final contentProvider = FutureProvider.autoDispose.family<String, dynamic>(
-  (ref, aid) async {
-    // final catalog = ref.watch(catalogProvider(aid)).whenData<List<Chapter>>((value) {
-    //   return value;
-    // });
-    initBookDir(aid);
-    final catalog = await ref.watch(catalogProvider(aid).future);
-    // buildCurrent(aid, catalog, ref);
-    Log.d("message:$aid");
-    catalog.take(3).forEach((element) {
-      Log.d(element.json);
-    });
-    // await Future.delayed(Duration(seconds: 3));
-    var res = await API.getNovelContent(aid, catalog[0].cid);
-    List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
-    String title = catalog[0].name;
-    arr.removeRange(0, 2);
-    String content = arr.map((e) => """<p style="text-align:justify;">$e</p>""").join("\n");
-    String html = getPageString(title, content);
-    final docDir = await getApplicationDocumentsDirectory();
-    final file = File("${docDir.path}/books/$aid/${catalog[0].cid}.html");
-    file.writeAsStringSync(html);
-    Log.d(file.path);
-    return "file://${file.path}";
-  },
-);
 
 final ReaderThemes = {
   "亚麻": {

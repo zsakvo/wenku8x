@@ -23,6 +23,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     statusBarHeight = padding.top;
     bottomBarHeight = padding.bottom;
     useEffect(() {
+      fetchCatalog(widget.aid);
       return () {};
     }, []);
     return Material(
