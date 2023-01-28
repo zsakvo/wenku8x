@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -14,7 +15,7 @@ import '../../modals/current.dart';
 import 'webview.dart';
 
 final loading = useState(true);
-final currentPage = useState(0);
+int currentPage = 0;
 double statusBarHeight = 0.0;
 double bottomBarHeight = 0.0;
 
@@ -69,12 +70,6 @@ const libsPath = "../../reader.js";
 const layoutStyle = 1;
 const flowStyle = 1;
 const currentTheme = "亚麻";
-// List<double> mMargin = [30.0 + 32, 18.0];
-late List<double> mMargin;
-const mLineSpacing = 1.5;
-const mTextAlign = 0;
-const fontSize = 16.0;
-const textSpace = 1.5;
 
 String getPageString(String title, content) {
   final pageStr = """
@@ -122,7 +117,7 @@ String getPageString(String title, content) {
           layoutStyle: 1,
           flowStyle: 1,
           marginHorizontal: 18,
-          marginVertical: 18,
+          marginVertical: 32,
           textAlign: 2,
           lineSpacing: 1.4,
           backgroundColor: 'f7f1e8',

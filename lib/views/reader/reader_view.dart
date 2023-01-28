@@ -30,9 +30,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         child: Stack(
       children: [
         Listener(
-            // onPointerMove: onPointerMove,
-            // onPointerUp: (event) => onPointerUp(event, ref),
-            // onPointerDown: onPointerDown,
+            onPointerMove: onPointerMove,
+            onPointerUp: (event) => onPointerUp(event, ref),
+            onPointerDown: onPointerDown,
             behavior: HitTestBehavior.translucent,
             child: InAppWebView(
               key: webViewKey,

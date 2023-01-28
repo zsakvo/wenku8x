@@ -16,7 +16,6 @@ late BuildContext mContext;
 
 int pageWidth = 0;
 double mDensityFixedWidth = 0.0, mDensityFixedHeight = 0.0;
-late ValueNotifier<int> currentPage;
 
 onWebViewCreated(
   InAppWebViewController webViewController,
@@ -32,6 +31,7 @@ onWebViewCreated(
   wController.addJavaScriptHandler(
       handlerName: "notifySize",
       callback: (params) {
+        Log.d(params, "ppppp");
         setPageWidth(params);
       });
   wController.addJavaScriptHandler(
@@ -92,16 +92,16 @@ onPointerUp(PointerUpEvent event, WidgetRef ref) {
   if (resAbs > distance) {
     if (res < 0) {
       // currentNotifier.increasePage();
-      currentPage.value++;
+      currentPage++;
     } else {
       // currentNotifier.decreasePage();
-      currentPage.value--;
+      currentPage--;
     }
   }
   // Current current = currentNotifier.state;
 
   // Log.d("$pageWidth\n${current.page}", "???");
-  wController.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+  wController.scrollTo(x: (pageWidth * currentPage).round(), y: 0, animated: true);
 }
 
 setPageWidth(params) {
