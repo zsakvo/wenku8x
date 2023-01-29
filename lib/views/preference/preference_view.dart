@@ -33,12 +33,14 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                 context.pop();
               },
             ),
-            flexibleSpace: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+            flexibleSpace: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
               top = constraints.biggest.height;
               return FlexibleSpaceBar(
                 title: Text(
                   '设置',
-                  style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.titleLarge?.color),
                 ),
                 centerTitle: false,
                 titlePadding: EdgeInsetsDirectional.only(
@@ -56,7 +58,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("动态取色", style: titleStyle),
             onTap: () {
               ref.read(preferenceProvider.notifier).toggleDynamicColor();
@@ -76,7 +79,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("强制高刷", style: titleStyle),
             onTap: () {
               ref.read(preferenceProvider.notifier).toggleHighRefreshRate();
@@ -91,7 +95,9 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               child: Switch(
                   value: config.highRefreshRate!,
                   onChanged: (value) {
-                    ref.read(preferenceProvider.notifier).toggleHighRefreshRate();
+                    ref
+                        .read(preferenceProvider.notifier)
+                        .toggleHighRefreshRate();
                   }),
             ),
           ),
@@ -102,7 +108,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("自动签到", style: titleStyle),
             onTap: () {
               ref.read(preferenceProvider.notifier).toggleAutoSign();
@@ -122,7 +129,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("简繁转换", style: titleStyle),
             onTap: () {
               ref.read(preferenceProvider.notifier).toggleTraditionalChinese();
@@ -137,12 +145,15 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               child: Switch(
                   value: config.traditionalChinese!,
                   onChanged: (value) {
-                    ref.read(preferenceProvider.notifier).toggleTraditionalChinese();
+                    ref
+                        .read(preferenceProvider.notifier)
+                        .toggleTraditionalChinese();
                   }),
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("清除缓存", style: titleStyle),
             onTap: () {},
             subtitle: Text(
@@ -151,8 +162,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-            title: Text("退出登录", style: titleStyle.copyWith(color: Theme.of(context).colorScheme.error)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            title: Text("退出登录",
+                style: titleStyle.copyWith(
+                    color: Theme.of(context).colorScheme.error)),
             onTap: () {},
             subtitle: Text(
               "这不会移除你的本地数据",

@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/http/ajax.dart';
+import 'package:wenku8x/modals/account.dart';
 import 'package:wenku8x/modals/config.dart';
 import 'package:wenku8x/router.dart';
 import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
@@ -19,7 +20,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(ConfigAdapter());
+  Hive.registerAdapter(AccountAdapter());
   await Hive.openBox<Config>("config");
+  await Hive.openBox<Account>("account");
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);

@@ -7,7 +7,11 @@ final _box = Hive.box<Config>("config");
 class PreferenceNotifier extends StateNotifier<Config> {
   PreferenceNotifier()
       : super(_box.get("appConfig") ??
-            const Config(dynamicColor: true, highRefreshRate: false, autoSign: false, traditionalChinese: false));
+            const Config(
+                dynamicColor: true,
+                highRefreshRate: false,
+                autoSign: false,
+                traditionalChinese: false));
 
   toggleDynamicColor() {
     state = state.copyWith(dynamicColor: !state.dynamicColor!);
@@ -34,6 +38,7 @@ class PreferenceNotifier extends StateNotifier<Config> {
   }
 }
 
-final preferenceProvider = StateNotifierProvider<PreferenceNotifier, Config>((ref) {
+final preferenceProvider =
+    StateNotifierProvider<PreferenceNotifier, Config>((ref) {
   return PreferenceNotifier();
 });

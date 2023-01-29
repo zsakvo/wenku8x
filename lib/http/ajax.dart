@@ -10,6 +10,7 @@ import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/http/api.dart';
+import 'package:wenku8x/modals/account.dart';
 import 'package:xml/xml.dart';
 
 import '../service/navigation.dart';
@@ -18,8 +19,7 @@ import '../utils/log.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
-  static String UA =
-      "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
+  static String UA = "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
   static const String _APPVER = "1.13";
 
   ///超时时间
@@ -28,7 +28,8 @@ class Ajax {
 
   static late Dio _client;
 
-  static final configBox = Hive.box("config");
+  static final box = Hive.box<Account>("account");
+  static final account = box.get("account");
 
   static init() async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -51,16 +52,9 @@ class Ajax {
   static Future<dynamic> post(String param, {bool isXml = true}) async {
     // 判断是否是登陆请求
     bool isLogin = param.contains("action=login");
-    FormData formData = FormData.fromMap({
-      "appver": _APPVER,
-      "request": _encrypt(param),
-      "timetoken": DateTime.now().millisecondsSinceEpoch
-    });
-    Log.d({
-      "appver": _APPVER,
-      "request": param,
-      "timetoken": DateTime.now().millisecondsSinceEpoch
-    }, "请求参数");
+    FormData formData = FormData.fromMap(
+        {"appver": _APPVER, "request": _encrypt(param), "timetoken": DateTime.now().millisecondsSinceEpoch});
+    Log.d({"appver": _APPVER, "request": param, "timetoken": DateTime.now().millisecondsSinceEpoch}, "请求参数");
     var res = await _client.post("", data: formData);
     if (isXml) {
       try {
@@ -68,8 +62,8 @@ class Ajax {
       } catch (err) {
         Log.e("请求失败，结果为：${res.data}");
         if (res.data == "4") {
-          final username = configBox.get("username");
-          final password = configBox.get("password");
+          final username = account!.username;
+          final password = account!.password;
           if (username != null && password != null) {
             var res = await API.login(username, password);
             Log.d(res, "relogin");
