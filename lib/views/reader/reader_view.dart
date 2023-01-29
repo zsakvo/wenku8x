@@ -26,11 +26,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   late Directory docDir;
   late double statusBarHeight;
   late double bottomBarHeight;
+  // 页面宽度
   late dynamic pageWidth;
+  // 手指滑动判定
   final distance = 24;
+  // 按下座标
   double tapDownPos = 0.0;
+  // 抬起座标
   double tapUpPos = 0.0;
+  // 位移比例
   double extraRate = 1.0;
+  // 总页数
+  int totalPage = 0;
+  // 当前章节
+  int chapterIndex = 0;
+
+  final _regExp = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
   Widget build(BuildContext context) {
     final loading = useState(true);
@@ -91,11 +102,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     onPointerUp(PointerUpEvent event, WidgetRef ref) {
       if (!enableGestureListener.value) return;
       tapUpPos = event.position.dx;
-      Log.d(tapUpPos, "tapUpPos");
       double res = (tapUpPos - tapDownPos);
       double resAbs = res.abs();
-      Log.d(resAbs, "resAbs");
-      Log.d(res, "res");
       if (resAbs > distance) {
         if (res < 0) {
           currentPage.value++;
@@ -104,6 +112,16 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         }
       }
       webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+    }
+
+    fetchBody(String uri) async {
+      File file = File(uri.replaceAll("file://", ""));
+      String htmlSrc = file.readAsStringSync();
+      var bodySrc = RegExp(_regExp).firstMatch(htmlSrc)!.group(0);
+      var a = await webViewController.value!.evaluateJavascript(source: """
+ReaderJs.appendChapter(`$bodySrc`)
+""");
+      Log.d(a, "aaa");
     }
 
     useEffect(() {
@@ -119,32 +137,53 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     useEffect(() {
       var cv = chapters.value;
       if (cv.isNotEmpty) {
-        chapters.value.take(3).forEach((element) {
-          Log.d(element.json);
-        });
-        fetchContent(widget.aid, cv[0].cid, cv[0].name);
+        // chapters.value.take(3).forEach((element) {
+        //   Log.d(element.json);
+        // });
+        fetchContent(widget.aid, cv[chapterIndex].cid, cv[chapterIndex].name);
       }
       return () {};
     }, [chapters.value]);
 
     useEffect(() {
+      Log.d(fileUri.value, "fv");
       var controller = webViewController.value;
       if (controller != null && fileUri.value != null) {
-        Log.d(fileUri.value, "fv");
-        controller.addJavaScriptHandler(
-            handlerName: "notifySize",
-            callback: (params) {
-              pageWidth = params[0] * extraRate;
-            });
-        controller.addJavaScriptHandler(
-            handlerName: "onBookReady",
-            callback: (params) {
-              loading.value = false;
-            });
-        controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
+        // Log.d(fileUri.value, "fv");
+        if (totalPage == 0) {
+          controller.addJavaScriptHandler(
+              handlerName: "notifySize",
+              callback: (params) {
+                pageWidth = params[0] * extraRate;
+              });
+          controller.addJavaScriptHandler(
+              handlerName: "onBookReady",
+              callback: (params) {
+                loading.value = false;
+              });
+          controller.addJavaScriptHandler(
+              handlerName: "onPagingSetup",
+              callback: (params) {
+                totalPage = params[2];
+              });
+          controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
+        } else {
+          Log.d("已经加载过了");
+          fetchBody(fileUri.value!);
+        }
       }
       return () {};
     }, [fileUri.value, webViewController.value]);
+
+    useEffect(() {
+      if (currentPage.value == totalPage - 3) {
+        Log.d("要加载下一章了");
+        var cpts = chapters.value;
+        chapterIndex++;
+        fetchContent(widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
+      }
+      return () {};
+    }, [currentPage.value]);
 
     return Material(
         child: Stack(
