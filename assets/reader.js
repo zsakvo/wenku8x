@@ -12,7 +12,7 @@ var G = {}, Vt = {
     function a(t, e, o) {
       return t.call.apply(t.bind, arguments);
     }
-    function p(t, e, o) {
+    function g(t, e, o) {
       if (!t)
         throw Error();
       if (2 < arguments.length) {
@@ -27,7 +27,7 @@ var G = {}, Vt = {
       };
     }
     function r(t, e, o) {
-      return r = Function.prototype.bind && Function.prototype.bind.toString().indexOf("native code") != -1 ? a : p, r.apply(null, arguments);
+      return r = Function.prototype.bind && Function.prototype.bind.toString().indexOf("native code") != -1 ? a : g, r.apply(null, arguments);
     }
     var c = Date.now || function() {
       return +new Date();
@@ -51,24 +51,24 @@ var G = {}, Vt = {
     function T(t, e, o) {
       e = e || [], o = o || [];
       for (var i = t.className.split(/\s+/), s = 0; s < e.length; s += 1) {
-        for (var g = !1, h = 0; h < i.length; h += 1)
+        for (var p = !1, h = 0; h < i.length; h += 1)
           if (e[s] === i[h]) {
-            g = !0;
+            p = !0;
             break;
           }
-        g || i.push(e[s]);
+        p || i.push(e[s]);
       }
       for (e = [], s = 0; s < i.length; s += 1) {
-        for (g = !1, h = 0; h < o.length; h += 1)
+        for (p = !1, h = 0; h < o.length; h += 1)
           if (i[s] === o[h]) {
-            g = !0;
+            p = !0;
             break;
           }
-        g || e.push(i[s]);
+        p || e.push(i[s]);
       }
       t.className = e.join(" ").replace(/\s+/g, " ").replace(/^\s+|\s+$/, "");
     }
-    function k(t, e) {
+    function H(t, e) {
       for (var o = t.className.split(/\s+/), i = 0, s = o.length; i < s; i++)
         if (o[i] == e)
           return !0;
@@ -79,10 +79,10 @@ var G = {}, Vt = {
     }
     function P(t, e, o) {
       function i() {
-        m && s && g && (m(h), m = null);
+        m && s && p && (m(h), m = null);
       }
       e = v(t, "link", { rel: "stylesheet", href: e, media: "all" });
-      var s = !1, g = !0, h = null, m = o || null;
+      var s = !1, p = !0, h = null, m = o || null;
       u ? (e.onload = function() {
         s = !0, i();
       }, e.onerror = function() {
@@ -94,12 +94,12 @@ var G = {}, Vt = {
     function E(t, e, o, i) {
       var s = t.c.getElementsByTagName("head")[0];
       if (s) {
-        var g = v(t, "script", { src: e }), h = !1;
-        return g.onload = g.onreadystatechange = function() {
-          h || this.readyState && this.readyState != "loaded" && this.readyState != "complete" || (h = !0, o && o(null), g.onload = g.onreadystatechange = null, g.parentNode.tagName == "HEAD" && s.removeChild(g));
-        }, s.appendChild(g), setTimeout(function() {
+        var p = v(t, "script", { src: e }), h = !1;
+        return p.onload = p.onreadystatechange = function() {
+          h || this.readyState && this.readyState != "loaded" && this.readyState != "complete" || (h = !0, o && o(null), p.onload = p.onreadystatechange = null, p.parentNode.tagName == "HEAD" && s.removeChild(p));
+        }, s.appendChild(p), setTimeout(function() {
           h || (h = !0, o && o(Error("Script load timeout")));
-        }, i || 5e3), g;
+        }, i || 5e3), p;
       }
       return null;
     }
@@ -161,7 +161,7 @@ var G = {}, Vt = {
     }
     function Q(t) {
       if (t.g) {
-        var e = k(t.f, t.a.c("wf", "active")), o = [], i = [t.a.c("wf", "loading")];
+        var e = H(t.f, t.a.c("wf", "active")), o = [], i = [t.a.c("wf", "loading")];
         e || o.push(t.a.c("wf", "inactive")), T(t.f, o, i);
       }
       F(t, "inactive");
@@ -172,12 +172,12 @@ var G = {}, Vt = {
     function _t() {
       this.c = {};
     }
-    function kt(t, e, o) {
+    function Ht(t, e, o) {
       var i = [], s;
       for (s in e)
         if (e.hasOwnProperty(s)) {
-          var g = t.c[s];
-          g && i.push(g(e[s], o));
+          var p = t.c[s];
+          p && i.push(p(e[s], o));
         }
       return i;
     }
@@ -190,8 +190,8 @@ var G = {}, Vt = {
     function z(t) {
       return "display:block;position:absolute;top:-9999px;left:-9999px;font-size:300px;width:auto;height:auto;line-height:normal;margin:0;padding:0;font-variant:normal;white-space:nowrap;font-family:" + J(t.c) + ";" + ("font-style:" + K(t) + ";font-weight:" + (t.f + "00") + ";");
     }
-    function Z(t, e, o, i, s, g) {
-      this.g = t, this.j = e, this.a = i, this.c = o, this.f = s || 3e3, this.h = g || void 0;
+    function Z(t, e, o, i, s, p) {
+      this.g = t, this.j = e, this.a = i, this.c = o, this.f = s || 3e3, this.h = p || void 0;
     }
     Z.prototype.start = function() {
       var t = this.c.o.document, e = this, o = c(), i = new Promise(function(h, m) {
@@ -203,17 +203,17 @@ var G = {}, Vt = {
           });
         }
         y();
-      }), s = null, g = new Promise(function(h, m) {
+      }), s = null, p = new Promise(function(h, m) {
         s = setTimeout(m, e.f);
       });
-      Promise.race([g, i]).then(function() {
+      Promise.race([p, i]).then(function() {
         s && (clearTimeout(s), s = null), e.g(e.a);
       }, function() {
         e.j(e.a);
       });
     };
-    function tt(t, e, o, i, s, g, h) {
-      this.v = t, this.B = e, this.c = o, this.a = i, this.s = h || "BESbswy", this.f = {}, this.w = s || 3e3, this.u = g || null, this.m = this.j = this.h = this.g = null, this.g = new I(this.c, this.s), this.h = new I(this.c, this.s), this.j = new I(this.c, this.s), this.m = new I(this.c, this.s), t = new S(this.a.c + ",serif", C(this.a)), t = z(t), this.g.a.style.cssText = t, t = new S(this.a.c + ",sans-serif", C(this.a)), t = z(t), this.h.a.style.cssText = t, t = new S("serif", C(this.a)), t = z(t), this.j.a.style.cssText = t, t = new S("sans-serif", C(this.a)), t = z(t), this.m.a.style.cssText = t, W(this.g), W(this.h), W(this.j), W(this.m);
+    function tt(t, e, o, i, s, p, h) {
+      this.v = t, this.B = e, this.c = o, this.a = i, this.s = h || "BESbswy", this.f = {}, this.w = s || 3e3, this.u = p || null, this.m = this.j = this.h = this.g = null, this.g = new I(this.c, this.s), this.h = new I(this.c, this.s), this.j = new I(this.c, this.s), this.m = new I(this.c, this.s), t = new S(this.a.c + ",serif", C(this.a)), t = z(t), this.g.a.style.cssText = t, t = new S(this.a.c + ",sans-serif", C(this.a)), t = z(t), this.h.a.style.cssText = t, t = new S("serif", C(this.a)), t = z(t), this.j.a.style.cssText = t, t = new S("sans-serif", C(this.a)), t = z(t), this.m.a.style.cssText = t, W(this.g), W(this.h), W(this.j), W(this.m);
     }
     var B = { D: "serif", C: "sans-serif" }, D = null;
     function et() {
@@ -234,9 +234,9 @@ var G = {}, Vt = {
     }
     function it(t) {
       var e = t.g.a.offsetWidth, o = t.h.a.offsetWidth, i;
-      (i = e === t.f.serif && o === t.f["sans-serif"]) || (i = et() && nt(t, e, o)), i ? c() - t.A >= t.w ? et() && nt(t, e, o) && (t.u === null || t.u.hasOwnProperty(t.a.c)) ? V(t, t.v) : V(t, t.B) : Ht(t) : V(t, t.v);
+      (i = e === t.f.serif && o === t.f["sans-serif"]) || (i = et() && nt(t, e, o)), i ? c() - t.A >= t.w ? et() && nt(t, e, o) && (t.u === null || t.u.hasOwnProperty(t.a.c)) ? V(t, t.v) : V(t, t.B) : kt(t) : V(t, t.v);
     }
-    function Ht(t) {
+    function kt(t) {
       setTimeout(r(function() {
         it(this);
       }, t), 50);
@@ -256,7 +256,7 @@ var G = {}, Vt = {
     }, U.prototype.h = function(t) {
       var e = this.a;
       if (e.g) {
-        var o = k(e.f, e.a.c("wf", t.c, C(t).toString(), "active")), i = [], s = [e.a.c("wf", t.c, C(t).toString(), "loading")];
+        var o = H(e.f, e.a.c("wf", t.c, C(t).toString(), "active")), i = [], s = [e.a.c("wf", t.c, C(t).toString(), "loading")];
         o || i.push(e.a.c("wf", t.c, C(t).toString(), "inactive")), T(e.f, i, s);
       }
       F(e, "fontinactive", t), ot(this);
@@ -271,13 +271,13 @@ var G = {}, Vt = {
       this.c = new l(this.j, t.context || this.j), this.g = t.events !== !1, this.f = t.classes !== !1, Mt(this, new St(this.c, t), t);
     };
     function Rt(t, e, o, i, s) {
-      var g = --t.h == 0;
+      var p = --t.h == 0;
       (t.f || t.g) && setTimeout(function() {
         var h = s || null, m = i || null || {};
-        if (o.length === 0 && g)
+        if (o.length === 0 && p)
           Q(e.a);
         else {
-          e.f += o.length, g && (e.j = g);
+          e.f += o.length, p && (e.j = p);
           var y, w = [];
           for (y = 0; y < o.length; y++) {
             var b = o[y], x = m[b.c], A = e.a, N = b;
@@ -297,10 +297,10 @@ var G = {}, Vt = {
     function Mt(t, e, o) {
       var s = [], i = o.timeout;
       At(e);
-      var s = kt(t.a, o, t.c), g = new U(t.c, e, i);
+      var s = Ht(t.a, o, t.c), p = new U(t.c, e, i);
       for (t.h = s.length, e = 0, o = s.length; e < o; e++)
         s[e].load(function(h, m, y) {
-          Rt(t, g, h, m, y);
+          Rt(t, p, h, m, y);
         });
     }
     function rt(t, e) {
@@ -308,8 +308,8 @@ var G = {}, Vt = {
     }
     rt.prototype.load = function(t) {
       function e() {
-        if (g["__mti_fntLst" + i]) {
-          var h = g["__mti_fntLst" + i](), m = [], y;
+        if (p["__mti_fntLst" + i]) {
+          var h = p["__mti_fntLst" + i](), m = [], y;
           if (h)
             for (var w = 0; w < h.length; w++) {
               var b = h[w].fontfamily;
@@ -323,9 +323,9 @@ var G = {}, Vt = {
       }
       var o = this, i = o.a.projectId, s = o.a.version;
       if (i) {
-        var g = o.c.o;
+        var p = o.c.o;
         E(this.c, (o.a.api || "https://fast.fonts.net/jsapi") + "/" + i + ".js" + (s ? "?v=" + s : ""), function(h) {
-          h ? t([]) : (g["__MonotypeConfiguration__" + i] = function() {
+          h ? t([]) : (p["__MonotypeConfiguration__" + i] = function() {
             return o.a;
           }, e());
         }).id = "__MonotypeAPIScript__" + i;
@@ -336,7 +336,7 @@ var G = {}, Vt = {
       this.c = t, this.a = e;
     }
     st.prototype.load = function(t) {
-      var e, o, i = this.a.urls || [], s = this.a.families || [], g = this.a.testStrings || {}, h = new _();
+      var e, o, i = this.a.urls || [], s = this.a.families || [], p = this.a.testStrings || {}, h = new _();
       for (e = 0, o = i.length; e < o; e++)
         P(this.c, i[e], X(h));
       var m = [];
@@ -347,7 +347,7 @@ var G = {}, Vt = {
         else
           m.push(new S(i[0]));
       Y(h, function() {
-        t(m, g);
+        t(m, p);
       });
     };
     function Ft(t, e) {
@@ -358,8 +358,8 @@ var G = {}, Vt = {
       for (var o = e.length, i = 0; i < o; i++) {
         var s = e[i].split(":");
         s.length == 3 && t.f.push(s.pop());
-        var g = "";
-        s.length == 2 && s[1] != "" && (g = ":"), t.a.push(s.join(g));
+        var p = "";
+        s.length == 2 && s[1] != "" && (p = ":"), t.a.push(s.join(p));
       }
     }
     function Lt(t) {
@@ -377,7 +377,7 @@ var G = {}, Vt = {
     var lt = { latin: "BESbswy", "latin-ext": "çöüğş", cyrillic: "йяЖ", greek: "αβΣ", khmer: "កខគ", Hanuman: "កខគ" }, Wt = { thin: "1", extralight: "2", "extra-light": "2", ultralight: "2", "ultra-light": "2", light: "3", regular: "4", book: "4", medium: "5", "semi-bold": "6", semibold: "6", "demi-bold": "6", demibold: "6", bold: "7", "extra-bold": "8", extrabold: "8", "ultra-bold": "8", ultrabold: "8", black: "9", heavy: "9", l: "3", r: "4", b: "7" }, zt = { i: "i", italic: "i", n: "n", normal: "n" }, Bt = /^(thin|(?:(?:extra|ultra)-?)?light|regular|book|medium|(?:(?:semi|demi|extra|ultra)-?)?bold|black|heavy|l|r|b|[1-9]00)?(n|i|normal|italic)?$/;
     function Ot(t) {
       for (var e = t.f.length, o = 0; o < e; o++) {
-        var i = t.f[o].split(":"), s = i[0].replace(/\+/g, " "), g = ["n4"];
+        var i = t.f[o].split(":"), s = i[0].replace(/\+/g, " "), p = ["n4"];
         if (2 <= i.length) {
           var h, m = i[1];
           if (h = [], m)
@@ -398,10 +398,10 @@ var G = {}, Vt = {
                 b = "";
               b && h.push(b);
             }
-          0 < h.length && (g = h), i.length == 3 && (i = i[2], h = [], i = i ? i.split(",") : h, 0 < i.length && (i = lt[i[0]]) && (t.c[s] = i));
+          0 < h.length && (p = h), i.length == 3 && (i = i[2], h = [], i = i ? i.split(",") : h, 0 < i.length && (i = lt[i[0]]) && (t.c[s] = i));
         }
-        for (t.c[s] || (i = lt[s]) && (t.c[s] = i), i = 0; i < g.length; i += 1)
-          t.a.push(new S(s, g[i]));
+        for (t.c[s] || (i = lt[s]) && (t.c[s] = i), i = 0; i < p.length; i += 1)
+          t.a.push(new S(s, p[i]));
       }
     }
     function ct(t, e) {
@@ -411,9 +411,9 @@ var G = {}, Vt = {
     ct.prototype.load = function(t) {
       var e = new _(), o = this.c, i = new Ft(this.a.api, this.a.text), s = this.a.families;
       Pt(i, s);
-      var g = new It(s);
-      Ot(g), P(o, Lt(i), X(e)), Y(e, function() {
-        t(g.a, g.c, jt);
+      var p = new It(s);
+      Ot(p), P(o, Lt(i), X(e)), Y(e, function() {
+        t(p.a, p.c, jt);
       });
     };
     function ut(t, e) {
@@ -426,8 +426,8 @@ var G = {}, Vt = {
           t([]);
         else if (o.Typekit && o.Typekit.config && o.Typekit.config.fn) {
           i = o.Typekit.config.fn;
-          for (var s = [], g = 0; g < i.length; g += 2)
-            for (var h = i[g], m = i[g + 1], y = 0; y < m.length; y++)
+          for (var s = [], p = 0; p < i.length; p += 2)
+            for (var h = i[p], m = i[p + 1], y = 0; y < m.length; y++)
               s.push(new S(h, m[y]));
           try {
             o.Typekit.load({ events: !1, classes: !1, async: !0 });
@@ -442,9 +442,9 @@ var G = {}, Vt = {
     }
     ft.prototype.load = function(t) {
       var e = this.f.id, o = this.c.o, i = this;
-      e ? (o.__webfontfontdeckmodule__ || (o.__webfontfontdeckmodule__ = {}), o.__webfontfontdeckmodule__[e] = function(s, g) {
-        for (var h = 0, m = g.fonts.length; h < m; ++h) {
-          var y = g.fonts[h];
+      e ? (o.__webfontfontdeckmodule__ || (o.__webfontfontdeckmodule__ = {}), o.__webfontfontdeckmodule__[e] = function(s, p) {
+        for (var h = 0, m = p.fonts.length; h < m; ++h) {
+          var y = p.fonts[h];
           i.a.push(new S(y.name, Et("font-weight:" + y.weight + ";font-style:" + y.style)));
         }
         t(i.a);
@@ -452,50 +452,50 @@ var G = {}, Vt = {
         s && t([]);
       })) : t([]);
     };
-    var H = new at(window);
-    H.a.c.custom = function(t, e) {
+    var k = new at(window);
+    k.a.c.custom = function(t, e) {
       return new st(e, t);
-    }, H.a.c.fontdeck = function(t, e) {
+    }, k.a.c.fontdeck = function(t, e) {
       return new ft(e, t);
-    }, H.a.c.monotype = function(t, e) {
+    }, k.a.c.monotype = function(t, e) {
       return new rt(e, t);
-    }, H.a.c.typekit = function(t, e) {
+    }, k.a.c.typekit = function(t, e) {
       return new ut(e, t);
-    }, H.a.c.google = function(t, e) {
+    }, k.a.c.google = function(t, e) {
       return new ct(e, t);
     };
-    var pt = { load: r(H.load, H) };
-    n.exports ? n.exports = pt : (window.WebFont = pt, window.WebFontConfig && H.load(window.WebFontConfig));
+    var gt = { load: r(k.load, k) };
+    n.exports ? n.exports = gt : (window.WebFont = gt, window.WebFontConfig && k.load(window.WebFontConfig));
   })();
 })(Vt);
 const yt = G, vt = (n) => {
   for (let a of n)
     a.style.margin = "0px", a.style.padding = "0px", a.style.border = "none";
-}, gt = (n) => {
-  let a = n, p;
+}, pt = (n) => {
+  let a = n, g;
   for (; a.tagName && a.tagName.toLowerCase() !== "body" && a != bookContainer; ) {
-    if (p) {
-      var r = p;
-      p = a.cloneNode(!1), p.className += " __Reader_NoEffects", p.appendChild(r);
+    if (g) {
+      var r = g;
+      g = a.cloneNode(!1), g.className += " __Reader_NoEffects", g.appendChild(r);
     } else
-      p = a.cloneNode(!0);
+      g = a.cloneNode(!0);
     a = a.parentNode;
   }
   var c = document.createElement("div");
-  return c.className = "__Reader_Footnote_Content " + specificityClassName, c.appendChild(p), c.outerHTML;
+  return c.className = "__Reader_Footnote_Content " + specificityClassName, c.appendChild(g), c.outerHTML;
 }, ht = (n) => {
   var a = "";
   a += "<link rel='stylesheet' type='text/css' href='file:///android_asset/css/default.css' />";
-  var p = n.querySelectorAll("link, style"), r = document.createElement("div");
-  for (let l = 0; l < p.length; l++) {
-    var c = p[l];
+  var g = n.querySelectorAll("link, style"), r = document.createElement("div");
+  for (let l = 0; l < g.length; l++) {
+    var c = g[l];
     c.dataset.excludeFromFootnote || r.appendChild(c.cloneNode(!0));
   }
   return a += r.innerHTML, a += "<style type='text/css'>" + ReaderThemes.getCss() + "</style>", a += "<link rel='stylesheet' type='text/css' href='file:///android_asset/css/footnote.css' />", a;
 }, Ut = (n, a) => {
   if (n[0] == "#") {
-    var p = document.getElementById(n.substring(1)) ? gt(document.getElementById(n.substring(1))) : "";
-    a(ht(document) + p);
+    var g = document.getElementById(n.substring(1)) ? pt(document.getElementById(n.substring(1))) : "";
+    a(ht(document) + g);
     return;
   }
   var r = n.indexOf("#"), c = n.substring(r), l = n.substring(0, r), u = new XMLHttpRequest();
@@ -508,15 +508,15 @@ const yt = G, vt = (n) => {
     }
     var v = u.responseXML;
     a(
-      ht(v) + gt(v.getElementById(c.substring(1)))
+      ht(v) + pt(v.getElementById(c.substring(1)))
     );
   }, u.send();
 }, Gt = () => {
   var n = document.getElementsByTagName("switch");
   for (let c = 0; c < n.length; c++) {
-    var a = n[c], p = a.getElementsByTagName("case");
-    for (let l = 0; l < p.length; l++) {
-      var r = p[l];
+    var a = n[c], g = a.getElementsByTagName("case");
+    for (let l = 0; l < g.length; l++) {
+      var r = g[l];
       r.parentNode.removeChild(r);
     }
   }
@@ -531,12 +531,12 @@ const yt = G, vt = (n) => {
 }, wt = (n) => {
   if (Xt(n))
     return { fonts: [], useWorkaround: !0 };
-  var a = [], p = !1, r = n.cssRules;
+  var a = [], g = !1, r = n.cssRules;
   for (let v = 0; v < r.length; v++) {
     var c = r[v];
     if (c.styleSheet) {
       var l = wt(c.styleSheet);
-      a.push.apply(a, l.fonts), p = p || l.useWorkaround;
+      a.push.apply(a, l.fonts), g = g || l.useWorkaround;
       continue;
     }
     if (c.type == CSSRule.FONT_FACE_RULE) {
@@ -544,13 +544,13 @@ const yt = G, vt = (n) => {
       a.indexOf(u) == -1 && a.push(u);
     }
   }
-  return { fonts: a, useWorkaround: p };
+  return { fonts: a, useWorkaround: g };
 }, Yt = () => {
   const n = [];
-  var a = {}, p = void 0, r = document.styleSheets;
+  var a = {}, g = void 0, r = document.styleSheets;
   for (let E = 0; E < r.length; E++) {
     var c = r[E], l = wt(c);
-    p = p || l.useWorkaround;
+    g = g || l.useWorkaround;
     var u = l.fonts;
     for (let _ = 0; _ < u.length; _++) {
       var v = u[_];
@@ -558,31 +558,31 @@ const yt = G, vt = (n) => {
     }
     n.push.apply(n, l.fonts);
   }
-  if (p) {
+  if (g) {
     var f = Array.prototype.slice.call(document.body.childNodes);
     for (let E = 0; E < f.length; E++) {
       var d = f[E];
       if (d.nodeType == Node.ELEMENT_NODE) {
-        var T = window.getComputedStyle(d), k = T["font-family"].split(",");
-        for (let _ = 0; _ < k.length; _++) {
-          var M = k[_], P = M.toLowerCase();
+        var T = window.getComputedStyle(d), H = T["font-family"].split(",");
+        for (let _ = 0; _ < H.length; _++) {
+          var M = H[_], P = M.toLowerCase();
           a[P] !== !0 && (a[P] = !0);
         }
-        n.push.apply(n, k);
+        n.push.apply(n, H);
       }
     }
   }
   return n;
 }, qt = (n) => {
-  for (var a = {}, p = n.split(","), r = 0; r < p.length; ++r) {
-    var c = p[r].split("="), l = c[0].trim(), u = c[1].trim();
+  for (var a = {}, g = n.split(","), r = 0; r < g.length; ++r) {
+    var c = g[r].split("="), l = c[0].trim(), u = c[1].trim();
     a[l] = u;
   }
   return a;
 }, $t = (n) => {
-  var a = "", p = 0;
+  var a = "", g = 0;
   for (var r in n)
-    p != 0 && (a += ","), a += r + "=" + n[r], p++;
+    g != 0 && (a += ","), a += r + "=" + n[r], g++;
   return a;
 }, bt = (n) => {
   var a = n.getBoundingClientRect();
@@ -593,15 +593,15 @@ const yt = G, vt = (n) => {
   );
 }, Jt = (n) => {
   var a = {};
-  for (var p in n) {
-    var r = n[p], c = document.getElementById(r.substring(1));
+  for (var g in n) {
+    var r = n[g], c = document.getElementById(r.substring(1));
     if (c)
       switch (globalThis.config.flowStyle) {
         case FLOW_PAGED:
-          a[p] = bt(c);
+          a[g] = bt(c);
           break;
         case FLOW_SCROLLED:
-          a[p] = c.offsetTop;
+          a[g] = c.offsetTop;
           break;
       }
   }
@@ -612,8 +612,8 @@ const yt = G, vt = (n) => {
     return;
   }
   var a = [];
-  for (var p in n) {
-    var r = n[p], c = document.getElementById(r.substring(1));
+  for (var g in n) {
+    var r = n[g], c = document.getElementById(r.substring(1));
     if (c)
       if (globalThis.config.flowStyle == FLOW_PAGED)
         a.push([r, bt(c)]);
@@ -625,11 +625,11 @@ const yt = G, vt = (n) => {
   ReaderApp.setAnchorPositions(JSON.stringify(a));
 }, Kt = (n) => {
   bookContainer.innerHTML = bookContainer.firstChild.outerHTML;
-  const a = globalThis.config.bookName ?? "", p = globalThis.config.chapterName ?? document.getElementsByTagName("title")[0].innerText;
+  const a = globalThis.config.bookName ?? "", g = globalThis.config.chapterName ?? document.getElementsByTagName("title")[0].innerText;
   let r = window.innerWidth;
   for (let c = 0; c < n; c++) {
     const l = document.createElement("div");
-    l.className = "ReaderApp-page-header", l.style.padding = "0", l.style.position = "absolute", l.style.top = globalThis.config.topExtraHeight + "px", l.style.left = r * c + "px", l.style.width = "100%", l.style.height = globalThis.config.infoBarHeight + "px", l.style.boxSizing = "border-box", l.style.fontSize = "13px", l.style.color = "#8d8d8d", l.style.padding = `0 ${globalThis.config.marginHorizontal}px`, l.style.display = "flex", l.style.alignItems = "flex-end", l.innerText = c == 0 ? a : p, bookContainer.appendChild(l);
+    l.className = "ReaderApp-page-header", l.style.padding = "0", l.style.position = "absolute", l.style.top = globalThis.config.topExtraHeight + "px", l.style.left = r * c + "px", l.style.width = "100%", l.style.height = globalThis.config.infoBarHeight + "px", l.style.boxSizing = "border-box", l.style.fontSize = "13px", l.style.color = "#8d8d8d", l.style.padding = `0 ${globalThis.config.marginHorizontal}px`, l.style.display = "flex", l.style.alignItems = "flex-end", l.innerText = c == 0 ? a : g, bookContainer.appendChild(l);
     const u = document.createElement("div");
     u.className = "ReaderApp-page-footer", u.style.padding = "0", u.style.position = "absolute", u.style.bottom = globalThis.config.bottomExtraHeight + "px", u.style.left = r * c + "px", u.style.width = "100%", u.style.height = globalThis.config.infoBarHeight + "px", u.style.boxSizing = "border-box", u.style.fontSize = "13px", u.style.color = "#8d8d8d", u.style.padding = `0 ${globalThis.config.marginHorizontal}px`, u.style.display = "flex", u.style.alignItems = "flex-start", u.style.justifyContent = "flex-end", u.innerText = `${c + 1}/${n}`, bookContainer.appendChild(u);
   }
@@ -641,12 +641,12 @@ const yt = G, vt = (n) => {
       n.style.webkitMarginCollapse = "separate";
       var a = Array.prototype.slice.call(document.body.childNodes);
       for (let l = 0; l < a.length; l++) {
-        var p = a[l];
-        n.appendChild(p);
+        var g = a[l];
+        n.appendChild(g);
       }
       n.className = "collapse-wrapper", bookContainer.appendChild(n), pageContainer = document.createElement("div"), pageContainer.className = "book-wrapper", pageContainer.appendChild(bookContainer), document.body.appendChild(pageContainer), vt([pageContainer, bookContainer]);
     }
-    pageHorizontalMargin = globalThis.config.marginHorizontal * 2, pageVerticalMargin = (globalThis.config.marginVertical + globalThis.config.infoBarHeight + globalThis.config.bottomExtraHeight) * 2, console.log("---><", pageHorizontalMargin, pageVerticalMargin), pageWidth = window.innerWidth - pageHorizontalMargin, pageHeight = window.innerHeight - pageVerticalMargin;
+    pageHorizontalMargin = globalThis.config.marginHorizontal * 2, pageVerticalMargin = (globalThis.config.marginVertical + globalThis.config.infoBarHeight) * 2 + globalThis.config.topExtraHeight + globalThis.config.bottomExtraHeight, console.log("---><", pageHorizontalMargin, pageVerticalMargin), pageWidth = window.innerWidth - pageHorizontalMargin, pageHeight = window.innerHeight - pageVerticalMargin;
     var r = window.getComputedStyle(document.body), c = window.getComputedStyle(
       document.getElementsByTagName("html")[0]
     );
@@ -691,10 +691,10 @@ const yt = G, vt = (n) => {
 }, dt = (n) => {
   globalThis.config.marginHorizontal = n, document.body.style.marginLeft = n + "px", document.body.style.marginRight = n + "px", R();
 }, mt = (n) => {
-  globalThis.config.marginVertical = n, document.body.style.marginBottom = globalThis.config.infoBarHeight + n + "px", document.body.style.marginTop = globalThis.config.infoBarHeight + n + "px", R();
+  globalThis.config.marginVertical = n, document.body.style.marginBottom = globalThis.config.infoBarHeight + n + globalThis.config.bottomExtraHeight + "px", document.body.style.marginTop = globalThis.config.infoBarHeight + n + globalThis.config.topExtraHeight + "px", R();
 }, ie = (n) => {
   textAlign = n, xt(), R();
-}, j = (n, a, p, r) => "@font-face { font-family: '" + n + "';font-style: " + a + "; font-weight: " + p + ";src: url(file:///android_asset/fonts/" + r + "); }", oe = (n) => {
+}, j = (n, a, g, r) => "@font-face { font-family: '" + n + "';font-style: " + a + "; font-weight: " + g + ";src: url(file:///android_asset/fonts/" + r + "); }", oe = (n) => {
   var a = j(n.name, "normal", 400, n.regular) + (n.bold ? j(n.name, "normal", 700, n.bold) : "") + (n.italic ? j(n.name, "italic", 400, n.italic) : "") + (n.italic ? j(n.name, "italic", 700, n.boldItalic) : "");
   typefacesStyleElement.innerText = typefacesStyleElement.innerText + a, fontsInjected.push(n.name);
 }, ae = (n) => {
@@ -741,10 +741,10 @@ const yt = G, vt = (n) => {
     ReaderApp.openFootNote(n.innerText.trim(), r, f, d);
   })) : ReaderApp.openLink(n.href);
 }, se = (n, a) => {
-  for (var p = n.parentNode; p; ) {
-    if (p.tagName && p.tagName.toLowerCase() == "a" && p.getAttribute("href"))
+  for (var g = n.parentNode; g; ) {
+    if (g.tagName && g.tagName.toLowerCase() == "a" && g.getAttribute("href"))
       return;
-    p = p.parentNode;
+    g = g.parentNode;
   }
   a.preventDefault(), a.stopPropagation();
   var r = n.getBoundingClientRect();
@@ -776,11 +776,11 @@ function le() {
   };
 }
 const ce = () => {
-  globalThis.ReaderApp = {}, navigator.userAgent.indexOf("ReaderJs/Client") > -1 ? (ReaderApp.notifySize = (...f) => window.flutter_inappwebview.callHandler("notifySize", ...f), ReaderApp.onTouchUp = (...f) => window.flutter_inappwebview.callHandler("onTouchUp", ...f), ReaderApp.setAnchorPositions = (...f) => window.flutter_inappwebview.callHandler("setAnchorPositions", ...f), ReaderApp.setPaperPageMap = (...f) => window.flutter_inappwebview.callHandler("setPaperPageMap", ...f), ReaderApp.onBookReady = (...f) => window.flutter_inappwebview.callHandler("onBookReady", ...f), ReaderApp.onPagingSetup = (...f) => window.flutter_inappwebview.callHandler("onPagingSetup", ...f), ReaderApp.openImage = (...f) => window.flutter_inappwebview.callHandler("openImage", ...f)) : (ReaderApp.notifySize = a, ReaderApp.onTouchUp = p, ReaderApp.setAnchorPositions = r, ReaderApp.setPaperPageMap = c, ReaderApp.onBookReady = l, ReaderApp.onPagingSetup = u, ReaderApp.openImage = v);
+  globalThis.ReaderApp = {}, navigator.userAgent.indexOf("ReaderJs/Client") > -1 ? (ReaderApp.notifySize = (...f) => window.flutter_inappwebview.callHandler("notifySize", ...f), ReaderApp.onTouchUp = (...f) => window.flutter_inappwebview.callHandler("onTouchUp", ...f), ReaderApp.setAnchorPositions = (...f) => window.flutter_inappwebview.callHandler("setAnchorPositions", ...f), ReaderApp.setPaperPageMap = (...f) => window.flutter_inappwebview.callHandler("setPaperPageMap", ...f), ReaderApp.onBookReady = (...f) => window.flutter_inappwebview.callHandler("onBookReady", ...f), ReaderApp.onPagingSetup = (...f) => window.flutter_inappwebview.callHandler("onPagingSetup", ...f), ReaderApp.openImage = (...f) => window.flutter_inappwebview.callHandler("openImage", ...f)) : (ReaderApp.notifySize = a, ReaderApp.onTouchUp = g, ReaderApp.setAnchorPositions = r, ReaderApp.setPaperPageMap = c, ReaderApp.onBookReady = l, ReaderApp.onPagingSetup = u, ReaderApp.openImage = v);
   function a(f, d) {
     console.log("notifySize", f, d);
   }
-  function p(f, d) {
+  function g(f, d) {
     console.log("onTouchUp", f, d);
   }
   function r(f, d) {
@@ -792,8 +792,8 @@ const ce = () => {
   function l(f, d) {
     console.log("onBookReady", f, d);
   }
-  function u(f, d, T, k) {
-    console.log("onPagingSetup", f, d, T, k);
+  function u(f, d, T, H) {
+    console.log("onPagingSetup", f, d, T, H);
   }
   function v(f, d) {
     console.log("openImage", f, d);
@@ -806,14 +806,14 @@ globalThis.ReaderThemes = function() {
     const l = document.createElement("style");
     l.setAttribute("type", "text/css"), l.id = "__ReaderThemeStyle", document.head.appendChild(l), styleElement = document.getElementById("__ReaderThemeStyle"), styleElement.dataset.excludeFromFootnote = !0;
   }
-  function p(l) {
+  function g(l) {
     for (var u = l.toString(16); u.length < 6; )
       u = "0" + u;
     return u;
   }
   function r(l) {
     var u = "";
-    l && (u += "body {", u += "background-color: #" + p(l.backgroundColor) + " !important;", u += "}", u += "* {", u += "background-color: transparent !important;", u += "color: #" + p(l.textColor) + " !important;" + n, u += "}", u += "a, a:link, a:visited, a:hover, a * {", u += "color: #" + p(l.linkColor) + " !important;" + n, u += "}"), styleElement.innerText = u;
+    l && (u += "body {", u += "background-color: #" + g(l.backgroundColor) + " !important;", u += "}", u += "* {", u += "background-color: transparent !important;", u += "color: #" + g(l.textColor) + " !important;" + n, u += "}", u += "a, a:link, a:visited, a:hover, a * {", u += "color: #" + g(l.linkColor) + " !important;" + n, u += "}"), styleElement.innerText = u;
   }
   function c() {
     return styleElement.innerText;

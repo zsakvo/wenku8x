@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/http/ajax.dart';
@@ -26,10 +27,8 @@ class AppPages {
         builder: (context, state) => const HomeView(),
         redirect: (context, state) async {
           Directory appDocDir = await getApplicationDocumentsDirectory();
-          final cookieJar =
-              PersistCookieJar(storage: FileStorage(appDocDir.path));
-          final cookies =
-              await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
+          final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
+          final cookies = await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
           if (cookies.isNotEmpty) {
             return "/";
           } else {
@@ -71,6 +70,7 @@ class AppPages {
         builder: (context, state) {
           final aid = state.params['aid']!;
           return ReaderView(
+            key: UniqueKey(),
             aid: aid,
           );
         },
