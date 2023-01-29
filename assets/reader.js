@@ -35,7 +35,7 @@ var G = {}, Ut = {
     function g(t, e) {
       this.a = t, this.o = e || t, this.c = this.o.document;
     }
-    var h = !!window.FontFace;
+    var f = !!window.FontFace;
     function d(t, e, i, o) {
       if (e = t.c.createElement(e), i)
         for (var l in i)
@@ -51,20 +51,20 @@ var G = {}, Ut = {
     function w(t, e, i) {
       e = e || [], i = i || [];
       for (var o = t.className.split(/\s+/), l = 0; l < e.length; l += 1) {
-        for (var f = !1, p = 0; p < o.length; p += 1)
+        for (var h = !1, p = 0; p < o.length; p += 1)
           if (e[l] === o[p]) {
-            f = !0;
+            h = !0;
             break;
           }
-        f || o.push(e[l]);
+        h || o.push(e[l]);
       }
       for (e = [], l = 0; l < o.length; l += 1) {
-        for (f = !1, p = 0; p < i.length; p += 1)
+        for (h = !1, p = 0; p < i.length; p += 1)
           if (o[l] === i[p]) {
-            f = !0;
+            h = !0;
             break;
           }
-        f || e.push(o[l]);
+        h || e.push(o[l]);
       }
       t.className = e.join(" ").replace(/\s+/g, " ").replace(/^\s+|\s+$/, "");
     }
@@ -74,16 +74,16 @@ var G = {}, Ut = {
           return !0;
       return !1;
     }
-    function R(t) {
+    function N(t) {
       return t.o.location.hostname || t.a.location.hostname;
     }
-    function L(t, e, i) {
+    function P(t, e, i) {
       function o() {
-        y && l && f && (y(p), y = null);
+        y && l && h && (y(p), y = null);
       }
       e = d(t, "link", { rel: "stylesheet", href: e, media: "all" });
-      var l = !1, f = !0, p = null, y = i || null;
-      h ? (e.onload = function() {
+      var l = !1, h = !0, p = null, y = i || null;
+      f ? (e.onload = function() {
         l = !0, o();
       }, e.onerror = function() {
         l = !0, p = Error("Stylesheet failed to load"), o();
@@ -94,12 +94,12 @@ var G = {}, Ut = {
     function E(t, e, i, o) {
       var l = t.c.getElementsByTagName("head")[0];
       if (l) {
-        var f = d(t, "script", { src: e }), p = !1;
-        return f.onload = f.onreadystatechange = function() {
-          p || this.readyState && this.readyState != "loaded" && this.readyState != "complete" || (p = !0, i && i(null), f.onload = f.onreadystatechange = null, f.parentNode.tagName == "HEAD" && l.removeChild(f));
-        }, l.appendChild(f), setTimeout(function() {
+        var h = d(t, "script", { src: e }), p = !1;
+        return h.onload = h.onreadystatechange = function() {
+          p || this.readyState && this.readyState != "loaded" && this.readyState != "complete" || (p = !0, i && i(null), h.onload = h.onreadystatechange = null, h.parentNode.tagName == "HEAD" && l.removeChild(h));
+        }, l.appendChild(h), setTimeout(function() {
           p || (p = !0, i && i(Error("Script load timeout")));
-        }, o || 5e3), f;
+        }, o || 5e3), h;
       }
       return null;
     }
@@ -157,16 +157,16 @@ var G = {}, Ut = {
       this.c = t, this.f = t.o.document.documentElement, this.h = e, this.a = new J("-"), this.j = e.events !== !1, this.g = e.classes !== !1;
     }
     function Ht(t) {
-      t.g && w(t.f, [t.a.c("wf", "loading")]), N(t, "loading");
+      t.g && w(t.f, [t.a.c("wf", "loading")]), R(t, "loading");
     }
     function Z(t) {
       if (t.g) {
         var e = _(t.f, t.a.c("wf", "active")), i = [], o = [t.a.c("wf", "loading")];
         e || i.push(t.a.c("wf", "inactive")), w(t.f, i, o);
       }
-      N(t, "inactive");
+      R(t, "inactive");
     }
-    function N(t, e, i) {
+    function R(t, e, i) {
       t.j && t.h[e] && (i ? t.h[e](i.c, C(i)) : t.h[e]());
     }
     function _t() {
@@ -176,22 +176,22 @@ var G = {}, Ut = {
       var o = [], l;
       for (l in e)
         if (e.hasOwnProperty(l)) {
-          var f = t.c[l];
-          f && o.push(f(e[l], i));
+          var h = t.c[l];
+          h && o.push(h(e[l], i));
         }
       return o;
     }
-    function B(t, e) {
+    function z(t, e) {
       this.c = t, this.f = e, this.a = d(this.c, "span", { "aria-hidden": "true" }, this.f);
     }
-    function W(t) {
+    function B(t) {
       u(t.c, "body", t.a);
     }
-    function I(t) {
+    function W(t) {
       return "display:block;position:absolute;top:-9999px;left:-9999px;font-size:300px;width:auto;height:auto;line-height:normal;margin:0;padding:0;font-variant:normal;white-space:nowrap;font-family:" + K(t.c) + ";" + ("font-style:" + Q(t) + ";font-weight:" + (t.f + "00") + ";");
     }
-    function tt(t, e, i, o, l, f) {
-      this.g = t, this.j = e, this.a = o, this.c = i, this.f = l || 3e3, this.h = f || void 0;
+    function tt(t, e, i, o, l, h) {
+      this.g = t, this.j = e, this.a = o, this.c = i, this.f = l || 3e3, this.h = h || void 0;
     }
     tt.prototype.start = function() {
       var t = this.c.o.document, e = this, i = s(), o = new Promise(function(p, y) {
@@ -203,19 +203,19 @@ var G = {}, Ut = {
           });
         }
         v();
-      }), l = null, f = new Promise(function(p, y) {
+      }), l = null, h = new Promise(function(p, y) {
         l = setTimeout(y, e.f);
       });
-      Promise.race([f, o]).then(function() {
+      Promise.race([h, o]).then(function() {
         l && (clearTimeout(l), l = null), e.g(e.a);
       }, function() {
         e.j(e.a);
       });
     };
-    function et(t, e, i, o, l, f, p) {
-      this.v = t, this.B = e, this.c = i, this.a = o, this.s = p || "BESbswy", this.f = {}, this.w = l || 3e3, this.u = f || null, this.m = this.j = this.h = this.g = null, this.g = new B(this.c, this.s), this.h = new B(this.c, this.s), this.j = new B(this.c, this.s), this.m = new B(this.c, this.s), t = new S(this.a.c + ",serif", C(this.a)), t = I(t), this.g.a.style.cssText = t, t = new S(this.a.c + ",sans-serif", C(this.a)), t = I(t), this.h.a.style.cssText = t, t = new S("serif", C(this.a)), t = I(t), this.j.a.style.cssText = t, t = new S("sans-serif", C(this.a)), t = I(t), this.m.a.style.cssText = t, W(this.g), W(this.h), W(this.j), W(this.m);
+    function et(t, e, i, o, l, h, p) {
+      this.v = t, this.B = e, this.c = i, this.a = o, this.s = p || "BESbswy", this.f = {}, this.w = l || 3e3, this.u = h || null, this.m = this.j = this.h = this.g = null, this.g = new z(this.c, this.s), this.h = new z(this.c, this.s), this.j = new z(this.c, this.s), this.m = new z(this.c, this.s), t = new S(this.a.c + ",serif", C(this.a)), t = W(t), this.g.a.style.cssText = t, t = new S(this.a.c + ",sans-serif", C(this.a)), t = W(t), this.h.a.style.cssText = t, t = new S("serif", C(this.a)), t = W(t), this.j.a.style.cssText = t, t = new S("sans-serif", C(this.a)), t = W(t), this.m.a.style.cssText = t, B(this.g), B(this.h), B(this.j), B(this.m);
     }
-    var z = { D: "serif", C: "sans-serif" }, D = null;
+    var I = { D: "serif", C: "sans-serif" }, D = null;
     function nt() {
       if (D === null) {
         var t = /AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent);
@@ -227,8 +227,8 @@ var G = {}, Ut = {
       this.f.serif = this.j.a.offsetWidth, this.f["sans-serif"] = this.m.a.offsetWidth, this.A = s(), it(this);
     };
     function ot(t, e, i) {
-      for (var o in z)
-        if (z.hasOwnProperty(o) && e === t.f[z[o]] && i === t.f[z[o]])
+      for (var o in I)
+        if (I.hasOwnProperty(o) && e === t.f[I[o]] && i === t.f[I[o]])
           return !0;
       return !1;
     }
@@ -252,36 +252,36 @@ var G = {}, Ut = {
     var O = null;
     U.prototype.g = function(t) {
       var e = this.a;
-      e.g && w(e.f, [e.a.c("wf", t.c, C(t).toString(), "active")], [e.a.c("wf", t.c, C(t).toString(), "loading"), e.a.c("wf", t.c, C(t).toString(), "inactive")]), N(e, "fontactive", t), this.m = !0, at(this);
+      e.g && w(e.f, [e.a.c("wf", t.c, C(t).toString(), "active")], [e.a.c("wf", t.c, C(t).toString(), "loading"), e.a.c("wf", t.c, C(t).toString(), "inactive")]), R(e, "fontactive", t), this.m = !0, at(this);
     }, U.prototype.h = function(t) {
       var e = this.a;
       if (e.g) {
         var i = _(e.f, e.a.c("wf", t.c, C(t).toString(), "active")), o = [], l = [e.a.c("wf", t.c, C(t).toString(), "loading")];
         i || o.push(e.a.c("wf", t.c, C(t).toString(), "inactive")), w(e.f, o, l);
       }
-      N(e, "fontinactive", t), at(this);
+      R(e, "fontinactive", t), at(this);
     };
     function at(t) {
-      --t.f == 0 && t.j && (t.m ? (t = t.a, t.g && w(t.f, [t.a.c("wf", "active")], [t.a.c("wf", "loading"), t.a.c("wf", "inactive")]), N(t, "active")) : Z(t.a));
+      --t.f == 0 && t.j && (t.m ? (t = t.a, t.g && w(t.f, [t.a.c("wf", "active")], [t.a.c("wf", "loading"), t.a.c("wf", "inactive")]), R(t, "active")) : Z(t.a));
     }
     function rt(t) {
       this.j = t, this.a = new _t(), this.h = 0, this.f = this.g = !0;
     }
     rt.prototype.load = function(t) {
-      this.c = new g(this.j, t.context || this.j), this.g = t.events !== !1, this.f = t.classes !== !1, Nt(this, new At(this.c, t), t);
+      this.c = new g(this.j, t.context || this.j), this.g = t.events !== !1, this.f = t.classes !== !1, Rt(this, new At(this.c, t), t);
     };
-    function Rt(t, e, i, o, l) {
-      var f = --t.h == 0;
+    function Nt(t, e, i, o, l) {
+      var h = --t.h == 0;
       (t.f || t.g) && setTimeout(function() {
         var p = l || null, y = o || null || {};
-        if (i.length === 0 && f)
+        if (i.length === 0 && h)
           Z(e.a);
         else {
-          e.f += i.length, f && (e.j = f);
+          e.f += i.length, h && (e.j = h);
           var v, b = [];
           for (v = 0; v < i.length; v++) {
             var T = i[v], x = y[T.c], A = e.a, F = T;
-            if (A.g && w(A.f, [A.a.c("wf", F.c, C(F).toString(), "loading")]), N(A, "fontloading", F), A = null, O === null)
+            if (A.g && w(A.f, [A.a.c("wf", F.c, C(F).toString(), "loading")]), R(A, "fontloading", F), A = null, O === null)
               if (window.FontFace) {
                 var F = /Gecko.*Firefox\/(\d+)/.exec(window.navigator.userAgent), Vt = /OS X.*Version\/10\..*Safari/.exec(window.navigator.userAgent) && /Apple/.exec(window.navigator.vendor);
                 O = F ? 42 < parseInt(F[1], 10) : !Vt;
@@ -294,13 +294,13 @@ var G = {}, Ut = {
         }
       }, 0);
     }
-    function Nt(t, e, i) {
+    function Rt(t, e, i) {
       var l = [], o = i.timeout;
       Ht(e);
-      var l = kt(t.a, i, t.c), f = new U(t.c, e, o);
+      var l = kt(t.a, i, t.c), h = new U(t.c, e, o);
       for (t.h = l.length, e = 0, i = l.length; e < i; e++)
         l[e].load(function(p, y, v) {
-          Rt(t, f, p, y, v);
+          Nt(t, h, p, y, v);
         });
     }
     function lt(t, e) {
@@ -308,8 +308,8 @@ var G = {}, Ut = {
     }
     lt.prototype.load = function(t) {
       function e() {
-        if (f["__mti_fntLst" + o]) {
-          var p = f["__mti_fntLst" + o](), y = [], v;
+        if (h["__mti_fntLst" + o]) {
+          var p = h["__mti_fntLst" + o](), y = [], v;
           if (p)
             for (var b = 0; b < p.length; b++) {
               var T = p[b].fontfamily;
@@ -323,9 +323,9 @@ var G = {}, Ut = {
       }
       var i = this, o = i.a.projectId, l = i.a.version;
       if (o) {
-        var f = i.c.o;
+        var h = i.c.o;
         E(this.c, (i.a.api || "https://fast.fonts.net/jsapi") + "/" + o + ".js" + (l ? "?v=" + l : ""), function(p) {
-          p ? t([]) : (f["__MonotypeConfiguration__" + o] = function() {
+          p ? t([]) : (h["__MonotypeConfiguration__" + o] = function() {
             return i.a;
           }, e());
         }).id = "__MonotypeAPIScript__" + o;
@@ -336,9 +336,9 @@ var G = {}, Ut = {
       this.c = t, this.a = e;
     }
     st.prototype.load = function(t) {
-      var e, i, o = this.a.urls || [], l = this.a.families || [], f = this.a.testStrings || {}, p = new H();
+      var e, i, o = this.a.urls || [], l = this.a.families || [], h = this.a.testStrings || {}, p = new H();
       for (e = 0, i = o.length; e < i; e++)
-        L(this.c, o[e], q(p));
+        P(this.c, o[e], q(p));
       var y = [];
       for (e = 0, i = l.length; e < i; e++)
         if (o = l[e].split(":"), o[1])
@@ -347,22 +347,22 @@ var G = {}, Ut = {
         else
           y.push(new S(o[0]));
       Y(p, function() {
-        t(y, f);
+        t(y, h);
       });
     };
     function Ft(t, e) {
-      t ? this.c = t : this.c = Lt, this.a = [], this.f = [], this.g = e || "";
+      t ? this.c = t : this.c = Pt, this.a = [], this.f = [], this.g = e || "";
     }
-    var Lt = "https://fonts.googleapis.com/css";
-    function Pt(t, e) {
+    var Pt = "https://fonts.googleapis.com/css";
+    function Lt(t, e) {
       for (var i = e.length, o = 0; o < i; o++) {
         var l = e[o].split(":");
         l.length == 3 && t.f.push(l.pop());
-        var f = "";
-        l.length == 2 && l[1] != "" && (f = ":"), t.a.push(l.join(f));
+        var h = "";
+        l.length == 2 && l[1] != "" && (h = ":"), t.a.push(l.join(h));
       }
     }
-    function Bt(t) {
+    function zt(t) {
       if (t.a.length == 0)
         throw Error("No fonts to load!");
       if (t.c.indexOf("kit=") != -1)
@@ -371,13 +371,13 @@ var G = {}, Ut = {
         i.push(t.a[o].replace(/ /g, "+"));
       return e = t.c + "?family=" + i.join("%7C"), 0 < t.f.length && (e += "&subset=" + t.f.join(",")), 0 < t.g.length && (e += "&text=" + encodeURIComponent(t.g)), e;
     }
-    function Wt(t) {
+    function Bt(t) {
       this.f = t, this.a = [], this.c = {};
     }
-    var ct = { latin: "BESbswy", "latin-ext": "çöüğş", cyrillic: "йяЖ", greek: "αβΣ", khmer: "កខគ", Hanuman: "កខគ" }, It = { thin: "1", extralight: "2", "extra-light": "2", ultralight: "2", "ultra-light": "2", light: "3", regular: "4", book: "4", medium: "5", "semi-bold": "6", semibold: "6", "demi-bold": "6", demibold: "6", bold: "7", "extra-bold": "8", extrabold: "8", "ultra-bold": "8", ultrabold: "8", black: "9", heavy: "9", l: "3", r: "4", b: "7" }, zt = { i: "i", italic: "i", n: "n", normal: "n" }, Ot = /^(thin|(?:(?:extra|ultra)-?)?light|regular|book|medium|(?:(?:semi|demi|extra|ultra)-?)?bold|black|heavy|l|r|b|[1-9]00)?(n|i|normal|italic)?$/;
+    var ct = { latin: "BESbswy", "latin-ext": "çöüğş", cyrillic: "йяЖ", greek: "αβΣ", khmer: "កខគ", Hanuman: "កខគ" }, Wt = { thin: "1", extralight: "2", "extra-light": "2", ultralight: "2", "ultra-light": "2", light: "3", regular: "4", book: "4", medium: "5", "semi-bold": "6", semibold: "6", "demi-bold": "6", demibold: "6", bold: "7", "extra-bold": "8", extrabold: "8", "ultra-bold": "8", ultrabold: "8", black: "9", heavy: "9", l: "3", r: "4", b: "7" }, It = { i: "i", italic: "i", n: "n", normal: "n" }, Ot = /^(thin|(?:(?:extra|ultra)-?)?light|regular|book|medium|(?:(?:semi|demi|extra|ultra)-?)?bold|black|heavy|l|r|b|[1-9]00)?(n|i|normal|italic)?$/;
     function jt(t) {
       for (var e = t.f.length, i = 0; i < e; i++) {
-        var o = t.f[i].split(":"), l = o[0].replace(/\+/g, " "), f = ["n4"];
+        var o = t.f[i].split(":"), l = o[0].replace(/\+/g, " "), h = ["n4"];
         if (2 <= o.length) {
           var p, y = o[1];
           if (p = [], y)
@@ -388,20 +388,20 @@ var G = {}, Ut = {
                 if (x == null)
                   T = "";
                 else {
-                  if (T = x[2], T = T == null || T == "" ? "n" : zt[T], x = x[1], x == null || x == "")
+                  if (T = x[2], T = T == null || T == "" ? "n" : It[T], x = x[1], x == null || x == "")
                     x = "4";
                   else
-                    var A = It[x], x = A || (isNaN(x) ? "4" : x.substr(0, 1));
+                    var A = Wt[x], x = A || (isNaN(x) ? "4" : x.substr(0, 1));
                   T = [T, x].join("");
                 }
               } else
                 T = "";
               T && p.push(T);
             }
-          0 < p.length && (f = p), o.length == 3 && (o = o[2], p = [], o = o ? o.split(",") : p, 0 < o.length && (o = ct[o[0]]) && (t.c[l] = o));
+          0 < p.length && (h = p), o.length == 3 && (o = o[2], p = [], o = o ? o.split(",") : p, 0 < o.length && (o = ct[o[0]]) && (t.c[l] = o));
         }
-        for (t.c[l] || (o = ct[l]) && (t.c[l] = o), o = 0; o < f.length; o += 1)
-          t.a.push(new S(l, f[o]));
+        for (t.c[l] || (o = ct[l]) && (t.c[l] = o), o = 0; o < h.length; o += 1)
+          t.a.push(new S(l, h[o]));
       }
     }
     function ut(t, e) {
@@ -410,10 +410,10 @@ var G = {}, Ut = {
     var Dt = { Arimo: !0, Cousine: !0, Tinos: !0 };
     ut.prototype.load = function(t) {
       var e = new H(), i = this.c, o = new Ft(this.a.api, this.a.text), l = this.a.families;
-      Pt(o, l);
-      var f = new Wt(l);
-      jt(f), L(i, Bt(o), q(e)), Y(e, function() {
-        t(f.a, f.c, Dt);
+      Lt(o, l);
+      var h = new Bt(l);
+      jt(h), P(i, zt(o), q(e)), Y(e, function() {
+        t(h.a, h.c, Dt);
       });
     };
     function gt(t, e) {
@@ -426,8 +426,8 @@ var G = {}, Ut = {
           t([]);
         else if (i.Typekit && i.Typekit.config && i.Typekit.config.fn) {
           o = i.Typekit.config.fn;
-          for (var l = [], f = 0; f < o.length; f += 2)
-            for (var p = o[f], y = o[f + 1], v = 0; v < y.length; v++)
+          for (var l = [], h = 0; h < o.length; h += 2)
+            for (var p = o[h], y = o[h + 1], v = 0; v < y.length; v++)
               l.push(new S(p, y[v]));
           try {
             i.Typekit.load({ events: !1, classes: !1, async: !0 });
@@ -437,18 +437,18 @@ var G = {}, Ut = {
         }
       }, 2e3) : t([]);
     };
-    function ht(t, e) {
+    function ft(t, e) {
       this.c = t, this.f = e, this.a = [];
     }
-    ht.prototype.load = function(t) {
+    ft.prototype.load = function(t) {
       var e = this.f.id, i = this.c.o, o = this;
-      e ? (i.__webfontfontdeckmodule__ || (i.__webfontfontdeckmodule__ = {}), i.__webfontfontdeckmodule__[e] = function(l, f) {
-        for (var p = 0, y = f.fonts.length; p < y; ++p) {
-          var v = f.fonts[p];
+      e ? (i.__webfontfontdeckmodule__ || (i.__webfontfontdeckmodule__ = {}), i.__webfontfontdeckmodule__[e] = function(l, h) {
+        for (var p = 0, y = h.fonts.length; p < y; ++p) {
+          var v = h.fonts[p];
           o.a.push(new S(v.name, St("font-weight:" + v.weight + ";font-style:" + v.style)));
         }
         t(o.a);
-      }, E(this.c, (this.f.api || "https://f.fontdeck.com/s/css/js/") + R(this.c) + "/" + e + ".js", function(l) {
+      }, E(this.c, (this.f.api || "https://f.fontdeck.com/s/css/js/") + N(this.c) + "/" + e + ".js", function(l) {
         l && t([]);
       })) : t([]);
     };
@@ -456,7 +456,7 @@ var G = {}, Ut = {
     k.a.c.custom = function(t, e) {
       return new st(e, t);
     }, k.a.c.fontdeck = function(t, e) {
-      return new ht(e, t);
+      return new ft(e, t);
     }, k.a.c.monotype = function(t, e) {
       return new lt(e, t);
     }, k.a.c.typekit = function(t, e) {
@@ -464,8 +464,8 @@ var G = {}, Ut = {
     }, k.a.c.google = function(t, e) {
       return new ut(e, t);
     };
-    var ft = { load: r(k.load, k) };
-    n.exports ? n.exports = ft : (window.WebFont = ft, window.WebFontConfig && k.load(window.WebFontConfig));
+    var ht = { load: r(k.load, k) };
+    n.exports ? n.exports = ht : (window.WebFont = ht, window.WebFontConfig && k.load(window.WebFontConfig));
   })();
 })(Ut);
 const vt = G, wt = (n) => {
@@ -498,19 +498,19 @@ const vt = G, wt = (n) => {
     a(dt(document) + c);
     return;
   }
-  var r = n.indexOf("#"), s = n.substring(r), g = n.substring(0, r), h = new XMLHttpRequest();
-  h.open("GET", g, !0), h.responseType = "document", h.onload = function() {
-    if (h.status != 200) {
+  var r = n.indexOf("#"), s = n.substring(r), g = n.substring(0, r), f = new XMLHttpRequest();
+  f.open("GET", g, !0), f.responseType = "document", f.onload = function() {
+    if (f.status != 200) {
       console.error(
-        'Failed to load footnote at "' + n + '": ' + h.statusText
+        'Failed to load footnote at "' + n + '": ' + f.statusText
       );
       return;
     }
-    var d = h.responseXML;
+    var d = f.responseXML;
     a(
       dt(d) + pt(d.getElementById(s.substring(1)))
     );
-  }, h.send();
+  }, f.send();
 }, Xt = () => {
   var n = document.getElementsByTagName("switch");
   for (let s = 0; s < n.length; s++) {
@@ -540,8 +540,8 @@ const vt = G, wt = (n) => {
       continue;
     }
     if (s.type == CSSRule.FONT_FACE_RULE) {
-      var h = s.style.fontFamily;
-      a.indexOf(h) == -1 && a.push(h);
+      var f = s.style.fontFamily;
+      a.indexOf(f) == -1 && a.push(f);
     }
   }
   return { fonts: a, useWorkaround: c };
@@ -551,9 +551,9 @@ const vt = G, wt = (n) => {
   for (let E = 0; E < r.length; E++) {
     var s = r[E], g = bt(s);
     c = c || g.useWorkaround;
-    var h = g.fonts;
-    for (let H = 0; H < h.length; H++) {
-      var d = h[H];
+    var f = g.fonts;
+    for (let H = 0; H < f.length; H++) {
+      var d = f[H];
       a[d.toLowerCase()] = !0;
     }
     n.push.apply(n, g.fonts);
@@ -565,8 +565,8 @@ const vt = G, wt = (n) => {
       if (m.nodeType == Node.ELEMENT_NODE) {
         var w = window.getComputedStyle(m), _ = w["font-family"].split(",");
         for (let H = 0; H < _.length; H++) {
-          var R = _[H], L = R.toLowerCase();
-          a[L] !== !0 && (a[L] = !0);
+          var N = _[H], P = N.toLowerCase();
+          a[P] !== !0 && (a[P] = !0);
         }
         n.push.apply(n, _);
       }
@@ -575,8 +575,8 @@ const vt = G, wt = (n) => {
   return n;
 }, $t = (n) => {
   for (var a = {}, c = n.split(","), r = 0; r < c.length; ++r) {
-    var s = c[r].split("="), g = s[0].trim(), h = s[1].trim();
-    a[g] = h;
+    var s = c[r].split("="), g = s[0].trim(), f = s[1].trim();
+    a[g] = f;
   }
   return a;
 }, Jt = (n) => {
@@ -618,8 +618,8 @@ const vt = G, wt = (n) => {
       if (globalThis.config.flowStyle == FLOW_PAGED)
         a.push([r, Tt(s)]);
       else {
-        var g = s.getBoundingClientRect(), h = g.top + window.scrollY;
-        a.push([r, h]);
+        var g = s.getBoundingClientRect(), f = g.top + window.scrollY;
+        a.push([r, f]);
       }
   }
   ReaderApp.setAnchorPositions(JSON.stringify(a));
@@ -629,9 +629,9 @@ const vt = G, wt = (n) => {
   let r = window.innerWidth;
   for (let s = 0; s < n; s++) {
     const g = document.createElement("div");
-    g.className = "ReaderApp-page-header", g.style.padding = "0", g.style.position = "absolute", g.style.top = globalThis.config.topExtraHeight + "px", g.style.left = r * s + "px", g.style.width = "100%", g.style.height = globalThis.config.infoBarHeight + "px", g.style.boxSizing = "border-box", g.style.fontSize = "13px", g.style.color = "#8d8d8d", g.style.padding = `0 ${globalThis.config.marginHorizontal}px`, g.style.display = "flex", g.style.alignItems = "flex-end", g.innerText = s == 0 ? a : c, bookContainer.appendChild(g);
-    const h = document.createElement("div");
-    h.className = "ReaderApp-page-footer", h.style.padding = "0", h.style.position = "absolute", h.style.bottom = globalThis.config.bottomExtraHeight + "px", h.style.left = r * s + "px", h.style.width = "100%", h.style.height = globalThis.config.infoBarHeight + "px", h.style.boxSizing = "border-box", h.style.fontSize = "13px", h.style.color = "#8d8d8d", h.style.padding = `0 ${globalThis.config.marginHorizontal}px`, h.style.display = "flex", h.style.alignItems = "flex-start", h.style.justifyContent = "flex-end", h.innerText = `${s + 1}/${n}`, bookContainer.appendChild(h);
+    g.className = "reader-app-page-header", g.style.position = "absolute", g.style.top = globalThis.config.topExtraHeight + "px", g.style.left = r * s + "px", g.style.width = "100%", g.style.height = globalThis.config.infoBarHeight + "px", g.style.boxSizing = "border-box", g.style.setProperty("font-size", "13px", "important"), g.style.setProperty("color", "#8d8d8d", "important"), g.style.padding = `0 ${globalThis.config.marginHorizontal}px`, g.style.display = "flex", g.style.alignItems = "flex-end", g.innerText = s == 0 ? a : c, bookContainer.appendChild(g);
+    const f = document.createElement("div");
+    f.className = "reader-app-page-footer", f.style.position = "absolute", f.style.bottom = globalThis.config.bottomExtraHeight + "px", f.style.left = r * s + "px", f.style.width = "100%", f.style.height = globalThis.config.infoBarHeight + "px", f.style.boxSizing = "border-box", f.style.setProperty("font-size", "13px", "important"), f.style.setProperty("color", "#8d8d8d", "important"), f.style.padding = `0 ${globalThis.config.marginHorizontal}px`, f.style.display = "flex", f.style.alignItems = "flex-start", f.style.justifyContent = "flex-end", f.innerText = `${s + 1}/${n}`, bookContainer.appendChild(f);
   }
 }, Ct = () => {
   if (!(globalThis.config.layoutStyle != LAYOUT_REFLOW || globalThis.config.flowStyle != FLOW_PAGED)) {
@@ -661,18 +661,18 @@ const vt = G, wt = (n) => {
       pagedHorizontally
     );
   }
-}, P = () => {
+}, L = () => {
   globalThis.config.flowStyle == FLOW_PAGED ? Ct() : xt(globalThis.config.tocAnchorList ?? []);
   var n = Kt(
     globalThis.config.paperPageToAnchorMap ?? []
   );
   ReaderApp.setPaperPageMap(JSON.stringify(n)), initialFlowWasDone = !0;
 }, M = () => {
-  initialFlowWasDone && P();
+  initialFlowWasDone && L();
 }, X = () => {
   console.log("use", globalThis.config.lineSpacing, globalThis.config.textAlign);
   var n = "line-height: " + globalThis.config.lineSpacing + " !important;";
-  switch (globalThis.config.textAlign) {
+  switch (n += "font-size: " + globalThis.config.fontSize + "px !important;", globalThis.config.textAlign) {
     case 1:
       n += "text-align: initial !important;";
       break;
@@ -701,13 +701,13 @@ const vt = G, wt = (n) => {
 }, ae = (n) => {
   if (currentFont = n, !n) {
     fontStyleElement.innerText = "", initialFlowWasDone && setTimeout(function() {
-      P();
+      L();
     }, 60);
     return;
   }
   if (fontStyleElement.innerText = specificitySelector + " * { font-family: " + n.name + " !important; }", fontSetupInitialized) {
     var a = function() {
-      fontsLoaded.push(n.name), initialFlowWasDone && P();
+      fontsLoaded.push(n.name), initialFlowWasDone && L();
     };
     fontsLoaded.indexOf(n.name) > -1 ? a() : vt.load({
       custom: {
@@ -731,8 +731,8 @@ const vt = G, wt = (n) => {
     let w = s.children;
     w.length === 0 ? r = !1 : s = w[w.length - 1];
   }
-  const { y: g, height: h } = s.getBoundingClientRect(), d = Math.floor(
-    window.innerHeight - g - h - globalThis.config.infoBarHeight * 2
+  const { y: g, height: f } = s.getBoundingClientRect(), d = Math.floor(
+    window.innerHeight - g - f - globalThis.config.infoBarHeight * 2
   ) + "px", u = "1px", m = document.createElement("div");
   m.style.width = u, m.style.height = d, c.appendChild(m);
   for (let w of a.children)
@@ -746,8 +746,8 @@ const vt = G, wt = (n) => {
   a.preventDefault(), a.stopPropagation(), (n.getAttribute("epub:type") || n.getAttribute("epubu0003atype")) == "noteref" ? (a.preventDefault(), a.stopPropagation(), Gt(n.getAttribute("href"), function(r) {
     const s = n.getClientRects();
     let g;
-    for (var h in s) {
-      var d = s[h];
+    for (var f in s) {
+      var d = s[f];
       if (a.clientX >= d.left && a.clientX <= d.right && a.clientY >= d.top && a.clientY <= d.bottom) {
         g = d;
         break;
@@ -780,6 +780,7 @@ function ce() {
     marginHorizontal: 18,
     marginVertical: 30,
     infoBarHeight: 32,
+    fontSize: 18,
     textAlign: 2,
     lineSpacing: 1.4,
     backgroundColor: "f7f1e8",
@@ -793,7 +794,7 @@ function ce() {
   };
 }
 const ue = () => {
-  globalThis.ReaderApp = {}, navigator.userAgent.indexOf("ReaderJs/Client") > -1 ? (ReaderApp.notifySize = (...u) => window.flutter_inappwebview.callHandler("notifySize", ...u), ReaderApp.onTouchUp = (...u) => window.flutter_inappwebview.callHandler("onTouchUp", ...u), ReaderApp.setAnchorPositions = (...u) => window.flutter_inappwebview.callHandler("setAnchorPositions", ...u), ReaderApp.setPaperPageMap = (...u) => window.flutter_inappwebview.callHandler("setPaperPageMap", ...u), ReaderApp.onBookReady = (...u) => window.flutter_inappwebview.callHandler("onBookReady", ...u), ReaderApp.onPagingSetup = (...u) => window.flutter_inappwebview.callHandler("onPagingSetup", ...u), ReaderApp.openImage = (...u) => window.flutter_inappwebview.callHandler("openImage", ...u)) : (ReaderApp.notifySize = a, ReaderApp.onTouchUp = c, ReaderApp.setAnchorPositions = r, ReaderApp.setPaperPageMap = s, ReaderApp.onBookReady = g, ReaderApp.onPagingSetup = h, ReaderApp.openImage = d);
+  globalThis.ReaderApp = {}, navigator.userAgent.indexOf("ReaderJs/Client") > -1 ? (ReaderApp.notifySize = (...u) => window.flutter_inappwebview.callHandler("notifySize", ...u), ReaderApp.onTouchUp = (...u) => window.flutter_inappwebview.callHandler("onTouchUp", ...u), ReaderApp.setAnchorPositions = (...u) => window.flutter_inappwebview.callHandler("setAnchorPositions", ...u), ReaderApp.setPaperPageMap = (...u) => window.flutter_inappwebview.callHandler("setPaperPageMap", ...u), ReaderApp.onBookReady = (...u) => window.flutter_inappwebview.callHandler("onBookReady", ...u), ReaderApp.onPagingSetup = (...u) => window.flutter_inappwebview.callHandler("onPagingSetup", ...u), ReaderApp.openImage = (...u) => window.flutter_inappwebview.callHandler("openImage", ...u)) : (ReaderApp.notifySize = a, ReaderApp.onTouchUp = c, ReaderApp.setAnchorPositions = r, ReaderApp.setPaperPageMap = s, ReaderApp.onBookReady = g, ReaderApp.onPagingSetup = f, ReaderApp.openImage = d);
   function a(u, m) {
     console.log("notifySize", u, m);
   }
@@ -809,7 +810,7 @@ const ue = () => {
   function g(u, m) {
     console.log("onBookReady", u, m);
   }
-  function h(u, m, w, _) {
+  function f(u, m, w, _) {
     console.log("onPagingSetup", u, m, w, _);
   }
   function d(u, m) {
@@ -820,17 +821,17 @@ globalThis.ReaderThemes = function() {
   var n = "-webkit-text-fill-color: currentcolor !important;";
   let a;
   function c() {
-    const h = document.createElement("style");
-    h.setAttribute("type", "text/css"), h.id = "__ReaderThemeStyle", document.head.appendChild(h), a = document.getElementById("__ReaderThemeStyle"), a.dataset.excludeFromFootnote = !0;
+    const f = document.createElement("style");
+    f.setAttribute("type", "text/css"), f.id = "__ReaderThemeStyle", document.head.appendChild(f), a = document.getElementById("__ReaderThemeStyle"), a.dataset.excludeFromFootnote = !0;
   }
-  function r(h) {
-    for (var d = h.toString(16); d.length < 6; )
+  function r(f) {
+    for (var d = f.toString(16); d.length < 6; )
       d = "0" + d;
     return d;
   }
-  function s(h) {
+  function s(f) {
     var d = "";
-    h && (d += "body {", d += "background-color: #" + r(h.backgroundColor) + " !important;", d += "}", d += "* {", d += "background-color: transparent !important;", d += "color: #" + r(h.textColor) + " !important;" + n, d += "}", d += "a, a:link, a:visited, a:hover, a * {", d += "color: #" + r(h.linkColor) + " !important;" + n, d += "}"), a.innerText = d;
+    f && (d += "body {", d += "background-color: #" + r(f.backgroundColor) + " !important;", d += "}", d += "* {", d += "background-color: transparent !important;", d += "color: #" + r(f.textColor) + " !important;" + n, d += "}", d += "a, a:link, a:visited, a:hover, a * {", d += "color: #" + r(f.linkColor) + " !important;" + n, d += "}"), a.innerText = d;
   }
   function g() {
     return a.innerText;
@@ -858,25 +859,25 @@ globalThis.ReaderJs = (() => {
         break;
       }
     }
-    const h = !!s;
-    if (h && globalThis.config.layoutStyle == LAYOUT_FIXED) {
+    const f = !!s;
+    if (f && globalThis.config.layoutStyle == LAYOUT_FIXED) {
       const u = $t(
         s.getAttribute("content")
       ), m = parseInt(u.width);
       let w = 0;
       u.height && (w = parseInt(u.height));
-      const R = document.getElementsByTagName("html")[0].getBoundingClientRect();
-      w = Math.max(w, R.bottom - R.top), u.width = m, u.height = w, u["minimum-scale"] = 0, ReaderApp.setFixedViewport(m, w), s.setAttribute(
+      const N = document.getElementsByTagName("html")[0].getBoundingClientRect();
+      w = Math.max(w, N.bottom - N.top), u.width = m, u.height = w, u["minimum-scale"] = 0, ReaderApp.setFixedViewport(m, w), s.setAttribute(
         "content",
         Jt(u)
       );
     } else {
-      h && ((d = s == null ? void 0 : s.parentNode) == null || d.removeChild(s));
+      f && ((d = s == null ? void 0 : s.parentNode) == null || d.removeChild(s));
       const u = document.createElement("meta");
       u.setAttribute("name", "viewport"), u.setAttribute("content", "width=device-width, user-scalable=no"), document.head.appendChild(u);
     }
-    ReaderApp.notifySize(window.innerWidth, window.innerHeight), P(), window.onresize = function() {
-      console.log("---onresize---"), ReaderApp.notifySize(window.innerWidth, window.innerHeight), P();
+    ReaderApp.notifySize(window.innerWidth, window.innerHeight), L(), window.onresize = function() {
+      console.log("---onresize---"), ReaderApp.notifySize(window.innerWidth, window.innerHeight), L();
     }, ReaderApp.onBookReady(), setTimeout(function() {
       ReaderApp.notifySize(window.innerWidth, window.innerHeight);
     }, 300);
@@ -894,9 +895,9 @@ globalThis.ReaderJs = (() => {
         le(this, u);
       });
     }
-    const h = document.getElementsByTagName("img");
-    for (let u = 0; u < h.length; u++) {
-      var d = h[u];
+    const f = document.getElementsByTagName("img");
+    for (let u = 0; u < f.length; u++) {
+      var d = f[u];
       d.addEventListener("click", function(m) {
         se(this, m);
       });
