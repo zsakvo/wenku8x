@@ -16,13 +16,15 @@ import 'page_string.dart';
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
-  const ReaderView({required this.aid, required this.name, Key? key}) : super(key: key);
+  const ReaderView({required this.aid, required this.name, Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReaderViewState();
 }
 
-class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStateMixin {
+class _ReaderViewState extends ConsumerState<ReaderView>
+    with TickerProviderStateMixin {
   late Directory docDir;
   late double statusBarHeight;
   late double bottomBarHeight;
@@ -46,7 +48,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   Widget build(BuildContext context) {
     final loading = useState(true);
     final currentPage = useState(0);
-    final padding = MediaQuery.of(context).padding;
+    final mediaQuery = MediaQuery.of(context);
     final chapters = useState<List<Chapter>>([]);
     final fileUri = useState<String?>(null);
     final webViewController = useState<InAppWebViewController?>(null);
@@ -66,7 +68,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             for (var node in element.children) {
               if (node.toString().length > 2) {
                 if (i != 0) {
-                  cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
+                  cpts.add(Chapter(
+                      node.getAttribute("cid").toString(), node.innerText));
                 }
               }
               i++;
@@ -83,7 +86,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
+      String html = getPageString(
+          widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
       final file = File("${docDir.path}/books/$aid/$cid.html");
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
@@ -95,7 +99,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     onPointerMove(PointerMoveEvent event) {
       if (enableGestureListener.value) {
-        webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+        webViewController.value!
+            .scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
       }
     }
 
@@ -111,7 +116,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           currentPage.value--;
         }
       }
-      webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      webViewController.value!.scrollTo(
+          x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
     fetchBody(String uri) async {
@@ -126,10 +132,10 @@ ReaderJs.appendChapter(`$bodySrc`)
 
     useEffect(() {
       if (Platform.isAndroid) {
-        extraRate = MediaQuery.of(context).devicePixelRatio;
+        extraRate = mediaQuery.devicePixelRatio;
       }
-      statusBarHeight = padding.top;
-      bottomBarHeight = padding.bottom;
+      statusBarHeight = mediaQuery.padding.top;
+      bottomBarHeight = mediaQuery.padding.bottom;
       fetchCatalog(widget.aid);
       return () {};
     }, []);
@@ -166,7 +172,8 @@ ReaderJs.appendChapter(`$bodySrc`)
               callback: (params) {
                 totalPage = params[2];
               });
-          controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
+          controller.loadUrl(
+              urlRequest: URLRequest(url: WebUri(fileUri.value!)));
         } else {
           Log.d("已经加载过了");
           fetchBody(fileUri.value!);
@@ -180,7 +187,8 @@ ReaderJs.appendChapter(`$bodySrc`)
         Log.d("要加载下一章了");
         var cpts = chapters.value;
         chapterIndex++;
-        fetchContent(widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        fetchContent(
+            widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
       return () {};
     }, [currentPage.value]);

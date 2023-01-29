@@ -68,6 +68,7 @@ dev_dependencies:
   json_serializable: any
   build_runner: any
   freezed: any
+  hive_generator:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

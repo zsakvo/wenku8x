@@ -55,7 +55,10 @@ Widget ListBookTile(context,
                 style: TextStyle(
                     fontSize: descSize,
                     height: 1.4,
-                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onBackground
+                        .withOpacity(0.5)),
               ),
               desc2 != null
                   ? Text(
@@ -65,7 +68,10 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)),
                     )
                   : const SizedBox.shrink(),
               desc3 != null
@@ -76,7 +82,10 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onBackground
+                              .withOpacity(0.5)),
                     )
                   : const SizedBox.shrink()
             ],

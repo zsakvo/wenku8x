@@ -18,7 +18,8 @@ import '../utils/log.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
-  static String UA = "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
+  static String UA =
+      "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
   static const String _APPVER = "1.13";
 
   ///超时时间
@@ -50,9 +51,16 @@ class Ajax {
   static Future<dynamic> post(String param, {bool isXml = true}) async {
     // 判断是否是登陆请求
     bool isLogin = param.contains("action=login");
-    FormData formData = FormData.fromMap(
-        {"appver": _APPVER, "request": _encrypt(param), "timetoken": DateTime.now().millisecondsSinceEpoch});
-    Log.d({"appver": _APPVER, "request": param, "timetoken": DateTime.now().millisecondsSinceEpoch}, "请求参数");
+    FormData formData = FormData.fromMap({
+      "appver": _APPVER,
+      "request": _encrypt(param),
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    });
+    Log.d({
+      "appver": _APPVER,
+      "request": param,
+      "timetoken": DateTime.now().millisecondsSinceEpoch
+    }, "请求参数");
     var res = await _client.post("", data: formData);
     if (isXml) {
       try {
@@ -64,6 +72,7 @@ class Ajax {
           final password = configBox.get("password");
           if (username != null && password != null) {
             var res = await API.login(username, password);
+            Log.d(res, "relogin");
             if (res) {
               post(param, isXml: isXml);
             }

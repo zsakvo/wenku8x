@@ -41,7 +41,8 @@ class Loginview extends HookConsumerWidget {
                 padding: const EdgeInsets.only(bottom: 32),
                 child: TextField(
                   controller: usernameController,
-                  decoration: const InputDecoration(label: Text("用户名"), contentPadding: EdgeInsets.zero),
+                  decoration: const InputDecoration(
+                      label: Text("用户名"), contentPadding: EdgeInsets.zero),
                   // controller: controller.usernameController,
                 ),
               ),
@@ -49,19 +50,22 @@ class Loginview extends HookConsumerWidget {
                   padding: const EdgeInsets.only(bottom: 32),
                   child: TextField(
                     controller: passwordController,
-                    decoration: const InputDecoration(label: Text("密码"), contentPadding: EdgeInsets.zero),
+                    decoration: const InputDecoration(
+                        label: Text("密码"), contentPadding: EdgeInsets.zero),
                   )),
               Container(
                   alignment: Alignment.centerRight,
                   padding: const EdgeInsets.only(top: 64),
                   child: TextButton(
                       style: TextButton.styleFrom(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30)),
                         backgroundColor: Theme.of(context).colorScheme.primary,
                         minimumSize: const Size(148, 44),
                       ),
                       onPressed: () async {
-                        var res = await API.login(usernameController.text, passwordController.text);
+                        var res = await API.login(
+                            usernameController.text, passwordController.text);
                         Log.d(res);
                         if (res) {
                           configBox.put("username", usernameController.text);
@@ -75,7 +79,8 @@ class Loginview extends HookConsumerWidget {
                       },
                       child: Text(
                         "登陆",
-                        style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
                       ))),
             ]),
       ),

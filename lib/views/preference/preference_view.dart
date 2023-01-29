@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:settings_ui/settings_ui.dart';
+import 'package:wenku8x/modals/config.dart';
 import 'package:wenku8x/utils/log.dart';
+import 'package:wenku8x/views/preference/preference_model.dart';
 
 class PreferenceView extends StatefulHookConsumerWidget {
   const PreferenceView({Key? key}) : super(key: key);
@@ -19,6 +21,7 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
   final subTitleStyle = const TextStyle(fontSize: 14);
   @override
   Widget build(BuildContext context) {
+    final Config config = ref.watch(preferenceProvider);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: CustomScrollView(slivers: [
@@ -55,7 +58,9 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
           ListTile(
             contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("动态取色", style: titleStyle),
-            onTap: () {},
+            onTap: () {
+              ref.read(preferenceProvider.notifier).toggleDynamicColor();
+            },
             subtitle: Text(
               "跟随系统桌面自动获取主题色",
               style: subTitleStyle,
@@ -63,13 +68,19 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             trailing: Transform.scale(
               scaleX: 0.8,
               scaleY: 0.8,
-              child: Switch(value: true, onChanged: (value) {}),
+              child: Switch(
+                  value: config.dynamicColor!,
+                  onChanged: (value) {
+                    ref.read(preferenceProvider.notifier).toggleDynamicColor();
+                  }),
             ),
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("强制高刷", style: titleStyle),
-            onTap: () {},
+            onTap: () {
+              ref.read(preferenceProvider.notifier).toggleHighRefreshRate();
+            },
             subtitle: Text(
               "一加的部分机型可能需要",
               style: subTitleStyle,
@@ -77,7 +88,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             trailing: Transform.scale(
               scaleX: 0.8,
               scaleY: 0.8,
-              child: Switch(value: true, onChanged: (value) {}),
+              child: Switch(
+                  value: config.highRefreshRate!,
+                  onChanged: (value) {
+                    ref.read(preferenceProvider.notifier).toggleHighRefreshRate();
+                  }),
             ),
           ),
           ListTile(
@@ -89,7 +104,9 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
           ListTile(
             contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("自动签到", style: titleStyle),
-            onTap: () {},
+            onTap: () {
+              ref.read(preferenceProvider.notifier).toggleAutoSign();
+            },
             subtitle: Text(
               "启动 App 时尝试自动签到",
               style: subTitleStyle,
@@ -97,13 +114,19 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             trailing: Transform.scale(
               scaleX: 0.8,
               scaleY: 0.8,
-              child: Switch(value: true, onChanged: (value) {}),
+              child: Switch(
+                  value: config.autoSign!,
+                  onChanged: (value) {
+                    ref.read(preferenceProvider.notifier).toggleAutoSign();
+                  }),
             ),
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("简繁转换", style: titleStyle),
-            onTap: () {},
+            onTap: () {
+              ref.read(preferenceProvider.notifier).toggleTraditionalChinese();
+            },
             subtitle: Text(
               "当前显示为简体中文",
               style: subTitleStyle,
@@ -111,7 +134,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             trailing: Transform.scale(
               scaleX: 0.8,
               scaleY: 0.8,
-              child: Switch(value: false, onChanged: (value) {}),
+              child: Switch(
+                  value: config.traditionalChinese!,
+                  onChanged: (value) {
+                    ref.read(preferenceProvider.notifier).toggleTraditionalChinese();
+                  }),
             ),
           ),
           ListTile(
