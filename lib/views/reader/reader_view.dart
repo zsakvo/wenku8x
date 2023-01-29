@@ -15,7 +15,8 @@ import 'page_string.dart';
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
-  const ReaderView({required this.aid, Key? key}) : super(key: key);
+  final String name;
+  const ReaderView({required this.aid, required this.name, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReaderViewState();
@@ -71,7 +72,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      String html = getPageString(chapterName, content, statusBarHeight, bottomBarHeight);
+      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
       final file = File("${docDir.path}/books/$aid/$cid.html");
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
@@ -129,6 +130,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     useEffect(() {
       var controller = webViewController.value;
       if (controller != null && fileUri.value != null) {
+        Log.d(fileUri.value, "fv");
         controller.addJavaScriptHandler(
             handlerName: "notifySize",
             callback: (params) {

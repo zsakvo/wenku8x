@@ -3,7 +3,7 @@ const layoutStyle = 1;
 const flowStyle = 1;
 const currentTheme = "亚麻";
 
-String getPageString(String title, content, dynamic statusBarHeight, dynamic bottomBarHeight) {
+String getPageString(String bookName, String chapterName, content, dynamic statusBarHeight, dynamic bottomBarHeight) {
   final pageStr = """
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -11,10 +11,10 @@ String getPageString(String title, content, dynamic statusBarHeight, dynamic bot
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$title</title>
+  <title>$chapterName</title>
 </head>
 <body>
-  <h3 class="title" style="padding:28px 0 28px 0;">$title</h3>
+  <h3 class="title" style="padding:28px 0 28px 0;">$chapterName</h3>
   <div class="content">$content</div>
 </body>
 </html>
@@ -53,13 +53,13 @@ String getPageString(String title, content, dynamic statusBarHeight, dynamic bot
           textAlign: 2,
           lineSpacing: 1.4,
           backgroundColor: 'f7f1e8',
-          textColor: 'black',
-          linkColor: 'black',
+          textColor: '000000',
+          linkColor: '000000',
           font: '',
           topExtraHeight: $statusBarHeight,
           bottomExtraHeight: $bottomBarHeight,
-          bookName: '狼与香辛料',
-          chapterName: "第一幕"
+          bookName: '$bookName',
+          chapterName: "$chapterName"
         })
       })
     })</script>""";

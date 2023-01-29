@@ -66,13 +66,11 @@ class AppPages {
         },
       ),
       GoRoute(
-        path: '/reader/:aid',
+        path: '/reader',
         builder: (context, state) {
-          final aid = state.params['aid']!;
-          return ReaderView(
-            key: UniqueKey(),
-            aid: aid,
-          );
+          final aid = state.queryParams['aid']!;
+          final name = state.queryParams['name']!;
+          return ReaderView(key: UniqueKey(), aid: aid, name: name);
         },
       ),
       GoRoute(
