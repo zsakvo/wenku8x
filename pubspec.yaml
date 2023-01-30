@@ -22,6 +22,8 @@ version: 1.0.0+1
 environment:
   sdk: '>=2.18.0 <3.0.0'
 
+isar_version: &isar_version 3.0.5
+
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
 # consider running `flutter pub upgrade --major-versions`. Alternatively,
@@ -61,11 +63,14 @@ dependencies:
   settings_ui:
     path: modules/settings_ui
   archive: ^3.3.5
+  isar: *isar_version
+  isar_flutter_libs: *isar_version # contains Isar Core
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: any
+  isar_generator: *isar_version
   build_runner: any
   freezed: any
   hive_generator:
