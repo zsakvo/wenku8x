@@ -16,15 +16,13 @@ import 'page_string.dart';
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
-  const ReaderView({required this.aid, required this.name, Key? key})
-      : super(key: key);
+  const ReaderView({required this.aid, required this.name, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReaderViewState();
 }
 
-class _ReaderViewState extends ConsumerState<ReaderView>
-    with TickerProviderStateMixin {
+class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStateMixin {
   late Directory docDir;
   late double statusBarHeight;
   late double bottomBarHeight;
@@ -42,8 +40,11 @@ class _ReaderViewState extends ConsumerState<ReaderView>
   int totalPage = 0;
   // 当前章节
   int chapterIndex = 0;
+  // 是否在获取章节
+  bool fetchingNext = false;
+  bool fetchingPrevious = false;
 
-  final _regExp = r'<body[^>]*>([\s\S]*)<\/body>';
+  final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
   Widget build(BuildContext context) {
     final loading = useState(true);
@@ -68,8 +69,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
             for (var node in element.children) {
               if (node.toString().length > 2) {
                 if (i != 0) {
-                  cpts.add(Chapter(
-                      node.getAttribute("cid").toString(), node.innerText));
+                  cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
                 }
               }
               i++;
@@ -86,8 +86,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      String html = getPageString(
-          widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
+      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
       final file = File("${docDir.path}/books/$aid/$cid.html");
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
@@ -99,8 +98,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
 
     onPointerMove(PointerMoveEvent event) {
       if (enableGestureListener.value) {
-        webViewController.value!
-            .scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+        webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
       }
     }
 
@@ -116,16 +114,15 @@ class _ReaderViewState extends ConsumerState<ReaderView>
           currentPage.value--;
         }
       }
-      webViewController.value!.scrollTo(
-          x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
-    fetchBody(String uri) async {
+    fetchExtraChapter(String uri, String title) async {
       File file = File(uri.replaceAll("file://", ""));
       String htmlSrc = file.readAsStringSync();
-      var bodySrc = RegExp(_regExp).firstMatch(htmlSrc)!.group(0);
+      var bodySrc = RegExp(_regExpBody).firstMatch(htmlSrc)!.group(0);
       var a = await webViewController.value!.evaluateJavascript(source: """
-ReaderJs.appendChapter(`$bodySrc`)
+ReaderJs.appendChapter(`$bodySrc`,`$title`)
 """);
       Log.d(a, "aaa");
     }
@@ -171,24 +168,24 @@ ReaderJs.appendChapter(`$bodySrc`)
               handlerName: "onPagingSetup",
               callback: (params) {
                 totalPage = params[2];
+                fetchingNext = false;
               });
-          controller.loadUrl(
-              urlRequest: URLRequest(url: WebUri(fileUri.value!)));
+          controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
         } else {
           Log.d("已经加载过了");
-          fetchBody(fileUri.value!);
+          fetchExtraChapter(fileUri.value!, chapters.value[chapterIndex].name);
         }
       }
       return () {};
     }, [fileUri.value, webViewController.value]);
 
     useEffect(() {
-      if (currentPage.value == totalPage - 3) {
+      if (currentPage.value == totalPage - 3 && !fetchingNext) {
         Log.d("要加载下一章了");
+        fetchingNext = true;
         var cpts = chapters.value;
         chapterIndex++;
-        fetchContent(
-            widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        fetchContent(widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
       return () {};
     }, [currentPage.value]);
