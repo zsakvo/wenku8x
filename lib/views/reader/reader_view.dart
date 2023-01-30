@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/http/api.dart';
@@ -12,6 +13,8 @@ import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
 
 import 'page_string.dart';
+
+enum Menu { none, wrapper, catalog, theme, reader, style }
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
@@ -44,16 +47,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   bool fetchingNext = false;
   bool fetchingPrevious = false;
 
+  // 工具栏状态
+  // Menu menuStatus = Menu.none;
+
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
   Widget build(BuildContext context) {
     final loading = useState(true);
     final currentPage = useState(0);
     final mediaQuery = MediaQuery.of(context);
+    final screenWidth = mediaQuery.size.width;
+    final screenHeight = mediaQuery.size.height;
     final chapters = useState<List<Chapter>>([]);
     final fileUri = useState<String?>(null);
     final webViewController = useState<InAppWebViewController?>(null);
     final enableGestureListener = useState(true);
+    final menuStatus = useState<Menu>(Menu.none);
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -102,7 +111,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       }
     }
 
-    onPointerUp(PointerUpEvent event, WidgetRef ref) {
+    onPointerUp(
+      PointerUpEvent event,
+    ) {
       if (!enableGestureListener.value) return;
       tapUpPos = event.position.dx;
       double res = (tapUpPos - tapDownPos);
@@ -112,6 +123,17 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           currentPage.value++;
         } else {
           currentPage.value--;
+        }
+      } else {
+        // 视为点击事件
+        double tapUpPosY = event.position.dy;
+        if ((tapUpPos > screenWidth / 3 && tapUpPos < 2 * screenWidth / 3) &&
+            (tapUpPosY > screenHeight / 3 && tapUpPosY < 2 * screenHeight / 3)) {
+          if (menuStatus.value == Menu.none) {
+            menuStatus.value = Menu.wrapper;
+          } else {
+            menuStatus.value = Menu.none;
+          }
         }
       }
       webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
@@ -190,12 +212,24 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       return () {};
     }, [currentPage.value]);
 
+    // 工具条状态监听
+    useEffect(() {
+      if (menuStatus.value != Menu.none) {
+        Log.d("显示最外层菜单");
+      } else {
+        Log.d("收起菜单");
+      }
+      return () {};
+    }, [menuStatus.value]);
+
     return Material(
         child: Stack(
       children: [
         Listener(
             onPointerMove: onPointerMove,
-            onPointerUp: (event) => onPointerUp(event, ref),
+            onPointerUp: (event) => onPointerUp(
+                  event,
+                ),
             onPointerDown: onPointerDown,
             behavior: HitTestBehavior.translucent,
             child: InAppWebView(
@@ -215,6 +249,36 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                   disableHorizontalScroll: true,
                   disableVerticalScroll: true),
             )),
+        Positioned(
+            top: 0,
+            left: 0,
+            child: AnimatedContainer(
+                width: screenWidth,
+                height: menuStatus.value == Menu.wrapper ? mediaQuery.padding.top + 48 : 0,
+                duration: const Duration(milliseconds: 100),
+                padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+                color: const Color(0xff66ccff),
+                child: Row(children: [
+                  Flexible(
+                    child: IconButton(
+                        onPressed: () {
+                          GoRouter.of(context).pop();
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.black,
+                        )),
+                  ),
+                  Expanded(
+                      child: Text(
+                    widget.name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ))
+                ]))),
         loading.value
             ? Container(
                 color: const Color(0xfff7f1e8),
