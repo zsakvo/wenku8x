@@ -3,8 +3,8 @@ const layoutStyle = 1;
 const flowStyle = 1;
 const currentTheme = "亚麻";
 
-String getPageString(String bookName, String chapterName, content,
-    dynamic statusBarHeight, dynamic bottomBarHeight) {
+String getPageString(String bookName, String chapterName, content, dynamic statusBarHeight, dynamic bottomBarHeight,
+    String backgroundColor) {
   final pageStr = """
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -53,7 +53,7 @@ String getPageString(String bookName, String chapterName, content,
           marginVertical: 14,
           textAlign: 2,
           lineSpacing: 1.4,
-          backgroundColor: 'f7f1e8',
+          backgroundColor: '$backgroundColor',
           textColor: '000000',
           linkColor: '000000',
           font: '',

@@ -11,6 +11,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
+import 'package:wenku8x/views/reader/components/menu_bottom.dart';
+import 'package:wenku8x/views/reader/components/menu_top.dart';
 
 import 'page_string.dart';
 
@@ -49,6 +51,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
   // 工具栏状态
   // Menu menuStatus = Menu.none;
+  final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
+  final menuTopKey = GlobalKey<MenuTopState>();
 
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
@@ -95,7 +99,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight);
+      Log.d(Theme.of(context).colorScheme.primaryContainer.value.toRadixString(16), "ddd");
+      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight, "f7f2f2");
       final file = File("${docDir.path}/books/$aid/$cid.html");
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
@@ -216,8 +221,12 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     useEffect(() {
       if (menuStatus.value != Menu.none) {
         Log.d("显示最外层菜单");
+        menuBottomWrapperKey.currentState!.toggle();
+        menuTopKey.currentState!.toggle();
       } else {
         Log.d("收起菜单");
+        menuBottomWrapperKey.currentState?.toggle();
+        menuTopKey.currentState?.toggle();
       }
       return () {};
     }, [menuStatus.value]);
@@ -252,33 +261,24 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         Positioned(
             top: 0,
             left: 0,
-            child: AnimatedContainer(
-                width: screenWidth,
-                height: menuStatus.value == Menu.wrapper ? mediaQuery.padding.top + 48 : 0,
-                duration: const Duration(milliseconds: 100),
-                padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
-                color: const Color(0xff66ccff),
-                child: Row(children: [
-                  Flexible(
-                    child: IconButton(
-                        onPressed: () {
-                          GoRouter.of(context).pop();
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.black,
-                        )),
-                  ),
-                  Expanded(
-                      child: Text(
-                    widget.name,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ))
-                ]))),
+            child: MenuTop(
+              key: menuTopKey,
+              title: widget.name,
+              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            )),
+        Positioned(
+          bottom: 0,
+          left: 0,
+          child: MenuBottom(
+            key: menuBottomWrapperKey,
+            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+            onCatalogTap: () {},
+            onStyleTap: () {},
+            onProgressTap: () {},
+            onTextTap: () {},
+            onConfigTap: () {},
+          ),
+        ),
         loading.value
             ? Container(
                 color: const Color(0xfff7f1e8),

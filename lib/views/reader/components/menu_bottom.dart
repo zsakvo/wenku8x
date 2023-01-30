@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 class MenuBottom extends StatefulWidget {
   const MenuBottom(
       {Key? key,
-      required this.visible,
-      required this.theme,
+      // required this.visible,
+      required this.backgroundColor,
       required this.onCatalogTap,
       required this.onStyleTap,
       required this.onProgressTap,
       required this.onTextTap,
       required this.onConfigTap})
       : super(key: key);
-  final bool visible;
-  final Map<dynamic, dynamic> theme;
+  // final bool visible;
+  final Color backgroundColor;
 
   final void Function() onCatalogTap;
   final void Function() onStyleTap;
@@ -25,11 +25,11 @@ class MenuBottom extends StatefulWidget {
 }
 
 class MenuBottomState extends State<MenuBottom> {
-  late bool visible;
+  late bool visible = false;
   @override
   void initState() {
     super.initState();
-    visible = widget.visible;
+    // visible = widget.visible;
   }
 
   void open() {
@@ -52,6 +52,7 @@ class MenuBottomState extends State<MenuBottom> {
 
   @override
   Widget build(BuildContext context) {
+    final onPrimaryContainerColor = Theme.of(context).colorScheme.onPrimaryContainer;
     return Material(
       child: AnimatedContainer(
           width: MediaQuery.of(context).size.width,
@@ -59,7 +60,7 @@ class MenuBottomState extends State<MenuBottom> {
           duration: const Duration(milliseconds: 100),
           padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
           decoration: BoxDecoration(
-              color: Color(widget.theme["pannelColor"]),
+              color: widget.backgroundColor,
               border: const Border(top: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
           child: Wrap(
             children: [
@@ -68,50 +69,50 @@ class MenuBottomState extends State<MenuBottom> {
                     child: Center(
                   child: IconButton(
                       onPressed: widget.onCatalogTap,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.menu,
                         size: 20,
-                        color: Colors.black,
+                        color: onPrimaryContainerColor,
                       )),
                 )),
                 Flexible(
                     child: Center(
                   child: IconButton(
                       onPressed: widget.onStyleTap,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.palette_outlined,
                         size: 20,
-                        color: Colors.black,
+                        color: onPrimaryContainerColor,
                       )),
                 )),
                 Flexible(
                     child: Center(
                   child: IconButton(
                       onPressed: widget.onProgressTap,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.toll,
                         size: 20,
-                        color: Colors.black,
+                        color: onPrimaryContainerColor,
                       )),
                 )),
                 Flexible(
                     child: Center(
                   child: IconButton(
                       onPressed: widget.onStyleTap,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.text_format,
                         size: 20,
-                        color: Colors.black,
+                        color: onPrimaryContainerColor,
                       )),
                 )),
                 Flexible(
                     child: Center(
                   child: IconButton(
                       onPressed: widget.onConfigTap,
-                      icon: const Icon(
+                      icon: Icon(
                         Icons.settings_outlined,
                         size: 20,
-                        color: Colors.black,
+                        color: onPrimaryContainerColor,
                       )),
                 )),
               ])
