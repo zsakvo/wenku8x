@@ -6,11 +6,14 @@ class MenuCatalog extends StatefulWidget {
       {Key? key,
       // required this.visible,
       required this.backgroundColor,
-      required this.chapters})
+      required this.chapters,
+      required this.onItemTap})
       : super(key: key);
   // final bool visible;
   final Color backgroundColor;
   final List<Chapter> chapters;
+
+  final void Function(int index, Chapter chapter) onItemTap;
 
   @override
   State<MenuCatalog> createState() => MenuCatalogState();
@@ -67,7 +70,7 @@ class MenuCatalogState extends State<MenuCatalog> {
                 child: Text(
                   "目录",
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary, fontSize: 15, fontWeight: FontWeight.w600),
+                      color: Theme.of(context).colorScheme.primary, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               Expanded(
@@ -84,7 +87,9 @@ class MenuCatalogState extends State<MenuCatalog> {
                             } else {
                               final chapter = widget.chapters[index - 1];
                               return InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  widget.onItemTap(index, chapter);
+                                },
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                   child: Text(

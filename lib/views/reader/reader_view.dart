@@ -98,7 +98,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     }
 
     // 获取内容
-    Future fetchContent(String aid, String cid, String chapterName) async {
+    Future fetchContent(String cid, String chapterName) async {
+      if (totalPage == 0) {
+        loading.value = true;
+        menuCatalogKey.currentState!.close();
+        menuBottomWrapperKey.currentState!.close();
+      }
+      var aid = widget.aid;
       var res = await API.getNovelContent(aid, cid);
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
@@ -184,7 +190,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         // chapters.value.take(3).forEach((element) {
         //   Log.d(element.json);
         // });
-        fetchContent(widget.aid, cv[chapterIndex].cid, cv[chapterIndex].name);
+        fetchContent(cv[chapterIndex].cid, cv[chapterIndex].name);
       }
       return () {};
     }, [chapters.value]);
@@ -193,7 +199,6 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       Log.d(fileUri.value, "fv");
       var controller = webViewController.value;
       if (controller != null && fileUri.value != null) {
-        // Log.d(fileUri.value, "fv");
         if (totalPage == 0) {
           controller.addJavaScriptHandler(
               handlerName: "notifySize",
@@ -226,7 +231,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         fetchingNext = true;
         var cpts = chapters.value;
         chapterIndex++;
-        fetchContent(widget.aid, cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
       return () {};
     }, [currentPage.value]);
@@ -303,16 +308,25 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           key: menuCatalogKey,
           chapters: chapters.value,
           backgroundColor: toolBarBackgroundColor,
+          onItemTap: (index, chapter) {
+            totalPage = 0;
+            fetchContent(chapter.cid, chapter.name);
+          },
         ),
         loading.value
             ? Container(
                 color: Theme.of(context).colorScheme.background,
                 alignment: Alignment.center,
-                child: const SizedBox(
-                  width: 42,
-                  height: 42,
-                  child: CircularProgressIndicator(),
-                ))
+                child: Text(
+                  "章节加载中，请稍候",
+                  style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.secondary),
+                )
+                //  const SizedBox(
+                //   width: 42,
+                //   height: 42,
+                //   child: CircularProgressIndicator(),
+                // )
+                )
             : const SizedBox.shrink()
       ],
     ));
