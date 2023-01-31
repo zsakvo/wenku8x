@@ -13,11 +13,12 @@ import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
 import 'package:wenku8x/views/reader/components/menu_catalog.dart';
+import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 
 import 'page_string.dart';
 
-enum Menu { none, wrapper, catalog, theme, reader, style }
+enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
@@ -55,6 +56,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
   final menuTopKey = GlobalKey<MenuTopState>();
   final menuCatalogKey = GlobalKey<MenuCatalogState>();
+  final menuTextKey = GlobalKey<MenuTextState>();
 
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
@@ -151,13 +153,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             menuStatus.value = Menu.wrapper;
           } else if (menuStatus.value == Menu.wrapper) {
             menuStatus.value = Menu.none;
-          } else if (menuStatus.value == Menu.catalog) {
+          } else if (menuStatus.value == Menu.catalog || menuStatus.value == Menu.text) {
             menuStatus.value = Menu.wrapper;
           }
         } else {
           if (menuStatus.value == Menu.wrapper) {
             menuStatus.value = Menu.none;
-          } else if (menuStatus.value == Menu.catalog) {
+          } else if (menuStatus.value == Menu.catalog || menuStatus.value == Menu.text) {
             menuStatus.value = Menu.wrapper;
           }
         }
@@ -245,10 +247,15 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           menuBottomWrapperKey.currentState!.open();
           menuTopKey.currentState!.open();
           menuCatalogKey.currentState!.close();
+          menuTextKey.currentState!.close();
         } else if (menuStatus.value == Menu.catalog) {
           Log.d("显示目录菜单");
           menuCatalogKey.currentState!.open();
           menuTopKey.currentState!.close();
+        } else if (menuStatus.value == Menu.text) {
+          Log.d("显示排版菜单");
+          menuTextKey.currentState!.open();
+          // menuTopKey.currentState!.close();
         }
       } else {
         Log.d("收起菜单");
@@ -290,6 +297,26 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           title: widget.name,
           backgroundColor: toolBarBackgroundColor,
         ),
+        MenuCatalog(
+          key: menuCatalogKey,
+          chapters: chapters.value,
+          backgroundColor: toolBarBackgroundColor,
+          onItemTap: (index, chapter) {
+            totalPage = 0;
+            fetchContent(chapter.cid, chapter.name);
+          },
+        ),
+        MenuText(
+          key: menuTextKey,
+          fontSize: 16,
+          lineSpace: 1.4,
+          onFontSizeSlideBarValueChangeEnd: (p0) {},
+          onTextSpaceSlideBarValueChangeEnd: (p0) {},
+          backgroundColor: toolBarBackgroundColor,
+          primaryColor: Theme.of(context).colorScheme.primary,
+          secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+          tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        ),
         MenuBottom(
           key: menuBottomWrapperKey,
           backgroundColor: toolBarBackgroundColor,
@@ -302,17 +329,15 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           },
           onStyleTap: () {},
           onProgressTap: () {},
-          onTextTap: () {},
-          onConfigTap: () {},
-        ),
-        MenuCatalog(
-          key: menuCatalogKey,
-          chapters: chapters.value,
-          backgroundColor: toolBarBackgroundColor,
-          onItemTap: (index, chapter) {
-            totalPage = 0;
-            fetchContent(chapter.cid, chapter.name);
+          onTextTap: () {
+            Log.d("message");
+            if (menuStatus.value != Menu.text) {
+              menuStatus.value = Menu.text;
+            } else {
+              menuStatus.value = Menu.wrapper;
+            }
           },
+          onConfigTap: () {},
         ),
         loading.value
             ? Container(

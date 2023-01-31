@@ -61,7 +61,7 @@ class MenuBottomState extends State<MenuBottom> {
           child: AnimatedContainer(
               width: MediaQuery.of(context).size.width,
               height: visible ? MediaQuery.of(context).viewPadding.bottom + 48 : 0,
-              duration: const Duration(milliseconds: 100),
+              duration: const Duration(milliseconds: 120),
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
               decoration: BoxDecoration(
                   color: widget.backgroundColor,
@@ -102,7 +102,7 @@ class MenuBottomState extends State<MenuBottom> {
                     Flexible(
                         child: Center(
                       child: IconButton(
-                          onPressed: widget.onStyleTap,
+                          onPressed: widget.onTextTap,
                           icon: Icon(
                             Icons.text_format,
                             size: 20,

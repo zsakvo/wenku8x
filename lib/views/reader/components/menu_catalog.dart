@@ -54,7 +54,7 @@ class MenuCatalogState extends State<MenuCatalog> {
       left: 0,
       child: Material(
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
+          duration: const Duration(milliseconds: 120),
           width: MediaQuery.of(context).size.width,
           height: visible
               ? MediaQuery.of(context).size.height -
