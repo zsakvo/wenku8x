@@ -12,6 +12,7 @@ import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
+import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 
 import 'page_string.dart';
@@ -53,6 +54,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // Menu menuStatus = Menu.none;
   final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
   final menuTopKey = GlobalKey<MenuTopState>();
+  final menuCatalogKey = GlobalKey<MenuCatalogState>();
 
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
@@ -68,6 +70,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final enableGestureListener = useState(true);
     final menuStatus = useState<Menu>(Menu.none);
     final topBaseHeight = MediaQuery.of(context).viewPadding.top + 48;
+    final toolBarBackgroundColor = Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3);
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -135,10 +138,20 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         double tapUpPosY = event.position.dy;
         if ((tapUpPos > screenWidth / 3 && tapUpPos < 2 * screenWidth / 3) &&
             (tapUpPosY > screenHeight / 3 && tapUpPosY < 2 * screenHeight / 3)) {
+          // 菜单唤醒区域
+          // 如果菜单未显示，则展示第一层菜单
           if (menuStatus.value == Menu.none) {
             menuStatus.value = Menu.wrapper;
-          } else {
+          } else if (menuStatus.value == Menu.wrapper) {
             menuStatus.value = Menu.none;
+          } else if (menuStatus.value == Menu.catalog) {
+            menuStatus.value = Menu.wrapper;
+          }
+        } else {
+          if (menuStatus.value == Menu.wrapper) {
+            menuStatus.value = Menu.none;
+          } else if (menuStatus.value == Menu.catalog) {
+            menuStatus.value = Menu.wrapper;
           }
         }
       }
@@ -221,9 +234,16 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     // 工具条状态监听
     useEffect(() {
       if (menuStatus.value != Menu.none) {
-        Log.d("显示最外层菜单");
-        menuBottomWrapperKey.currentState!.toggle();
-        menuTopKey.currentState!.toggle();
+        if (menuStatus.value == Menu.wrapper) {
+          Log.d("显示最外层菜单");
+          menuBottomWrapperKey.currentState!.open();
+          menuTopKey.currentState!.open();
+          menuCatalogKey.currentState!.close();
+        } else if (menuStatus.value == Menu.catalog) {
+          Log.d("显示目录菜单");
+          menuCatalogKey.currentState!.open();
+          menuTopKey.currentState!.close();
+        }
       } else {
         Log.d("收起菜单");
         menuBottomWrapperKey.currentState?.toggle();
@@ -262,16 +282,27 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         MenuTop(
           key: menuTopKey,
           title: widget.name,
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor: toolBarBackgroundColor,
         ),
         MenuBottom(
           key: menuBottomWrapperKey,
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-          onCatalogTap: () {},
+          backgroundColor: toolBarBackgroundColor,
+          onCatalogTap: () {
+            if (menuStatus.value != Menu.catalog) {
+              menuStatus.value = Menu.catalog;
+            } else {
+              menuStatus.value = Menu.wrapper;
+            }
+          },
           onStyleTap: () {},
           onProgressTap: () {},
           onTextTap: () {},
           onConfigTap: () {},
+        ),
+        MenuCatalog(
+          key: menuCatalogKey,
+          chapters: chapters.value,
+          backgroundColor: toolBarBackgroundColor,
         ),
         loading.value
             ? Container(
