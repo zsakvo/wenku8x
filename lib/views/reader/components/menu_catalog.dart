@@ -63,11 +63,11 @@ class MenuCatalogState extends State<MenuCatalog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+                padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                 child: Text(
                   "目录",
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary, fontSize: 20, fontWeight: FontWeight.w600),
+                      color: Theme.of(context).colorScheme.primary, fontSize: 15, fontWeight: FontWeight.w600),
                 ),
               ),
               Expanded(
@@ -77,17 +77,24 @@ class MenuCatalogState extends State<MenuCatalog> {
                       context: context,
                       child: ListView.separated(
                           itemBuilder: (context, index) {
-                            final chapter = widget.chapters[index];
-                            return InkWell(
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                                child: Text(
-                                  chapter.name,
-                                  style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14),
+                            if (index == 0) {
+                              return const SizedBox(
+                                height: 1,
+                              );
+                            } else {
+                              final chapter = widget.chapters[index - 1];
+                              return InkWell(
+                                onTap: () {},
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                  child: Text(
+                                    chapter.name,
+                                    style:
+                                        TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            }
                           },
                           separatorBuilder: (BuildContext context, int index) {
                             return Divider(
@@ -98,7 +105,7 @@ class MenuCatalogState extends State<MenuCatalog> {
                               color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
                             );
                           },
-                          itemCount: widget.chapters.length)))
+                          itemCount: widget.chapters.length + 1)))
             ],
           ),
         ),
