@@ -47,33 +47,38 @@ class MenuTopState extends State<MenuTop> {
   @override
   Widget build(BuildContext context) {
     final onPrimaryContainerColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final baseHeight = MediaQuery.of(context).viewPadding.top + 48;
     return Material(
       child: AnimatedContainer(
           width: MediaQuery.of(context).size.width,
-          height: visible ? MediaQuery.of(context).viewPadding.top + 48 : 0,
+          height: visible ? baseHeight * 2 : baseHeight,
           duration: const Duration(milliseconds: 100),
           padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
           decoration: BoxDecoration(
               color: widget.backgroundColor,
               border: const Border(top: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
-          child: Row(children: [
-            IconButton(
-                iconSize: visible ? 20 : 0,
-                onPressed: () {
-                  GoRouter.of(context).pop();
-                },
-                icon: Icon(
-                  Icons.arrow_back,
-                  color: onPrimaryContainerColor,
-                )),
-            Expanded(
-                child: Text(
-              widget.title,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(fontWeight: FontWeight.normal, color: onPrimaryContainerColor),
-            )),
-          ])),
+          child: Align(
+              alignment: visible ? Alignment.bottomCenter : Alignment.topCenter,
+              child: Row(
+                children: [
+                  IconButton(
+                      // iconSize: visible ? 20 : 0,
+                      onPressed: () {
+                        GoRouter.of(context).pop();
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: onPrimaryContainerColor,
+                      )),
+                  Expanded(
+                      child: Text(
+                    widget.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontWeight: FontWeight.normal, color: onPrimaryContainerColor),
+                  )),
+                ],
+              ))),
     );
   }
 }

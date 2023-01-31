@@ -67,6 +67,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final webViewController = useState<InAppWebViewController?>(null);
     final enableGestureListener = useState(true);
     final menuStatus = useState<Menu>(Menu.none);
+    final topBaseHeight = MediaQuery.of(context).viewPadding.top + 48;
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -259,7 +260,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                   disableVerticalScroll: true),
             )),
         Positioned(
-            top: 0,
+            top: -topBaseHeight,
             left: 0,
             child: MenuTop(
               key: menuTopKey,
