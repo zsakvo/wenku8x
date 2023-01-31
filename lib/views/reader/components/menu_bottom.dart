@@ -52,14 +52,15 @@ class MenuBottomState extends State<MenuBottom> {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimaryContainerColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final onSurfaceVariantColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    final primarayColor = Theme.of(context).colorScheme.primary;
     return Positioned(
         bottom: 0,
         left: 0,
         child: Material(
           child: AnimatedContainer(
               width: MediaQuery.of(context).size.width,
-              height: visible ? MediaQuery.of(context).viewPadding.bottom + 44 : 0,
+              height: visible ? MediaQuery.of(context).viewPadding.bottom + 48 : 0,
               duration: const Duration(milliseconds: 100),
               padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
               decoration: BoxDecoration(
@@ -75,7 +76,7 @@ class MenuBottomState extends State<MenuBottom> {
                           icon: Icon(
                             Icons.menu,
                             size: 20,
-                            color: onPrimaryContainerColor,
+                            color: onSurfaceVariantColor,
                           )),
                     )),
                     Flexible(
@@ -85,7 +86,7 @@ class MenuBottomState extends State<MenuBottom> {
                           icon: Icon(
                             Icons.palette_outlined,
                             size: 20,
-                            color: onPrimaryContainerColor,
+                            color: onSurfaceVariantColor,
                           )),
                     )),
                     Flexible(
@@ -95,7 +96,7 @@ class MenuBottomState extends State<MenuBottom> {
                           icon: Icon(
                             Icons.toll,
                             size: 20,
-                            color: onPrimaryContainerColor,
+                            color: onSurfaceVariantColor,
                           )),
                     )),
                     Flexible(
@@ -105,7 +106,7 @@ class MenuBottomState extends State<MenuBottom> {
                           icon: Icon(
                             Icons.text_format,
                             size: 20,
-                            color: onPrimaryContainerColor,
+                            color: onSurfaceVariantColor,
                           )),
                     )),
                     Flexible(
@@ -115,7 +116,7 @@ class MenuBottomState extends State<MenuBottom> {
                           icon: Icon(
                             Icons.settings_outlined,
                             size: 20,
-                            color: onPrimaryContainerColor,
+                            color: onSurfaceVariantColor,
                           )),
                     )),
                   ])

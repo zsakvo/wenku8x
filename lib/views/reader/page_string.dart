@@ -1,3 +1,5 @@
+import 'package:wenku8x/utils/log.dart';
+
 const libsPath = "../../reader.js";
 const layoutStyle = 1;
 const flowStyle = 1;
@@ -5,6 +7,11 @@ const currentTheme = "亚麻";
 
 String getPageString(String bookName, String chapterName, content, dynamic statusBarHeight, dynamic bottomBarHeight,
     String backgroundColor) {
+  if (backgroundColor.length == 8) {
+    String opacity = backgroundColor.substring(0, 2);
+    String rgb = backgroundColor.substring(2);
+    backgroundColor = rgb + opacity;
+  }
   final pageStr = """
 <!DOCTYPE html>
 <html lang="zh-CN">

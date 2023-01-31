@@ -46,7 +46,7 @@ class MenuTopState extends State<MenuTop> {
 
   @override
   Widget build(BuildContext context) {
-    final onPrimaryContainerColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final onSurfaceVariantColor = Theme.of(context).colorScheme.onSurfaceVariant;
     final baseHeight = MediaQuery.of(context).viewPadding.top + 56;
     return Positioned(
         top: -baseHeight,
@@ -64,23 +64,20 @@ class MenuTopState extends State<MenuTop> {
                   alignment: visible ? Alignment.bottomCenter : Alignment.topCenter,
                   child: Row(
                     children: [
-                      Transform.translate(
-                        offset: const Offset(0, 1),
-                        child: IconButton(
-                            onPressed: () {
-                              GoRouter.of(context).pop();
-                            },
-                            icon: Icon(
-                              Icons.arrow_back,
-                              color: onPrimaryContainerColor,
-                            )),
-                      ),
+                      IconButton(
+                          onPressed: () {
+                            GoRouter.of(context).pop();
+                          },
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: onSurfaceVariantColor,
+                          )),
                       Expanded(
                           child: Text(
                         widget.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.bold, color: onPrimaryContainerColor, fontSize: 16),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: onSurfaceVariantColor, fontSize: 16),
                       )),
                       const SizedBox(
                         width: 36,

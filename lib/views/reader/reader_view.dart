@@ -100,8 +100,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      Log.d(Theme.of(context).colorScheme.primaryContainer.value.toRadixString(16), "ddd");
-      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight, "f7f2f2");
+      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight,
+          Theme.of(context).colorScheme.surface.value.toRadixString(16));
       final file = File("${docDir.path}/books/$aid/$cid.html");
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
@@ -262,11 +262,11 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         MenuTop(
           key: menuTopKey,
           title: widget.name,
-          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
         ),
         MenuBottom(
           key: menuBottomWrapperKey,
-          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
           onCatalogTap: () {},
           onStyleTap: () {},
           onProgressTap: () {},
@@ -275,7 +275,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         ),
         loading.value
             ? Container(
-                color: const Color(0xfff7f1e8),
+                color: Theme.of(context).colorScheme.background,
                 alignment: Alignment.center,
                 child: const SizedBox(
                   width: 42,
