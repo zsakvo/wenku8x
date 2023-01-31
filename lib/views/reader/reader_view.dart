@@ -259,26 +259,19 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                   disableHorizontalScroll: true,
                   disableVerticalScroll: true),
             )),
-        Positioned(
-            top: -topBaseHeight,
-            left: 0,
-            child: MenuTop(
-              key: menuTopKey,
-              title: widget.name,
-              backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            )),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          child: MenuBottom(
-            key: menuBottomWrapperKey,
-            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-            onCatalogTap: () {},
-            onStyleTap: () {},
-            onProgressTap: () {},
-            onTextTap: () {},
-            onConfigTap: () {},
-          ),
+        MenuTop(
+          key: menuTopKey,
+          title: widget.name,
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+        ),
+        MenuBottom(
+          key: menuBottomWrapperKey,
+          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+          onCatalogTap: () {},
+          onStyleTap: () {},
+          onProgressTap: () {},
+          onTextTap: () {},
+          onConfigTap: () {},
         ),
         loading.value
             ? Container(
