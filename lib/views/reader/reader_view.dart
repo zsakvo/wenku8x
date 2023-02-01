@@ -13,6 +13,7 @@ import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
 import 'package:wenku8x/views/reader/components/menu_catalog.dart';
+import 'package:wenku8x/views/reader/components/menu_config.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 
@@ -57,6 +58,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuTopKey = GlobalKey<MenuTopState>();
   final menuCatalogKey = GlobalKey<MenuCatalogState>();
   final menuTextKey = GlobalKey<MenuTextState>();
+  final menuConfigKey = GlobalKey<MenuConfigState>();
 
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
   @override
@@ -153,13 +155,17 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             menuStatus.value = Menu.wrapper;
           } else if (menuStatus.value == Menu.wrapper) {
             menuStatus.value = Menu.none;
-          } else if (menuStatus.value == Menu.catalog || menuStatus.value == Menu.text) {
+          } else if (menuStatus.value == Menu.catalog ||
+              menuStatus.value == Menu.text ||
+              menuStatus.value == Menu.config) {
             menuStatus.value = Menu.wrapper;
           }
         } else {
           if (menuStatus.value == Menu.wrapper) {
             menuStatus.value = Menu.none;
-          } else if (menuStatus.value == Menu.catalog || menuStatus.value == Menu.text) {
+          } else if (menuStatus.value == Menu.catalog ||
+              menuStatus.value == Menu.text ||
+              menuStatus.value == Menu.config) {
             menuStatus.value = Menu.wrapper;
           }
         }
@@ -248,6 +254,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           menuTopKey.currentState!.open();
           menuCatalogKey.currentState!.close();
           menuTextKey.currentState!.close();
+          menuConfigKey.currentState!.close();
         } else if (menuStatus.value == Menu.catalog) {
           Log.d("显示目录菜单");
           menuCatalogKey.currentState!.open();
@@ -256,11 +263,16 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           Log.d("显示排版菜单");
           menuTextKey.currentState!.open();
           // menuTopKey.currentState!.close();
+        } else if (menuStatus.value == Menu.config) {
+          Log.d("显示配置菜单");
+          menuConfigKey.currentState!.open();
+          // menuTopKey.currentState!.close();
         }
       } else {
         Log.d("收起菜单");
-        menuBottomWrapperKey.currentState?.toggle();
-        menuTopKey.currentState?.toggle();
+        menuBottomWrapperKey.currentState?.close();
+        menuTopKey.currentState?.close();
+        menuConfigKey.currentState?.close();
       }
       return () {};
     }, [menuStatus.value]);
@@ -317,6 +329,19 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
           secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
           tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
         ),
+        MenuConfig(
+          key: menuConfigKey,
+          backgroundColor: toolBarBackgroundColor,
+          primaryColor: Theme.of(context).colorScheme.primary,
+          secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.27),
+          tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          horizontal: true,
+          volumeKey: true,
+          fullNext: true,
+          hideExtra: true,
+          textColor: Theme.of(context).colorScheme.primary,
+          onChange: (key, value) {},
+        ),
         MenuBottom(
           key: menuBottomWrapperKey,
           backgroundColor: toolBarBackgroundColor,
@@ -337,7 +362,13 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
               menuStatus.value = Menu.wrapper;
             }
           },
-          onConfigTap: () {},
+          onConfigTap: () {
+            if (menuStatus.value != Menu.config) {
+              menuStatus.value = Menu.config;
+            } else {
+              menuStatus.value = Menu.wrapper;
+            }
+          },
         ),
         loading.value
             ? Container(
