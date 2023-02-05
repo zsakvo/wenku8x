@@ -16,6 +16,7 @@ import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
+import 'package:wenku8x/views/reader/html.dart';
 
 import 'page_string.dart';
 
@@ -61,6 +62,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuConfigKey = GlobalKey<MenuConfigState>();
 
   final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
+
   @override
   Widget build(BuildContext context) {
     final loading = useState(true);
@@ -75,6 +77,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final menuStatus = useState<Menu>(Menu.none);
     final topBaseHeight = MediaQuery.of(context).viewPadding.top + 48;
     final toolBarBackgroundColor = Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3);
+    final dir = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
+    final appInit = useState(false);
+    final tmpChapter = useState<String?>(null);
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -104,7 +109,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 获取内容
     Future fetchContent(String cid, String chapterName) async {
       if (totalPage == 0) {
-        loading.value = true;
+        // loading.value = true;
         currentPage.value = 0;
         menuCatalogKey.currentState!.close();
         menuBottomWrapperKey.currentState!.close();
@@ -114,9 +119,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight,
-          Theme.of(context).colorScheme.surface.value.toRadixString(16));
+      // String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight,
+      //     Theme.of(context).colorScheme.surface.value.toRadixString(16));
+      String html = """<body>$content</body>""";
       final file = File("${docDir.path}/books/$aid/$cid.html");
+      tmpChapter.value = html;
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
     }
@@ -205,34 +212,67 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     }, [chapters.value]);
 
     useEffect(() {
-      Log.d(fileUri.value, "fv");
+      final dirData = dir.data;
+      Log.d(dirData, "fv");
       var controller = webViewController.value;
-      if (controller != null && fileUri.value != null) {
-        if (totalPage == 0) {
-          controller.addJavaScriptHandler(
-              handlerName: "notifySize",
-              callback: (params) {
-                pageWidth = params[0] * extraRate;
-              });
-          controller.addJavaScriptHandler(
-              handlerName: "onBookReady",
-              callback: (params) {
-                loading.value = false;
-              });
-          controller.addJavaScriptHandler(
-              handlerName: "onPagingSetup",
-              callback: (params) {
-                totalPage = params[2];
-                fetchingNext = false;
-              });
-          controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
-        } else {
-          Log.d("已经加载过了");
-          fetchExtraChapter(fileUri.value!, chapters.value[chapterIndex].name);
-        }
+      if (controller != null && dirData != null) {
+        Log.d(dirData.uri, "uri");
+        controller.addJavaScriptHandler(
+          handlerName: "jsBridge",
+          callback: (args) {
+            Log.d(args, "args");
+            final handler = args[0];
+            switch (handler) {
+              case 'initDone':
+                Log.d("初始化成功");
+                appInit.value = true;
+                break;
+            }
+          },
+        );
+        controller.loadData(
+            data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
+        loading.value = false;
+      }
+      // if (controller != null && fileUri.value != null) {
+      //   if (totalPage == 0) {
+      //     controller.addJavaScriptHandler(
+      //         handlerName: "notifySize",
+      //         callback: (params) {
+      //           pageWidth = params[0] * extraRate;
+      //         });
+      //     controller.addJavaScriptHandler(
+      //         handlerName: "onBookReady",
+      //         callback: (params) {
+      //           loading.value = false;
+      //         });
+      //     controller.addJavaScriptHandler(
+      //         handlerName: "onPagingSetup",
+      //         callback: (params) {
+      //           totalPage = params[2];
+      //           fetchingNext = false;
+      //         });
+      //     controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
+      //   } else {
+      //     Log.d("已经加载过了");
+      //     fetchExtraChapter(fileUri.value!, chapters.value[chapterIndex].name);
+      //   }
+      // }
+      return () {};
+    }, [dir.data, webViewController.value]);
+
+    useEffect(() {
+      final initData = appInit.value;
+      final tmpChapterData = tmpChapter.value;
+      Log.d(tmpChapterData, "lll");
+      Log.d(mediaQuery.devicePixelRatio, "lll");
+      if (initData && tmpChapterData != null) {
+        webViewController.value!.evaluateJavascript(source: """
+ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
+""");
       }
       return () {};
-    }, [fileUri.value, webViewController.value]);
+    }, [appInit.value, tmpChapter.value]);
 
     useEffect(() {
       if (currentPage.value == totalPage - 3 && !fetchingNext) {
@@ -281,11 +321,11 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         child: Stack(
       children: [
         Listener(
-            onPointerMove: onPointerMove,
-            onPointerUp: (event) => onPointerUp(
-                  event,
-                ),
-            onPointerDown: onPointerDown,
+            // onPointerMove: onPointerMove,
+            // onPointerUp: (event) => onPointerUp(
+            //       event,
+            //     ),
+            // onPointerDown: onPointerDown,
             behavior: HitTestBehavior.translucent,
             child: InAppWebView(
               onWebViewCreated: (controller) {
@@ -301,7 +341,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                   userAgent: "ReaderJs/Client",
                   verticalScrollBarEnabled: false,
                   horizontalScrollBarEnabled: false,
-                  disableHorizontalScroll: true,
+                  // disableHorizontalScroll: true,
                   disableVerticalScroll: true),
             )),
         MenuTop(
