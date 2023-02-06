@@ -26,7 +26,7 @@ const READER_APP = """
           infoBarHeight: 32,
         })
         console.log("init success",window.devicePixelRatio)
-        window.flutter_inappwebview.callHandler('jsBridge', 'initDone')
+        // window.flutter_inappwebview.callHandler('jsBridge', 'initDone')
       })
     })
   </script>

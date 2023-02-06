@@ -226,6 +226,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
               case 'initDone':
                 Log.d("初始化成功");
                 appInit.value = true;
+                pageWidth = args[1] * extraRate;
                 break;
             }
           },
@@ -321,11 +322,11 @@ ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
         child: Stack(
       children: [
         Listener(
-            // onPointerMove: onPointerMove,
-            // onPointerUp: (event) => onPointerUp(
-            //       event,
-            //     ),
-            // onPointerDown: onPointerDown,
+            onPointerMove: onPointerMove,
+            onPointerUp: (event) => onPointerUp(
+                  event,
+                ),
+            onPointerDown: onPointerDown,
             behavior: HitTestBehavior.translucent,
             child: InAppWebView(
               onWebViewCreated: (controller) {
@@ -338,10 +339,10 @@ ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
               },
               initialSettings: InAppWebViewSettings(
                   pageZoom: 1,
-                  userAgent: "ReaderJs/Client",
+                  userAgent: "ReaderJs/NoScroll",
                   verticalScrollBarEnabled: false,
                   horizontalScrollBarEnabled: false,
-                  // disableHorizontalScroll: true,
+                  disableHorizontalScroll: true,
                   disableVerticalScroll: true),
             )),
         MenuTop(
