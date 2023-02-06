@@ -12429,7 +12429,7 @@ globalThis.ReaderJs = (() => {
       e = P.targetTouches[0].pageX;
     }), J.addEventListener("touchmove", (P) => {
       t = P.targetTouches[0].pageX;
-      const H = (t - e) * window.devicePixelRatio;
+      const H = (t - e) * 1;
       J.style.transform = `translateX(${n + H}px)`;
     }), J.addEventListener("touchend", () => {
       const P = n;
