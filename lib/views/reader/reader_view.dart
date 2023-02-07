@@ -309,9 +309,9 @@ ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
       } else if (currentPage.value == 2 && fetchStatus == Fetching.none) {
         Log.d("要加载上一章了");
         // fetchingNext = true;
-        fetchStatus = Fetching.previous;
+        // fetchStatus = Fetching.previous;
         var cpts = chapters.value;
-        chapterIndex--;
+        // chapterIndex--;
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
       return () {};
