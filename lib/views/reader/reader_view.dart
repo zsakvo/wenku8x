@@ -22,6 +22,8 @@ import 'page_string.dart';
 
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
+enum Fetching { none, next, previous }
+
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
@@ -48,9 +50,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 总页数
   int totalPage = 0;
   // 当前章节
-  int chapterIndex = 0;
+  int chapterIndex = 3;
   // 是否在获取章节
-  bool fetchingNext = false;
+  // bool fetchingNext = false;
+  Fetching fetchStatus = Fetching.next;
   bool fetchingPrevious = false;
 
   // 工具栏状态
@@ -80,6 +83,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final dir = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
     final appInit = useState(false);
     final tmpChapter = useState<String?>(null);
+    pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
+    Log.d(pageWidth, "???");
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -177,6 +182,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           }
         }
       }
+      Log.d(pageWidth, "zz");
       webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
@@ -228,6 +234,9 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                 appInit.value = true;
                 pageWidth = args[1] * extraRate;
                 break;
+              case 'notifySize':
+                totalPage = args[1];
+                break;
             }
           },
         );
@@ -262,25 +271,47 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       return () {};
     }, [dir.data, webViewController.value]);
 
+    // useEffect(() {
+    //   final page = currentPage.value;
+    //   Log.d(page, totalPage.toString());
+    //   return () {};
+    // }, [currentPage.value]);
+
     useEffect(() {
       final initData = appInit.value;
       final tmpChapterData = tmpChapter.value;
       Log.d(tmpChapterData, "lll");
       Log.d(mediaQuery.devicePixelRatio, "lll");
       if (initData && tmpChapterData != null) {
-        webViewController.value!.evaluateJavascript(source: """
+        Log.d(fetchStatus);
+        if (fetchStatus == Fetching.next) {
+          webViewController.value!.evaluateJavascript(source: """
 ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
 """);
+        } else if (fetchStatus == Fetching.previous) {
+//           webViewController.value!.evaluateJavascript(source: """
+// ReaderJs.insertChapter(`$tmpChapterData`,"测试章节");
+// """);
+        }
+        fetchStatus = Fetching.none;
       }
       return () {};
     }, [appInit.value, tmpChapter.value]);
 
     useEffect(() {
-      if (currentPage.value == totalPage - 3 && !fetchingNext) {
+      if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none) {
         Log.d("要加载下一章了");
-        fetchingNext = true;
+        // fetchingNext = true;
+        fetchStatus = Fetching.next;
         var cpts = chapters.value;
         chapterIndex++;
+        fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
+      } else if (currentPage.value == 2 && fetchStatus == Fetching.none) {
+        Log.d("要加载上一章了");
+        // fetchingNext = true;
+        fetchStatus = Fetching.previous;
+        var cpts = chapters.value;
+        chapterIndex--;
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
       return () {};
