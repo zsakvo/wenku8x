@@ -52,7 +52,8 @@ class MenuBottomState extends State<MenuBottom> {
 
   @override
   Widget build(BuildContext context) {
-    final onSurfaceVariantColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    final onSurfaceVariantColor =
+        Theme.of(context).colorScheme.onSurfaceVariant;
     final primarayColor = Theme.of(context).colorScheme.primary;
     return Positioned(
         bottom: 0,
@@ -60,12 +61,16 @@ class MenuBottomState extends State<MenuBottom> {
         child: Material(
           child: AnimatedContainer(
               width: MediaQuery.of(context).size.width,
-              height: visible ? MediaQuery.of(context).viewPadding.bottom + 48 : 0,
+              height:
+                  visible ? MediaQuery.of(context).viewPadding.bottom + 48 : 0,
               duration: const Duration(milliseconds: 120),
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewPadding.bottom),
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewPadding.bottom),
               decoration: BoxDecoration(
                   color: widget.backgroundColor,
-                  border: const Border(top: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
+                  border: const Border(
+                      top: BorderSide(
+                          width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
               child: Wrap(
                 children: [
                   Row(children: [

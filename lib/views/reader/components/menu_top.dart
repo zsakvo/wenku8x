@@ -46,7 +46,8 @@ class MenuTopState extends State<MenuTop> {
 
   @override
   Widget build(BuildContext context) {
-    final onSurfaceVariantColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    final onSurfaceVariantColor =
+        Theme.of(context).colorScheme.onSurfaceVariant;
     final baseHeight = MediaQuery.of(context).viewPadding.top + 56;
     return Positioned(
         top: -baseHeight,
@@ -56,12 +57,16 @@ class MenuTopState extends State<MenuTop> {
               width: MediaQuery.of(context).size.width,
               height: visible ? baseHeight * 2 : baseHeight,
               duration: const Duration(milliseconds: 100),
-              padding: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
+              padding:
+                  EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
               decoration: BoxDecoration(
                   color: widget.backgroundColor,
-                  border: const Border(top: BorderSide(width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
+                  border: const Border(
+                      top: BorderSide(
+                          width: 0.5, color: Color.fromRGBO(0, 0, 0, 0.08)))),
               child: Align(
-                  alignment: visible ? Alignment.bottomCenter : Alignment.topCenter,
+                  alignment:
+                      visible ? Alignment.bottomCenter : Alignment.topCenter,
                   child: Row(
                     children: [
                       IconButton(
@@ -77,7 +82,10 @@ class MenuTopState extends State<MenuTop> {
                         widget.title,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontWeight: FontWeight.bold, color: onSurfaceVariantColor, fontSize: 16),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: onSurfaceVariantColor,
+                            fontSize: 16),
                       )),
                       const SizedBox(
                         width: 36,

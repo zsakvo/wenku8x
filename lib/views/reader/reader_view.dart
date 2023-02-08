@@ -7,7 +7,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
@@ -53,6 +55,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // bool fetchingNext = false;
   Fetching fetchStatus = Fetching.next;
   Fetching pageStatue = Fetching.none;
+  Isar isar = Isar.getInstance()!;
+
+  late BookRecord bookRecord;
 
   // 工具栏状态
   // Menu menuStatus = Menu.none;
@@ -195,13 +200,15 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     }
 
     useEffect(() {
-      Log.d(mediaQuery.padding, "ptt");
+      bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
+        ..aid = widget.aid;
       pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
       if (Platform.isAndroid) {
         extraRate = mediaQuery.devicePixelRatio;
       }
       statusBarHeight = mediaQuery.padding.top;
       bottomBarHeight = mediaQuery.padding.bottom;
+      chapterIndex = bookRecord.chapterIndex;
       fetchCatalog(widget.aid);
       return () {};
     }, []);
@@ -234,6 +241,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                 pageWidth = args[1] * extraRate;
                 break;
               case 'notifySize':
+                loading.value = false;
                 totalPage += args[1] as int;
                 // currentPage.value += args[1] as int;
                 if (pageStatue == Fetching.previous) {
@@ -245,7 +253,6 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
         );
         controller.loadData(
             data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
-        loading.value = false;
       }
       // if (controller != null && fileUri.value != null) {
       //   if (totalPage == 0) {
@@ -341,6 +348,11 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}")
         // chapterIndex--;
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
+      isar.writeTxnSync(
+        () {
+          isar.bookRecords.putSync(bookRecord..chapterIndex = chapterIndex);
+        },
+      );
       return () {};
     }, [currentPage.value]);
 
