@@ -195,6 +195,7 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     }
 
     useEffect(() {
+      Log.d(mediaQuery.padding, "ptt");
       pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
       if (Platform.isAndroid) {
         extraRate = mediaQuery.devicePixelRatio;
@@ -272,6 +273,33 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       // }
       return () {};
     }, [dir.data, webViewController.value]);
+
+    useEffect(() {
+      final controller = webViewController.value;
+      if (controller != null) {
+        Log.d("开始设置阅读器");
+//         controller.evaluateJavascript(source: """
+// ReaderJs.init({
+//           bookName: '${widget.name}',
+//           horizontal: true,
+//           marginHorizontal: 18,
+//           marginVertical: 18,
+//           fontSize:18,
+//           textAlign: 1, //0 start,1 justify,2 end,3 center
+//           lineSpacing: 1.4,
+//           backgroundColor: 'fffffbff',
+//           textColor: '000000',
+//           linkColor: '000000',
+//           topExtraHeight: ${mediaQuery.padding.top},
+//           bottomExtraHeight: ${mediaQuery.padding.bottom},
+//           infoBarHeight: 32,
+//           enableJsBridge:true,
+//           enableScroll:false
+//         })
+// """);
+      }
+      return () {};
+    }, [webViewController.value]);
 
     // useEffect(() {
     //   final page = currentPage.value;

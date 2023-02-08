@@ -22,8 +22,8 @@ const READER_APP = """
           backgroundColor: 'fffffbff',
           textColor: '000000',
           linkColor: '000000',
-          topExtraHeight: 20,
-          bottomExtraHeight: 30,
+          topExtraHeight: 40,
+          bottomExtraHeight: 24,
           infoBarHeight: 32,
           enableJsBridge:true,
           enableScroll:false
