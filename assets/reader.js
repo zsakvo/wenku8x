@@ -357,7 +357,7 @@ globalThis.ReaderJs = (() => {
         newNode.style.cssText += `margin-left: 0px;`;
         console.log("!!!", newNode.style.cssText);
         reader.insertBefore(newNode, reader.firstChild);
-        const newSpacer = document.querySelectorAll(".reader-spacer")[1];
+        const newSpacer = document.getElementById("virtual-reader-spacer");
         endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(newSpacer.style.left.replace("px", "")) + 0 * ((_c = globalThis.config) == null ? void 0 : _c.marginHorizontal) + "px";
         const children = reader.children;
         for (let i = 1; i < children.length; i++) {
