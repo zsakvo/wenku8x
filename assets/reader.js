@@ -1,4 +1,4 @@
-(function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}#virtual-wrapper{position:fixed;left:0;top:0;opacity:0;z-index:1}#reader{z-index:99;display:flex;z-index:10}:root{scroll-behavior:smooth}")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
+(function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}#virtual-wrapper{position:fixed;left:0;top:0;opacity:0;z-index:1}#reader{z-index:99;display:flex;z-index:10}")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
 const normalize = "";
 globalThis.readerContainerClassName = "";
 globalThis.readerContainerSelector = "";
@@ -216,7 +216,7 @@ globalThis.ReaderJs = (() => {
     bookContainer.style.height = pageHeight + "px";
     bookContainer.style.webkitColumnWidth = (pagedHorizontally ? pageWidth : pageHeight) + "px";
     bookContainer.style.webkitColumnGap = (pagedHorizontally ? pageHorizontalMargin : pageVerticalMargin) + "px";
-    let endSpacer = getSpacer();
+    let endSpacer = getVirtualSpacer();
     if (globalThis.config.horizontal) {
       virtualPageCount = Math.ceil(
         virtualReader.scrollWidth / (pageWidth + pageHorizontalMargin)
@@ -229,11 +229,12 @@ globalThis.ReaderJs = (() => {
     globalThis.JsBridge("notifySize", virtualPageCount);
     virtualReader.appendChild(endSpacer);
   }
-  function getSpacer() {
-    let endSpacer = document.getElementById("reader-spacer");
+  function getVirtualSpacer() {
+    let endSpacer = document.getElementById("virtual-reader-spacer");
     if (!endSpacer) {
       endSpacer = document.createElement("div");
-      endSpacer.className = "reader-spacer";
+      endSpacer.id = "virtual-reader-spacer";
+      endSpacer.className = "spacer";
       endSpacer.setAttribute(
         "style",
         `
@@ -313,7 +314,7 @@ globalThis.ReaderJs = (() => {
     }
   }
   function initReaderContainerStyle(config) {
-    var style = "line-height: " + config.lineSpacing + " !important;";
+    var style = "line-height: " + config.lineSpacing + " !important;font-size: " + config.fontSize + "px !important;";
     switch (config.textAlign) {
       case 0:
         style += "text-align: initial !important;";
@@ -343,18 +344,20 @@ globalThis.ReaderJs = (() => {
     const virtualReader = document.getElementById("virtual-reader");
     if (reader) {
       const newNode = virtualReader.children[0].cloneNode(true);
-      const endSpacer = document.querySelector(".reader-spacer");
+      const endSpacer = document.getElementById("reader-spacer");
+      const vEndSpacer = getVirtualSpacer();
       if (!insert) {
-        newNode.style.cssText += `margin-left: ${parseFloat(endSpacer.style.left) - pageWidth + 0 * ((_a = globalThis.config) == null ? void 0 : _a.marginHorizontal)}px;`;
-        console.log("!!!", newNode.style.cssText);
+        const pages = document.querySelectorAll(".page-container");
+        const tmpPageContainer = pages[pages.length - 2];
+        newNode.style.cssText += `margin-left: ${tmpPageContainer.scrollWidth - pageWidth + 2 * ((_a = globalThis.config) == null ? void 0 : _a.marginHorizontal)}px;`;
+        console.log("!!!!!", newNode.style.cssText);
         reader.appendChild(newNode);
-        const newSpacer = document.querySelectorAll(".reader-spacer")[1];
-        endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(newSpacer.style.left.replace("px", "")) + 0 * ((_b = globalThis.config) == null ? void 0 : _b.marginHorizontal) + "px";
+        endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(vEndSpacer.style.left.replace("px", "")) + 0 * ((_b = globalThis.config) == null ? void 0 : _b.marginHorizontal) + "px";
       } else {
         newNode.style.cssText += `margin-left: 0px;`;
         console.log("!!!", newNode.style.cssText);
         reader.insertBefore(newNode, reader.firstChild);
-        const newSpacer = document.querySelectorAll(".reader-spacer")[1];
+        const newSpacer = document.getElementById("virtual-reader-spacer");
         endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(newSpacer.style.left.replace("px", "")) + 0 * ((_c = globalThis.config) == null ? void 0 : _c.marginHorizontal) + "px";
         const children = reader.children;
         for (let i = 1; i < children.length; i++) {
@@ -367,14 +370,20 @@ globalThis.ReaderJs = (() => {
           );
           elem.style.marginLeft = newMl;
         }
-        reader.style.transform = `translateX(-${newSpacer.style.left})`;
-        currentX = -parseFloat(newSpacer.style.left.replace("px", ""));
+        const offset = parseFloat(newSpacer.style.left.replace("px", ""));
+        if (globalThis.config.enableScroll) {
+          reader.style.transform = `translateX(-${newSpacer.style.left})`;
+        } else {
+          document.querySelector("html").scrollLeft += offset;
+        }
+        currentX = -offset;
       }
     } else {
       const virtualWrapper = document.getElementById("virtual-wrapper");
       document.body.insertBefore(virtualReader.cloneNode(true), virtualWrapper);
       document.body.children[0].id = "reader";
-      if (navigator.userAgent.indexOf("ReaderJs/NoScroll") === -1) {
+      document.querySelector(".spacer").id = "reader-spacer";
+      if (globalThis.config.enableScroll) {
         initEvent();
         document.getElementById("reader").style.position = "fixed";
       }

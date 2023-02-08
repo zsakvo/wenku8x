@@ -18,8 +18,6 @@ import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 import 'package:wenku8x/views/reader/html.dart';
 
-import 'page_string.dart';
-
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
 enum Fetching { none, next, previous }
@@ -54,7 +52,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 是否在获取章节
   // bool fetchingNext = false;
   Fetching fetchStatus = Fetching.next;
-  bool fetchingPrevious = false;
+  Fetching pageStatue = Fetching.none;
 
   // 工具栏状态
   // Menu menuStatus = Menu.none;
@@ -83,8 +81,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final dir = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
     final appInit = useState(false);
     final tmpChapter = useState<String?>(null);
-    pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
-    Log.d(pageWidth, "???");
 
     // 获取目录
     fetchCatalog(String aid) async {
@@ -153,10 +149,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       if (resAbs > distance) {
         if (res < 0) {
           currentPage.value++;
+          pageStatue = Fetching.next;
         } else {
           currentPage.value--;
+          pageStatue = Fetching.previous;
         }
       } else {
+        // pageStatue = Fetching.none;
         // 视为点击事件
         double tapUpPosY = event.position.dy;
         if ((tapUpPos > screenWidth / 3 && tapUpPos < 2 * screenWidth / 3) &&
@@ -182,7 +181,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           }
         }
       }
-      Log.d(pageWidth, "zz");
       webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
@@ -197,6 +195,8 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     }
 
     useEffect(() {
+      Log.d(mediaQuery.padding, "ptt");
+      pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
       if (Platform.isAndroid) {
         extraRate = mediaQuery.devicePixelRatio;
       }
@@ -219,7 +219,6 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
 
     useEffect(() {
       final dirData = dir.data;
-      Log.d(dirData, "fv");
       var controller = webViewController.value;
       if (controller != null && dirData != null) {
         Log.d(dirData.uri, "uri");
@@ -235,7 +234,11 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                 pageWidth = args[1] * extraRate;
                 break;
               case 'notifySize':
-                totalPage = args[1];
+                totalPage += args[1] as int;
+                // currentPage.value += args[1] as int;
+                if (pageStatue == Fetching.previous) {
+                  currentPage.value += args[1] as int;
+                }
                 break;
             }
           },
@@ -271,6 +274,33 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       return () {};
     }, [dir.data, webViewController.value]);
 
+    useEffect(() {
+      final controller = webViewController.value;
+      if (controller != null) {
+        Log.d("开始设置阅读器");
+//         controller.evaluateJavascript(source: """
+// ReaderJs.init({
+//           bookName: '${widget.name}',
+//           horizontal: true,
+//           marginHorizontal: 18,
+//           marginVertical: 18,
+//           fontSize:18,
+//           textAlign: 1, //0 start,1 justify,2 end,3 center
+//           lineSpacing: 1.4,
+//           backgroundColor: 'fffffbff',
+//           textColor: '000000',
+//           linkColor: '000000',
+//           topExtraHeight: ${mediaQuery.padding.top},
+//           bottomExtraHeight: ${mediaQuery.padding.bottom},
+//           infoBarHeight: 32,
+//           enableJsBridge:true,
+//           enableScroll:false
+//         })
+// """);
+      }
+      return () {};
+    }, [webViewController.value]);
+
     // useEffect(() {
     //   final page = currentPage.value;
     //   Log.d(page, totalPage.toString());
@@ -280,18 +310,15 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
     useEffect(() {
       final initData = appInit.value;
       final tmpChapterData = tmpChapter.value;
-      Log.d(tmpChapterData, "lll");
-      Log.d(mediaQuery.devicePixelRatio, "lll");
       if (initData && tmpChapterData != null) {
-        Log.d(fetchStatus);
         if (fetchStatus == Fetching.next) {
           webViewController.value!.evaluateJavascript(source: """
 ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
 """);
         } else if (fetchStatus == Fetching.previous) {
-//           webViewController.value!.evaluateJavascript(source: """
-// ReaderJs.insertChapter(`$tmpChapterData`,"测试章节");
-// """);
+          webViewController.value!.evaluateJavascript(source: """
+ReaderJs.insertChapter(`$tmpChapterData`,"测试章节");
+""");
         }
         fetchStatus = Fetching.none;
       }
@@ -299,14 +326,14 @@ ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
     }, [appInit.value, tmpChapter.value]);
 
     useEffect(() {
-      if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none) {
+      if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none && pageStatue == Fetching.next) {
         Log.d("要加载下一章了");
         // fetchingNext = true;
         fetchStatus = Fetching.next;
         var cpts = chapters.value;
         chapterIndex++;
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
-      } else if (currentPage.value == 2 && fetchStatus == Fetching.none) {
+      } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
         Log.d("要加载上一章了");
         // fetchingNext = true;
         // fetchStatus = Fetching.previous;

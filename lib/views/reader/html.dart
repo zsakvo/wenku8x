@@ -16,14 +16,17 @@ const READER_APP = """
           horizontal: true,
           marginHorizontal: 18,
           marginVertical: 18,
+          fontSize:18,
           textAlign: 1, //0 start,1 justify,2 end,3 center
           lineSpacing: 1.4,
           backgroundColor: 'fffffbff',
           textColor: '000000',
           linkColor: '000000',
           topExtraHeight: 40,
-          bottomExtraHeight: 30,
+          bottomExtraHeight: 24,
           infoBarHeight: 32,
+          enableJsBridge:true,
+          enableScroll:false
         })
         console.log("init success",window.devicePixelRatio)
         // window.flutter_inappwebview.callHandler('jsBridge', 'initDone')
