@@ -216,7 +216,7 @@ globalThis.ReaderJs = (() => {
     bookContainer.style.height = pageHeight + "px";
     bookContainer.style.webkitColumnWidth = (pagedHorizontally ? pageWidth : pageHeight) + "px";
     bookContainer.style.webkitColumnGap = (pagedHorizontally ? pageHorizontalMargin : pageVerticalMargin) + "px";
-    let endSpacer = getSpacer();
+    let endSpacer = getVirtualSpacer();
     if (globalThis.config.horizontal) {
       virtualPageCount = Math.ceil(
         virtualReader.scrollWidth / (pageWidth + pageHorizontalMargin)
@@ -229,11 +229,12 @@ globalThis.ReaderJs = (() => {
     globalThis.JsBridge("notifySize", virtualPageCount);
     virtualReader.appendChild(endSpacer);
   }
-  function getSpacer() {
-    let endSpacer = document.getElementById("reader-spacer");
+  function getVirtualSpacer() {
+    let endSpacer = document.getElementById("virtual-reader-spacer");
     if (!endSpacer) {
       endSpacer = document.createElement("div");
-      endSpacer.className = "reader-spacer";
+      endSpacer.id = "virtual-reader-spacer";
+      endSpacer.className = "spacer";
       endSpacer.setAttribute(
         "style",
         `
@@ -343,13 +344,15 @@ globalThis.ReaderJs = (() => {
     const virtualReader = document.getElementById("virtual-reader");
     if (reader) {
       const newNode = virtualReader.children[0].cloneNode(true);
-      const endSpacer = document.querySelector(".reader-spacer");
+      const endSpacer = document.getElementById("reader-spacer");
+      const vEndSpacer = getVirtualSpacer();
       if (!insert) {
-        newNode.style.cssText += `margin-left: ${parseFloat(endSpacer.style.left) - pageWidth + 0 * ((_a = globalThis.config) == null ? void 0 : _a.marginHorizontal)}px;`;
-        console.log("!!!", newNode.style.cssText);
+        const pages = document.querySelectorAll(".page-container");
+        const tmpPageContainer = pages[pages.length - 2];
+        newNode.style.cssText += `margin-left: ${tmpPageContainer.scrollWidth - pageWidth + 2 * ((_a = globalThis.config) == null ? void 0 : _a.marginHorizontal)}px;`;
+        console.log("!!!!!", newNode.style.cssText);
         reader.appendChild(newNode);
-        const newSpacer = document.querySelectorAll(".reader-spacer")[1];
-        endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(newSpacer.style.left.replace("px", "")) + 0 * ((_b = globalThis.config) == null ? void 0 : _b.marginHorizontal) + "px";
+        endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(vEndSpacer.style.left.replace("px", "")) + 0 * ((_b = globalThis.config) == null ? void 0 : _b.marginHorizontal) + "px";
       } else {
         newNode.style.cssText += `margin-left: 0px;`;
         console.log("!!!", newNode.style.cssText);
@@ -379,6 +382,7 @@ globalThis.ReaderJs = (() => {
       const virtualWrapper = document.getElementById("virtual-wrapper");
       document.body.insertBefore(virtualReader.cloneNode(true), virtualWrapper);
       document.body.children[0].id = "reader";
+      document.querySelector(".spacer").id = "reader-spacer";
       if (globalThis.config.enableScroll) {
         initEvent();
         document.getElementById("reader").style.position = "fixed";

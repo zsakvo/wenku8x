@@ -48,7 +48,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 总页数
   int totalPage = 0;
   // 当前章节
-  int chapterIndex = 3;
+  int chapterIndex = 0;
   // 是否在获取章节
   // bool fetchingNext = false;
   Fetching fetchStatus = Fetching.next;
