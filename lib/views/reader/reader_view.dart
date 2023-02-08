@@ -313,11 +313,11 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
       if (initData && tmpChapterData != null) {
         if (fetchStatus == Fetching.next) {
           webViewController.value!.evaluateJavascript(source: """
-ReaderJs.appendChapter(`$tmpChapterData`,"测试章节");
+ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}");
 """);
         } else if (fetchStatus == Fetching.previous) {
           webViewController.value!.evaluateJavascript(source: """
-ReaderJs.insertChapter(`$tmpChapterData`,"测试章节");
+ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}");
 """);
         }
         fetchStatus = Fetching.none;
@@ -394,6 +394,27 @@ ReaderJs.insertChapter(`$tmpChapterData`,"测试章节");
                 Factory<OneSequenceGestureRecognizer>(
                   () => LongPressGestureRecognizer(),
                 )
+              },
+              onLoadStop: (controller, url) {
+                controller.evaluateJavascript(source: """
+ ReaderJs.init({
+          bookName: '${widget.name}',
+          horizontal: true,
+          marginHorizontal: 18,
+          marginVertical: 18,
+          fontSize:18,
+          textAlign: 1, //0 start,1 justify,2 end,3 center
+          lineSpacing: 1.4,
+          backgroundColor: 'fffffbff',
+          textColor: '000000',
+          linkColor: '000000',
+          topExtraHeight: ${mediaQuery.padding.top},
+          bottomExtraHeight: ${mediaQuery.padding.bottom},
+          infoBarHeight: 32,
+          enableJsBridge:true,
+          enableScroll:false
+        })
+""");
               },
               initialSettings: InAppWebViewSettings(
                   pageZoom: 1,
