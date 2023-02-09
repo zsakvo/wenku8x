@@ -57,6 +57,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   Fetching pageStatue = Fetching.none;
   Isar isar = Isar.getInstance()!;
 
+  final chapterIndexArr = [0];
+
   late BookRecord bookRecord;
 
   // 工具栏状态
@@ -146,7 +148,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     onPointerUp(
       PointerUpEvent event,
-    ) {
+    ) async {
       if (!enableGestureListener.value) return;
       tapUpPos = event.position.dx;
       double res = (tapUpPos - tapDownPos);
@@ -186,7 +188,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           }
         }
       }
-      webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      await webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      // 执行js探测滚动
+      Future.delayed(const Duration(milliseconds: 500))
+          .then((value) => webViewController.value!.evaluateJavascript(source: """
+JsBridge("log","090",document.getElementsByTagName("html")[0].getBoundingClientRect(),window.innerWidth)
+"""));
+      //
     }
 
     fetchExtraChapter(String uri, String title) async {
@@ -244,8 +252,12 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                 loading.value = false;
                 totalPage += args[1] as int;
                 // currentPage.value += args[1] as int;
+                // 页码累积，查询所在区间推断章节
                 if (pageStatue == Fetching.previous) {
                   currentPage.value += args[1] as int;
+                  chapterIndexArr.insert(0, args[1] as int);
+                } else if (pageStatue == Fetching.next) {
+                  chapterIndexArr.add(args[1] as int);
                 }
                 break;
             }
