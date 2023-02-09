@@ -65,6 +65,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   int chapterCeil = 0;
   int chapterFloor = 0;
 
+  final chapterPagesMap = {};
+  int currentChapterPage = 0;
+
   // 工具栏状态
   // Menu menuStatus = Menu.none;
   final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
@@ -136,6 +139,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       String html = """<body>$content</body>""";
       final file = File("${docDir.path}/books/$aid/$cid.html");
       tmpChapter.value = html;
+      Log.d(html, cid);
       file.writeAsStringSync(html);
       fileUri.value = "file://${file.path}";
     }
@@ -193,23 +197,24 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         }
       }
       await webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      Log.d(currentPage.value, "cpp");
       // 执行js探测滚动
-      Future.delayed(const Duration(milliseconds: 500))
-          .then((value) => webViewController.value!.evaluateJavascript(source: """
-JsBridge("log","090",document.getElementsByTagName("html")[0].getBoundingClientRect(),window.innerWidth)
-"""));
+//       Future.delayed(const Duration(milliseconds: 500))
+//           .then((value) => webViewController.value!.evaluateJavascript(source: """
+// JsBridge("log","090",document.getElementsByTagName("html")[0].getBoundingClientRect(),window.innerWidth)
+// """));
       //
     }
 
-    fetchExtraChapter(String uri, String title) async {
-      File file = File(uri.replaceAll("file://", ""));
-      String htmlSrc = file.readAsStringSync();
-      var bodySrc = RegExp(_regExpBody).firstMatch(htmlSrc)!.group(0);
-      var a = await webViewController.value!.evaluateJavascript(source: """
-ReaderJs.appendChapter(`$bodySrc`,`$title`)
-""");
-      Log.d(a, "aaa");
-    }
+//     fetchExtraChapter(String uri, String title) async {
+//       File file = File(uri.replaceAll("file://", ""));
+//       String htmlSrc = file.readAsStringSync();
+//       var bodySrc = RegExp(_regExpBody).firstMatch(htmlSrc)!.group(0);
+//       var a = await webViewController.value!.evaluateJavascript(source: """
+// ReaderJs.appendChapter(`$bodySrc`,`$title`)
+// """);
+//       Log.d(a, "aaa");
+//     }
 
     useEffect(() {
       bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
@@ -255,16 +260,19 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
               case 'notifySize':
                 loading.value = false;
                 totalPage += args[1] as int;
+                chapterPagesMap[chapterIndex] = args[1] as int;
                 // currentPage.value += args[1] as int;
                 // 页码累积，查询所在区间推断章节
                 // 同时设置边界 判断章节
                 if (pageStatue == Fetching.previous) {
                   currentPage.value += args[1] as int;
-                  chapterFloor += args[1] as int;
+                  // chapterFloor += args[1] as int;
                   // chapterIndexArr.insert(0, args[1] as int);
                 } else if (pageStatue == Fetching.next) {
                   // chapterIndexArr.add(args[1] as int);
-                  chapterCeil += args[1] as int;
+                  // chapterCeil += args[1] as int;
+                } else {
+                  // chapterCeil = args[1] as int;
                 }
                 break;
             }
@@ -361,13 +369,14 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}")
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
         Log.d("要加载上一章了");
-        // fetchingNext = true;
-        // fetchStatus = Fetching.previous;
+        fetchStatus = Fetching.previous;
         var cpts = chapters.value;
-        // chapterIndex--;
-        fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        if (chapterIndex >= 1) {
+          chapterIndex--;
+          fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        }
       }
-      Log.d([chapterCeil, chapterFloor], "章节检测");
+      Log.d(chapterPagesMap[chapterIndex], "章节检测");
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord..chapterIndex = chapterIndex);
