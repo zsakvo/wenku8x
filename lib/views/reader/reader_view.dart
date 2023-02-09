@@ -66,6 +66,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   int chapterFloor = 0;
 
   final chapterPagesMap = {};
+  int currentChapterIndex = 0;
   int currentChapterPage = 0;
 
   // 工具栏状态
@@ -164,9 +165,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       if (resAbs > distance) {
         if (res < 0) {
           currentPage.value++;
+          currentChapterPage++;
           pageStatue = Fetching.next;
         } else {
           currentPage.value--;
+          currentChapterPage--;
           pageStatue = Fetching.previous;
         }
       } else {
@@ -197,7 +200,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         }
       }
       await webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
-      Log.d(currentPage.value, "cpp");
       // 执行js探测滚动
 //       Future.delayed(const Duration(milliseconds: 500))
 //           .then((value) => webViewController.value!.evaluateJavascript(source: """
@@ -226,6 +228,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       statusBarHeight = mediaQuery.padding.top;
       bottomBarHeight = mediaQuery.padding.bottom;
       chapterIndex = bookRecord.chapterIndex;
+      currentChapterIndex = chapterIndex;
       fetchCatalog(widget.aid);
       return () {};
     }, []);
@@ -376,10 +379,22 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}")
           fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
         }
       }
-      Log.d(chapterPagesMap[chapterIndex], "章节检测");
+
+      final ceil = chapterPagesMap[currentChapterIndex];
+      if (currentChapterPage == ceil) {
+        currentChapterIndex++;
+        currentChapterPage = 0;
+      } else if (currentChapterPage == -1) {
+        currentChapterIndex--;
+        currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
+      }
+      Log.d([currentChapterIndex, currentChapterPage], "cpp");
+      Log.d([chapterPagesMap, chapterPagesMap[currentChapterIndex]], "章节检测");
       isar.writeTxnSync(
         () {
-          isar.bookRecords.putSync(bookRecord..chapterIndex = chapterIndex);
+          isar.bookRecords.putSync(bookRecord
+            ..chapterIndex = currentChapterIndex
+            ..pageIndex = currentChapterPage);
         },
       );
       return () {};
