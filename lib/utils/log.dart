@@ -2,7 +2,7 @@ import 'package:logger/logger.dart';
 
 class Log {
   static final Logger _logger = Logger(printer: PrefixPrinter(PrettyPrinter()));
-  static void v(dynamic message, [String? tag]) {
+  static void v(message, [String? tag]) {
     _logger.v(message, tag);
   }
 

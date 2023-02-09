@@ -57,9 +57,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   Fetching pageStatue = Fetching.none;
   Isar isar = Isar.getInstance()!;
 
-  final chapterIndexArr = [0];
+  // final chapterIndexArr = [0];
 
   late BookRecord bookRecord;
+
+  // 边界
+  int chapterCeil = 0;
+  int chapterFloor = 0;
 
   // 工具栏状态
   // Menu menuStatus = Menu.none;
@@ -253,11 +257,14 @@ ReaderJs.appendChapter(`$bodySrc`,`$title`)
                 totalPage += args[1] as int;
                 // currentPage.value += args[1] as int;
                 // 页码累积，查询所在区间推断章节
+                // 同时设置边界 判断章节
                 if (pageStatue == Fetching.previous) {
                   currentPage.value += args[1] as int;
-                  chapterIndexArr.insert(0, args[1] as int);
+                  chapterFloor += args[1] as int;
+                  // chapterIndexArr.insert(0, args[1] as int);
                 } else if (pageStatue == Fetching.next) {
-                  chapterIndexArr.add(args[1] as int);
+                  // chapterIndexArr.add(args[1] as int);
+                  chapterCeil += args[1] as int;
                 }
                 break;
             }
@@ -360,6 +367,7 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}")
         // chapterIndex--;
         fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
       }
+      Log.d([chapterCeil, chapterFloor], "章节检测");
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord..chapterIndex = chapterIndex);
