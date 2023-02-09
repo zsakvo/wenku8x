@@ -50,7 +50,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 总页数
   int totalPage = 0;
   // 当前章节
-  int chapterIndex = 0;
+  // int chapterIndex = 0;
   // 是否在获取章节
   // bool fetchingNext = false;
   Fetching fetchStatus = Fetching.next;
@@ -227,8 +227,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       }
       statusBarHeight = mediaQuery.padding.top;
       bottomBarHeight = mediaQuery.padding.bottom;
-      chapterIndex = bookRecord.chapterIndex;
-      currentChapterIndex = chapterIndex;
+      // chapterIndex = bookRecord.chapterIndex;
+      currentChapterIndex = bookRecord.chapterIndex;
+      currentChapterPage = bookRecord.pageIndex;
+      currentPage.value = currentChapterPage;
       fetchCatalog(widget.aid);
       return () {};
     }, []);
@@ -239,7 +241,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         // chapters.value.take(3).forEach((element) {
         //   Log.d(element.json);
         // });
-        fetchContent(cv[chapterIndex].cid, cv[chapterIndex].name);
+        fetchContent(cv[currentChapterIndex].cid, cv[currentChapterIndex].name);
       }
       return () {};
     }, [chapters.value]);
@@ -263,19 +265,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               case 'notifySize':
                 loading.value = false;
                 totalPage += args[1] as int;
-                chapterPagesMap[chapterIndex] = args[1] as int;
+                // chapterPagesMap[chapterIndex] = args[1] as int;
                 // currentPage.value += args[1] as int;
                 // 页码累积，查询所在区间推断章节
                 // 同时设置边界 判断章节
                 if (pageStatue == Fetching.previous) {
+                  chapterPagesMap[currentChapterIndex - 1] = args[1] as int;
                   currentPage.value += args[1] as int;
                   // chapterFloor += args[1] as int;
                   // chapterIndexArr.insert(0, args[1] as int);
                 } else if (pageStatue == Fetching.next) {
+                  chapterPagesMap[currentChapterIndex + 1] = args[1] as int;
                   // chapterIndexArr.add(args[1] as int);
                   // chapterCeil += args[1] as int;
                 } else {
                   // chapterCeil = args[1] as int;
+                  webViewController.value!.scrollTo(x: (pageWidth * currentChapterPage).round(), y: 0, animated: false);
                 }
                 break;
             }
@@ -350,11 +355,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       if (initData && tmpChapterData != null) {
         if (fetchStatus == Fetching.next) {
           webViewController.value!.evaluateJavascript(source: """
-ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}");
+ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex + 1].name}");
 """);
         } else if (fetchStatus == Fetching.previous) {
           webViewController.value!.evaluateJavascript(source: """
-ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}");
+ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex - 1].name}");
 """);
         }
         fetchStatus = Fetching.none;
@@ -368,15 +373,16 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[chapterIndex].name}")
         // fetchingNext = true;
         fetchStatus = Fetching.next;
         var cpts = chapters.value;
-        chapterIndex++;
-        fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        // chapterIndex++;
+        int newIndex = currentChapterIndex + 1;
+        fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
       } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
         Log.d("要加载上一章了");
         fetchStatus = Fetching.previous;
         var cpts = chapters.value;
-        if (chapterIndex >= 1) {
-          chapterIndex--;
-          fetchContent(cpts[chapterIndex].cid, cpts[chapterIndex].name);
+        if (currentChapterIndex >= 1) {
+          int newIndex = currentChapterIndex - 1;
+          fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
         }
       }
 
