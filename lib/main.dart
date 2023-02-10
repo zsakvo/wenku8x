@@ -12,7 +12,7 @@ import 'package:isar/isar.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/ajax.dart';
 import 'package:wenku8x/modals/account.dart';
-import 'package:wenku8x/modals/config.dart';
+
 import 'package:wenku8x/router.dart';
 import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
@@ -23,9 +23,7 @@ void main() async {
   await Hive.initFlutter();
 
   Isar.openSync([BookRecordSchema]);
-  Hive.registerAdapter(ConfigAdapter());
   Hive.registerAdapter(AccountAdapter());
-  await Hive.openBox<Config>("config");
   await Hive.openBox<Account>("account");
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =

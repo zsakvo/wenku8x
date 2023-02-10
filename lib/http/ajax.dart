@@ -9,6 +9,7 @@ import 'package:hive/hive.dart';
 import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/account.dart';
 import 'package:xml/xml.dart';
@@ -19,8 +20,7 @@ import '../utils/log.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
-  static String UA =
-      "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
+  static String UA = "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
   static const String _APPVER = "1.13";
 
   ///超时时间
@@ -31,8 +31,10 @@ class Ajax {
 
   static final box = Hive.box<Account>("account");
   static final account = box.get("account");
+  static late final SharedPreferences sp;
 
   static init() async {
+    sp = await SharedPreferences.getInstance();
     Directory appDocDir = await getApplicationDocumentsDirectory();
     final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
     _client = Dio(BaseOptions(
@@ -53,16 +55,9 @@ class Ajax {
   static Future<dynamic> post(String param, {bool isXml = true}) async {
     // 判断是否是登陆请求
     bool isLogin = param.contains("action=login");
-    FormData formData = FormData.fromMap({
-      "appver": _APPVER,
-      "request": _encrypt(param),
-      "timetoken": DateTime.now().millisecondsSinceEpoch
-    });
-    Log.d({
-      "appver": _APPVER,
-      "request": param,
-      "timetoken": DateTime.now().millisecondsSinceEpoch
-    }, "请求参数");
+    FormData formData = FormData.fromMap(
+        {"appver": _APPVER, "request": _encrypt(param), "timetoken": DateTime.now().millisecondsSinceEpoch});
+    Log.d({"appver": _APPVER, "request": param, "timetoken": DateTime.now().millisecondsSinceEpoch}, "请求参数");
     var res = await _client.post("", data: formData);
     if (isXml) {
       try {
@@ -70,9 +65,9 @@ class Ajax {
       } catch (err) {
         Log.e("请求失败，结果为：${res.data}");
         if (res.data == "4") {
-          final username = account!.username;
-          final password = account!.password;
-          if (username != null && password != null) {
+          final username = sp.getString("username") ?? "";
+          final password = sp.getString("password") ?? "";
+          if (username.isNotEmpty && password.isNotEmpty) {
             var res = await API.login(username, password);
             Log.d(res, "relogin");
             if (res) {

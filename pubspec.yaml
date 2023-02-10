@@ -63,6 +63,7 @@ dependencies:
   archive: ^3.3.5
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
+  shared_preferences: ^2.0.17
 
 dev_dependencies:
   flutter_test:
