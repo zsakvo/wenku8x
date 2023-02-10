@@ -313,7 +313,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
         currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
       }
 
-      Log.d(chapterPagesMap, "信息探测");
+      Log.d([chapterPagesMap, currentChapterIndex, currentChapterPage], "信息探测");
 
       saveRecord();
       return () {};
@@ -409,6 +409,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
           chapters: chapters.value,
           backgroundColor: toolBarBackgroundColor,
           onItemTap: (index, chapter) {
+            Log.d([index, chapter], "点击目录");
             fetchStatus = Fetching.none;
             loading.value = true;
             totalPage = 0;
