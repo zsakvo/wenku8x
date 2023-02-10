@@ -5,7 +5,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -49,15 +48,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   double extraRate = 1.0;
   // 总页数
   int totalPage = 0;
-  // 当前章节
-  // int chapterIndex = 0;
-  // 是否在获取章节
-  // bool fetchingNext = false;
+
   Fetching fetchStatus = Fetching.next;
   Fetching pageStatue = Fetching.none;
   Isar isar = Isar.getInstance()!;
-
-  // final chapterIndexArr = [0];
 
   late BookRecord bookRecord;
 
@@ -125,8 +119,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 获取内容
     Future fetchContent(String cid, String chapterName) async {
       if (totalPage == 0) {
-        // loading.value = true;
-        // currentPage.value = 0;
         menuCatalogKey.currentState!.close();
         menuBottomWrapperKey.currentState!.close();
       }
@@ -135,8 +127,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
       arr.removeRange(0, 2);
       String content = arr.map((e) => """<p>$e</p>""").join("\n");
-      // String html = getPageString(widget.name, chapterName, content, statusBarHeight, bottomBarHeight,
-      //     Theme.of(context).colorScheme.surface.value.toRadixString(16));
+
       String html = """<body>$content</body>""";
       final file = File("${docDir.path}/books/$aid/$cid.html");
       tmpChapter.value = html;
@@ -173,7 +164,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           pageStatue = Fetching.previous;
         }
       } else {
-        // pageStatue = Fetching.none;
         // 视为点击事件
         double tapUpPosY = event.position.dy;
         if ((tapUpPos > screenWidth / 3 && tapUpPos < 2 * screenWidth / 3) &&
@@ -199,24 +189,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           }
         }
       }
-      await webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
-      // 执行js探测滚动
-//       Future.delayed(const Duration(milliseconds: 500))
-//           .then((value) => webViewController.value!.evaluateJavascript(source: """
-// JsBridge("log","090",document.getElementsByTagName("html")[0].getBoundingClientRect(),window.innerWidth)
-// """));
-      //
+      webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
-
-//     fetchExtraChapter(String uri, String title) async {
-//       File file = File(uri.replaceAll("file://", ""));
-//       String htmlSrc = file.readAsStringSync();
-//       var bodySrc = RegExp(_regExpBody).firstMatch(htmlSrc)!.group(0);
-//       var a = await webViewController.value!.evaluateJavascript(source: """
-// ReaderJs.appendChapter(`$bodySrc`,`$title`)
-// """);
-//       Log.d(a, "aaa");
-//     }
 
     useEffect(() {
       bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
@@ -227,7 +201,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       }
       statusBarHeight = mediaQuery.padding.top;
       bottomBarHeight = mediaQuery.padding.bottom;
-      // chapterIndex = bookRecord.chapterIndex;
       currentChapterIndex = bookRecord.chapterIndex;
       currentChapterPage = bookRecord.pageIndex;
       currentPage.value = currentChapterPage;
@@ -238,9 +211,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     useEffect(() {
       var cv = chapters.value;
       if (cv.isNotEmpty) {
-        // chapters.value.take(3).forEach((element) {
-        //   Log.d(element.json);
-        // });
         fetchContent(cv[currentChapterIndex].cid, cv[currentChapterIndex].name);
       }
       return () {};
@@ -265,22 +235,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               case 'notifySize':
                 loading.value = false;
                 totalPage += args[1] as int;
-                // chapterPagesMap[chapterIndex] = args[1] as int;
-                // currentPage.value += args[1] as int;
-                // 页码累积，查询所在区间推断章节
-                // 同时设置边界 判断章节
                 if (pageStatue == Fetching.previous) {
                   chapterPagesMap[currentChapterIndex - 1] = args[1] as int;
                   currentPage.value += args[1] as int;
-                  // chapterFloor += args[1] as int;
-                  // chapterIndexArr.insert(0, args[1] as int);
                 } else if (pageStatue == Fetching.next) {
                   chapterPagesMap[currentChapterIndex + 1] = args[1] as int;
-                  // chapterIndexArr.add(args[1] as int);
-                  // chapterCeil += args[1] as int;
                 } else {
                   chapterPagesMap[currentChapterIndex] = args[1] as int;
-                  // chapterCeil = args[1] as int;
                   webViewController.value!.scrollTo(x: (pageWidth * currentChapterPage).round(), y: 0, animated: false);
                 }
                 break;
@@ -290,65 +251,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         controller.loadData(
             data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
       }
-      // if (controller != null && fileUri.value != null) {
-      //   if (totalPage == 0) {
-      //     controller.addJavaScriptHandler(
-      //         handlerName: "notifySize",
-      //         callback: (params) {
-      //           pageWidth = params[0] * extraRate;
-      //         });
-      //     controller.addJavaScriptHandler(
-      //         handlerName: "onBookReady",
-      //         callback: (params) {
-      //           loading.value = false;
-      //         });
-      //     controller.addJavaScriptHandler(
-      //         handlerName: "onPagingSetup",
-      //         callback: (params) {
-      //           totalPage = params[2];
-      //           fetchingNext = false;
-      //         });
-      //     controller.loadUrl(urlRequest: URLRequest(url: WebUri(fileUri.value!)));
-      //   } else {
-      //     Log.d("已经加载过了");
-      //     fetchExtraChapter(fileUri.value!, chapters.value[chapterIndex].name);
-      //   }
-      // }
+
       return () {};
     }, [dir.data, webViewController.value]);
-
-    useEffect(() {
-      final controller = webViewController.value;
-      if (controller != null) {
-        Log.d("开始设置阅读器");
-//         controller.evaluateJavascript(source: """
-// ReaderJs.init({
-//           bookName: '${widget.name}',
-//           horizontal: true,
-//           marginHorizontal: 18,
-//           marginVertical: 18,
-//           fontSize:18,
-//           textAlign: 1, //0 start,1 justify,2 end,3 center
-//           lineSpacing: 1.4,
-//           backgroundColor: 'fffffbff',
-//           textColor: '000000',
-//           linkColor: '000000',
-//           topExtraHeight: ${mediaQuery.padding.top},
-//           bottomExtraHeight: ${mediaQuery.padding.bottom},
-//           infoBarHeight: 32,
-//           enableJsBridge:true,
-//           enableScroll:false
-//         })
-// """);
-      }
-      return () {};
-    }, [webViewController.value]);
-
-    // useEffect(() {
-    //   final page = currentPage.value;
-    //   Log.d(page, totalPage.toString());
-    //   return () {};
-    // }, [currentPage.value]);
 
     useEffect(() {
       final initData = appInit.value;
@@ -371,10 +276,8 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex -
     useEffect(() {
       if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none && pageStatue == Fetching.next) {
         Log.d("要加载下一章了");
-        // fetchingNext = true;
         fetchStatus = Fetching.next;
         var cpts = chapters.value;
-        // chapterIndex++;
         int newIndex = currentChapterIndex + 1;
         fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
       } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
@@ -395,8 +298,7 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex -
         currentChapterIndex--;
         currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
       }
-      Log.d([currentChapterIndex, currentChapterPage], "cpp");
-      Log.d([chapterPagesMap, chapterPagesMap[currentChapterIndex]], "章节检测");
+
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord
@@ -560,13 +462,7 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex -
                 child: Text(
                   "章节加载中，请稍候",
                   style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.secondary),
-                )
-                //  const SizedBox(
-                //   width: 42,
-                //   height: 42,
-                //   child: CircularProgressIndicator(),
-                // )
-                )
+                ))
             : const SizedBox.shrink()
       ],
     ));
