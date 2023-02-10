@@ -4,14 +4,13 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_displaymode/flutter_displaymode.dart';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/ajax.dart';
-import 'package:wenku8x/modals/account.dart';
 
 import 'package:wenku8x/router.dart';
 import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
@@ -20,11 +19,8 @@ import 'package:wenku8x/utils/scroll.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Hive.initFlutter();
 
   Isar.openSync([BookRecordSchema]);
-  Hive.registerAdapter(AccountAdapter());
-  await Hive.openBox<Account>("account");
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);

@@ -5,17 +5,14 @@ import 'dart:io';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:hive/hive.dart';
 import 'dart:convert' as convert;
 
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wenku8x/http/api.dart';
-import 'package:wenku8x/modals/account.dart';
+
 import 'package:xml/xml.dart';
 
-import '../service/navigation.dart';
-import '../utils/flash.dart';
 import '../utils/log.dart';
 
 class Ajax {
@@ -29,8 +26,6 @@ class Ajax {
 
   static late Dio _client;
 
-  static final box = Hive.box<Account>("account");
-  static final account = box.get("account");
   static late final SharedPreferences sp;
 
   static init() async {

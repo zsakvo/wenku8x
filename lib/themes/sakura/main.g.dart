@@ -28,19 +28,18 @@ class Home extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           elevation: 2,
-          title: Text("Material Theme Builder"),
+          title: const Text("Material Theme Builder"),
         ),
         body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
+            children: const [
+              Text(
                 'Update with your UI',
               ),
             ],
           ),
         ),
-        floatingActionButton:
-            FloatingActionButton(onPressed: () => {}, tooltip: 'Increment'));
+        floatingActionButton: FloatingActionButton(onPressed: () => {}, tooltip: 'Increment'));
   }
 }

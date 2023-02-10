@@ -5,8 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/modals/list_book.dart';
 import 'package:wenku8x/utils/constant.dart';
 
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/widgets/list_book.dart';
 
 import 'rank_model.dart';
@@ -34,10 +32,8 @@ class _RankViewState extends ConsumerState<RankView> {
 
     return Scaffold(
       body: EasyRefresh(
-          onRefresh: () =>
-              ref.read(booksListProvider.notifier).refresh(widget.type),
-          onLoad: () =>
-              ref.read(booksListProvider.notifier).loadMore(widget.type),
+          onRefresh: () => ref.read(booksListProvider.notifier).refresh(widget.type),
+          onLoad: () => ref.read(booksListProvider.notifier).loadMore(widget.type),
           child: CustomScrollView(
             slivers: [
               SliverAppBar.large(
@@ -52,14 +48,12 @@ class _RankViewState extends ConsumerState<RankView> {
                     },
                   ),
                 ),
-                flexibleSpace: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
+                flexibleSpace: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
                   top = constraints.biggest.height;
                   return FlexibleSpaceBar(
                     title: Text(
                       RankMap[type]!,
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.titleLarge?.color),
+                      style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
                     ),
                     centerTitle: false,
                     titlePadding: EdgeInsetsDirectional.only(
