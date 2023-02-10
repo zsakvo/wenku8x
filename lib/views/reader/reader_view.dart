@@ -193,6 +193,16 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
+    saveRecord() {
+      isar.writeTxnSync(
+        () {
+          isar.bookRecords.putSync(bookRecord
+            ..chapterIndex = currentChapterIndex
+            ..pageIndex = currentChapterPage);
+        },
+      );
+    }
+
     useEffect(() {
       bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
         ..aid = widget.aid;
@@ -245,6 +255,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                   chapterPagesMap[currentChapterIndex] = args[1] as int;
                   webViewController.value!.scrollTo(x: (pageWidth * currentChapterPage).round(), y: 0, animated: false);
                 }
+                saveRecord();
                 break;
             }
           },
@@ -306,13 +317,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
 
       Log.d(chapterPagesMap, "信息探测");
 
-      isar.writeTxnSync(
-        () {
-          isar.bookRecords.putSync(bookRecord
-            ..chapterIndex = currentChapterIndex
-            ..pageIndex = currentChapterPage);
-        },
-      );
+      saveRecord();
       return () {};
     }, [currentPage.value]);
 
