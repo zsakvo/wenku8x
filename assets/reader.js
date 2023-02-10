@@ -415,9 +415,15 @@ globalThis.ReaderJs = (() => {
     setupPageInfos(title, virtualPageCount);
     applyRealReader(true);
   }
+  function refreshChapter(body, title) {
+    document.getElementById("reader").remove();
+    document.getElementById("virtual-reader").innerHTML = "";
+    appendChapter(body, title);
+  }
   return {
     init,
     appendChapter,
-    insertChapter
+    insertChapter,
+    refreshChapter
   };
 })();

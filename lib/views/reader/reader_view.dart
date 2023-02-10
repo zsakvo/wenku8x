@@ -76,12 +76,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     final loading = useState(true);
+    // 这里维护一个全局的页码，用来计算滚动宽度
     final currentPage = useState(0);
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
     final chapters = useState<List<Chapter>>([]);
-    final fileUri = useState<String?>(null);
+    // final fileUri = useState<String?>(null);
     final webViewController = useState<InAppWebViewController?>(null);
     final enableGestureListener = useState(true);
     final menuStatus = useState<Menu>(Menu.none);
@@ -130,10 +131,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
       String html = """<body>$content</body>""";
       final file = File("${docDir.path}/books/$aid/$cid.html");
-      tmpChapter.value = html;
+      tmpChapter.value = html + (tmpChapter.value == html ? " " : "");
       Log.d(html, cid);
       file.writeAsStringSync(html);
-      fileUri.value = "file://${file.path}";
+      // fileUri.value = "file://${file.path}";
     }
 
     onPointerDown(PointerDownEvent event) {
@@ -267,6 +268,10 @@ ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex +
           webViewController.value!.evaluateJavascript(source: """
 ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex - 1].name}");
 """);
+        } else {
+          webViewController.value!.evaluateJavascript(source: """
+ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex - 1].name}");
+""");
         }
         fetchStatus = Fetching.none;
       }
@@ -298,6 +303,8 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex -
         currentChapterIndex--;
         currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
       }
+
+      Log.d(chapterPagesMap, "信息探测");
 
       isar.writeTxnSync(
         () {
@@ -399,7 +406,12 @@ ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex -
           chapters: chapters.value,
           backgroundColor: toolBarBackgroundColor,
           onItemTap: (index, chapter) {
+            fetchStatus = Fetching.none;
+            loading.value = true;
             totalPage = 0;
+            currentChapterPage = 0;
+            currentPage.value = 0;
+            currentChapterIndex = index;
             fetchContent(chapter.cid, chapter.name);
           },
         ),
