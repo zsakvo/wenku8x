@@ -131,7 +131,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       String html = """<body>$content</body>""";
       final file = File("${docDir.path}/books/$aid/$cid.html");
       tmpChapter.value = html + (tmpChapter.value == html ? " " : "");
-      Log.d(html, cid);
+      // Log.d(html, cid);
       file.writeAsStringSync(html);
     }
 
@@ -313,7 +313,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
         currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
       }
 
-      Log.d([chapterPagesMap, currentChapterIndex, currentChapterPage], "信息探测");
+      // Log.d([chapterPagesMap, currentChapterIndex, currentChapterPage], "信息探测");
 
       saveRecord();
       return () {};
