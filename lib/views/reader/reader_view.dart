@@ -279,6 +279,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                   // chapterIndexArr.add(args[1] as int);
                   // chapterCeil += args[1] as int;
                 } else {
+                  chapterPagesMap[currentChapterIndex] = args[1] as int;
                   // chapterCeil = args[1] as int;
                   webViewController.value!.scrollTo(x: (pageWidth * currentChapterPage).round(), y: 0, animated: false);
                 }
