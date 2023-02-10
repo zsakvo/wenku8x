@@ -39,7 +39,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 页面宽度
   late dynamic pageWidth;
   // 手指滑动判定
-  final distance = 24;
+  final distance = 8;
   // 按下座标
   double tapDownPos = 0.0;
   // 抬起座标
@@ -82,7 +82,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
     final chapters = useState<List<Chapter>>([]);
-    // final fileUri = useState<String?>(null);
     final webViewController = useState<InAppWebViewController?>(null);
     final enableGestureListener = useState(true);
     final menuStatus = useState<Menu>(Menu.none);
@@ -134,7 +133,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       tmpChapter.value = html + (tmpChapter.value == html ? " " : "");
       Log.d(html, cid);
       file.writeAsStringSync(html);
-      // fileUri.value = "file://${file.path}";
     }
 
     onPointerDown(PointerDownEvent event) {
