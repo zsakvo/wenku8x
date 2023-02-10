@@ -20,12 +20,19 @@ final booksListProvider = StateNotifierProvider<BookListNotifier, List<CaseBook>
 
 class BookListNotifier extends StateNotifier<List<CaseBook>> {
   BookListNotifier() : super([]);
+  late final Isar isar;
   void refresh() async {
-    final isar = await Isar.open([CaseBookSchema]);
     var res = await API.getShelfBookList();
     state = res;
-//     isar.writeTxn(() async {
-//   await isar.caseBooks.put(...res);
-// });
+    isar.writeTxn(() async {
+      for (var element in res) {
+        await isar.caseBooks.put(element);
+      }
+    });
+  }
+
+  void init() async {
+    isar = await Isar.open([CaseBookSchema]);
+    state = isar.caseBooks.where().findAllSync();
   }
 }
