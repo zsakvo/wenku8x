@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wenku8x/modals/case_book.dart';
+
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/views/home/home_model.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wenku8x/widgets/list_book.dart';
+
+import '../../data/scheme/case_book.dart';
 
 const ranks = [
   {"icon": Icons.pan_tool_alt_outlined, "title": "点击"},
@@ -34,13 +36,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
     final List<CaseBook> booksList = ref.watch(booksListProvider);
     return Scaffold(
       key: _scaffoldKey,
-      // appBar: AppBar(
-      //   toolbarHeight: 0,
-      //   backgroundColor: Colors.transparent,
-      //   systemOverlayStyle: Theme.of(context).brightness == Brightness.light
-      //       ? SystemUiOverlayStyle.dark
-      //       : SystemUiOverlayStyle.light,
-      // ),
       body: EasyRefresh(
           refreshOnStart: true,
           onRefresh: () async {

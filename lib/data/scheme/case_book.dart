@@ -1,6 +1,12 @@
 import 'dart:convert';
 
+import 'package:isar/isar.dart';
+
+part 'case_book.g.dart';
+
+@collection
 class CaseBook {
+  Id id = Isar.autoIncrement;
   final String bookName;
   String updateTime;
   final String aid;
@@ -53,6 +59,5 @@ class CaseBook {
 
   String toJson() => json.encode(toMap());
 
-  factory CaseBook.fromJson(String source) =>
-      CaseBook.fromMap(json.decode(source));
+  factory CaseBook.fromJson(String source) => CaseBook.fromMap(json.decode(source));
 }

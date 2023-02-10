@@ -10,6 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
+import 'package:wenku8x/data/scheme/case_book.dart';
 import 'package:wenku8x/http/ajax.dart';
 
 import 'package:wenku8x/router.dart';
@@ -20,7 +21,7 @@ import 'package:wenku8x/utils/scroll.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  Isar.openSync([BookRecordSchema]);
+  Isar.openSync([CaseBookSchema, BookRecordSchema]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);
