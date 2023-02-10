@@ -126,7 +126,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     Future fetchContent(String cid, String chapterName) async {
       if (totalPage == 0) {
         // loading.value = true;
-        currentPage.value = 0;
+        // currentPage.value = 0;
         menuCatalogKey.currentState!.close();
         menuBottomWrapperKey.currentState!.close();
       }
