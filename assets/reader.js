@@ -1,8 +1,8 @@
-(function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}#virtual-wrapper{position:fixed;left:0;top:0;opacity:0;z-index:1}#reader{z-index:99;display:flex;z-index:10}")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
+(function(){"use strict";try{if(typeof document!="undefined"){var e=document.createElement("style");e.appendChild(document.createTextNode("/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */html{line-height:1.15;-webkit-text-size-adjust:100%}body{margin:0}main{display:block}h1{font-size:2em;margin:.67em 0}hr{box-sizing:content-box;height:0;overflow:visible}pre{font-family:monospace,monospace;font-size:1em}a{background-color:transparent}abbr[title]{border-bottom:none;text-decoration:underline;text-decoration:underline dotted}b,strong{font-weight:bolder}code,kbd,samp{font-family:monospace,monospace;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}img{border-style:none}button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;line-height:1.15;margin:0}button,input{overflow:visible}button,select{text-transform:none}button,[type=button],[type=reset],[type=submit]{-webkit-appearance:button}button::-moz-focus-inner,[type=button]::-moz-focus-inner,[type=reset]::-moz-focus-inner,[type=submit]::-moz-focus-inner{border-style:none;padding:0}button:-moz-focusring,[type=button]:-moz-focusring,[type=reset]:-moz-focusring,[type=submit]:-moz-focusring{outline:1px dotted ButtonText}fieldset{padding:.35em .75em .625em}legend{box-sizing:border-box;color:inherit;display:table;max-width:100%;padding:0;white-space:normal}progress{vertical-align:baseline}textarea{overflow:auto}[type=checkbox],[type=radio]{box-sizing:border-box;padding:0}[type=number]::-webkit-inner-spin-button,[type=number]::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}[type=search]::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}details{display:block}summary{display:list-item}template{display:none}[hidden]{display:none}#virtual-wrapper{position:fixed;left:0;top:0;opacity:0;z-index:1}#reader{z-index:99;display:flex;z-index:10}*{outline:none!important}body{padding:0!important;word-break:break-word}html{margin:0!important;padding:0!important}sup{vertical-align:top!important}sub{vertical-align:bottom!important}img{max-width:100%!important}")),document.head.appendChild(e)}}catch(t){console.error("vite-plugin-css-injected-by-js",t)}})();
 const normalize = "";
 globalThis.readerContainerClassName = "";
 globalThis.readerContainerSelector = "";
-const base = "";
+const _default = "";
 var NEWTON_ITERATIONS = 4;
 var NEWTON_MIN_SLOPE = 1e-3;
 var SUBDIVISION_PRECISION = 1e-7;
@@ -314,8 +314,18 @@ globalThis.ReaderJs = (() => {
     }
   }
   function initReaderContainerStyle(config) {
-    var style = "line-height: " + config.lineSpacing + " !important;font-size: " + config.fontSize + "px !important;";
-    switch (config.textAlign) {
+    const virtualReaderContainer = document.getElementById("virtual-reader");
+    virtualReaderContainer.style.paddingLeft = config.marginHorizontal + "px";
+    virtualReaderContainer.style.paddingRight = config.marginHorizontal + "px";
+    virtualReaderContainer.style.paddingBottom = config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px";
+    virtualReaderContainer.style.paddingTop = config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px";
+    virtualReaderContainer.style.left = "0";
+    virtualReaderContainer.style.top = "0";
+    updateReaderStyleElement();
+  }
+  function updateReaderStyleElement() {
+    var style = "line-height: " + globalThis.config.lineSpacing + " !important;font-size: " + globalThis.config.fontSize + "px !important;";
+    switch (globalThis.config.textAlign) {
       case 0:
         style += "text-align: initial !important;";
         break;
@@ -329,13 +339,6 @@ globalThis.ReaderJs = (() => {
         style += "text-align: center !important;";
         break;
     }
-    const virtualReaderContainer = document.getElementById("virtual-reader");
-    virtualReaderContainer.style.paddingLeft = config.marginHorizontal + "px";
-    virtualReaderContainer.style.paddingRight = config.marginHorizontal + "px";
-    virtualReaderContainer.style.paddingBottom = config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px";
-    virtualReaderContainer.style.paddingTop = config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px";
-    virtualReaderContainer.style.left = "0";
-    virtualReaderContainer.style.top = "0";
     globalThis.readerStyleElement.innerText = globalThis.readerContainerSelector + " * { " + style + " }";
   }
   function applyRealReader(insert = false) {
@@ -420,10 +423,30 @@ globalThis.ReaderJs = (() => {
     document.getElementById("virtual-reader").innerHTML = "";
     appendChapter(body, title);
   }
+  function setFontSize(fontSize) {
+    globalThis.config.fontSize = fontSize;
+    updateReaderStyleElement();
+  }
+  function setLineSpacing(lineSpacing) {
+    globalThis.config.lineSpacing = lineSpacing;
+    updateReaderStyleElement();
+  }
+  function setTextAlign(textAlign) {
+    globalThis.config.textAlign = textAlign;
+    updateReaderStyleElement();
+  }
+  function setBackgroundColor(color) {
+    globalThis.config.backgroundColor = color;
+    document.body.style.backgroundColor = color;
+  }
   return {
     init,
     appendChapter,
     insertChapter,
-    refreshChapter
+    refreshChapter,
+    setFontSize,
+    setLineSpacing,
+    setTextAlign,
+    setBackgroundColor
   };
 })();
