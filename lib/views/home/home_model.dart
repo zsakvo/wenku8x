@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:wenku8x/http/api.dart';
+import 'package:wenku8x/utils/log.dart';
 
 import '../../data/scheme/case_book.dart';
 
@@ -20,19 +21,27 @@ final booksListProvider = StateNotifierProvider<BookListNotifier, List<CaseBook>
 
 class BookListNotifier extends StateNotifier<List<CaseBook>> {
   BookListNotifier() : super([]);
-  late final Isar isar;
+  Isar? isar;
+  // final Isar isar = Isar.openSync([CaseBookSchema]);
   void refresh() async {
+    if (isar == null) {
+      var isarInstance = Isar.getInstance();
+      if (isarInstance == null) {
+        isar = Isar.openSync([CaseBookSchema]);
+      } else {
+        isar = isarInstance;
+      }
+    }
+    state = isar!.caseBooks.where().findAllSync();
     var res = await API.getShelfBookList();
     state = res;
-    isar.writeTxn(() async {
-      for (var element in res) {
-        await isar.caseBooks.put(element);
-      }
-    });
-  }
-
-  void init() async {
-    isar = await Isar.open([CaseBookSchema]);
-    state = isar.caseBooks.where().findAllSync();
+    if (res.isNotEmpty) {
+      await isar!.writeTxn(() async {
+        await isar!.caseBooks.clear();
+        for (var element in res) {
+          await isar!.caseBooks.put(element);
+        }
+      });
+    }
   }
 }

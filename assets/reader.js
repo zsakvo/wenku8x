@@ -185,6 +185,7 @@ globalThis.ReaderJs = (() => {
     });
   }
   function setupPaging(insert = false) {
+    var _a;
     console.log("--->", bookContainer);
     if (!pageContainer) {
       bookContainer = document.createElement("div");
@@ -216,6 +217,7 @@ globalThis.ReaderJs = (() => {
     bookContainer.style.height = pageHeight + "px";
     bookContainer.style.webkitColumnWidth = (pagedHorizontally ? pageWidth : pageHeight) + "px";
     bookContainer.style.webkitColumnGap = (pagedHorizontally ? pageHorizontalMargin : pageVerticalMargin) + "px";
+    bookContainer.style.textIndent = ((_a = globalThis.config) == null ? void 0 : _a.textIndent) + "px";
     let endSpacer = getVirtualSpacer();
     if (globalThis.config.horizontal) {
       virtualPageCount = Math.ceil(
@@ -439,6 +441,10 @@ globalThis.ReaderJs = (() => {
     globalThis.config.backgroundColor = color;
     document.body.style.backgroundColor = color;
   }
+  function setTextIndent(indent) {
+    globalThis.config.textIndent = indent;
+    bookContainer.style.textIndent = indent;
+  }
   return {
     init,
     appendChapter,
@@ -447,6 +453,7 @@ globalThis.ReaderJs = (() => {
     setFontSize,
     setLineSpacing,
     setTextAlign,
-    setBackgroundColor
+    setBackgroundColor,
+    setTextIndent
   };
 })();

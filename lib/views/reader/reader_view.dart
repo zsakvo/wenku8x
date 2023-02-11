@@ -377,6 +377,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
           horizontal: true,
           marginHorizontal: 18,
           marginVertical: 18,
+          textIndent: 36,
           fontSize:18,
           textAlign: 1, //0 start,1 justify,2 end,3 center
           lineSpacing: 1.4,

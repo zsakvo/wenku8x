@@ -30,6 +30,7 @@ void _showToast(
         child: FlashBar(
           content: Text(
             content,
+            maxLines: 12,
             style: TextStyle(color: fontColor),
           ),
         ),
