@@ -49,7 +49,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 总页数
   int totalPage = 0;
 
-  Fetching fetchStatus = Fetching.next;
+  Fetching fetchStatus = Fetching.refresh;
   Fetching pageStatue = Fetching.none;
   Isar isar = Isar.getInstance()!;
 
@@ -62,6 +62,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final chapterPagesMap = {};
   int currentChapterIndex = 0;
   int currentChapterPage = 0;
+
+  String? previousChater;
+  String? nextChapter;
 
   // 工具栏状态
   // Menu menuStatus = Menu.none;
@@ -77,7 +80,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   Widget build(BuildContext context) {
     final loading = useState(true);
     // 这里维护一个全局的页码，用来计算滚动宽度
-    final currentPage = useState(0);
+    final currentPage = useState(-1);
     final mediaQuery = MediaQuery.of(context);
     final screenWidth = mediaQuery.size.width;
     final screenHeight = mediaQuery.size.height;
@@ -212,18 +215,19 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       bottomBarHeight = mediaQuery.padding.bottom;
       currentChapterIndex = bookRecord.chapterIndex;
       currentChapterPage = bookRecord.pageIndex;
-      currentPage.value = currentChapterPage;
       fetchCatalog(widget.aid);
       return () {};
     }, []);
 
     useEffect(() {
+      final initData = appInit.value;
       var cv = chapters.value;
-      if (cv.isNotEmpty) {
-        fetchContent(cv[currentChapterIndex].cid, cv[currentChapterIndex].name);
+      if (initData && cv.isNotEmpty) {
+        // fetchContent(cv[currentChapterIndex].cid, cv[currentChapterIndex].name);
+        currentPage.value = currentChapterPage;
       }
       return () {};
-    }, [chapters.value]);
+    }, [appInit.value, chapters.value]);
 
     useEffect(() {
       final dirData = dir.data;
@@ -266,9 +270,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     }, [dir.data, webViewController.value]);
 
     useEffect(() {
-      final initData = appInit.value;
       final tmpChapterData = tmpChapter.value;
-      if (initData && tmpChapterData != null) {
+      if (tmpChapterData != null) {
         if (fetchStatus == Fetching.next) {
           webViewController.value!.evaluateJavascript(source: """
 ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex + 1].name}");
@@ -285,37 +288,42 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
         fetchStatus = Fetching.none;
       }
       return () {};
-    }, [appInit.value, tmpChapter.value]);
+    }, [tmpChapter.value]);
 
     useEffect(() {
-      if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none && pageStatue == Fetching.next) {
-        Log.d("要加载下一章了");
-        fetchStatus = Fetching.next;
-        var cpts = chapters.value;
-        int newIndex = currentChapterIndex + 1;
-        fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
-      } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
-        Log.d("要加载上一章了");
-        fetchStatus = Fetching.previous;
-        var cpts = chapters.value;
-        if (currentChapterIndex >= 1) {
-          int newIndex = currentChapterIndex - 1;
+      if (currentPage.value > -1) {
+        if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none && pageStatue == Fetching.next) {
+          Log.d("要加载下一章了");
+          fetchStatus = Fetching.next;
+          var cpts = chapters.value;
+          int newIndex = currentChapterIndex + 1;
           fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
+        } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
+          Log.d("要加载上一章了");
+          fetchStatus = Fetching.previous;
+          var cpts = chapters.value;
+          if (currentChapterIndex >= 1) {
+            int newIndex = currentChapterIndex - 1;
+            fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
+          }
+        } else if (fetchStatus == Fetching.refresh) {
+          var cpts = chapters.value;
+          fetchContent(cpts[currentChapterIndex].cid, cpts[currentChapterIndex].name);
         }
+
+        final ceil = chapterPagesMap[currentChapterIndex];
+        if (currentChapterPage == ceil) {
+          currentChapterIndex++;
+          currentChapterPage = 0;
+        } else if (currentChapterPage == -1) {
+          currentChapterIndex--;
+          currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
+        }
+
+        // Log.d([chapterPagesMap, currentChapterIndex, currentChapterPage], "信息探测");
+
+        saveRecord();
       }
-
-      final ceil = chapterPagesMap[currentChapterIndex];
-      if (currentChapterPage == ceil) {
-        currentChapterIndex++;
-        currentChapterPage = 0;
-      } else if (currentChapterPage == -1) {
-        currentChapterIndex--;
-        currentChapterPage = chapterPagesMap[currentChapterIndex] - 1;
-      }
-
-      // Log.d([chapterPagesMap, currentChapterIndex, currentChapterPage], "信息探测");
-
-      saveRecord();
       return () {};
     }, [currentPage.value]);
 

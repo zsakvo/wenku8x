@@ -228,8 +228,8 @@ globalThis.ReaderJs = (() => {
       endSpacer.style.left = virtualPageCount * (pageWidth + pageHorizontalMargin) - 1 + "px";
       console.log(endSpacer.style.left, "PPP");
     }
-    globalThis.JsBridge("notifySize", virtualPageCount);
     virtualReader.appendChild(endSpacer);
+    setTimeout(() => globalThis.JsBridge("notifySize", virtualPageCount));
   }
   function getVirtualSpacer() {
     let endSpacer = document.getElementById("virtual-reader-spacer");
@@ -421,7 +421,8 @@ globalThis.ReaderJs = (() => {
     applyRealReader(true);
   }
   function refreshChapter(body, title) {
-    document.getElementById("reader").remove();
+    var _a;
+    (_a = document.getElementById("reader")) == null ? void 0 : _a.remove();
     document.getElementById("virtual-reader").innerHTML = "";
     appendChapter(body, title);
   }
