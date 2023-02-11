@@ -21,7 +21,7 @@ import 'package:wenku8x/views/reader/html.dart';
 
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
-enum Fetching { none, next, previous }
+enum Fetching { none, next, previous, refresh }
 
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
@@ -277,9 +277,9 @@ ReaderJs.appendChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex +
           webViewController.value!.evaluateJavascript(source: """
 ReaderJs.insertChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex - 1].name}");
 """);
-        } else {
+        } else if (fetchStatus == Fetching.refresh) {
           webViewController.value!.evaluateJavascript(source: """
-ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex - 1].name}");
+ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex].name}");
 """);
         }
         fetchStatus = Fetching.none;
@@ -411,7 +411,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex 
           backgroundColor: toolBarBackgroundColor,
           onItemTap: (index, chapter) {
             Log.d([index, chapter], "点击目录");
-            fetchStatus = Fetching.none;
+            fetchStatus = Fetching.refresh;
             loading.value = true;
             totalPage = 0;
             currentChapterPage = 0;
