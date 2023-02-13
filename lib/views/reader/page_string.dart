@@ -1,5 +1,3 @@
-
-
 const libsPath = "../../reader.js";
 const layoutStyle = 1;
 const flowStyle = 1;

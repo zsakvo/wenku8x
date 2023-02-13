@@ -47,7 +47,8 @@ class MenuCatalogState extends State<MenuCatalog> {
 
   @override
   Widget build(BuildContext context) {
-    final onSurfaceVariantColor = Theme.of(context).colorScheme.onSurfaceVariant;
+    final onSurfaceVariantColor =
+        Theme.of(context).colorScheme.onSurfaceVariant;
     final primarayColor = Theme.of(context).colorScheme.primary;
     return Positioned(
       bottom: MediaQuery.of(context).viewPadding.bottom + 48,
@@ -70,7 +71,9 @@ class MenuCatalogState extends State<MenuCatalog> {
                 child: Text(
                   "目录",
                   style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary, fontSize: 16, fontWeight: FontWeight.w600),
+                      color: Theme.of(context).colorScheme.primary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
               Expanded(
@@ -91,11 +94,15 @@ class MenuCatalogState extends State<MenuCatalog> {
                                   widget.onItemTap(index - 1, chapter);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 16),
                                   child: Text(
                                     chapter.name,
-                                    style:
-                                        TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 13),
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurfaceVariant,
+                                        fontSize: 13),
                                   ),
                                 ),
                               );
@@ -107,7 +114,10 @@ class MenuCatalogState extends State<MenuCatalog> {
                               endIndent: 16,
                               height: 0,
                               thickness: 0.4,
-                              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .outline
+                                  .withOpacity(0.2),
                             );
                           },
                           itemCount: widget.chapters.length + 1)))

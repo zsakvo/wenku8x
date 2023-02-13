@@ -59,5 +59,6 @@ class CaseBook {
 
   String toJson() => json.encode(toMap());
 
-  factory CaseBook.fromJson(String source) => CaseBook.fromMap(json.decode(source));
+  factory CaseBook.fromJson(String source) =>
+      CaseBook.fromMap(json.decode(source));
 }

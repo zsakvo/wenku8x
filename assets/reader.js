@@ -230,6 +230,7 @@ globalThis.ReaderJs = (() => {
     }
     virtualReader.appendChild(endSpacer);
     setTimeout(() => globalThis.JsBridge("notifySize", virtualPageCount));
+    return virtualPageCount;
   }
   function getVirtualSpacer() {
     let endSpacer = document.getElementById("virtual-reader-spacer");
@@ -250,10 +251,10 @@ globalThis.ReaderJs = (() => {
     return endSpacer;
   }
   function setupFlow(insert = false) {
-    setupPaging(insert);
+    return setupPaging(insert);
   }
   function initReader(insert = false) {
-    setupFlow(insert);
+    return setupFlow(insert);
   }
   function setupPageInfos(chapterName, pages) {
     let width = window.innerWidth;
@@ -403,9 +404,10 @@ globalThis.ReaderJs = (() => {
     for (let child of div.children) {
       shadow.appendChild(child.cloneNode(true));
     }
-    initReader();
+    const pageNum = initReader();
     setupPageInfos(title, virtualPageCount);
     applyRealReader();
+    return pageNum;
   }
   function insertChapter(body, title) {
     const div = document.createElement("div");
@@ -416,15 +418,16 @@ globalThis.ReaderJs = (() => {
     for (let child of div.children) {
       shadow.appendChild(child.cloneNode(true));
     }
-    initReader(true);
+    const pageNum = initReader(true);
     setupPageInfos(title, virtualPageCount);
     applyRealReader(true);
+    return pageNum;
   }
   function refreshChapter(body, title) {
     var _a;
     (_a = document.getElementById("reader")) == null ? void 0 : _a.remove();
     document.getElementById("virtual-reader").innerHTML = "";
-    appendChapter(body, title);
+    return appendChapter(body, title);
   }
   function setFontSize(fontSize) {
     globalThis.config.fontSize = fontSize;

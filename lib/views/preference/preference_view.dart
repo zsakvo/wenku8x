@@ -57,12 +57,14 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                 context.pop();
               },
             ),
-            flexibleSpace: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
+            flexibleSpace: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
               top = constraints.biggest.height;
               return FlexibleSpaceBar(
                 title: Text(
                   '设置',
-                  style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
+                  style: TextStyle(
+                      color: Theme.of(context).textTheme.titleLarge?.color),
                 ),
                 centerTitle: false,
                 titlePadding: EdgeInsetsDirectional.only(
@@ -80,9 +82,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("动态取色", style: titleStyle),
-            onTap: () => setSpBool("dynamicColor", !dynamicColor.value, dynamicColor),
+            onTap: () =>
+                setSpBool("dynamicColor", !dynamicColor.value, dynamicColor),
             subtitle: Text(
               "跟随系统桌面自动获取主题色",
               style: subTitleStyle,
@@ -92,14 +96,17 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               scaleY: 0.8,
               child: Switch(
                 value: dynamicColor.value,
-                onChanged: (value) => setSpBool("dynamicColor", !value, dynamicColor),
+                onChanged: (value) =>
+                    setSpBool("dynamicColor", !value, dynamicColor),
               ),
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("强制高刷", style: titleStyle),
-            onTap: () => setSpBool("highRefreshRate", !highRefreshRate.value, highRefreshRate),
+            onTap: () => setSpBool(
+                "highRefreshRate", !highRefreshRate.value, highRefreshRate),
             subtitle: Text(
               "一加的部分机型可能需要",
               style: subTitleStyle,
@@ -109,7 +116,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               scaleY: 0.8,
               child: Switch(
                 value: highRefreshRate.value,
-                onChanged: (value) => setSpBool("highRefreshRate", value, highRefreshRate),
+                onChanged: (value) =>
+                    setSpBool("highRefreshRate", value, highRefreshRate),
               ),
             ),
           ),
@@ -120,7 +128,8 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("自动签到", style: titleStyle),
             onTap: () => setSpBool("autoSign", !autoSign.value, autoSign),
             subtitle: Text(
@@ -137,9 +146,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("简繁转换", style: titleStyle),
-            onTap: () => setSpBool("traditionalChinese", !traditionalChinese.value, traditionalChinese),
+            onTap: () => setSpBool("traditionalChinese",
+                !traditionalChinese.value, traditionalChinese),
             subtitle: Text(
               "当前显示为简体中文",
               style: subTitleStyle,
@@ -149,12 +160,14 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
               scaleY: 0.8,
               child: Switch(
                 value: traditionalChinese.value,
-                onChanged: (value) => setSpBool("traditionalChinese", value, traditionalChinese),
+                onChanged: (value) =>
+                    setSpBool("traditionalChinese", value, traditionalChinese),
               ),
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
             title: Text("清除缓存", style: titleStyle),
             onTap: () {},
             subtitle: Text(
@@ -163,8 +176,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
             ),
           ),
           ListTile(
-            contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
-            title: Text("退出登录", style: titleStyle.copyWith(color: Theme.of(context).colorScheme.error)),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
+            title: Text("退出登录",
+                style: titleStyle.copyWith(
+                    color: Theme.of(context).colorScheme.error)),
             onTap: () {},
             subtitle: Text(
               "这不会移除你的本地数据",
