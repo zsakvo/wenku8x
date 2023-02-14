@@ -185,7 +185,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     initChapter(int index) async {
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index);
-      int page = (await refreshChapter(content, catalog[index].name) as double).floor();
+      int page = (await refreshChapter(content, catalog[index].name));
       chapterPagesMap[index] = page;
       currentIndex.value += bookRecord.pageIndex;
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
@@ -197,7 +197,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       }
       if (index < catalog.length - 1) {
         final nextContent = await fetchContent(index + 1);
-        int pageNext = (await appendChapter(nextContent, catalog[index + 1].name) as double).floor();
+        int pageNext = (await appendChapter(nextContent, catalog[index + 1].name));
         chapterPagesMap[index + 1] = pageNext;
       }
       loading.value = false;
