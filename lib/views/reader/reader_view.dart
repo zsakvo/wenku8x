@@ -163,7 +163,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         }
       }
       Log.d(bookRecord.pageIndex);
-      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
+      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: true);
     }
 
     // 手指落下
@@ -191,7 +191,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
-        int pagePre = (await insertChapter(preContent, catalog[index - 1].name) as double).floor();
+        int pagePre = (await insertChapter(preContent, catalog[index - 1].name));
         chapterPagesMap[index - 1] = pagePre;
         currentIndex.value += pagePre;
       }
