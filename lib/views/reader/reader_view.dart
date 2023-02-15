@@ -154,10 +154,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         }
       } else {
         // 点击事件
-        if (tapUpPos > 2 * pageWidth / 3 && tapUpPos < pageWidth) {
+        var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
+        if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
           currentIndex.value++;
           bookRecord.pageIndex++;
-        } else if (tapUpPos < pageWidth / 3 && tapUpPos > 0) {
+        } else if (tapUpPos < tempWidth / 3 && tapUpPos > 0) {
           currentIndex.value--;
           bookRecord.pageIndex--;
         }
@@ -214,7 +215,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
           ..aid = widget.aid;
         // 临时初始化页面宽度
-        pageWidth = (mediaQuerySize.width * devicePixelRatio).floor();
+        pageWidth = (mediaQuerySize.width).floor();
         // 计算额外比例参数
         if (Platform.isAndroid) {
           extraRate = devicePixelRatio;
@@ -229,7 +230,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               final handler = args[0];
               switch (handler) {
                 case 'initDone':
-                  Log.d("HTML 初始化成功");
+                  Log.d(args, "HTML 初始化成功");
                   pageWidth = args[1] * extraRate;
                   initChapter(bookRecord.chapterIndex);
                   break;
