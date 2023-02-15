@@ -3,8 +3,8 @@ const layoutStyle = 1;
 const flowStyle = 1;
 const currentTheme = "亚麻";
 
-String getPageString(String bookName, String chapterName, content,
-    dynamic statusBarHeight, dynamic bottomBarHeight, String backgroundColor) {
+String getPageString(String bookName, String chapterName, content, dynamic statusBarHeight, dynamic bottomBarHeight,
+    String backgroundColor) {
   if (backgroundColor.length == 8) {
     String opacity = backgroundColor.substring(0, 2);
     String rgb = backgroundColor.substring(2);
@@ -68,7 +68,8 @@ String getPageString(String bookName, String chapterName, content,
           chapterName: "$chapterName"
         })
       })
-    })</script>""";
+    })
+    </script>""";
   }
   // str = "$str</script><style type='text/css' id='__LithiumThemeStyle'></style>";
   return pageStr.substring(0, i) + str + pageStr.substring(i);

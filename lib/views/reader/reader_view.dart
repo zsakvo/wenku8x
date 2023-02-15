@@ -82,7 +82,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 文档路径
     final dirFuture = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
     // 目录请求
-    final catalogFuture = useFuture(useMemoized(fetchCatalog), initialData: []);
+    final catalogFuture = useFuture<bool>(useMemoized(fetchCatalog), initialData: false);
     // webview-controller
     final webViewController = useState<InAppWebViewController?>(null);
     // 页面尺寸数据
@@ -184,6 +184,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 初始化章节
     initChapter(int index) async {
+      Log.e("错误初始化");
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index);
       int page = (await refreshChapter(content, catalog[index].name));
@@ -209,7 +210,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       final dirData = dirFuture.data;
       final catalogData = catalogFuture.data;
       final webviewControllerValue = webViewController.value;
-      if (dirData != null && webviewControllerValue != null && catalogData != null) {
+      if (dirData != null && webviewControllerValue != null && catalogData!) {
+        Log.e([dirData, catalogData, webviewControllerValue], "---->");
         // 前置数据初始完毕，进入逻辑
         // 阅读记录
         bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
@@ -251,7 +253,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           bookRecord.pageIndex = chapterPagesMap[bookRecord.chapterIndex] - 1;
           if (chapterPagesMap[bookRecord.chapterIndex - 1] == null && bookRecord.chapterIndex > 0) {
             fetchContent(bookRecord.chapterIndex - 1).then((content) {
-              insertChapter(content, catalog[bookRecord.chapterIndex - 1].name);
+              // insertChapter(content, catalog[bookRecord.chapterIndex - 1].name);
             });
           }
         } else if (bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex]) {
@@ -260,7 +262,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           bookRecord.pageIndex = 0;
           if (chapterPagesMap[bookRecord.chapterIndex + 1] == null) {
             fetchContent(bookRecord.chapterIndex + 1).then((content) {
-              appendChapter(content, catalog[bookRecord.chapterIndex + 1].name);
+              // appendChapter(content, catalog[bookRecord.chapterIndex + 1].name);
             });
           }
         }
