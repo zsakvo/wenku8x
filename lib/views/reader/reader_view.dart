@@ -73,7 +73,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuTextKey = GlobalKey<MenuTextState>();
   final menuConfigKey = GlobalKey<MenuConfigState>();
 
-  final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
+  // final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
 
   @override
   Widget build(BuildContext context) {
@@ -91,12 +91,12 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
     // 当前页码（相对于总页数）
     final currentIndex = useState(0);
-    // 总内容映射
-    final chaptersMap = useState({}); // {index:{title:"",page:0,content:""}}
     // 章节内容
     // final chapterContent = useState(null);
     // 是否监听手势
     final enableGestureListener = useState(true);
+    // 菜单状态
+    final menuStatus = useState<Menu>(Menu.none);
     // -----
 
     // 追加章节
@@ -161,6 +161,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         } else if (tapUpPos < tempWidth / 3 && tapUpPos > 0) {
           currentIndex.value--;
           bookRecord.pageIndex--;
+        } else {
+          Log.d("菜单响应");
+          if (menuStatus.value == Menu.none) {
+            menuStatus.value = Menu.wrapper;
+          } else if (menuStatus.value == Menu.wrapper) {
+            menuStatus.value = Menu.none;
+          }
         }
       }
       Log.d(bookRecord.pageIndex);
@@ -271,6 +278,17 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       }
       return () {};
     }, [currentIndex.value, loading.value]);
+
+    useEffect(() {
+      final menu = menuStatus.value;
+      if (menu == Menu.wrapper) {
+        menuBottomWrapperKey.currentState?.open();
+        menuTopKey.currentState?.open();
+      } else if (menu == Menu.none) {
+        menuBottomWrapperKey.currentState?.close();
+        menuTopKey.currentState?.close();
+      }
+    }, [menuStatus.value]);
 
     // -----
 
@@ -607,7 +625,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         MenuTop(
           key: menuTopKey,
           title: widget.name,
-          backgroundColor: Colors.black,
+          backgroundColor: Theme.of(context).colorScheme.surface,
         ),
         MenuCatalog(
           key: menuCatalogKey,
@@ -650,7 +668,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         ),
         MenuBottom(
           key: menuBottomWrapperKey,
-          backgroundColor: Colors.black,
+          backgroundColor: Theme.of(context).colorScheme.surface,
           onCatalogTap: () {
             // if (menuStatus.value != Menu.catalog) {
             //   menuStatus.value = Menu.catalog;
