@@ -104,17 +104,27 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // -----
 
     // 追加章节
-    appendChapter(String content, String title) {
-      return webViewController.value?.evaluateJavascript(source: """
+    appendChapter(String content, String title, int index) async {
+      final page = (await webViewController.value?.evaluateJavascript(source: """
         ReaderJs.appendChapter(`$content`,"$title");
-      """);
+      """) * 1.0 as double).toInt();
+      chapterPagesMap[index] = page;
+      return page;
     }
 
     // 插入章节
-    insertChapter(String content, String title) {
-      return webViewController.value?.evaluateJavascript(source: """
+    insertChapter(String content, String title, int index) async {
+      await Future.delayed(const Duration(milliseconds: 300));
+      final page = (await webViewController.value?.evaluateJavascript(source: """
         ReaderJs.insertChapter(`$content`,"$title");
+      """) * 1.0 as double).toInt();
+      chapterPagesMap[index] = page;
+      currentIndex.value += page;
+      Log.e(currentIndex.value, "当前页码");
+      webViewController.value?.evaluateJavascript(source: """
+        console.log(document.getElementsByTagName('html')[0].scrollLeft,23333);
       """);
+      return page;
     }
 
     // 刷新章节
@@ -139,7 +149,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     }
 
     // 手指抬起
-    onPointerUp(PointerUpEvent event) {
+    onPointerUp(PointerUpEvent event) async {
       if (menuStatus.value != Menu.none) {
         if (menuStatus.value == Menu.wrapper) {
           menuStatus.value = Menu.none;
@@ -152,14 +162,15 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       tapUpPos = event.position.dx;
       double res = (tapUpPos - tapDownPos);
       double resAbs = res.abs();
+      int tmpIndex = currentIndex.value;
       if (resAbs > distance) {
         if (res < 0) {
-          currentIndex.value++;
+          tmpIndex = currentIndex.value + 1;
           bookRecord.pageIndex++;
           // currentChapterPage++;
           // pageStatue = Fetching.next;
         } else {
-          currentIndex.value--;
+          tmpIndex = currentIndex.value - 1;
           bookRecord.pageIndex--;
           // currentChapterPage--;
           // pageStatue = Fetching.previous;
@@ -168,10 +179,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         // 点击事件
         var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
         if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
-          currentIndex.value++;
+          tmpIndex = currentIndex.value + 1;
           bookRecord.pageIndex++;
         } else if (tapUpPos < tempWidth / 3 && tapUpPos > 0) {
-          currentIndex.value--;
+          tmpIndex = currentIndex.value - 1;
           bookRecord.pageIndex--;
         } else {
           Log.d("菜单响应");
@@ -182,8 +193,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           }
         }
       }
-      Log.d(bookRecord.pageIndex);
-      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: true);
+      Log.d(currentIndex.value, "跳转目的地");
+      await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
+      Log.e(currentIndex.value);
+      currentIndex.value = tmpIndex;
+      Log.e(currentIndex.value);
     }
 
     // 手指落下
@@ -216,14 +230,15 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
-        int pagePre = (await insertChapter(preContent, catalog[index - 1].name));
-        chapterPagesMap[index - 1] = pagePre;
-        currentIndex.value += pagePre;
+        int pagePre = (await insertChapter(preContent, catalog[index - 1].name, index - 1));
+        // chapterPagesMap[index - 1] = pagePre;
+        // currentIndex.value += pagePre;
       }
       if (index < catalog.length - 1) {
         final nextContent = await fetchContent(index + 1);
-        int pageNext = (await appendChapter(nextContent, catalog[index + 1].name));
-        chapterPagesMap[index + 1] = pageNext;
+        // int pageNext = (await appendChapter(nextContent, catalog[index + 1].name));
+        // chapterPagesMap[index + 1] = pageNext;
+        appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
       loading.value = false;
     }
@@ -270,22 +285,25 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     useEffect(() {
       if (!loading.value) {
+        // Log.e([currentIndex.value, bookRecord.pageIndex, bookRecord.chapterIndex, chapterPagesMap]);
         if (bookRecord.pageIndex == -1) {
           // 到了上一章
           bookRecord.chapterIndex--;
           bookRecord.pageIndex = chapterPagesMap[bookRecord.chapterIndex] - 1;
+          // Log.e([bookRecord.chapterIndex - 1, bookRecord.chapterIndex]);
           if (chapterPagesMap[bookRecord.chapterIndex - 1] == null && bookRecord.chapterIndex > 0) {
             fetchContent(bookRecord.chapterIndex - 1).then((content) {
-              // insertChapter(content, catalog[bookRecord.chapterIndex - 1].name);
+              insertChapter(content, catalog[bookRecord.chapterIndex - 1].name, bookRecord.chapterIndex - 1);
             });
           }
         } else if (bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex]) {
           // 到了下一章
+          Log.e("加载下一章");
           bookRecord.chapterIndex++;
           bookRecord.pageIndex = 0;
           if (chapterPagesMap[bookRecord.chapterIndex + 1] == null) {
             fetchContent(bookRecord.chapterIndex + 1).then((content) {
-              // appendChapter(content, catalog[bookRecord.chapterIndex + 1].name);
+              appendChapter(content, catalog[bookRecord.chapterIndex + 1].name, bookRecord.chapterIndex + 1);
             });
           }
         }
@@ -788,6 +806,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     arr.removeRange(0, 2);
     String content = arr.map((e) => """<p>$e</p>""").join("\n");
 
+    // String content = '';
+    // for (var i = 0; i < 50; i++) {
+    //   content += ("<p>${(catalog.indexWhere((element) => element.cid == cid))},$cid</p>");
+    // }
     String html = """<body>$content</body>""";
     final file = File("${docDir.path}/books/$aid/$cid.html");
     file.writeAsString(html);

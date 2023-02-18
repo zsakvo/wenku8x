@@ -414,6 +414,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
           backgroundColor: toolBarBackgroundColor,
         ),
         MenuCatalog(
+          currentIndex: 0,
           key: menuCatalogKey,
           chapters: chapters.value,
           backgroundColor: toolBarBackgroundColor,
@@ -441,15 +442,15 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
         ),
         MenuConfig(
           key: menuConfigKey,
-          backgroundColor: toolBarBackgroundColor,
-          primaryColor: Theme.of(context).colorScheme.primary,
-          secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.27),
-          tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+          // backgroundColor: toolBarBackgroundColor,
+          // primaryColor: Theme.of(context).colorScheme.primary,
+          // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.27),
+          // tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
           horizontal: true,
           volumeKey: true,
           fullNext: true,
           hideExtra: true,
-          textColor: Theme.of(context).colorScheme.primary,
+          // textColor: Theme.of(context).colorScheme.primary,
           onChange: (key, value) {},
         ),
         MenuBottom(
