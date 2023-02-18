@@ -99,6 +99,10 @@ const resetStyles = (elements) => {
     element.style.border = "none";
   }
 };
+const jumpToPage = (page) => {
+  document.getElementsByTagName("html")[0].scrollTo(window.innerWidth * page, 0);
+  return setTimeout(() => true);
+};
 const ua = navigator.userAgent;
 const isApp = ua.indexOf("ReaderJs") > -1;
 console.log("xxx", isApp);
@@ -317,6 +321,7 @@ globalThis.ReaderJs = (() => {
     }
   }
   function initReaderContainerStyle(config) {
+    document.body.style.backgroundColor = `#${config.backgroundColor}`;
     const virtualReaderContainer = document.getElementById("virtual-reader");
     virtualReaderContainer.style.paddingLeft = config.marginHorizontal + "px";
     virtualReaderContainer.style.paddingRight = config.marginHorizontal + "px";
@@ -458,6 +463,7 @@ globalThis.ReaderJs = (() => {
     setLineSpacing,
     setTextAlign,
     setBackgroundColor,
-    setTextIndent
+    setTextIndent,
+    jumpToPage
   };
 })();

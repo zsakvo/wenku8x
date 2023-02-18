@@ -17,7 +17,9 @@ import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
-import 'package:wenku8x/views/reader/html.dart';
+import 'package:wenku8x/views/reader/constants/html.dart';
+
+import 'constants/theme.dart';
 
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
@@ -94,7 +96,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 章节内容
     // final chapterContent = useState(null);
     // 是否监听手势
-    final enableGestureListener = useState(true);
+    // final enableGestureListener = useState(true);
     // 菜单状态
     final menuStatus = useState<Menu>(Menu.none);
     // -----
@@ -136,7 +138,15 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 手指抬起
     onPointerUp(PointerUpEvent event) {
-      if (!enableGestureListener.value) return;
+      if (menuStatus.value != Menu.none) {
+        if (menuStatus.value == Menu.wrapper) {
+          menuStatus.value = Menu.none;
+        } else {
+          closeAllSubMenus();
+          menuStatus.value = Menu.wrapper;
+        }
+        return;
+      }
       tapUpPos = event.position.dx;
       double res = (tapUpPos - tapDownPos);
       double resAbs = res.abs();
@@ -183,7 +193,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     onPointerMove(PointerMoveEvent event) {
       final dx = event.delta.dx;
       // if (dx.abs() >= distance) {
-      if (enableGestureListener.value) {
+      if (menuStatus.value == Menu.none) {
         webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
       }
       // }
@@ -287,6 +297,27 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       } else if (menu == Menu.none) {
         menuBottomWrapperKey.currentState?.close();
         menuTopKey.currentState?.close();
+      } else {
+        menuTopKey.currentState?.close();
+        closeAllSubMenus();
+        switch (menu) {
+          case Menu.none:
+            break;
+          case Menu.wrapper:
+            break;
+          case Menu.catalog:
+            menuCatalogKey.currentState?.toggle();
+            break;
+          case Menu.theme:
+            break;
+          case Menu.reader:
+            break;
+          case Menu.text:
+            break;
+          case Menu.config:
+            menuConfigKey.currentState?.toggle();
+            break;
+        }
       }
     }, [menuStatus.value]);
 
@@ -603,7 +634,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                     fontSize:18,
                     textAlign: 1, //0 start,1 justify,2 end,3 center
                     lineSpacing: 1.4,
-                    backgroundColor: 'fffffbff',
+                    backgroundColor: '${readerBackgroundColor.value.toRadixString(16)}',
                     textColor: '000000',
                     linkColor: '000000',
                     topExtraHeight: ${mediaQueryPadding.top},
@@ -625,12 +656,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         MenuTop(
           key: menuTopKey,
           title: widget.name,
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: pannelBackgroundColor,
         ),
         MenuCatalog(
           key: menuCatalogKey,
-          chapters: const [],
-          backgroundColor: Colors.black,
+          chapters: catalog,
+          currentIndex: currentChapterIndex,
+          backgroundColor: pannelBackgroundColor,
           onItemTap: (index, chapter) {
             Log.d([index, chapter], "点击目录");
             fetchStatus = Fetching.none;
@@ -655,26 +687,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         ),
         MenuConfig(
           key: menuConfigKey,
-          backgroundColor: Colors.black,
-          primaryColor: Theme.of(context).colorScheme.primary,
-          secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.27),
-          tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
           horizontal: true,
           volumeKey: true,
           fullNext: true,
           hideExtra: true,
-          textColor: Theme.of(context).colorScheme.primary,
           onChange: (key, value) {},
         ),
         MenuBottom(
           key: menuBottomWrapperKey,
-          backgroundColor: Theme.of(context).colorScheme.surface,
+          backgroundColor: pannelBackgroundColor,
           onCatalogTap: () {
-            // if (menuStatus.value != Menu.catalog) {
-            //   menuStatus.value = Menu.catalog;
-            // } else {
-            //   menuStatus.value = Menu.wrapper;
-            // }
+            if (menuStatus.value != Menu.catalog) {
+              menuStatus.value = Menu.catalog;
+            } else {
+              closeAllSubMenus();
+              menuStatus.value = Menu.wrapper;
+            }
           },
           onStyleTap: () {},
           onProgressTap: () {},
@@ -687,11 +715,12 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             // }
           },
           onConfigTap: () {
-            // if (menuStatus.value != Menu.config) {
-            //   menuStatus.value = Menu.config;
-            // } else {
-            //   menuStatus.value = Menu.wrapper;
-            // }
+            if (menuStatus.value != Menu.config) {
+              menuStatus.value = Menu.config;
+            } else {
+              closeAllSubMenus();
+              menuStatus.value = Menu.wrapper;
+            }
           },
         ),
         loading.value
@@ -754,5 +783,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final file = File("${docDir.path}/books/$aid/$cid.html");
     file.writeAsString(html);
     return html;
+  }
+
+  closeAllSubMenus() {
+    menuCatalogKey.currentState?.close();
+    menuConfigKey.currentState?.close();
+    menuTextKey.currentState?.close();
   }
 }

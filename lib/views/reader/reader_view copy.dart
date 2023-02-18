@@ -17,7 +17,7 @@ import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
-import 'package:wenku8x/views/reader/html.dart';
+import 'package:wenku8x/views/reader/constants/html.dart';
 
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
 
@@ -26,15 +26,13 @@ enum Fetching { none, next, previous, refresh }
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
-  const ReaderView({required this.aid, required this.name, Key? key})
-      : super(key: key);
+  const ReaderView({required this.aid, required this.name, Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReaderViewState();
 }
 
-class _ReaderViewState extends ConsumerState<ReaderView>
-    with TickerProviderStateMixin {
+class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStateMixin {
   late Directory docDir;
   late double statusBarHeight;
   late double bottomBarHeight;
@@ -91,10 +89,8 @@ class _ReaderViewState extends ConsumerState<ReaderView>
     final enableGestureListener = useState(true);
     final menuStatus = useState<Menu>(Menu.none);
     final topBaseHeight = MediaQuery.of(context).viewPadding.top + 48;
-    final toolBarBackgroundColor =
-        Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3);
-    final dir = useFuture(useMemoized(getApplicationDocumentsDirectory),
-        initialData: null);
+    final toolBarBackgroundColor = Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3);
+    final dir = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
     final appInit = useState(false);
     final tmpChapter = useState<String?>(null);
 
@@ -112,8 +108,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
             for (var node in element.children) {
               if (node.toString().length > 2) {
                 if (i != 0) {
-                  cpts.add(Chapter(
-                      node.getAttribute("cid").toString(), node.innerText));
+                  cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
                 }
               }
               i++;
@@ -149,8 +144,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
 
     onPointerMove(PointerMoveEvent event) {
       if (enableGestureListener.value) {
-        webViewController.value!
-            .scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+        webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
       }
     }
 
@@ -175,8 +169,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
         // 视为点击事件
         double tapUpPosY = event.position.dy;
         if ((tapUpPos > screenWidth / 3 && tapUpPos < 2 * screenWidth / 3) &&
-            (tapUpPosY > screenHeight / 3 &&
-                tapUpPosY < 2 * screenHeight / 3)) {
+            (tapUpPosY > screenHeight / 3 && tapUpPosY < 2 * screenHeight / 3)) {
           // 菜单唤醒区域
           // 如果菜单未显示，则展示第一层菜单
           if (menuStatus.value == Menu.none) {
@@ -198,8 +191,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
           }
         }
       }
-      webViewController.value!.scrollTo(
-          x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
+      webViewController.value!.scrollTo(x: (pageWidth * currentPage.value).round(), y: 0, animated: true);
     }
 
     saveRecord() {
@@ -213,12 +205,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
     }
 
     useEffect(() {
-      bookRecord = isar.bookRecords
-              .filter()
-              .aidEqualTo(widget.aid)
-              .distinctByAid()
-              .findFirstSync() ??
-          BookRecord()
+      bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
         ..aid = widget.aid;
       pageWidth = (mediaQuery.size.width * mediaQuery.devicePixelRatio).floor();
       if (Platform.isAndroid) {
@@ -268,10 +255,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
                   chapterPagesMap[currentChapterIndex + 1] = args[1] as int;
                 } else {
                   chapterPagesMap[currentChapterIndex] = args[1] as int;
-                  webViewController.value!.scrollTo(
-                      x: (pageWidth * currentChapterPage).round(),
-                      y: 0,
-                      animated: false);
+                  webViewController.value!.scrollTo(x: (pageWidth * currentChapterPage).round(), y: 0, animated: false);
                 }
                 saveRecord();
                 break;
@@ -279,9 +263,7 @@ class _ReaderViewState extends ConsumerState<ReaderView>
           },
         );
         controller.loadData(
-            data: READER_APP,
-            baseUrl: WebUri.uri(dirData.uri),
-            allowingReadAccessTo: WebUri.uri(dirData.uri));
+            data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
       }
 
       return () {};
@@ -310,17 +292,13 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
 
     useEffect(() {
       if (currentPage.value > -1) {
-        if (currentPage.value == totalPage - 3 &&
-            fetchStatus == Fetching.none &&
-            pageStatue == Fetching.next) {
+        if (currentPage.value == totalPage - 3 && fetchStatus == Fetching.none && pageStatue == Fetching.next) {
           Log.d("要加载下一章了");
           fetchStatus = Fetching.next;
           var cpts = chapters.value;
           int newIndex = currentChapterIndex + 1;
           fetchContent(cpts[newIndex].cid, cpts[newIndex].name);
-        } else if (currentPage.value == 2 &&
-            fetchStatus == Fetching.none &&
-            pageStatue == Fetching.previous) {
+        } else if (currentPage.value == 2 && fetchStatus == Fetching.none && pageStatue == Fetching.previous) {
           Log.d("要加载上一章了");
           fetchStatus = Fetching.previous;
           var cpts = chapters.value;
@@ -330,8 +308,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
           }
         } else if (fetchStatus == Fetching.refresh) {
           var cpts = chapters.value;
-          fetchContent(
-              cpts[currentChapterIndex].cid, cpts[currentChapterIndex].name);
+          fetchContent(cpts[currentChapterIndex].cid, cpts[currentChapterIndex].name);
         }
 
         final ceil = chapterPagesMap[currentChapterIndex];
@@ -509,9 +486,7 @@ ReaderJs.refreshChapter(`$tmpChapterData`,"${chapters.value[currentChapterIndex]
                 alignment: Alignment.center,
                 child: Text(
                   "章节加载中，请稍候",
-                  style: TextStyle(
-                      fontSize: 15,
-                      color: Theme.of(context).colorScheme.secondary),
+                  style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.secondary),
                 ))
             : const SizedBox.shrink()
       ],
