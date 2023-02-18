@@ -55,7 +55,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // Fetching pageStatue = Fetching.none;
   Isar isar = Isar.getInstance()!;
 
-  late BookRecord bookRecord;
+  BookRecord bookRecord = BookRecord()
+    ..pageIndex = 0
+    ..chapterIndex = 0;
 
   // 边界
   int chapterCeil = 0;
@@ -201,12 +203,16 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 初始化章节
     initChapter(int index) async {
+      loading.value = true;
+      currentIndex.value = 0;
+      await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
       Log.e("错误初始化");
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index);
       int page = (await refreshChapter(content, catalog[index].name));
       chapterPagesMap[index] = page;
       currentIndex.value += bookRecord.pageIndex;
+      Log.e((pageWidth * (bookRecord.pageIndex)).round(), "跳转距离");
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
@@ -661,16 +667,19 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         MenuCatalog(
           key: menuCatalogKey,
           chapters: catalog,
-          currentIndex: currentChapterIndex,
+          currentIndex: bookRecord.chapterIndex,
           backgroundColor: pannelBackgroundColor,
           onItemTap: (index, chapter) {
             Log.d([index, chapter], "点击目录");
-            fetchStatus = Fetching.none;
-            loading.value = true;
-            totalPage = 0;
-            currentChapterPage = 0;
+            bookRecord.pageIndex = 0;
+            bookRecord.chapterIndex = index;
+            initChapter(index);
+            // fetchStatus = Fetching.none;
+            // loading.value = true;
+            // totalPage = 0;
+            // currentChapterPage = 0;
             // currentPage.value = 0;
-            currentChapterIndex = index;
+            // currentChapterIndex = index;
             // fetchContent(chapter.cid, chapter.name);
           },
         ),
