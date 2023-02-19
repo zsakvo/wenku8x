@@ -114,7 +114,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 插入章节
     insertChapter(String content, String title, int index) async {
-      await Future.delayed(const Duration(milliseconds: 300));
       final page = (await webViewController.value?.evaluateJavascript(source: """
         ReaderJs.insertChapter(`$content`,"$title");
       """) * 1.0 as double).toInt();
@@ -217,6 +216,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 初始化章节
     initChapter(int index) async {
+      chapterPagesMap.clear();
       loading.value = true;
       currentIndex.value = 0;
       await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
@@ -279,6 +279,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         // HTML容器加载
         webviewControllerValue.loadData(
             data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
+        // webviewControllerValue.loadUrl(
+        //     urlRequest: URLRequest(url: WebUri("http://10.0.2.2:5173/")),
+        //     allowingReadAccessTo: WebUri.uri(dirData.uri));
       }
       return () {};
     }, [dirFuture.data, catalogFuture.data, webViewController.value]);
@@ -648,6 +651,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                 )
               },
               onLoadStop: (controller, url) {
+                Log.e(mediaQueryPadding);
                 controller.evaluateJavascript(source: """
                   ReaderJs.init({
                     bookName: '${widget.name}',

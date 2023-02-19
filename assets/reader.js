@@ -353,6 +353,7 @@ globalThis.ReaderJs = (() => {
     var _a, _b, _c;
     const reader = document.getElementById("reader");
     const virtualReader = document.getElementById("virtual-reader");
+    console.log("追加内容", reader, insert);
     if (reader) {
       const newNode = virtualReader.children[0].cloneNode(true);
       const endSpacer = document.getElementById("reader-spacer");
@@ -371,15 +372,12 @@ globalThis.ReaderJs = (() => {
         const newSpacer = document.getElementById("virtual-reader-spacer");
         endSpacer.style.left = parseFloat(endSpacer.style.left.replace("px", "")) + parseFloat(newSpacer.style.left.replace("px", "")) + 0 * ((_c = globalThis.config) == null ? void 0 : _c.marginHorizontal) + "px";
         const children = reader.children;
+        let tmpMl = parseFloat(newSpacer.style.left.replace("px", "")) - pageWidth + "px";
         for (let i = 1; i < children.length; i++) {
           const elem = children[i];
-          if (elem.className === "reader-spacer")
+          if (elem.id === "reader-spacer")
             continue;
-          const newMl = (
-            // parseFloat(ml.replace('px', '')) +
-            parseFloat(newSpacer.style.left.replace("px", "")) - pageWidth + "px"
-          );
-          elem.style.marginLeft = newMl;
+          elem.style.marginLeft = i === 1 ? tmpMl : elem.style.marginLeft;
         }
         const offset = parseFloat(newSpacer.style.left.replace("px", ""));
         if (globalThis.config.enableScroll) {
