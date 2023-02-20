@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
+import 'package:wenku8x/views/reader/page_string.dart';
 
 class MenuConfig extends StatefulWidget {
-  const MenuConfig({
-    Key? key,
-    // required this.backgroundColor,
-    // required this.primaryColor,
-    // required this.secondColor,
-    // required this.tertiaryColor,
-    // required this.textColor
-    required this.horizontal,
-    required this.volumeKey,
-    required this.fullNext,
-    required this.hideExtra,
-    required this.onChange,
-  }) : super(key: key);
+  const MenuConfig(
+      {Key? key,
+      // required this.backgroundColor,
+      // required this.primaryColor,
+      // required this.secondColor,
+      // required this.tertiaryColor,
+      // required this.textColor
+      required this.horizontal,
+      required this.volumeKey,
+      required this.fullNext,
+      required this.hideExtra,
+      required this.onChange,
+      required this.currentTheme})
+      : super(key: key);
 
   // final Color backgroundColor;
   // final Color primaryColor;
@@ -26,6 +28,8 @@ class MenuConfig extends StatefulWidget {
   final bool fullNext;
   final bool hideExtra;
   final void Function(String key, bool value) onChange;
+
+  final ReaderTheme currentTheme;
 
   @override
   State<MenuConfig> createState() => MenuConfigState();
@@ -54,6 +58,7 @@ class MenuConfigState extends State<MenuConfig> {
   @override
   Widget build(BuildContext context) {
     final baseHeight = MediaQuery.of(context).viewPadding.bottom + 48 + 154;
+    final currentTheme = widget.currentTheme;
     return Positioned(
       bottom: -baseHeight,
       left: 0,
@@ -63,7 +68,7 @@ class MenuConfigState extends State<MenuConfig> {
           duration: const Duration(milliseconds: 120),
           width: MediaQuery.of(context).size.width,
           height: visible ? baseHeight * 2 : baseHeight,
-          color: pannelBackgroundColor,
+          color: currentTheme.pannelBackgroundColor,
           child: Wrap(
             children: [
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -71,7 +76,7 @@ class MenuConfigState extends State<MenuConfig> {
                   padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 18),
                   child: Text(
                     "设置",
-                    style: TextStyle(fontSize: 16, color: pannelTextColor, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 16, color: currentTheme.pannelTextColor, fontWeight: FontWeight.bold),
                   ),
                 ),
                 Padding(
@@ -83,7 +88,9 @@ class MenuConfigState extends State<MenuConfig> {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: widget.horizontal ? pannelContainerColor : pannelContainerColorSelected,
+                            backgroundColor: widget.horizontal
+                                ? currentTheme.pannelContainerColor
+                                : currentTheme.pannelContainerColorSelected,
                             child: IconButton(
                               onPressed: () {},
                               iconSize: 24,
@@ -96,7 +103,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "横向翻页",
-                              style: TextStyle(fontSize: 12, color: pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
                             ),
                           )
                         ],
@@ -105,7 +112,9 @@ class MenuConfigState extends State<MenuConfig> {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: widget.volumeKey ? pannelContainerColor : pannelContainerColorSelected,
+                            backgroundColor: widget.volumeKey
+                                ? currentTheme.pannelContainerColor
+                                : currentTheme.pannelContainerColorSelected,
                             child: IconButton(
                               onPressed: () {},
                               iconSize: 24,
@@ -118,7 +127,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "音量翻页",
-                              style: TextStyle(fontSize: 12, color: pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
                             ),
                           )
                         ],
@@ -127,7 +136,9 @@ class MenuConfigState extends State<MenuConfig> {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: widget.fullNext ? pannelContainerColor : pannelContainerColorSelected,
+                            backgroundColor: widget.fullNext
+                                ? currentTheme.pannelContainerColor
+                                : currentTheme.pannelContainerColorSelected,
                             child: IconButton(
                               onPressed: () {},
                               iconSize: 24,
@@ -140,7 +151,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "全屏翻页",
-                              style: TextStyle(fontSize: 12, color: pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
                             ),
                           )
                         ],
@@ -149,7 +160,9 @@ class MenuConfigState extends State<MenuConfig> {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: widget.hideExtra ? pannelContainerColor : pannelContainerColorSelected,
+                            backgroundColor: widget.hideExtra
+                                ? currentTheme.pannelContainerColor
+                                : currentTheme.pannelContainerColorSelected,
                             child: IconButton(
                               onPressed: () {},
                               iconSize: 24,
@@ -162,7 +175,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "沉浸阅读",
-                              style: TextStyle(fontSize: 12, color: pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
                             ),
                           )
                         ],

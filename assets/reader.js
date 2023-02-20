@@ -193,6 +193,7 @@ globalThis.ReaderJs = (() => {
     console.log("--->", bookContainer);
     if (!pageContainer) {
       bookContainer = document.createElement("div");
+      bookContainer.className = "book-container";
       var collapseWrapper = document.createElement("div");
       collapseWrapper.style.webkitMarginCollapse = "separate";
       const virtualReader2 = document.getElementById("virtual-reader");
@@ -264,7 +265,7 @@ globalThis.ReaderJs = (() => {
     let width = window.innerWidth;
     for (let i = 0; i < pages; i++) {
       const headerElem = document.createElement("div");
-      headerElem.className = "reader-app-page-header";
+      headerElem.className = "reader-app-page-header reader-app-page-info";
       headerElem.setAttribute(
         "style",
         `
@@ -291,14 +292,14 @@ globalThis.ReaderJs = (() => {
         white-space: nowrap;
         text-overflow: ellipsis;
         font-size: 13px !important;
-        color: rgb(141, 141, 141) !important;
+        // color: #${globalThis.config.infoColor} !important;
       `
       );
       headerLeftElem.innerText = i == 0 ? globalThis.config.bookName : chapterName;
       headerElem.appendChild(headerLeftElem);
       pageContainer.appendChild(headerElem);
       const footerElem = document.createElement("div");
-      footerElem.className = "reader-app-page-footer";
+      footerElem.className = "reader-app-page-footer reader-app-page-info";
       footerElem.setAttribute(
         "style",
         `
@@ -310,7 +311,7 @@ globalThis.ReaderJs = (() => {
           height: ${globalThis.config.infoBarHeight + "px"};
           box-sizing: border-box;
           font-size: 13px !important;
-          color: rgb(141, 141, 141) !important;
+          // color: #${globalThis.config.infoColor} !important;
           display: flex;
           align-items: flex-start;
           justify-content: flex-end;
@@ -347,7 +348,9 @@ globalThis.ReaderJs = (() => {
         style += "text-align: center !important;";
         break;
     }
-    globalThis.readerStyleElement.innerText = globalThis.readerContainerSelector + " * { " + style + " }";
+    const infoStyle = ` .reader-app-page-info {color:#${globalThis.config.infoColor} !important;}`;
+    const bookTextStyle = `.book-container {color:#${globalThis.config.textColor}}`;
+    globalThis.readerStyleElement.innerText = globalThis.readerContainerSelector + " * { " + style + " } " + bookTextStyle + infoStyle;
   }
   function applyRealReader(insert = false) {
     var _a, _b, _c;
@@ -446,11 +449,35 @@ globalThis.ReaderJs = (() => {
   }
   function setBackgroundColor(color) {
     globalThis.config.backgroundColor = color;
+    const c = color[0] === "#" ? color : "#" + color;
+    document.body.style.backgroundColor = `${c}`;
+  }
+  function setTextColor(color) {
+    globalThis.config.textColor = color;
+    updateReaderStyleElement();
+  }
+  function setInfoColor(color) {
+    globalThis.config.infoColor = color;
+    updateReaderStyleElement();
+  }
+  function setLinkColor(color) {
+    globalThis.config.linkColor = color;
     document.body.style.backgroundColor = color;
   }
   function setTextIndent(indent) {
     globalThis.config.textIndent = indent;
     bookContainer.style.textIndent = indent;
+  }
+  function updateTheme(backgroundColor, textColor, infoColor, linkColor) {
+    try {
+      setBackgroundColor(backgroundColor);
+      setTextColor(textColor);
+      setInfoColor(infoColor);
+      setLinkColor(`#${linkColor}`);
+      return true;
+    } catch (err) {
+      return false;
+    }
   }
   return {
     init,
@@ -461,7 +488,10 @@ globalThis.ReaderJs = (() => {
     setLineSpacing,
     setTextAlign,
     setBackgroundColor,
+    setTextColor,
+    setInfoColor,
     setTextIndent,
-    jumpToPage
+    jumpToPage,
+    updateTheme
   };
 })();

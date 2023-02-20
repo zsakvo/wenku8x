@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide MenuTheme;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -12,16 +12,21 @@ import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
+import 'package:wenku8x/utils/util.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
 import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 import 'package:wenku8x/views/reader/constants/html.dart';
+import 'package:wenku8x/views/reader/reader_model.dart';
 
+import 'components/menu_theme.dart';
 import 'constants/theme.dart';
 
 enum Menu { none, wrapper, catalog, theme, reader, text, config }
+
+enum ThemeX { monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo }
 
 enum Fetching { none, next, previous }
 
@@ -73,6 +78,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // Menu menuStatus = Menu.none;
   final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
   final menuTopKey = GlobalKey<MenuTopState>();
+  final menuThemeKey = GlobalKey<MenuThemeState>();
   final menuCatalogKey = GlobalKey<MenuCatalogState>();
   final menuTextKey = GlobalKey<MenuTextState>();
   final menuConfigKey = GlobalKey<MenuConfigState>();
@@ -81,6 +87,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    // 当前主题
+    final currentTheme = useState<ReaderTheme>(readerThemeList[ThemeX.hashibami.index]);
     // 加载状态
     final loading = useState(true);
     // 文档路径
@@ -133,6 +141,16 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       """) * 1.0 as double).toInt();
       chapterPagesMap[index] = page;
       return page;
+    }
+
+    // 更新样式
+    updateElementStyle({required Color backgroundColor, required Color textColor, required Color infoColor}) async {
+      final bColor = Util.getJsColor(backgroundColor);
+      final tColor = Util.getJsColor(textColor);
+      final iColor = Util.getJsColor(infoColor);
+      return await webViewController.value?.evaluateJavascript(source: """
+        ReaderJs.updateTheme(`$bColor`,`$tColor`,`$iColor`);
+      """);
     }
 
     // 获取章节
@@ -338,6 +356,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             menuCatalogKey.currentState?.toggle();
             break;
           case Menu.theme:
+            menuThemeKey.currentState?.toggle();
             break;
           case Menu.reader:
             break;
@@ -653,7 +672,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                 )
               },
               onLoadStop: (controller, url) {
-                Log.e(mediaQueryPadding);
+                Log.e([mediaQueryPadding, currentTheme.value.readerBackgroundColor.value.toRadixString(16)],
+                    'currentTheme.value.readerBackgroundColor');
                 controller.evaluateJavascript(source: """
                   ReaderJs.init({
                     bookName: '${widget.name}',
@@ -664,8 +684,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                     fontSize:18,
                     textAlign: 1, //0 start,1 justify,2 end,3 center
                     lineSpacing: 1.4,
-                    backgroundColor: '${readerBackgroundColor.value.toRadixString(16)}',
-                    textColor: '000000',
+                    backgroundColor: '${Util.getJsColor(currentTheme.value.readerBackgroundColor)}',
+                    textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
+                    infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
                     linkColor: '000000',
                     topExtraHeight: ${mediaQueryPadding.top},
                     bottomExtraHeight: ${mediaQueryPadding.bottom},
@@ -686,13 +707,14 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         MenuTop(
           key: menuTopKey,
           title: widget.name,
-          backgroundColor: pannelBackgroundColor,
+          currentTheme: currentTheme.value,
         ),
         MenuCatalog(
           key: menuCatalogKey,
           chapters: catalog,
           currentIndex: bookRecord.chapterIndex,
-          backgroundColor: pannelBackgroundColor,
+          currentTheme: currentTheme.value,
+          // backgroundColor: pannelBackgroundColor,
           onItemTap: (index, chapter) {
             Log.d([index, chapter], "点击目录");
             bookRecord.pageIndex = 0;
@@ -706,6 +728,19 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             // currentPage.value = 0;
             // currentChapterIndex = index;
             // fetchContent(chapter.cid, chapter.name);
+          },
+        ),
+        MenuTheme(
+          key: menuThemeKey,
+          currentTheme: currentTheme.value,
+          onThemeItemTap: (theme) async {
+            Log.e(theme.readerBackgroundColor, "???");
+            await updateElementStyle(
+                backgroundColor: theme.readerBackgroundColor,
+                textColor: theme.readerTextColor,
+                infoColor: theme.readerInfoColor);
+            await Future.delayed(const Duration(milliseconds: 300));
+            currentTheme.value = theme;
           },
         ),
         MenuText(
@@ -725,11 +760,12 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           volumeKey: true,
           fullNext: true,
           hideExtra: true,
+          currentTheme: currentTheme.value,
           onChange: (key, value) {},
         ),
         MenuBottom(
           key: menuBottomWrapperKey,
-          backgroundColor: pannelBackgroundColor,
+          currentTheme: currentTheme.value,
           onCatalogTap: () {
             if (menuStatus.value != Menu.catalog) {
               menuStatus.value = Menu.catalog;
@@ -738,7 +774,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               menuStatus.value = Menu.wrapper;
             }
           },
-          onStyleTap: () {},
+          onStyleTap: () {
+            Log.e(menuStatus.value);
+            menuStatus.value = menuStatus.value != Menu.theme ? Menu.theme : Menu.wrapper;
+          },
           onProgressTap: () {},
           onTextTap: () {
             Log.d("message");
@@ -827,5 +866,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     menuCatalogKey.currentState?.close();
     menuConfigKey.currentState?.close();
     menuTextKey.currentState?.close();
+    menuThemeKey.currentState?.close();
   }
 }

@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
+import 'package:wenku8x/views/reader/page_string.dart';
 
 class MenuCatalog extends StatefulWidget {
   const MenuCatalog(
       {Key? key,
       // required this.visible,
       required this.currentIndex,
-      required this.backgroundColor,
+      // required this.backgroundColor,
       required this.chapters,
+      required this.currentTheme,
       required this.onItemTap})
       : super(key: key);
   // final bool visible;
-  final Color backgroundColor;
+  // final Color backgroundColor;
   final List<Chapter> chapters;
   final void Function(int index, Chapter chapter) onItemTap;
   final int currentIndex;
+  final ReaderTheme currentTheme;
 
   @override
   State<MenuCatalog> createState() => MenuCatalogState();
@@ -49,19 +52,17 @@ class MenuCatalogState extends State<MenuCatalog> {
 
   @override
   Widget build(BuildContext context) {
+    final currentTheme = widget.currentTheme;
+    final baseHeight = MediaQuery.of(context).size.height - (MediaQuery.of(context).viewPadding.top + 56);
     return Positioned(
-      bottom: MediaQuery.of(context).viewPadding.bottom + 48,
+      bottom: -baseHeight,
       left: 0,
       child: Material(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           width: MediaQuery.of(context).size.width,
-          height: visible
-              ? MediaQuery.of(context).size.height -
-                  (MediaQuery.of(context).viewPadding.bottom + 48) -
-                  (MediaQuery.of(context).viewPadding.top + 56)
-              : 0,
-          color: widget.backgroundColor,
+          height: visible ? 2 * baseHeight : baseHeight,
+          color: currentTheme.pannelBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +70,7 @@ class MenuCatalogState extends State<MenuCatalog> {
                 padding: const EdgeInsets.only(left: 16, top: 16, bottom: 16),
                 child: Text(
                   "目录",
-                  style: TextStyle(color: pannelTextColor, fontSize: 16, fontWeight: FontWeight.w600),
+                  style: TextStyle(color: currentTheme.pannelTextColor, fontSize: 16, fontWeight: FontWeight.w600),
                 ),
               ),
               Expanded(
@@ -94,7 +95,9 @@ class MenuCatalogState extends State<MenuCatalog> {
                                   child: Text(
                                     chapter.name,
                                     style: TextStyle(
-                                        color: (index - 1) == widget.currentIndex ? primaryColor : pannelTextColor,
+                                        color: (index - 1) == widget.currentIndex
+                                            ? currentTheme.primaryColor
+                                            : currentTheme.pannelTextColor,
                                         fontSize: 13),
                                   ),
                                 ),
@@ -107,7 +110,7 @@ class MenuCatalogState extends State<MenuCatalog> {
                               endIndent: 16,
                               height: 0,
                               thickness: 0.4,
-                              color: dividerColor,
+                              color: currentTheme.dividerColor,
                             );
                           },
                           itemCount: widget.chapters.length + 1)))
