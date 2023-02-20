@@ -118,34 +118,45 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 追加章节
     appendChapter(String content, String title, int index) async {
-      final page = (await webViewController.value?.evaluateJavascript(source: """
-        ReaderJs.appendChapter(`$content`,"$title");
-      """) * 1.0 as double).toInt();
-      chapterPagesMap[index] = page;
-      return page;
+      // final page = (await webViewController.value?.evaluateJavascript(source: """
+      //   await ReaderJs.appendChapter(`$content`,"$title");
+      // """) * 1.0 as double).toInt();
+      // chapterPagesMap[index] = page;
+      // return page;
+      Log.e(index, "append");
+      webViewController.value?.evaluateJavascript(source: """
+        ReaderJs.appendChapter(`$content`,"$title",$index);
+      """);
     }
 
     // 插入章节
     insertChapter(String content, String title, int index) async {
-      final page = (await webViewController.value?.evaluateJavascript(source: """
-        ReaderJs.insertChapter(`$content`,"$title");
-      """) * 1.0 as double).toInt();
-      chapterPagesMap[index] = page;
-      currentIndex.value += page;
-      Log.e(currentIndex.value, "当前页码");
+      // final page = (await webViewController.value?.evaluateJavascript(source: """
+      //   await ReaderJs.insertChapter(`$content`,"$title");
+      // """) * 1.0 as double).toInt();
+      // chapterPagesMap[index] = page;
+      // currentIndex.value += page;
+      // Log.e(currentIndex.value, "当前页码");
+      // webViewController.value?.evaluateJavascript(source: """
+      //   console.log(document.getElementsByTagName('html')[0].scrollLeft,23333);
+      // """);
+      // return page;
       webViewController.value?.evaluateJavascript(source: """
-        console.log(document.getElementsByTagName('html')[0].scrollLeft,23333);
+          ReaderJs.insertChapter(`$content`,"$title",$index);
       """);
-      return page;
     }
 
     // 刷新章节
     refreshChapter(String content, String title, int index) async {
-      int page = (await webViewController.value?.evaluateJavascript(source: """
-        ReaderJs.refreshChapter(`$content`,"$title");
-      """) * 1.0 as double).toInt();
-      chapterPagesMap[index] = page;
-      return page;
+      Log.e(index, "refresh");
+      // int page = (await webViewController.value?.evaluateJavascript(source: """
+      //   await ReaderJs.refreshChapter(`$content`,"$title");
+      // """) * 1.0 as double).toInt();
+      // chapterPagesMap[index] = page;
+      // return page;
+      webViewController.value?.evaluateJavascript(source: """
+          ReaderJs.refreshChapter(`$content`,"$title",$index);
+      """);
     }
 
     // 更新样式
@@ -255,7 +266,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
-        int pagePre = (await insertChapter(preContent, catalog[index - 1].name, index - 1));
+        // int pagePre = (await insertChapter(preContent, catalog[index - 1].name, index - 1));
+        insertChapter(preContent, catalog[index - 1].name, index - 1);
         // chapterPagesMap[index - 1] = pagePre;
         // currentIndex.value += pagePre;
       }
@@ -298,6 +310,12 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                   Log.d(args, "HTML 初始化成功");
                   pageWidth = args[1] * extraRate;
                   initChapter(bookRecord.chapterIndex);
+                  break;
+                case 'notifySize':
+                  Log.e(args);
+                  final pageSize = args[1];
+                  final index = args[2];
+                  chapterPagesMap[index] = pageSize;
                   break;
               }
             });
@@ -746,7 +764,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
                 backgroundColor: theme.readerBackgroundColor,
                 textColor: theme.readerTextColor,
                 infoColor: theme.readerInfoColor);
-            await Future.delayed(const Duration(milliseconds: 300));
+            // await Future.delayed(const Duration(milliseconds: 300));
             currentTheme.value = theme;
           },
         ),
@@ -876,6 +894,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 获取章节内容
   Future fetchContent(int index) async {
     final cid = catalog[index].cid;
+    final title = catalog[index].name;
     // final name = catalog[index].name;
     if (totalPage == 0) {
       menuCatalogKey.currentState!.close();
@@ -885,12 +904,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     var res = await API.getNovelContent(aid, cid);
     List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
     arr.removeRange(0, 2);
-    String content = arr.map((e) => """<p>$e</p>""").join("\n");
+    String content = arr.map((e) {
+      if (title == "插图") {
+        if (e.trim().isNotEmpty) return """<img src="${e.replaceAll("<!--image-->", "")}"/>""";
+        return "";
+      } else {
+        return """<p>$e</p>""";
+      }
+    }).join("\n");
 
     // String content = '';
     // for (var i = 0; i < 50; i++) {
     //   content += ("<p>${(catalog.indexWhere((element) => element.cid == cid))},$cid</p>");
     // }
+    if (title == "插图") {
+      content = """<div style="text-indent:0">$content</div>""";
+    }
     String html = """<body>$content</body>""";
     final file = File("${docDir.path}/books/$aid/$cid.html");
     file.writeAsString(html);

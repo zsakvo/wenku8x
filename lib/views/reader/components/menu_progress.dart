@@ -114,7 +114,8 @@ class MenuProgressState extends State<MenuProgress> {
                               child: Slider(
                                   value: currentPage,
                                   min: 0,
-                                  max: (widget.totalPage - 1) * 1.0,
+                                  // max: (widget.totalPage - 1) * 1.0,
+                                  max: 400,
                                   onChanged: (val) {
                                     setState(() {
                                       currentPage = val.round().toDouble();
