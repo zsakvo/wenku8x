@@ -127,10 +127,12 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     }
 
     // 刷新章节
-    refreshChapter(String content, String title) {
-      return webViewController.value?.evaluateJavascript(source: """
+    refreshChapter(String content, String title, int index) async {
+      int page = (await webViewController.value?.evaluateJavascript(source: """
         ReaderJs.refreshChapter(`$content`,"$title");
-      """);
+      """) * 1.0 as double).toInt();
+      chapterPagesMap[index] = page;
+      return page;
     }
 
     // 获取章节
@@ -223,8 +225,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
       Log.e("错误初始化");
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index);
-      int page = (await refreshChapter(content, catalog[index].name));
-      chapterPagesMap[index] = page;
+      await refreshChapter(content, catalog[index].name, index);
+      // chapterPagesMap[index] = page;
       currentIndex.value += bookRecord.pageIndex;
       Log.e((pageWidth * (bookRecord.pageIndex)).round(), "跳转距离");
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
