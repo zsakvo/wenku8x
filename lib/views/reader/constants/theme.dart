@@ -67,7 +67,7 @@ final ama = ReaderTheme(
     readerInfoColor: const Color(0xff96928c),
     pannelBackgroundColor: const Color(0xfffbfaf5),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffebe5d8),
+    primaryColor: const Color(0xffebcd8b),
     dividerColor: const Color(0xffdbd6cd),
     pannelContainerColor: const Color(0xfff3f0e8),
     pannelContainerColorSelected: const Color(0xfff9f4ea));
@@ -80,7 +80,7 @@ final hashibami = ReaderTheme(
     readerInfoColor: const Color(0xff908b76),
     pannelBackgroundColor: const Color(0xfff9f1da),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffddcca1),
+    primaryColor: const Color(0xffebcd8b),
     dividerColor: const Color(0xffd8d0b0),
     pannelContainerColor: const Color(0xffeae1c8),
     pannelContainerColorSelected: const Color(0xfff2e7c7));
@@ -93,7 +93,7 @@ final usuao = ReaderTheme(
     readerInfoColor: const Color(0xff959e95),
     pannelBackgroundColor: const Color(0xfff4fbf4),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffd0e2d0),
+    primaryColor: const Color(0xff85e285),
     dividerColor: const Color(0xffcad5ca),
     pannelContainerColor: const Color(0xffe1ece1),
     pannelContainerColorSelected: const Color(0xffe2ede1));
@@ -106,7 +106,7 @@ final chigusa = ReaderTheme(
     readerInfoColor: const Color(0xff879092),
     pannelBackgroundColor: const Color(0xffe7f5f6),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffcfdde1),
+    primaryColor: const Color(0xff87cde1),
     dividerColor: const Color(0xffc7d1d5),
     pannelContainerColor: const Color(0xffe2eaec),
     pannelContainerColorSelected: const Color(0xffdfecf0));
@@ -119,7 +119,7 @@ final sekichiku = ReaderTheme(
     readerInfoColor: const Color(0xff9d9292),
     pannelBackgroundColor: const Color(0xfffaeceb),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffe9cccc),
+    primaryColor: const Color(0xffe98989),
     dividerColor: const Color(0xffd8c9c9),
     pannelContainerColor: const Color(0xfff3e1e1),
     pannelContainerColorSelected: const Color(0xfff2e1e1));
@@ -132,7 +132,7 @@ final namari = ReaderTheme(
     readerInfoColor: const Color(0xff868686),
     pannelBackgroundColor: const Color(0xffe7e7e7),
     pannelTextColor: const Color(0xff262626),
-    primaryColor: const Color(0xffd0d0d0),
+    primaryColor: const Color(0xffababab),
     dividerColor: const Color(0xffc6c5c6),
     pannelContainerColor: const Color(0xffe2e2e2),
     pannelContainerColorSelected: const Color(0xffdadada));

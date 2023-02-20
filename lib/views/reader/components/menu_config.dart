@@ -103,7 +103,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "横向翻页",
-                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelTextColor),
                             ),
                           )
                         ],
@@ -127,7 +127,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "音量翻页",
-                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelTextColor),
                             ),
                           )
                         ],
@@ -151,7 +151,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "全屏翻页",
-                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelTextColor),
                             ),
                           )
                         ],
@@ -175,7 +175,7 @@ class MenuConfigState extends State<MenuConfig> {
                             padding: const EdgeInsets.only(top: 6),
                             child: Text(
                               "沉浸阅读",
-                              style: TextStyle(fontSize: 12, color: currentTheme.pannelContainerColorSelected),
+                              style: TextStyle(fontSize: 12, color: currentTheme.pannelTextColor),
                             ),
                           )
                         ],

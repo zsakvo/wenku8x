@@ -16,6 +16,7 @@ import 'package:wenku8x/utils/util.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
 import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
+import 'package:wenku8x/views/reader/components/menu_progress.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 import 'package:wenku8x/views/reader/constants/html.dart';
@@ -24,7 +25,7 @@ import 'package:wenku8x/views/reader/reader_model.dart';
 import 'components/menu_theme.dart';
 import 'constants/theme.dart';
 
-enum Menu { none, wrapper, catalog, theme, reader, text, config }
+enum Menu { none, wrapper, catalog, theme, progress, text, config }
 
 enum ThemeX { monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo }
 
@@ -74,6 +75,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
   final List<Chapter> catalog = [];
 
+  // 相对当前章节的进度（给进度条用）
+  // int currentPage = 0;
+
   // 工具栏状态
   // Menu menuStatus = Menu.none;
   final menuBottomWrapperKey = GlobalKey<MenuBottomState>();
@@ -82,13 +86,14 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuCatalogKey = GlobalKey<MenuCatalogState>();
   final menuTextKey = GlobalKey<MenuTextState>();
   final menuConfigKey = GlobalKey<MenuConfigState>();
+  final menuProgressKey = GlobalKey<MenuProgressState>();
 
   // final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
 
   @override
   Widget build(BuildContext context) {
     // 当前主题
-    final currentTheme = useState<ReaderTheme>(readerThemeList[ThemeX.hashibami.index]);
+    final currentTheme = useState<ReaderTheme>(readerThemeList[ThemeX.ama.index]);
     // 加载状态
     final loading = useState(true);
     // 文档路径
@@ -358,7 +363,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           case Menu.theme:
             menuThemeKey.currentState?.toggle();
             break;
-          case Menu.reader:
+          case Menu.progress:
+            menuProgressKey.currentState?.toggle();
             break;
           case Menu.text:
             menuTextKey.currentState?.toggle();
@@ -744,6 +750,22 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             currentTheme.value = theme;
           },
         ),
+        MenuProgress(
+          key: menuProgressKey,
+          currentPage: bookRecord.pageIndex,
+          totalPage: chapterPagesMap[bookRecord.chapterIndex] ?? 0,
+          currentTheme: currentTheme.value,
+          onNextTap: () {},
+          onPreviousTap: () {},
+          onProgressBarValueChangeEnd: (p0) async {
+            final page = p0.toInt();
+            Log.d([bookRecord.pageIndex, page], "进度条");
+            final tmpIndex = currentIndex.value + (page - bookRecord.pageIndex);
+            await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: false);
+            currentIndex.value = tmpIndex;
+            bookRecord.pageIndex = page;
+          },
+        ),
         MenuText(
           key: menuTextKey,
           fontSize: 16,
@@ -784,7 +806,14 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
               menuStatus.value = Menu.wrapper;
             }
           },
-          onProgressTap: () {},
+          onProgressTap: () {
+            if (menuStatus.value != Menu.progress) {
+              menuStatus.value = Menu.progress;
+            } else {
+              closeAllSubMenus();
+              menuStatus.value = Menu.wrapper;
+            }
+          },
           onTextTap: () {
             if (menuStatus.value != Menu.text) {
               menuStatus.value = Menu.text;
@@ -873,5 +902,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     menuConfigKey.currentState?.close();
     menuTextKey.currentState?.close();
     menuThemeKey.currentState?.close();
+    menuProgressKey.currentState?.close();
   }
 }
