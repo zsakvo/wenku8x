@@ -53,15 +53,18 @@ class MenuCatalogState extends State<MenuCatalog> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = widget.currentTheme;
-    final baseHeight = MediaQuery.of(context).size.height - (MediaQuery.of(context).viewPadding.top + 56);
+    final bottomPadding = MediaQuery.of(context).viewPadding.bottom + 48;
+    final baseHeight =
+        MediaQuery.of(context).size.height - (MediaQuery.of(context).viewPadding.top + 56) - bottomPadding;
+
     return Positioned(
-      bottom: -baseHeight,
+      bottom: visible ? bottomPadding : -baseHeight,
       left: 0,
       child: Material(
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 120),
           width: MediaQuery.of(context).size.width,
-          height: visible ? 2 * baseHeight : baseHeight,
+          height: baseHeight,
           color: currentTheme.pannelBackgroundColor,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

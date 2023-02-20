@@ -361,6 +361,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           case Menu.reader:
             break;
           case Menu.text:
+            menuTextKey.currentState?.toggle();
             break;
           case Menu.config:
             menuConfigKey.currentState?.toggle();
@@ -747,12 +748,13 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           key: menuTextKey,
           fontSize: 16,
           lineSpace: 1.4,
+          currentTheme: currentTheme.value,
           onFontSizeSlideBarValueChangeEnd: (p0) {},
           onTextSpaceSlideBarValueChangeEnd: (p0) {},
-          backgroundColor: Colors.black,
-          primaryColor: Theme.of(context).colorScheme.primary,
-          secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
-          tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          // backgroundColor: Colors.black,
+          // primaryColor: Theme.of(context).colorScheme.primary,
+          // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+          // tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
         ),
         MenuConfig(
           key: menuConfigKey,
@@ -775,17 +777,21 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
             }
           },
           onStyleTap: () {
-            Log.e(menuStatus.value);
-            menuStatus.value = menuStatus.value != Menu.theme ? Menu.theme : Menu.wrapper;
+            if (menuStatus.value != Menu.theme) {
+              menuStatus.value = Menu.theme;
+            } else {
+              closeAllSubMenus();
+              menuStatus.value = Menu.wrapper;
+            }
           },
           onProgressTap: () {},
           onTextTap: () {
-            Log.d("message");
-            // if (menuStatus.value != Menu.text) {
-            //   menuStatus.value = Menu.text;
-            // } else {
-            //   menuStatus.value = Menu.wrapper;
-            // }
+            if (menuStatus.value != Menu.text) {
+              menuStatus.value = Menu.text;
+            } else {
+              closeAllSubMenus();
+              menuStatus.value = Menu.wrapper;
+            }
           },
           onConfigTap: () {
             if (menuStatus.value != Menu.config) {
