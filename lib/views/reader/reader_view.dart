@@ -696,6 +696,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
           onItemTap: (index, chapter) {
             Log.d([index, chapter], "点击目录");
             bookRecord.pageIndex = 0;
+            menuStatus.value = Menu.none;
             bookRecord.chapterIndex = index;
             initChapter(index);
             // fetchStatus = Fetching.none;
