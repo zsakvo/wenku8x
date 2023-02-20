@@ -833,11 +833,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
         ),
         loading.value
             ? Container(
-                color: Theme.of(context).colorScheme.background,
+                color: currentTheme.value.readerBackgroundColor,
                 alignment: Alignment.center,
                 child: Text(
                   "章节加载中，请稍候",
-                  style: TextStyle(fontSize: 15, color: Theme.of(context).colorScheme.secondary),
+                  style: TextStyle(fontSize: 15, color: currentTheme.value.readerInfoColor),
                 ))
             : const SizedBox.shrink()
       ],
