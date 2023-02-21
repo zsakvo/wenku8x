@@ -640,6 +640,15 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
             ),
             onWillPop: () async {
               Log.e("准备返回");
+              // if (menuStatus.value != Menu.none) {
+              //   if (menuStatus.value != Menu.wrapper) {
+              //     closeAllSubMenus();
+              //   } else {
+              //     menuTopKey.currentState?.close();
+              //     menuBottomWrapperKey.currentState?.close();
+              //   }
+              //   return false;
+              // }
               return true;
             }));
   }
