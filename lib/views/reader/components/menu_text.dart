@@ -98,7 +98,7 @@ class MenuTextState extends State<MenuText> {
                           Flexible(
                             child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: currentTheme.pannelContainerColorSelected,
+                                  activeTrackColor: currentTheme.primaryColor,
                                   inactiveTrackColor: currentTheme.pannelContainerColor,
                                   trackHeight: 12,
                                   overlayShape: SliderComponentShape.noOverlay,
@@ -110,14 +110,14 @@ class MenuTextState extends State<MenuText> {
                                 ),
                                 child: Slider(
                                     value: fontSize,
-                                    min: 12,
-                                    max: 24,
+                                    min: 16,
+                                    max: 28,
                                     onChanged: (val) {
                                       setState(() {
-                                        fontSize = val.round().toDouble();
+                                        fontSize = val.round() * 1.0;
                                       });
                                     },
-                                    onChangeEnd: widget.onFontSizeSlideBarValueChangeEnd)),
+                                    onChangeEnd: (val) => widget.onFontSizeSlideBarValueChangeEnd(fontSize))),
                           ),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -149,7 +149,7 @@ class MenuTextState extends State<MenuText> {
                           Flexible(
                             child: SliderTheme(
                                 data: SliderTheme.of(context).copyWith(
-                                  activeTrackColor: currentTheme.pannelContainerColorSelected,
+                                  activeTrackColor: currentTheme.primaryColor,
                                   inactiveTrackColor: currentTheme.pannelContainerColor,
                                   trackHeight: 12,
                                   overlayShape: SliderComponentShape.noOverlay,
@@ -162,13 +162,13 @@ class MenuTextState extends State<MenuText> {
                                 child: Slider(
                                   value: lineSpace,
                                   min: 1.3,
-                                  max: 3.5,
+                                  max: 2.5,
                                   onChanged: (val) {
                                     setState(() {
                                       lineSpace = double.parse(val.toStringAsFixed(1));
                                     });
                                   },
-                                  onChangeEnd: widget.onTextSpaceSlideBarValueChangeEnd,
+                                  onChangeEnd: (val) => widget.onTextSpaceSlideBarValueChangeEnd(lineSpace),
                                 )),
                           ),
                           Padding(

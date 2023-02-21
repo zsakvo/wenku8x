@@ -101,11 +101,16 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
   // final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
 
+  // 字体大小
+  final fontSize = spInstance.getDouble("fontSize") ?? 18;
+  // 字间距
+  final lineSpace = spInstance.getDouble("lineSpace") ?? 1.5;
+
   @override
   Widget build(BuildContext context) {
     // 当前主题
-    // final currentTheme = useState<ReaderTheme>(readerThemeList[spInstance.getInt("reader_theme") ?? 0]);
-    final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
+    final currentTheme = useState<ReaderTheme>(readerThemeList[spInstance.getInt("reader_theme") ?? 0]);
+    // final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
     // 加载状态
     final loading = useState(true);
     // 文档路径
@@ -175,6 +180,20 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
     clearLongHits() {
       webViewController.value!.evaluateJavascript(source: """
         document.getSelection().empty()
+      """);
+    }
+
+    // 设置字号
+    setFontSize(double size) {
+      webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.setFontSize($size)
+      """);
+    }
+
+    // 设置间距
+    setLineSpacing(double lineSpacing) {
+      webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.setLineSpacing($lineSpacing)
       """);
     }
 
@@ -408,10 +427,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       return () {};
     }, [menuStatus.value]);
 
-    // useEffect(() {
-    //   spInstance.setInt("reader_theme", readerThemeList.indexOf(currentTheme.value));
-    //   return () {};
-    // }, [currentTheme.value]);
+    useEffect(() {
+      spInstance.setInt("reader_theme", readerThemeList.indexOf(currentTheme.value));
+      return () {};
+    }, [currentTheme.value]);
 
     // -----
 
@@ -446,9 +465,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
                     marginHorizontal: 18,
                     marginVertical: 18,
                     textIndent: 36,
-                    fontSize:18,
+                    fontSize: $fontSize,
                     textAlign: 1, //0 start,1 justify,2 end,3 center
-                    lineSpacing: 1.4,
+                    lineSpacing: $lineSpace,
                     backgroundColor: '${Util.getJsColor(currentTheme.value.readerBackgroundColor)}',
                     textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
                     infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
@@ -524,11 +543,19 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
         ),
         MenuText(
           key: menuTextKey,
-          fontSize: 16,
-          lineSpace: 1.4,
+          fontSize: fontSize,
+          lineSpace: lineSpace,
           currentTheme: currentTheme.value,
-          onFontSizeSlideBarValueChangeEnd: (p0) {},
-          onTextSpaceSlideBarValueChangeEnd: (p0) {},
+          onFontSizeSlideBarValueChangeEnd: (p0) {
+            setFontSize(p0);
+            spInstance.setDouble("fontSize", p0);
+            initChapter(bookRecord.chapterIndex);
+          },
+          onTextSpaceSlideBarValueChangeEnd: (p0) {
+            setLineSpacing(p0);
+            spInstance.setDouble("lineSpace", p0);
+            initChapter(bookRecord.chapterIndex);
+          },
           // backgroundColor: Colors.black,
           // primaryColor: Theme.of(context).colorScheme.primary,
           // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
