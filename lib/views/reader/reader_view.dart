@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -53,8 +54,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   double moveX = 0;
   // 按下座标
   double tapDownPos = 0.0;
+  double tapDownPosY = 0.0;
   // 抬起座标
   double tapUpPos = 0.0;
+  double tapUpPosY = 0.0;
   // 位移比例
   double extraRate = 1.0;
   // 总页数
@@ -183,15 +186,24 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
 
     // 手指抬起
     onPointerUp(PointerUpEvent event) async {
+      tapUpPos = event.position.dx;
+      tapUpPosY = event.position.dy;
       Log.d(longHitStatus, "up");
       if (longHitStatus == LongHitStatus.a) {
         longHitStatus = LongHitStatus.b;
         return;
+      } else if (longHitStatus == LongHitStatus.b) {
+        // longHitStatus = LongHitStatus.c;
+        final d = sqrt(pow((tapUpPos - tapDownPos), 2) + pow((tapUpPosY - tapDownPosY), 2));
+        if (d < 10) {
+          // 当作点击事件
+          clearLongHits();
+          longHitStatus = LongHitStatus.c;
+          return;
+        }
+        return;
       }
-      // else if (longHitStatus == LongHitStatus.b) {
-      //   longHitStatus = LongHitStatus.c;
-      //   return;
-      // }
+
       if (menuStatus.value != Menu.none) {
         if (menuStatus.value == Menu.wrapper) {
           menuStatus.value = Menu.none;
@@ -201,13 +213,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
         }
         return;
       }
-      tapUpPos = event.position.dx;
       double res = (tapUpPos - tapDownPos);
       double resAbs = res.abs();
       int tmpIndex = currentIndex.value;
       if (resAbs > distance) {
         // ---如果是处于选中状态,直接拦截事件
-        if (longHitStatus != LongHitStatus.c) return;
+        // if (longHitStatus != LongHitStatus.c) return;
 
         if (res < 0) {
           tmpIndex = currentIndex.value + 1;
@@ -219,10 +230,11 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       } else {
         // 点击事件
         // ---如果是处于选中状态,直接拦截事件
-        if (longHitStatus != LongHitStatus.c) {
-          longHitStatus = LongHitStatus.c;
-          return;
-        }
+        // if (longHitStatus != LongHitStatus.c) {
+        //   clearLongHits();
+        //   longHitStatus = LongHitStatus.c;
+        //   return;
+        // }
 
         var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
         if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
@@ -249,11 +261,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       // if (longHitStatus != LongHitStatus.c) return;
       moveX = 0;
       tapDownPos = event.position.dx;
+      tapDownPosY = event.position.dy;
     }
 
     // 手指移动
     onPointerMove(PointerMoveEvent event) {
-      // if (longHitStatus != LongHitStatus.c) return;
+      if (longHitStatus != LongHitStatus.c) return;
       final dx = event.delta.dx;
       moveX += dx;
       if (moveX.abs() >= distance) {
