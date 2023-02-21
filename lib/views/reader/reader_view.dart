@@ -30,6 +30,9 @@ enum ThemeX { monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo
 
 enum Fetching { none, next, previous }
 
+// 实在不知道怎么起名了，a是长按刚撒手，b是长按已撒手，c是无长按状态
+enum LongHitStatus { a, b, c }
+
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
@@ -46,7 +49,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 页面宽度
   late dynamic pageWidth;
   // 手指滑动判定
-  final distance = 8;
+  final distance = 10;
   double moveX = 0;
   // 按下座标
   double tapDownPos = 0.0;
@@ -74,6 +77,10 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   int currentChapterPage = 0;
 
   final List<Chapter> catalog = [];
+
+  // 是否处于选中状态
+  // bool isLongHitStatus = false;
+  LongHitStatus longHitStatus = LongHitStatus.c;
 
   // 相对当前章节的进度（给进度条用）
   // int currentPage = 0;
@@ -159,6 +166,13 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       """);
     }
 
+    // 清除选中
+    clearLongHits() {
+      webViewController.value!.evaluateJavascript(source: """
+        document.getSelection().empty()
+      """);
+    }
+
     saveRecord() {
       isar.writeTxnSync(
         () {
@@ -169,6 +183,15 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
 
     // 手指抬起
     onPointerUp(PointerUpEvent event) async {
+      Log.d(longHitStatus, "up");
+      if (longHitStatus == LongHitStatus.a) {
+        longHitStatus = LongHitStatus.b;
+        return;
+      }
+      // else if (longHitStatus == LongHitStatus.b) {
+      //   longHitStatus = LongHitStatus.c;
+      //   return;
+      // }
       if (menuStatus.value != Menu.none) {
         if (menuStatus.value == Menu.wrapper) {
           menuStatus.value = Menu.none;
@@ -183,19 +206,24 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       double resAbs = res.abs();
       int tmpIndex = currentIndex.value;
       if (resAbs > distance) {
+        // ---如果是处于选中状态,直接拦截事件
+        if (longHitStatus != LongHitStatus.c) return;
+
         if (res < 0) {
           tmpIndex = currentIndex.value + 1;
           bookRecord.pageIndex++;
-          // currentChapterPage++;
-          // pageStatue = Fetching.next;
         } else {
           tmpIndex = currentIndex.value - 1;
           bookRecord.pageIndex--;
-          // currentChapterPage--;
-          // pageStatue = Fetching.previous;
         }
       } else {
         // 点击事件
+        // ---如果是处于选中状态,直接拦截事件
+        if (longHitStatus != LongHitStatus.c) {
+          longHitStatus = LongHitStatus.c;
+          return;
+        }
+
         var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
         if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
           tmpIndex = currentIndex.value + 1;
@@ -214,23 +242,30 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       }
       await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
       currentIndex.value = tmpIndex;
-      moveX = 0;
     }
 
     // 手指落下
     onPointerDown(PointerDownEvent event) {
+      // if (longHitStatus != LongHitStatus.c) return;
+      moveX = 0;
       tapDownPos = event.position.dx;
     }
 
     // 手指移动
     onPointerMove(PointerMoveEvent event) {
+      // if (longHitStatus != LongHitStatus.c) return;
       final dx = event.delta.dx;
       moveX += dx;
       if (moveX.abs() >= distance) {
-        if (menuStatus.value == Menu.none) {
+        if (menuStatus.value == Menu.none && longHitStatus == LongHitStatus.c) {
           webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
         }
       }
+      // else {
+      //   if (longHitStatus == LongHitStatus.b) {
+      //     longHitStatus = LongHitStatus.c;
+      //   }
+      // }
     }
 
     // 初始化章节
@@ -373,6 +408,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
             child: InAppWebView(
               onWebViewCreated: (controller) {
                 webViewController.value = controller;
+              },
+              onLongPressHitTestResult: (controller, hitTestResult) {
+                Log.e(hitTestResult.toJson());
+                longHitStatus = LongHitStatus.a;
               },
               gestureRecognizers: {
                 Factory<OneSequenceGestureRecognizer>(
