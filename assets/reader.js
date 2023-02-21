@@ -125,7 +125,7 @@ globalThis.ReaderJs = (() => {
   let pageWidth;
   let pageHeight;
   let pagedHorizontally;
-  let lockVirtual = false;
+  let virtualPageCount;
   function init(config) {
     console.log("---init---");
     console.log("当前配置", config);
@@ -188,7 +188,7 @@ globalThis.ReaderJs = (() => {
       animeHandler();
     });
   }
-  async function setupPaging(insert = false, chapterIndex) {
+  async function setupPaging(insert = false) {
     var _a;
     console.log("--->", bookContainer);
     if (!pageContainer) {
@@ -240,18 +240,17 @@ globalThis.ReaderJs = (() => {
       return promise;
     }
     await runLoop();
-    let vPage = 0;
     if (globalThis.config.horizontal) {
-      vPage = Math.ceil(
+      virtualPageCount = Math.ceil(
         virtualReader.scrollWidth / (pageWidth + pageHorizontalMargin)
       );
       if (insert)
-        currentPage += vPage;
-      endSpacer.style.left = vPage * (pageWidth + pageHorizontalMargin) - 1 + "px";
+        currentPage += virtualPageCount;
+      endSpacer.style.left = virtualPageCount * (pageWidth + pageHorizontalMargin) - 1 + "px";
       console.log(endSpacer.style.left, "PPP");
     }
     virtualReader.appendChild(endSpacer);
-    return { vPage, chapterIndex };
+    return virtualPageCount;
   }
   function getVirtualSpacer() {
     let endSpacer = document.getElementById("virtual-reader-spacer");
@@ -271,11 +270,11 @@ globalThis.ReaderJs = (() => {
     }
     return endSpacer;
   }
-  async function setupFlow(insert = false, index) {
-    return await setupPaging(insert, index);
+  async function setupFlow(insert = false) {
+    return await setupPaging(insert);
   }
-  async function initReader(insert = false, index) {
-    return await setupFlow(insert, index);
+  async function initReader(insert = false) {
+    return await setupFlow(insert);
   }
   function setupPageInfos(chapterName, pages) {
     let width = window.innerWidth;
@@ -418,58 +417,34 @@ globalThis.ReaderJs = (() => {
     }
   }
   async function appendChapter(body, title, index) {
-    let intervalId;
-    let vPage;
-    let chapterIndex;
-    intervalId = setInterval(async () => {
-      if (!lockVirtual) {
-        lockVirtual = true;
-        console.log("?", lockVirtual);
-        const div = document.createElement("div");
-        div.innerHTML = body;
-        pageContainer = void 0;
-        const shadow = document.getElementById("virtual-reader");
-        shadow.innerHTML = "";
-        for (let child of div.children) {
-          shadow.appendChild(child.cloneNode(true));
-        }
-        const res = await initReader(false, index);
-        vPage = res.vPage;
-        chapterIndex = res.chapterIndex;
-        console.log("?", vPage, chapterIndex);
-        globalThis.JsBridge("notifySize", vPage, chapterIndex);
-        setupPageInfos(title, vPage);
-        applyRealReader();
-        clearInterval(intervalId);
-        lockVirtual = false;
-      }
-    }, 500);
+    const div = document.createElement("div");
+    div.innerHTML = body;
+    pageContainer = void 0;
+    const shadow = document.getElementById("virtual-reader");
+    shadow.innerHTML = "";
+    for (let child of div.children) {
+      shadow.appendChild(child.cloneNode(true));
+    }
+    const pageNum = await initReader();
+    globalThis.JsBridge("notifySize", virtualPageCount, index);
+    setupPageInfos(title, virtualPageCount);
+    applyRealReader();
+    return pageNum;
   }
   async function insertChapter(body, title, index) {
-    let intervalId;
-    let vPage;
-    let chapterIndex;
-    intervalId = setInterval(async () => {
-      if (!lockVirtual) {
-        lockVirtual = true;
-        const div = document.createElement("div");
-        div.innerHTML = body;
-        pageContainer = void 0;
-        const shadow = document.getElementById("virtual-reader");
-        shadow.innerHTML = "";
-        for (let child of div.children) {
-          shadow.appendChild(child.cloneNode(true));
-        }
-        const res = await initReader(true, index);
-        vPage = res.vPage;
-        chapterIndex = res.chapterIndex;
-        globalThis.JsBridge("notifySize", vPage, chapterIndex);
-        setupPageInfos(title, vPage);
-        applyRealReader(true);
-        clearInterval(intervalId);
-        lockVirtual = false;
-      }
-    }, 500);
+    const div = document.createElement("div");
+    div.innerHTML = body;
+    pageContainer = void 0;
+    const shadow = document.getElementById("virtual-reader");
+    shadow.innerHTML = "";
+    for (let child of div.children) {
+      shadow.appendChild(child.cloneNode(true));
+    }
+    const pageNum = await initReader(true);
+    globalThis.JsBridge("notifySize", virtualPageCount, index);
+    setupPageInfos(title, virtualPageCount);
+    applyRealReader(true);
+    return pageNum;
   }
   async function refreshChapter(body, title, index) {
     var _a;
