@@ -26,6 +26,7 @@ class MenuCatalog extends StatefulWidget {
 
 class MenuCatalogState extends State<MenuCatalog> {
   late bool visible = false;
+  ScrollController scrollController = ScrollController(keepScrollOffset: true);
   @override
   void initState() {
     super.initState();
@@ -46,6 +47,9 @@ class MenuCatalogState extends State<MenuCatalog> {
 
   void toggle() {
     setState(() {
+      if (!visible) {
+        scrollController.jumpTo(widget.currentIndex * 46 + 1);
+      }
       visible = !visible;
     });
   }
@@ -82,6 +86,8 @@ class MenuCatalogState extends State<MenuCatalog> {
                       removeBottom: true,
                       context: context,
                       child: ListView.separated(
+                          controller: scrollController,
+                          cacheExtent: 46,
                           itemBuilder: (context, index) {
                             if (index == 0) {
                               return const SizedBox(

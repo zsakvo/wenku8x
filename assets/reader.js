@@ -433,6 +433,7 @@ globalThis.ReaderJs = (() => {
         margin-top: 32px;
         margin-bottom: 48px;
         font-weight: bold;
+        text-align: start !important;
         font-size: ${globalThis.config.fontSize + 2}px !important;
       `
       );

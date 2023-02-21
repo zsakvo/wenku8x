@@ -50,7 +50,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 页面宽度
   late dynamic pageWidth;
   // 手指滑动判定
-  final distance = 10;
+  final distance = 8;
   double moveX = 0;
   // 按下座标
   double tapDownPos = 0.0;
