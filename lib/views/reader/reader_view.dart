@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
@@ -116,7 +117,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 文档路径
     final dirFuture = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
     // 目录请求
-    final catalogFuture = useFuture<bool>(useMemoized(fetchCatalog), initialData: false);
+    final catalogFuture = useFuture<bool>(useMemoized(getCatalog), initialData: false);
     // webview-controller
     final webViewController = useState<InAppWebViewController?>(null);
     // 页面尺寸数据
@@ -330,6 +331,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       final catalogData = catalogFuture.data;
       final webviewControllerValue = webViewController.value;
       if (dirData != null && webviewControllerValue != null && catalogData!) {
+        Log.e("开始初始化");
         // 前置数据初始完毕，进入逻辑
         // 阅读记录
         bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
@@ -627,11 +629,31 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
     ));
   }
 
+  // 读取目录
+  Future<bool> getCatalog() async {
+    final aid = widget.aid;
+    docDir = await getApplicationDocumentsDirectory();
+    final dir = Directory("${docDir.path}/books/$aid");
+    final file = File("${dir.path}/catalog.json");
+    Log.e(file.existsSync(), "存在目录吗");
+    if (file.existsSync()) {
+      String str = file.readAsStringSync();
+      var json = jsonDecode(str) as List<dynamic>;
+      final arr = json.map((e) => Chapter(e['cid'], e['name']));
+      catalog.addAll(arr);
+      fetchCatalog();
+      return true;
+    } else {
+      return await fetchCatalog();
+    }
+  }
+
   // 获取目录
   Future<bool> fetchCatalog() async {
     final aid = widget.aid;
     docDir = await getApplicationDocumentsDirectory();
     final dir = Directory("${docDir.path}/books/$aid");
+    final file = File("${dir.path}/catalog.json");
     if (!dir.existsSync()) dir.createSync(recursive: true);
     List<Chapter> cpts = [];
     var res = await API.getNovelIndex(aid);
@@ -649,6 +671,15 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
           }
         }
       }
+      final cptJson = cpts
+          .map((element) {
+            // Log.e(element.json);
+            return element.json;
+          })
+          .toList()
+          .toString();
+      file.writeAsString(cptJson);
+      catalog.clear();
       catalog.addAll(cpts);
       return true;
     } else {
@@ -657,33 +688,37 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
   }
 
   // 获取章节内容
-  Future fetchContent(int index) async {
+  Future fetchContent(int index, {force = false}) async {
+    final aid = widget.aid;
     final cid = catalog[index].cid;
     final title = catalog[index].name;
-    // final name = catalog[index].name;
-    if (totalPage == 0) {
-      menuCatalogKey.currentState!.close();
-      menuBottomWrapperKey.currentState!.close();
-    }
-    var aid = widget.aid;
-    var res = await API.getNovelContent(aid, cid);
-    List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
-    arr.removeRange(0, 2);
-    String content = arr.map((e) {
-      if (title == "插图") {
-        if (e.trim().isNotEmpty) return """<img src="${e.replaceAll("<!--image-->", "")}"/>""";
-        return "";
-      } else {
-        return """<p>$e</p>""";
-      }
-    }).join("\n");
-    if (title == "插图") {
-      content = """<div style="text-indent:0">$content</div>""";
-    }
-    String html = """<body>$content</body>""";
     final file = File("${docDir.path}/books/$aid/$cid.html");
-    file.writeAsString(html);
-    return html;
+    if (file.existsSync() && !force) {
+      Log.e(index, "内容以存在");
+      return file.readAsStringSync();
+    } else {
+      if (totalPage == 0) {
+        menuCatalogKey.currentState!.close();
+        menuBottomWrapperKey.currentState!.close();
+      }
+      var res = await API.getNovelContent(aid, cid);
+      List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
+      arr.removeRange(0, 2);
+      String content = arr.map((e) {
+        if (title == "插图") {
+          if (e.trim().isNotEmpty) return """<img src="${e.replaceAll("<!--image-->", "")}"/>""";
+          return "";
+        } else {
+          return """<p>$e</p>""";
+        }
+      }).join("\n");
+      if (title == "插图") {
+        content = """<div style="text-indent:0">$content</div>""";
+      }
+      String html = """<body>$content</body>""";
+      file.writeAsString(html);
+      return html;
+    }
   }
 
   closeAllSubMenus() {
