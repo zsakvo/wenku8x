@@ -47,6 +47,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   late dynamic pageWidth;
   // 手指滑动判定
   final distance = 8;
+  double moveX = 0;
   // 按下座标
   double tapDownPos = 0.0;
   // 抬起座标
@@ -213,6 +214,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       }
       await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
       currentIndex.value = tmpIndex;
+      moveX = 0;
     }
 
     // 手指落下
@@ -223,11 +225,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
     // 手指移动
     onPointerMove(PointerMoveEvent event) {
       final dx = event.delta.dx;
-      // if (dx.abs() >= distance) {
-      if (menuStatus.value == Menu.none) {
-        webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+      moveX += dx;
+      if (moveX.abs() >= distance) {
+        if (menuStatus.value == Menu.none) {
+          webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+        }
       }
-      // }
     }
 
     // 初始化章节
