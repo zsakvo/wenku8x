@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/data/scheme/case_book.dart';
 import 'package:wenku8x/http/ajax.dart';
@@ -19,9 +20,11 @@ import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
 import 'package:wenku8x/utils/scroll.dart';
 
+late final SharedPreferences spInstance;
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  spInstance = await SharedPreferences.getInstance();
   Isar.openSync([CaseBookSchema, BookRecordSchema]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wenku8x/main.dart';
 import 'package:wenku8x/utils/log.dart';
 
 class PreferenceView extends StatefulHookConsumerWidget {
@@ -24,28 +25,28 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
     final highRefreshRate = useState(false);
     final autoSign = useState(false);
     final traditionalChinese = useState(false);
-    final getSpInstance = useMemoized(() => SharedPreferences.getInstance());
-    final spInstance = useFuture(getSpInstance, initialData: null);
+    // final getSpInstance = useMemoized(() => SharedPreferences.getInstance());
+    // final spInstance = useFuture(getSpInstance, initialData: null);
 
     setSpBool(String key, bool value, ValueNotifier<bool> state) {
-      final sp = spInstance.data;
-      if (sp != null) {
-        state.value = value;
-        sp.setBool(key, value);
-      }
+      // final sp = spInstance.data;
+      // if (spInstance != null) {
+      state.value = value;
+      spInstance.setBool(key, value);
+      // }
     }
 
     useEffect(() {
-      final sp = spInstance.data;
-      Log.d(sp, "??");
-      if (sp != null) {
-        dynamicColor.value = sp.getBool("dynamicColor") ?? true;
-        highRefreshRate.value = sp.getBool("highRefreshRate") ?? false;
-        autoSign.value = sp.getBool("autoSign") ?? false;
-        traditionalChinese.value = sp.getBool("traditionalChinese") ?? false;
-      }
+      // final sp = spInstance.data;
+      Log.d(spInstance, "??");
+      // if (spInstance != null) {
+      dynamicColor.value = spInstance.getBool("dynamicColor") ?? true;
+      highRefreshRate.value = spInstance.getBool("highRefreshRate") ?? false;
+      autoSign.value = spInstance.getBool("autoSign") ?? false;
+      traditionalChinese.value = spInstance.getBool("traditionalChinese") ?? false;
+      // }
       return () {};
-    }, [spInstance.data]);
+    }, []);
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
