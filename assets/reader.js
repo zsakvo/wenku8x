@@ -422,6 +422,22 @@ globalThis.ReaderJs = (() => {
     pageContainer = void 0;
     const shadow = document.getElementById("virtual-reader");
     shadow.innerHTML = "";
+    if (globalThis.config.extraTitle) {
+      const titleWrapprer = document.createElement("div");
+      titleWrapprer.className = "title-wrapper";
+      titleWrapprer.innerText = title;
+      titleWrapprer.setAttribute(
+        "style",
+        `
+        text-indent: 0;
+        margin-top: 32px;
+        margin-bottom: 48px;
+        font-weight: bold;
+        font-size: ${globalThis.config.fontSize + 2}px !important;
+      `
+      );
+      shadow.appendChild(titleWrapprer);
+    }
     for (let child of div.children) {
       shadow.appendChild(child.cloneNode(true));
     }

@@ -395,7 +395,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
                     bottomExtraHeight: ${mediaQueryPadding.bottom},
                     infoBarHeight: 32,
                     enableJsBridge:true,
-                    enableScroll:false
+                    enableScroll:false,
+                    extraTitle: true
                   })
                 """);
               },
