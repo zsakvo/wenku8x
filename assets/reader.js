@@ -416,7 +416,7 @@ globalThis.ReaderJs = (() => {
       }
     }
   }
-  async function appendChapter(body, title, index) {
+  async function appendChapter(body, title) {
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -426,12 +426,13 @@ globalThis.ReaderJs = (() => {
       shadow.appendChild(child.cloneNode(true));
     }
     const pageNum = await initReader();
-    globalThis.JsBridge("notifySize", virtualPageCount, index);
+    globalThis.JsBridge("notifySize", virtualPageCount);
     setupPageInfos(title, virtualPageCount);
     applyRealReader();
-    return pageNum;
+    console.log(pageNum, "appendCpt");
+    return Math.round(pageNum);
   }
-  async function insertChapter(body, title, index) {
+  async function insertChapter(body, title) {
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -441,16 +442,17 @@ globalThis.ReaderJs = (() => {
       shadow.appendChild(child.cloneNode(true));
     }
     const pageNum = await initReader(true);
-    globalThis.JsBridge("notifySize", virtualPageCount, index);
+    globalThis.JsBridge("notifySize", virtualPageCount);
     setupPageInfos(title, virtualPageCount);
     applyRealReader(true);
-    return pageNum;
+    console.log(pageNum, "insertCpt");
+    return Math.round(pageNum);
   }
-  async function refreshChapter(body, title, index) {
+  async function refreshChapter(body, title) {
     var _a;
     (_a = document.getElementById("reader")) == null ? void 0 : _a.remove();
     document.getElementById("virtual-reader").innerHTML = "";
-    return await appendChapter(body, title, index);
+    return await appendChapter(body, title);
   }
   function setFontSize(fontSize) {
     globalThis.config.fontSize = fontSize;

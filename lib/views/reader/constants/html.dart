@@ -6,6 +6,7 @@ const READER_APP = """
 
 <head>
   <meta charset="UTF-8" />
+  <meta name="referrer" content="never" />
   <script src="./reader.js"></script>
   <script type='text/javascript'>
    

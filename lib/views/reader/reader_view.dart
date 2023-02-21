@@ -20,7 +20,6 @@ import 'package:wenku8x/views/reader/components/menu_progress.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
 import 'package:wenku8x/views/reader/constants/html.dart';
-import 'package:wenku8x/views/reader/reader_model.dart';
 
 import 'components/menu_theme.dart';
 import 'constants/theme.dart';
@@ -118,44 +117,36 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 追加章节
     appendChapter(String content, String title, int index) async {
-      final page = (await webViewController.value?.evaluateJavascript(source: """
-        ReaderJs.appendChapter(`$content`,"$title");
-      """) * 1.0 as double).toInt();
+      final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
+return await ReaderJs.appendChapter(`$content`,"$title");
+"""));
+      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      Log.e(page, "refreshChapter");
       chapterPagesMap[index] = page;
       return page;
     }
 
     // 插入章节
     insertChapter(String content, String title, int index) async {
-      // final page = (await webViewController.value?.evaluateJavascript(source: """
-      //   ReaderJs.insertChapter(`$content`,"$title");
-      // """) * 1.0 as double).toInt();
-      final page = (await webViewController.value?.callAsyncJavaScript(functionBody: """
-await ReaderJs.insertChapter(`$content`,"$title");
-"""));
-      Log.e(page, "ps");
-      // chapterPagesMap[index] = page;
-      // currentIndex.value += page;
-      // Log.e(currentIndex.value, "当前页码");
-      // webViewController.value?.evaluateJavascript(source: """
-      //   console.log(document.getElementsByTagName('html')[0].scrollLeft,23333);
-      // """);
-      // return page;
-      return 0;
+      final res = await webViewController.value?.callAsyncJavaScript(functionBody: """
+return ReaderJs.insertChapter(`$content`,"$title");
+""");
+      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      Log.e(page, "insertChapter");
+      chapterPagesMap[index] = page;
+      currentIndex.value += page;
+      return page;
     }
 
     // 刷新章节
     refreshChapter(String content, String title, int index) async {
-      // int page = (await webViewController.value?.evaluateJavascript(source: """
-      //   ReaderJs.refreshChapter(`$content`,"$title");
-      // """) * 1.0 as double).toInt();
-      // chapterPagesMap[index] = page;
-      // return page;
-      final page = (await webViewController.value?.callAsyncJavaScript(functionBody: """
-return await ReaderJs.refreshChapter(`$content`,"$title",$index);
+      final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
+return await ReaderJs.refreshChapter(`$content`,"$title");
 """));
-      Log.e(page, "ps");
-      return 0;
+      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      Log.e(page, "refreshChapter");
+      chapterPagesMap[index] = page;
+      return page;
     }
 
     // 更新样式
@@ -265,14 +256,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
-        int pagePre = (await insertChapter(preContent, catalog[index - 1].name, index - 1));
-        // chapterPagesMap[index - 1] = pagePre;
-        // currentIndex.value += pagePre;
+        await insertChapter(preContent, catalog[index - 1].name, index - 1);
       }
       if (index < catalog.length - 1) {
         final nextContent = await fetchContent(index + 1);
-        // int pageNext = (await appendChapter(nextContent, catalog[index + 1].name));
-        // chapterPagesMap[index + 1] = pageNext;
         appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
       loading.value = false;
@@ -384,6 +371,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             break;
         }
       }
+      return () {};
     }, [menuStatus.value]);
 
     // -----
