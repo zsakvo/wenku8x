@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
 import 'package:wenku8x/views/reader/page_string.dart';
@@ -31,6 +32,9 @@ class MenuCatalogState extends State<MenuCatalog> {
   void initState() {
     super.initState();
     // visible = widget.visible;
+    // SchedulerBinding.instance.addPostFrameCallback((_) {
+    //   scrollController.jumpTo(widget.currentIndex * 46 + 1);
+    // });
   }
 
   void open() {
@@ -47,12 +51,28 @@ class MenuCatalogState extends State<MenuCatalog> {
 
   void toggle() {
     setState(() {
-      if (!visible) {
-        scrollController.jumpTo(widget.currentIndex * 46 + 1);
-      }
+      // if (!visible) {
+      //   scrollController.jumpTo(widget.currentIndex * 46 + 1);
+      // }
       visible = !visible;
     });
   }
+
+  @override
+  void didUpdateWidget(covariant MenuCatalog oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(widget.currentIndex * 46 + 1);
+    });
+  }
+
+  // @override
+  // void didUpdateWidget() {
+  //   if (scrollController.hasClients) {
+  //     scrollController.jumpTo(widget.currentIndex * 46 + 1);
+  //   }
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +106,7 @@ class MenuCatalogState extends State<MenuCatalog> {
                       removeBottom: true,
                       context: context,
                       child: ListView.separated(
+                          physics: const ClampingScrollPhysics(),
                           controller: scrollController,
                           cacheExtent: 46,
                           itemBuilder: (context, index) {
