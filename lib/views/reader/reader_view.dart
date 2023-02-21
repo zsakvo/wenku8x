@@ -434,33 +434,44 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       return () {};
     }, [currentTheme.value]);
 
+    // useEffect(() {
+    //   return () {
+    //     webViewController.value!.loadData(data: "<html></html>");
+    //   };
+    // }, []);
+
     // -----
 
     return Material(
-        child: Stack(
-      children: [
-        Listener(
-            onPointerMove: onPointerMove,
-            onPointerUp: (event) => onPointerUp(
-                  event,
-                ),
-            onPointerDown: onPointerDown,
-            behavior: HitTestBehavior.translucent,
-            child: InAppWebView(
-              onWebViewCreated: (controller) {
-                webViewController.value = controller;
-              },
-              onLongPressHitTestResult: (controller, hitTestResult) {
-                Log.e(hitTestResult.toJson());
-                longHitStatus = LongHitStatus.a;
-              },
-              gestureRecognizers: {
-                Factory<OneSequenceGestureRecognizer>(
-                  () => LongPressGestureRecognizer(),
-                )
-              },
-              onLoadStop: (controller, url) {
-                controller.evaluateJavascript(source: """
+        child: WillPopScope(
+            child: Stack(
+              children: [
+                Listener(
+                    onPointerCancel: (event) {
+                      webViewController.value!
+                          .scrollTo(x: (pageWidth * (currentIndex.value)).round(), y: 0, animated: true);
+                    },
+                    onPointerMove: onPointerMove,
+                    onPointerUp: (event) => onPointerUp(
+                          event,
+                        ),
+                    onPointerDown: onPointerDown,
+                    behavior: HitTestBehavior.translucent,
+                    child: InAppWebView(
+                      onWebViewCreated: (controller) {
+                        webViewController.value = controller;
+                      },
+                      onLongPressHitTestResult: (controller, hitTestResult) {
+                        Log.e(hitTestResult.toJson());
+                        longHitStatus = LongHitStatus.a;
+                      },
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(
+                          () => LongPressGestureRecognizer(),
+                        )
+                      },
+                      onLoadStop: (controller, url) {
+                        controller.evaluateJavascript(source: """
                   ReaderJs.init({
                     bookName: '${widget.name}',
                     horizontal: true,
@@ -482,151 +493,155 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
                     extraTitle: true
                   })
                 """);
-              },
-              initialSettings: InAppWebViewSettings(
-                  pageZoom: 1,
-                  userAgent: "ReaderJs/NoScroll",
-                  verticalScrollBarEnabled: false,
-                  horizontalScrollBarEnabled: false,
-                  disableHorizontalScroll: true,
-                  disableVerticalScroll: true),
-            )),
-        MenuTop(
-          key: menuTopKey,
-          title: widget.name,
-          currentTheme: currentTheme.value,
-        ),
-        MenuCatalog(
-          key: menuCatalogKey,
-          chapters: catalog,
-          currentIndex: bookRecord.chapterIndex,
-          currentTheme: currentTheme.value,
-          // backgroundColor: pannelBackgroundColor,
-          onItemTap: (index, chapter) {
-            bookRecord.pageIndex = 0;
-            menuStatus.value = Menu.none;
-            bookRecord.chapterIndex = index;
-            initChapter(index);
-            // fetchStatus = Fetching.none;
-            // loading.value = true;
-            // totalPage = 0;
-            // currentChapterPage = 0;
-            // currentPage.value = 0;
-            // currentChapterIndex = index;
-            // fetchContent(chapter.cid, chapter.name);
-          },
-        ),
-        MenuTheme(
-          key: menuThemeKey,
-          currentTheme: currentTheme.value,
-          onThemeItemTap: (theme) async {
-            await updateElementStyle(
-                backgroundColor: theme.readerBackgroundColor,
-                textColor: theme.readerTextColor,
-                infoColor: theme.readerInfoColor);
-            // await Future.delayed(const Duration(milliseconds: 300));
-            currentTheme.value = theme;
-          },
-        ),
-        MenuProgress(
-          key: menuProgressKey,
-          currentPage: bookRecord.pageIndex,
-          totalPage: chapterPagesMap[bookRecord.chapterIndex] ?? 0,
-          currentTheme: currentTheme.value,
-          onNextTap: () {},
-          onPreviousTap: () {},
-          onProgressBarValueChangeEnd: (p0) async {
-            final page = p0.toInt();
-            final tmpIndex = currentIndex.value + (page - bookRecord.pageIndex);
-            await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: false);
-            currentIndex.value = tmpIndex;
-            bookRecord.pageIndex = page;
-          },
-        ),
-        MenuText(
-          key: menuTextKey,
-          fontSize: fontSize,
-          lineSpace: lineSpace,
-          currentTheme: currentTheme.value,
-          onFontSizeSlideBarValueChangeEnd: (p0) {
-            setFontSize(p0);
-            spInstance.setDouble("fontSize", p0);
-            initChapter(bookRecord.chapterIndex);
-          },
-          onTextSpaceSlideBarValueChangeEnd: (p0) {
-            setLineSpacing(p0);
-            spInstance.setDouble("lineSpace", p0);
-            initChapter(bookRecord.chapterIndex);
-          },
-          // backgroundColor: Colors.black,
-          // primaryColor: Theme.of(context).colorScheme.primary,
-          // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
-          // tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-        ),
-        MenuConfig(
-          key: menuConfigKey,
-          horizontal: true,
-          volumeKey: true,
-          fullNext: true,
-          hideExtra: true,
-          currentTheme: currentTheme.value,
-          onChange: (key, value) {},
-        ),
-        MenuBottom(
-          key: menuBottomWrapperKey,
-          currentTheme: currentTheme.value,
-          onCatalogTap: () {
-            if (menuStatus.value != Menu.catalog) {
-              menuStatus.value = Menu.catalog;
-            } else {
-              closeAllSubMenus();
-              menuStatus.value = Menu.wrapper;
-            }
-          },
-          onStyleTap: () {
-            if (menuStatus.value != Menu.theme) {
-              menuStatus.value = Menu.theme;
-            } else {
-              closeAllSubMenus();
-              menuStatus.value = Menu.wrapper;
-            }
-          },
-          onProgressTap: () {
-            if (menuStatus.value != Menu.progress) {
-              menuStatus.value = Menu.progress;
-            } else {
-              closeAllSubMenus();
-              menuStatus.value = Menu.wrapper;
-            }
-          },
-          onTextTap: () {
-            if (menuStatus.value != Menu.text) {
-              menuStatus.value = Menu.text;
-            } else {
-              closeAllSubMenus();
-              menuStatus.value = Menu.wrapper;
-            }
-          },
-          onConfigTap: () {
-            if (menuStatus.value != Menu.config) {
-              menuStatus.value = Menu.config;
-            } else {
-              closeAllSubMenus();
-              menuStatus.value = Menu.wrapper;
-            }
-          },
-        ),
-        loading.value
-            ? Container(
-                color: currentTheme.value.readerBackgroundColor,
-                alignment: Alignment.center,
-                child: Text(
-                  "章节加载中，请稍候",
-                  style: TextStyle(fontSize: 15, color: currentTheme.value.readerInfoColor),
-                ))
-            : const SizedBox.shrink()
-      ],
-    ));
+                      },
+                      initialSettings: InAppWebViewSettings(
+                          pageZoom: 1,
+                          userAgent: "ReaderJs/NoScroll",
+                          verticalScrollBarEnabled: false,
+                          horizontalScrollBarEnabled: false,
+                          disableHorizontalScroll: true,
+                          disableVerticalScroll: true),
+                    )),
+                MenuTop(
+                  key: menuTopKey,
+                  title: widget.name,
+                  currentTheme: currentTheme.value,
+                ),
+                MenuCatalog(
+                  key: menuCatalogKey,
+                  chapters: catalog,
+                  currentIndex: bookRecord.chapterIndex,
+                  currentTheme: currentTheme.value,
+                  // backgroundColor: pannelBackgroundColor,
+                  onItemTap: (index, chapter) {
+                    bookRecord.pageIndex = 0;
+                    menuStatus.value = Menu.none;
+                    bookRecord.chapterIndex = index;
+                    initChapter(index);
+                    // fetchStatus = Fetching.none;
+                    // loading.value = true;
+                    // totalPage = 0;
+                    // currentChapterPage = 0;
+                    // currentPage.value = 0;
+                    // currentChapterIndex = index;
+                    // fetchContent(chapter.cid, chapter.name);
+                  },
+                ),
+                MenuTheme(
+                  key: menuThemeKey,
+                  currentTheme: currentTheme.value,
+                  onThemeItemTap: (theme) async {
+                    await updateElementStyle(
+                        backgroundColor: theme.readerBackgroundColor,
+                        textColor: theme.readerTextColor,
+                        infoColor: theme.readerInfoColor);
+                    // await Future.delayed(const Duration(milliseconds: 300));
+                    currentTheme.value = theme;
+                  },
+                ),
+                MenuProgress(
+                  key: menuProgressKey,
+                  currentPage: bookRecord.pageIndex,
+                  totalPage: chapterPagesMap[bookRecord.chapterIndex] ?? 0,
+                  currentTheme: currentTheme.value,
+                  onNextTap: () {},
+                  onPreviousTap: () {},
+                  onProgressBarValueChangeEnd: (p0) async {
+                    final page = p0.toInt();
+                    final tmpIndex = currentIndex.value + (page - bookRecord.pageIndex);
+                    await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: false);
+                    currentIndex.value = tmpIndex;
+                    bookRecord.pageIndex = page;
+                  },
+                ),
+                MenuText(
+                  key: menuTextKey,
+                  fontSize: fontSize,
+                  lineSpace: lineSpace,
+                  currentTheme: currentTheme.value,
+                  onFontSizeSlideBarValueChangeEnd: (p0) {
+                    setFontSize(p0);
+                    spInstance.setDouble("fontSize", p0);
+                    initChapter(bookRecord.chapterIndex);
+                  },
+                  onTextSpaceSlideBarValueChangeEnd: (p0) {
+                    setLineSpacing(p0);
+                    spInstance.setDouble("lineSpace", p0);
+                    initChapter(bookRecord.chapterIndex);
+                  },
+                  // backgroundColor: Colors.black,
+                  // primaryColor: Theme.of(context).colorScheme.primary,
+                  // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                  // tertiaryColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                ),
+                MenuConfig(
+                  key: menuConfigKey,
+                  horizontal: true,
+                  volumeKey: true,
+                  fullNext: true,
+                  hideExtra: true,
+                  currentTheme: currentTheme.value,
+                  onChange: (key, value) {},
+                ),
+                MenuBottom(
+                  key: menuBottomWrapperKey,
+                  currentTheme: currentTheme.value,
+                  onCatalogTap: () {
+                    if (menuStatus.value != Menu.catalog) {
+                      menuStatus.value = Menu.catalog;
+                    } else {
+                      closeAllSubMenus();
+                      menuStatus.value = Menu.wrapper;
+                    }
+                  },
+                  onStyleTap: () {
+                    if (menuStatus.value != Menu.theme) {
+                      menuStatus.value = Menu.theme;
+                    } else {
+                      closeAllSubMenus();
+                      menuStatus.value = Menu.wrapper;
+                    }
+                  },
+                  onProgressTap: () {
+                    if (menuStatus.value != Menu.progress) {
+                      menuStatus.value = Menu.progress;
+                    } else {
+                      closeAllSubMenus();
+                      menuStatus.value = Menu.wrapper;
+                    }
+                  },
+                  onTextTap: () {
+                    if (menuStatus.value != Menu.text) {
+                      menuStatus.value = Menu.text;
+                    } else {
+                      closeAllSubMenus();
+                      menuStatus.value = Menu.wrapper;
+                    }
+                  },
+                  onConfigTap: () {
+                    if (menuStatus.value != Menu.config) {
+                      menuStatus.value = Menu.config;
+                    } else {
+                      closeAllSubMenus();
+                      menuStatus.value = Menu.wrapper;
+                    }
+                  },
+                ),
+                loading.value
+                    ? Container(
+                        color: currentTheme.value.readerBackgroundColor,
+                        alignment: Alignment.center,
+                        child: Text(
+                          "章节加载中，请稍候",
+                          style: TextStyle(fontSize: 15, color: currentTheme.value.readerInfoColor),
+                        ))
+                    : const SizedBox.shrink()
+              ],
+            ),
+            onWillPop: () async {
+              Log.e("准备返回");
+              return true;
+            }));
   }
 
   // 读取目录
