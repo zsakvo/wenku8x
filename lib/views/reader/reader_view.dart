@@ -11,6 +11,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
+import 'package:wenku8x/main.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/utils/util.dart';
@@ -103,7 +104,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   @override
   Widget build(BuildContext context) {
     // 当前主题
-    final currentTheme = useState<ReaderTheme>(readerThemeList[ThemeX.ama.index]);
+    // final currentTheme = useState<ReaderTheme>(readerThemeList[spInstance.getInt("reader_theme") ?? 0]);
+    final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
     // 加载状态
     final loading = useState(true);
     // 文档路径
@@ -405,6 +407,11 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       }
       return () {};
     }, [menuStatus.value]);
+
+    // useEffect(() {
+    //   spInstance.setInt("reader_theme", readerThemeList.indexOf(currentTheme.value));
+    //   return () {};
+    // }, [currentTheme.value]);
 
     // -----
 
