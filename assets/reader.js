@@ -188,7 +188,7 @@ globalThis.ReaderJs = (() => {
       animeHandler();
     });
   }
-  async function setupPaging(insert = false) {
+  async function setupPaging(index) {
     var _a;
     console.log("--->", bookContainer);
     if (!pageContainer) {
@@ -205,6 +205,7 @@ globalThis.ReaderJs = (() => {
       pageContainer.className = "page-container";
       pageContainer.appendChild(bookContainer);
       pageContainer.style.position = "relative";
+      pageContainer.setAttribute("data-cpt", index.toString());
       virtualReader2.replaceChildren(pageContainer);
       resetStyles([pageContainer, bookContainer]);
     }
@@ -240,17 +241,7 @@ globalThis.ReaderJs = (() => {
       return promise;
     }
     await runLoop();
-    if (globalThis.config.horizontal) {
-      virtualPageCount = Math.ceil(
-        virtualReader.scrollWidth / (pageWidth + pageHorizontalMargin)
-      );
-      if (insert)
-        currentPage += virtualPageCount;
-      endSpacer.style.left = virtualPageCount * (pageWidth + pageHorizontalMargin) - 1 + "px";
-      console.log(endSpacer.style.left, "PPP");
-    }
     virtualReader.appendChild(endSpacer);
-    return virtualPageCount;
   }
   function getVirtualSpacer() {
     let endSpacer = document.getElementById("virtual-reader-spacer");
@@ -270,13 +261,24 @@ globalThis.ReaderJs = (() => {
     }
     return endSpacer;
   }
-  async function setupFlow(insert = false) {
-    return await setupPaging(insert);
+  async function setupFlow(index) {
+    await setupPaging(index);
   }
-  async function initReader(insert = false) {
-    return await setupFlow(insert);
+  async function initReader(index) {
+    await setupFlow(index);
   }
-  function setupPageInfos(chapterName, pages) {
+  function setupPageInfos(chapterName, insert = false) {
+    const virtualReader = document.getElementById("virtual-reader");
+    let pages = 0;
+    let endSpacer = getVirtualSpacer();
+    if (globalThis.config.horizontal) {
+      pages = Math.ceil(
+        virtualReader.scrollWidth / (pageWidth + pageHorizontalMargin)
+      );
+      if (insert)
+        currentPage += virtualPageCount;
+      endSpacer.style.left = pages * (pageWidth + pageHorizontalMargin) - 1 + "px";
+    }
     let width = window.innerWidth;
     for (let i = 0; i < pages; i++) {
       const headerElem = document.createElement("div");
@@ -335,6 +337,9 @@ globalThis.ReaderJs = (() => {
       footerElem.innerText = `${i + 1}/${pages}`;
       pageContainer.appendChild(footerElem);
     }
+    pageContainer == null ? void 0 : pageContainer.setAttribute("data-pages", pages.toString());
+    pageContainer == null ? void 0 : pageContainer.setAttribute("data-name", chapterName);
+    return Math.round(pages);
   }
   function initReaderContainerStyle(config) {
     document.body.style.backgroundColor = `#${config.backgroundColor}`;
@@ -366,6 +371,100 @@ globalThis.ReaderJs = (() => {
     const infoStyle = ` .reader-app-page-info {color:#${globalThis.config.infoColor} !important;}`;
     const bookTextStyle = `.book-container {color:#${globalThis.config.textColor}}`;
     globalThis.readerStyleElement.innerText = globalThis.readerContainerSelector + " * { " + style + " } " + bookTextStyle + infoStyle;
+  }
+  function updateReaderPage() {
+    var _a;
+    let width = window.innerWidth;
+    const reader = document.getElementById("reader");
+    const pageContainers = reader.querySelectorAll(".page-container");
+    let endSpacer = document.getElementById("reader-spacer");
+    let allPages = 0;
+    let tmpPage = 0;
+    let pageMap = {};
+    for (let pageContainer2 of pageContainers) {
+      const cpt = pageContainer2.getAttribute("data-cpt");
+      pageContainer2.style.marginLeft = (tmpPage === 0 ? 0 : width * (tmpPage - 1) + 2 * ((_a = globalThis.config) == null ? void 0 : _a.marginHorizontal)) + "px";
+      tmpPage = updatePageInfos(pageContainer2);
+      pageMap[cpt] = tmpPage;
+      allPages += tmpPage;
+    }
+    endSpacer.style.left = allPages * width - 1 + 0 * globalThis.config.marginHorizontal + "px";
+    console.log("xxxx", pageMap);
+    return pageMap;
+  }
+  function updatePageInfos(pageContainer2) {
+    const chapterName = pageContainer2.getAttribute("data-name");
+    let width = window.innerWidth;
+    let pages = 0;
+    pageContainer2.querySelectorAll(".reader-app-page-info").forEach((e) => {
+      e.remove();
+    });
+    if (globalThis.config.horizontal) {
+      pages = Math.ceil(
+        pageContainer2.scrollWidth / (pageWidth + pageHorizontalMargin)
+      );
+    }
+    pageContainer2 == null ? void 0 : pageContainer2.setAttribute("data-pages", pages.toString());
+    for (let i = 0; i < pages; i++) {
+      const headerElem = document.createElement("div");
+      headerElem.className = "reader-app-page-header reader-app-page-info";
+      headerElem.setAttribute(
+        "style",
+        `
+            position: absolute;
+            top: ${-// globalThis.config!.topExtraHeight +
+        (globalThis.config.infoBarHeight + globalThis.config.marginVertical) + "px"};
+            left: ${width * i + "px"};
+            width: 100%;
+            height: ${globalThis.config.infoBarHeight + "px"};
+            box-sizing: border-box;
+            display: flex;
+            align-items: flex-end;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        `
+      );
+      const headerLeftElem = document.createElement("div");
+      headerLeftElem.setAttribute(
+        "style",
+        `
+          display: inline-block; 
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          font-size: 13px !important;
+          // color: #${globalThis.config.infoColor} !important;
+        `
+      );
+      headerLeftElem.innerText = i == 0 ? globalThis.config.bookName : chapterName;
+      headerElem.appendChild(headerLeftElem);
+      pageContainer2.appendChild(headerElem);
+      const footerElem = document.createElement("div");
+      footerElem.className = "reader-app-page-footer reader-app-page-info";
+      footerElem.setAttribute(
+        "style",
+        `
+            position: absolute;
+            bottom: ${-// globalThis.config!.bottomExtraHeight +
+        (globalThis.config.infoBarHeight + globalThis.config.marginVertical) + "px"};
+            left: ${width * i + "px"};
+            width: 100%;
+            height: ${globalThis.config.infoBarHeight + "px"};
+            box-sizing: border-box;
+            font-size: 13px !important;
+            // color: #${globalThis.config.infoColor} !important;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+        `
+      );
+      footerElem.innerText = `${i + 1}/${pages}`;
+      pageContainer2.appendChild(footerElem);
+    }
+    pageContainer2 == null ? void 0 : pageContainer2.setAttribute("data-pages", pages.toString());
+    pageContainer2 == null ? void 0 : pageContainer2.setAttribute("data-name", chapterName);
+    return Math.round(pages);
   }
   function applyRealReader(insert = false) {
     var _a, _b, _c;
@@ -416,7 +515,7 @@ globalThis.ReaderJs = (() => {
       }
     }
   }
-  async function appendChapter(body, title) {
+  async function appendChapter(body, title, index) {
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -442,14 +541,14 @@ globalThis.ReaderJs = (() => {
     for (let child of div.children) {
       shadow.appendChild(child.cloneNode(true));
     }
-    const pageNum = await initReader();
-    globalThis.JsBridge("notifySize", virtualPageCount);
-    setupPageInfos(title, virtualPageCount);
+    await initReader(index);
+    const pageNum = setupPageInfos(title);
+    globalThis.JsBridge("notifySize", pageNum);
     applyRealReader();
     console.log(pageNum, "appendCpt");
     return Math.round(pageNum);
   }
-  async function insertChapter(body, title) {
+  async function insertChapter(body, title, index) {
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -458,26 +557,28 @@ globalThis.ReaderJs = (() => {
     for (let child of div.children) {
       shadow.appendChild(child.cloneNode(true));
     }
-    const pageNum = await initReader(true);
-    globalThis.JsBridge("notifySize", virtualPageCount);
-    setupPageInfos(title, virtualPageCount);
+    await initReader(index);
+    const pageNum = setupPageInfos(title, true);
+    globalThis.JsBridge("notifySize", pageNum);
     applyRealReader(true);
     console.log(pageNum, "insertCpt");
     return Math.round(pageNum);
   }
-  async function refreshChapter(body, title) {
+  async function refreshChapter(body, title, index) {
     var _a;
     (_a = document.getElementById("reader")) == null ? void 0 : _a.remove();
     document.getElementById("virtual-reader").innerHTML = "";
-    return await appendChapter(body, title);
+    return await appendChapter(body, title, index);
   }
   function setFontSize(fontSize) {
     globalThis.config.fontSize = fontSize;
     updateReaderStyleElement();
+    return updateReaderPage();
   }
   function setLineSpacing(lineSpacing) {
     globalThis.config.lineSpacing = lineSpacing;
     updateReaderStyleElement();
+    return updateReaderPage();
   }
   function setTextAlign(textAlign) {
     globalThis.config.textAlign = textAlign;

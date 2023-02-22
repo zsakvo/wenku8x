@@ -137,7 +137,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 追加章节
     appendChapter(String content, String title, int index) async {
       final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
-return await ReaderJs.appendChapter(`$content`,"$title");
+return await ReaderJs.appendChapter(`$content`,"$title",$index);
 """));
       final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
       Log.e(page, "refreshChapter");
@@ -148,7 +148,7 @@ return await ReaderJs.appendChapter(`$content`,"$title");
     // 插入章节
     insertChapter(String content, String title, int index) async {
       final res = await webViewController.value?.callAsyncJavaScript(functionBody: """
-return ReaderJs.insertChapter(`$content`,"$title");
+return ReaderJs.insertChapter(`$content`,"$title",$index);
 """);
       final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
       chapterPagesMap[index] = page;
@@ -159,7 +159,7 @@ return ReaderJs.insertChapter(`$content`,"$title");
     // 刷新章节
     refreshChapter(String content, String title, int index) async {
       final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
-return await ReaderJs.refreshChapter(`$content`,"$title");
+return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 """));
       final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
       Log.e(page, "refreshChapter");
@@ -185,17 +185,44 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
     }
 
     // 设置字号
-    setFontSize(double size) {
-      webViewController.value!.evaluateJavascript(source: """
-        ReaderJs.setFontSize($size)
-      """);
+    setFontSize(double size) async {
+      final res = (await webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.setFontSize($size,${currentIndex.value})
+      """) as Map);
+      chapterPagesMap.clear();
+      int t = 0;
+      for (var k in res.keys) {
+        Log.d([k, res[k]]);
+        int i = int.parse(k);
+        int p = (Platform.isIOS ? (res[k] as double).toInt() : res[k]) as int;
+        if (i < bookRecord.chapterIndex) {
+          t += p;
+        }
+        chapterPagesMap[i] = p;
+      }
+      currentIndex.value = t + bookRecord.pageIndex;
+      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
     }
 
     // 设置间距
-    setLineSpacing(double lineSpacing) {
-      webViewController.value!.evaluateJavascript(source: """
-        ReaderJs.setLineSpacing($lineSpacing)
-      """);
+    setLineSpacing(double lineSpacing) async {
+      final res = (await webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.setLineSpacing($lineSpacing,${currentIndex.value})
+      """) as Map<String, dynamic>);
+      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
+      chapterPagesMap.clear();
+      int t = 0;
+      for (var k in res.keys) {
+        Log.d([k, res[k]]);
+        int i = int.parse(k);
+        int p = (Platform.isIOS ? (res[k] as double).toInt() : res[k]) as int;
+        chapterPagesMap[i] = p;
+        if (i < bookRecord.chapterIndex) {
+          t += p;
+        }
+      }
+      currentIndex.value = t + bookRecord.pageIndex;
+      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
     }
 
     saveRecord() {
@@ -401,6 +428,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
       } else if (menu == Menu.none) {
         menuBottomWrapperKey.currentState?.close();
         menuTopKey.currentState?.close();
+        closeAllSubMenus();
       } else {
         menuTopKey.currentState?.close();
         closeAllSubMenus();
@@ -562,12 +590,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title");
                   onFontSizeSlideBarValueChangeEnd: (p0) {
                     setFontSize(p0);
                     spInstance.setDouble("fontSize", p0);
-                    initChapter(bookRecord.chapterIndex);
+                    // initChapter(bookRecord.chapterIndex);
                   },
                   onTextSpaceSlideBarValueChangeEnd: (p0) {
                     setLineSpacing(p0);
                     spInstance.setDouble("lineSpace", p0);
-                    initChapter(bookRecord.chapterIndex);
+                    // initChapter(bookRecord.chapterIndex);
                   },
                   // backgroundColor: Colors.black,
                   // primaryColor: Theme.of(context).colorScheme.primary,
