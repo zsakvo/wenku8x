@@ -347,6 +347,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       await refreshChapter(content, catalog[index].name, index);
       currentIndex.value += bookRecord.pageIndex;
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
+      loading.value = false;
       if (index > 0) {
         final preContent = await fetchContent(index - 1);
         await insertChapter(preContent, catalog[index - 1].name, index - 1);
@@ -355,7 +356,6 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         final nextContent = await fetchContent(index + 1);
         await appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
-      loading.value = false;
     }
 
     // 初始化信息
