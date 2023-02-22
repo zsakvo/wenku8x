@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/book_meta.dart';
 import 'package:wenku8x/utils/log.dart';
 
@@ -36,6 +37,12 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
     final showAppBarTitle = useState(false);
     final isInShelf = useState(false);
     final scrollController = useScrollController(keepScrollOffset: true);
+    // final addBookFuture = useFuture(useMemoized(() {
+    //   if (meta.hasValue) {
+    //     return API.addBookToShelf(meta.value!.aid);
+    //   }
+    //   return null;
+    // }, [meta.value]));
     scrollController.addListener(() {
       double pos = scrollController.position.pixels;
       // ref.read(appBarTitleProvider.notifier).setTitle(pos <= 50.w);
@@ -144,7 +151,12 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                   style: FilledButton.styleFrom(
                                       minimumSize: Size(124.w, 64.w),
                                       backgroundColor: Theme.of(context).colorScheme.error),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var res = await API.delBookFromShelf(meta.aid);
+                                    if (res == 1) {
+                                      isInShelf.value = false;
+                                    }
+                                  },
                                   icon: Icon(
                                     Icons.remove_circle_outline,
                                     size: 32.sp,
@@ -160,7 +172,12 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                       minimumSize: Size(124.w, 64.w),
                                       side: BorderSide(
                                           color: Theme.of(context).colorScheme.outline.withOpacity(0.5), width: 0.8)),
-                                  onPressed: () {},
+                                  onPressed: () async {
+                                    var res = await API.addBookToShelf(meta.aid);
+                                    if (res == 1) {
+                                      isInShelf.value = true;
+                                    }
+                                  },
                                   child: Row(
                                     children: [
                                       Padding(
