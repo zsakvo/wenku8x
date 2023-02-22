@@ -41,7 +41,7 @@ dependencies:
   dynamic_color: ^1.5.4
   # go_router:
   #   path: modules/go_router
-  go_router: ^5.2.4
+  go_router: ^6.0.9
   hooks_riverpod: ^2.1.1
   flutter_hooks: ^0.18.5+1
   dio: ^4.0.6

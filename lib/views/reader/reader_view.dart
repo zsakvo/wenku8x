@@ -309,6 +309,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     onPointerDown(PointerDownEvent event) {
       // if (longHitStatus != LongHitStatus.c) return;
       moveX = 0;
+      webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.enableLongHit()
+      """);
       tapDownPos = event.position.dx;
       tapDownPosY = event.position.dy;
     }
@@ -316,6 +319,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     // 手指移动
     onPointerMove(PointerMoveEvent event) {
       if (longHitStatus != LongHitStatus.c) return;
+      webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.disableLongHit()
+      """);
       final dx = event.delta.dx;
       moveX += dx;
       if (moveX.abs() >= distance) {
@@ -491,7 +497,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       },
                       onLongPressHitTestResult: (controller, hitTestResult) {
                         Log.e(hitTestResult.toJson());
-                        longHitStatus = LongHitStatus.a;
+                        if (hitTestResult.extra != null) {
+                          longHitStatus = LongHitStatus.a;
+                        }
                       },
                       gestureRecognizers: {
                         Factory<OneSequenceGestureRecognizer>(

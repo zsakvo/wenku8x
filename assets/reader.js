@@ -103,6 +103,12 @@ const jumpToPage = (page) => {
   document.getElementsByTagName("html")[0].scrollTo(window.innerWidth * page, 0);
   return setTimeout(() => true);
 };
+function disableLongHit() {
+  document.body.style.userSelect = "none";
+}
+function enableLongHit() {
+  document.body.style.userSelect = "unset";
+}
 const ua = navigator.userAgent;
 const isApp = ua.indexOf("ReaderJs") > -1;
 console.log("xxx", isApp);
@@ -629,6 +635,8 @@ globalThis.ReaderJs = (() => {
     setInfoColor,
     setTextIndent,
     jumpToPage,
-    updateTheme
+    updateTheme,
+    disableLongHit,
+    enableLongHit
   };
 })();

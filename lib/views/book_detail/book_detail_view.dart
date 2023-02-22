@@ -5,8 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wenku8x/modals/book_meta.dart';
+import 'package:wenku8x/utils/log.dart';
 
+import '../../data/scheme/case_book.dart';
 import '../../modals/chapter.dart';
+import '../home/home_model.dart';
 import 'book_detail_model.dart';
 
 class BookDetailView extends StatefulHookConsumerWidget {
@@ -26,16 +29,41 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
   @override
   Widget build(BuildContext context) {
     final AsyncValue<BookMeta> meta = ref.watch(bookMetaProvider(widget.aid));
-    final AsyncValue<List<Chapter>> catalog =
-        ref.watch(catalogProvider(widget.aid));
-    final appBarTitle = ref.watch(appBarTitleProvider);
+    final AsyncValue<List<Chapter>> catalog = ref.watch(catalogProvider(widget.aid));
+    final List<CaseBook> booksList = ref.watch(booksListProvider);
+    // final appBarTitle = ref.watch(appBarTitleProvider);
+    final appBarTitle = useState("");
+    final showAppBarTitle = useState(false);
+    final isInShelf = useState(false);
     final scrollController = useScrollController(keepScrollOffset: true);
     scrollController.addListener(() {
       double pos = scrollController.position.pixels;
-      ref.read(appBarTitleProvider.notifier).setTitle(pos <= 50.w);
+      // ref.read(appBarTitleProvider.notifier).setTitle(pos <= 50.w);
+      showAppBarTitle.value = pos > 50.w;
     });
+
+    useEffect(() {
+      final show = showAppBarTitle.value;
+      if (show && meta.value != null) {
+        appBarTitle.value = meta.value!.title!;
+      } else {
+        appBarTitle.value = "";
+      }
+      return () {};
+    }, [showAppBarTitle.value]);
+
+    useEffect(() {
+      final metaValue = meta.value;
+      if (metaValue != null && booksList.isNotEmpty) {
+        int i = booksList.indexWhere((element) => element.aid == metaValue.aid);
+        Log.e(i, "位置");
+        isInShelf.value = (i > -1);
+      }
+      return () {};
+    }, [meta.value, booksList]);
     return meta.when(
       data: (meta) {
+        // appBarTitle.value = meta.title!;
         return Scaffold(
           body: CustomScrollView(
             controller: scrollController,
@@ -51,12 +79,10 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                       },
                     ),
                   ),
-                  actions: [
-                    IconButton(onPressed: () {}, icon: const Icon(Icons.search))
-                  ],
+                  actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
                   centerTitle: false,
                   title: Text(
-                    appBarTitle,
+                    appBarTitle.value,
                     style: TextStyle(fontSize: 32.sp),
                   )),
               SliverToBoxAdapter(
@@ -90,27 +116,18 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                             style: TextStyle(
                                 fontSize: 25.sp,
                                 height: 1.6,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onBackground
-                                    .withOpacity(0.7)),
+                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
                           ),
                           Text(meta.pressValue!,
                               style: TextStyle(
                                   fontSize: 25.sp,
                                   height: 1.6,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground
-                                      .withOpacity(0.7))),
+                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
                           Text("${meta.status!} / ${meta.bookLength!}字",
                               style: TextStyle(
                                   fontSize: 25.sp,
                                   height: 1.6,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground
-                                      .withOpacity(0.7))),
+                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
                         ]),
                   ))
                 ]),
@@ -122,33 +139,45 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                       children: [
                         Padding(
                           padding: EdgeInsets.only(right: 26.w),
-                          child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                  minimumSize: Size(124.w, 64.w),
-                                  side: BorderSide(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .outline
-                                          .withOpacity(0.5),
-                                      width: 0.8)),
-                              onPressed: () {},
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.only(right: 12.w),
-                                    child: Icon(
-                                      Icons.favorite_border,
-                                      size: 32.sp,
-                                    ),
+                          child: isInShelf.value
+                              ? FilledButton.icon(
+                                  style: FilledButton.styleFrom(
+                                      minimumSize: Size(124.w, 64.w),
+                                      backgroundColor: Theme.of(context).colorScheme.error),
+                                  onPressed: () {},
+                                  icon: Icon(
+                                    Icons.remove_circle_outline,
+                                    size: 32.sp,
                                   ),
-                                  Transform.translate(
+                                  label: Transform.translate(
                                       offset: Offset(0, -2.w),
                                       child: Text(
-                                        "添加至书架",
+                                        "移除此书籍",
                                         style: TextStyle(fontSize: 26.sp),
-                                      ))
-                                ],
-                              )),
+                                      )))
+                              : OutlinedButton(
+                                  style: OutlinedButton.styleFrom(
+                                      minimumSize: Size(124.w, 64.w),
+                                      side: BorderSide(
+                                          color: Theme.of(context).colorScheme.outline.withOpacity(0.5), width: 0.8)),
+                                  onPressed: () {},
+                                  child: Row(
+                                    children: [
+                                      Padding(
+                                        padding: EdgeInsets.only(right: 12.w),
+                                        child: Icon(
+                                          Icons.favorite_border,
+                                          size: 32.sp,
+                                        ),
+                                      ),
+                                      Transform.translate(
+                                          offset: Offset(0, -2.w),
+                                          child: Text(
+                                            "添加至书架",
+                                            style: TextStyle(fontSize: 26.sp),
+                                          ))
+                                    ],
+                                  )),
                         ),
                         IconButton(
                             onPressed: () {},
@@ -167,16 +196,13 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+                  padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
                   child: RichText(
                       text: TextSpan(children: [
                     TextSpan(
                         text: "书籍简介\n",
-                        style: TextStyle(
-                            fontSize: 40.sp,
-                            height: 1,
-                            color: Theme.of(context).colorScheme.onBackground)),
+                        style:
+                            TextStyle(fontSize: 40.sp, height: 1, color: Theme.of(context).colorScheme.onBackground)),
                     WidgetSpan(
                         child: SizedBox(
                       height: 56.w,
@@ -184,32 +210,25 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                     TextSpan(
                         text: meta.intro,
                         style: TextStyle(
-                            fontSize: 28.sp,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onBackground
-                                .withOpacity(0.7)))
+                            fontSize: 28.sp, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)))
                   ])),
                 ),
               ),
               SliverToBoxAdapter(
                 child: Container(
                     alignment: Alignment.center,
-                    padding:
-                        EdgeInsets.symmetric(vertical: 24.w, horizontal: 40.w),
+                    padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 40.w),
                     child: TextButton(
                         style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30)),
-                            backgroundColor:
-                                Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                            backgroundColor: Theme.of(context).colorScheme.primary,
                             minimumSize: Size(double.infinity, 80.w)),
-                        onPressed: () async {},
+                        onPressed: () {
+                          GoRouter.of(context).push("/reader?aid=${meta.aid}&name=${meta.title}");
+                        },
                         child: Text(
                           "开始阅读",
-                          style: TextStyle(
-                              fontSize: 26.sp,
-                              color: Theme.of(context).colorScheme.onPrimary),
+                          style: TextStyle(fontSize: 26.sp, color: Theme.of(context).colorScheme.onPrimary),
                         ))),
               ),
               catalog.when(
@@ -218,27 +237,18 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                         delegate: SliverChildBuilderDelegate(
                           (_, index) => index == 0
                               ? ListTile(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 40.w),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 40.w),
                                   title: Text(
                                     "共 ${data.length} 章",
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .primary),
+                                    style: TextStyle(color: Theme.of(context).colorScheme.primary),
                                   ),
                                   shape: Border(
                                     bottom: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline
-                                            .withOpacity(0.1),
-                                        width: 0.5),
+                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1), width: 0.5),
                                   ),
                                 )
                               : ListTile(
-                                  contentPadding:
-                                      EdgeInsets.symmetric(horizontal: 40.w),
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 40.w),
                                   title: Text(
                                     data[index - 1].name,
                                     style: TextStyle(fontSize: 26.sp),
@@ -246,11 +256,7 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                   trailing: const Icon(Icons.cloud_outlined),
                                   shape: Border(
                                     bottom: BorderSide(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .outline
-                                            .withOpacity(0.1),
-                                        width: 0.5),
+                                        color: Theme.of(context).colorScheme.outline.withOpacity(0.1), width: 0.5),
                                   ),
                                 ),
                           childCount: data.length + 1,
