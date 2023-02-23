@@ -1,13 +1,14 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/list_book.dart';
 import 'package:wenku8x/utils/constant.dart';
+import 'package:wenku8x/utils/log.dart';
 
 import 'package:wenku8x/widgets/list_book.dart';
-
-import 'rank_model.dart';
 
 class RankView extends StatefulHookConsumerWidget {
   final String type;
@@ -19,23 +20,30 @@ class RankView extends StatefulHookConsumerWidget {
 
 class _RankViewState extends ConsumerState<RankView> {
   var top = 0.0;
-  @override
-  void initState() {
-    super.initState();
-    ref.read(booksListProvider.notifier).refresh(widget.type);
-  }
+  int page = 1;
 
   @override
   Widget build(BuildContext context) {
     final type = widget.type;
-    final List<ListBook> booksList = ref.watch(booksListProvider);
+    final booksList = useState<List<ListBook>>([]);
+
+    fetchBookList() async {
+      var res = await API.getNovelList(type, page);
+      booksList.value = [...booksList.value, ...res];
+    }
 
     return Scaffold(
       body: EasyRefresh(
-          onRefresh: () =>
-              ref.read(booksListProvider.notifier).refresh(widget.type),
-          onLoad: () =>
-              ref.read(booksListProvider.notifier).loadMore(widget.type),
+          refreshOnStart: true,
+          onRefresh: () {
+            booksList.value.clear();
+            page = 1;
+            fetchBookList();
+          },
+          onLoad: () {
+            page++;
+            fetchBookList();
+          },
           child: CustomScrollView(
             slivers: [
               SliverAppBar.large(
@@ -50,14 +58,12 @@ class _RankViewState extends ConsumerState<RankView> {
                     },
                   ),
                 ),
-                flexibleSpace: LayoutBuilder(builder:
-                    (BuildContext context, BoxConstraints constraints) {
+                flexibleSpace: LayoutBuilder(builder: (BuildContext context, BoxConstraints constraints) {
                   top = constraints.biggest.height;
                   return FlexibleSpaceBar(
                     title: Text(
                       RankMap[type]!,
-                      style: TextStyle(
-                          color: Theme.of(context).textTheme.titleLarge?.color),
+                      style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
                     ),
                     centerTitle: false,
                     titlePadding: EdgeInsetsDirectional.only(
@@ -71,7 +77,7 @@ class _RankViewState extends ConsumerState<RankView> {
               const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
               SliverList(
                   delegate: SliverChildListDelegate(
-                booksList
+                booksList.value
                     .map((book) => ListBookTile(context,
                             cover: book.cover,
                             name: book.title,

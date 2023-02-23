@@ -4,6 +4,7 @@ final RankMap = {
   "lastupdate": "最近更新",
   "allvote": "推荐榜",
   "allvisit": "点击榜",
+  "goodnum": "收藏榜",
   "postdate": "最新入库",
   "size": "字数排行",
   "fullflag": "完结榜"

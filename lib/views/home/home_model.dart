@@ -15,8 +15,7 @@ class DrawerToggle extends StateNotifier<bool> {
   void toogle() => !state;
 }
 
-final booksListProvider =
-    StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
+final booksListProvider = StateNotifierProvider<BookListNotifier, List<CaseBook>>((ref) {
   return BookListNotifier();
 });
 
@@ -44,5 +43,19 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
         }
       });
     }
+  }
+
+  void addBook(CaseBook book) async {
+    state = [book, ...state];
+    await isar!.writeTxn(() async {
+      await isar!.caseBooks.put(book);
+    });
+  }
+
+  void delBook(dynamic aid) async {
+    state = state.where((element) => element.aid != aid).toList();
+    await isar!.writeTxn(() async {
+      await isar!.caseBooks.filter().aidEqualTo(aid).deleteAll();
+    });
   }
 }

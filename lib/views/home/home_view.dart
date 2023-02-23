@@ -83,7 +83,6 @@ class _HomeViewState extends ConsumerState<HomeView> {
       drawer: NavigationDrawer(
         selectedIndex: -1,
         onDestinationSelected: (value) {
-          Log.d(value, "vvvv");
           switch (value) {
             case 2:
               GoRouter.of(context).push("/rank/allvisit");
@@ -92,7 +91,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
               GoRouter.of(context).push("/rank/allvote");
               break;
             case 4:
-              GoRouter.of(context).push("/rank/allvisit");
+              GoRouter.of(context).push("/rank/goodnum");
               break;
             case 5:
               GoRouter.of(context).push("/rank/size");
