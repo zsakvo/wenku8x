@@ -16,8 +16,8 @@ class _SearchViewState extends ConsumerState<SearchView> {
     TextEditingController searchController = useTextEditingController();
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:
-            Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.4),
+        titleSpacing: 0,
+        backgroundColor: Theme.of(context).colorScheme.secondaryContainer.withOpacity(0.4),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {

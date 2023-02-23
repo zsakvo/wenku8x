@@ -84,6 +84,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
         selectedIndex: -1,
         onDestinationSelected: (value) {
           switch (value) {
+            case 0:
+              GoRouter.of(context).push("/search");
+              break;
             case 2:
               GoRouter.of(context).push("/rank/allvisit");
               break;
