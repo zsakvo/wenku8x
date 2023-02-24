@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wenku8x/data/scheme/history_book.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/book_meta.dart';
 import 'package:wenku8x/utils/log.dart';
@@ -62,6 +63,8 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
             bookLength: elements[8].getAttribute("value").toString(),
             latestSection: elements[10].innerText,
             intro: intro);
+        ref.read(historyBooksListProvider.notifier).addBook(HistoryBook(elements[0].innerText, widget.aid,
+            bookMeta.value!.cover, elements[9].getAttribute("value").toString(), elements[10].innerText));
       } else {
         throw Exception("内容获取失败");
       }

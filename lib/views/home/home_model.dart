@@ -4,6 +4,7 @@ import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/utils/log.dart';
 
 import '../../data/scheme/case_book.dart';
+import '../../data/scheme/history_book.dart';
 
 final drawerToggleProvider = StateNotifierProvider((ref) {
   return DrawerToggle();
@@ -56,6 +57,48 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
     state = state.where((element) => element.aid != aid).toList();
     await isar!.writeTxn(() async {
       await isar!.caseBooks.filter().aidEqualTo(aid).deleteAll();
+    });
+  }
+}
+
+final historyBooksListProvider = StateNotifierProvider<HistoryBookListNotifier, List<HistoryBook>>((ref) {
+  return HistoryBookListNotifier();
+});
+
+class HistoryBookListNotifier extends StateNotifier<List<HistoryBook>> {
+  Isar? isar;
+
+  HistoryBookListNotifier() : super([]) {
+    if (isar == null) {
+      var isarInstance = Isar.getInstance();
+      if (isarInstance == null) {
+        isar = Isar.openSync([HistoryBookSchema]);
+      } else {
+        isar = isarInstance;
+      }
+    }
+  }
+
+  void addBook(HistoryBook book) async {
+    if (state.indexWhere((element) => element.aid == book.aid) == -1) {
+      state = [book, ...state];
+      await isar!.writeTxn(() async {
+        await isar!.historyBooks.put(book);
+      });
+    }
+  }
+
+  void delBook(dynamic aid) async {
+    state = state.where((element) => element.aid != aid).toList();
+    await isar!.writeTxn(() async {
+      await isar!.historyBooks.filter().aidEqualTo(aid).deleteAll();
+    });
+  }
+
+  void clear() async {
+    state = [];
+    await isar!.writeTxn(() async {
+      await isar!.historyBooks.where().deleteAll();
     });
   }
 }

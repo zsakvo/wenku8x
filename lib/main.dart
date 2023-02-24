@@ -20,12 +20,14 @@ import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
 import 'package:wenku8x/utils/scroll.dart';
 
+import 'data/scheme/history_book.dart';
+
 late final SharedPreferences spInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   spInstance = await SharedPreferences.getInstance();
-  Isar.openSync([CaseBookSchema, BookRecordSchema]);
+  Isar.openSync([CaseBookSchema, BookRecordSchema, HistoryBookSchema]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
   const systemUiOverlayStyle =
       SystemUiOverlayStyle(statusBarColor: Colors.transparent, systemNavigationBarColor: Colors.transparent);

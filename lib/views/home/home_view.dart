@@ -87,6 +87,9 @@ class _HomeViewState extends ConsumerState<HomeView> {
             case 0:
               GoRouter.of(context).push("/search");
               break;
+            case 1:
+              GoRouter.of(context).push("/history");
+              break;
             case 2:
               GoRouter.of(context).push("/rank/allvisit");
               break;
