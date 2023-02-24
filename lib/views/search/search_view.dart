@@ -31,13 +31,17 @@ class _SearchViewState extends ConsumerState<SearchView> {
           decoration: InputDecoration(
               suffixIcon: IconButton(
                   onPressed: () {
-                    searchController.clear();
+                    if (searchController.text.isEmpty) {
+                      GoRouter.of(context).pop();
+                    } else {
+                      searchController.clear();
+                    }
                   },
                   icon: const Icon(Icons.clear)),
               border: const OutlineInputBorder(borderSide: BorderSide.none),
               hintText: "搜索书籍或作者"),
           onSubmitted: (value) {
-            GoRouter.of(context).push("/search_result/$value");
+            GoRouter.of(context).pushReplacement("/search_result/$value");
           },
         ),
       ),
