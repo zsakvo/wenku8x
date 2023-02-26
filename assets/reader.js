@@ -522,6 +522,7 @@ globalThis.ReaderJs = (() => {
     }
   }
   async function appendChapter(body, title, index) {
+    console.log("追加内容", title.length, body.length);
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -555,6 +556,7 @@ globalThis.ReaderJs = (() => {
     return Math.round(pageNum);
   }
   async function insertChapter(body, title, index) {
+    console.log("插入内容", title.length, body.length);
     const div = document.createElement("div");
     div.innerHTML = body;
     pageContainer = void 0;
@@ -572,6 +574,7 @@ globalThis.ReaderJs = (() => {
   }
   async function refreshChapter(body, title, index) {
     var _a;
+    console.log("刷新内容", title.length, body.length);
     (_a = document.getElementById("reader")) == null ? void 0 : _a.remove();
     document.getElementById("virtual-reader").innerHTML = "";
     return await appendChapter(body, title, index);

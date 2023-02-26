@@ -102,3 +102,14 @@ class HistoryBookListNotifier extends StateNotifier<List<HistoryBook>> {
     });
   }
 }
+
+final appLogProvider = StateNotifierProvider<AppLogNotifier, String>((ref) {
+  return AppLogNotifier();
+});
+
+class AppLogNotifier extends StateNotifier<String> {
+  AppLogNotifier() : super("");
+  append(String log) {
+    state += "\n\n$log";
+  }
+}

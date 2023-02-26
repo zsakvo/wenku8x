@@ -14,6 +14,7 @@ import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/main.dart';
 import 'package:wenku8x/modals/chapter.dart';
+import 'package:wenku8x/utils/flash.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/utils/util.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
@@ -337,23 +338,23 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 初始化章节
-    initChapter(int index) async {
+    initChapter(int index, {force = false}) async {
       chapterPagesMap.clear();
       loading.value = true;
       currentIndex.value = 0;
       await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
       // 直接一次性加载三章内容，滚动到正确位置后再展示
-      final content = await fetchContent(index);
+      final content = await fetchContent(index, force: force);
       await refreshChapter(content, catalog[index].name, index);
       currentIndex.value += bookRecord.pageIndex;
       await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
 
       if (index > 0) {
-        final preContent = await fetchContent(index - 1);
+        final preContent = await fetchContent(index - 1, force: force);
         await insertChapter(preContent, catalog[index - 1].name, index - 1);
       }
       if (index < catalog.length - 1) {
-        final nextContent = await fetchContent(index + 1);
+        final nextContent = await fetchContent(index + 1, force: force);
         await appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
       loading.value = false;
@@ -385,6 +386,31 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             callback: (args) {
               final handler = args[0];
               switch (handler) {
+                case 'loadSuccess':
+                  // showErrorToast(context, "loadSuccess");
+                  webviewControllerValue.evaluateJavascript(source: """
+                    ReaderJs.init({
+                      bookName: '${widget.name}',
+                      horizontal: true,
+                      marginHorizontal: 18,
+                      marginVertical: 18,
+                      textIndent: 36,
+                      fontSize: $fontSize,
+                      textAlign: 1, //0 start,1 justify,2 end,3 center
+                      lineSpacing: $lineSpace,
+                      backgroundColor: '${Util.getJsColor(currentTheme.value.readerBackgroundColor)}',
+                      textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
+                      infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
+                      linkColor: '000000',
+                      topExtraHeight: ${mediaQueryPadding.top},
+                      bottomExtraHeight: ${mediaQueryPadding.bottom},
+                      infoBarHeight: 32,
+                      enableJsBridge:true,
+                      enableScroll:false,
+                      extraTitle: true
+                    })
+                  """);
+                  break;
                 case 'initDone':
                   pageWidth = args[1] * extraRate;
                   initChapter(bookRecord.chapterIndex);
@@ -493,8 +519,15 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                     onPointerDown: onPointerDown,
                     behavior: HitTestBehavior.translucent,
                     child: InAppWebView(
+                      onRenderProcessGone: (controller, detail) {
+                        showErrorToast(context, detail.didCrash);
+                      },
                       onWebViewCreated: (controller) {
                         webViewController.value = controller;
+                      },
+                      onConsoleMessage: (controller, consoleMessage) {
+                        // showErrorToast(context, consoleMessage.message);
+                        Log.d(consoleMessage.message);
                       },
                       onLongPressHitTestResult: (controller, hitTestResult) {
                         Log.e(hitTestResult.toJson());
@@ -508,28 +541,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                         )
                       },
                       onLoadStop: (controller, url) {
-                        controller.evaluateJavascript(source: """
-                  ReaderJs.init({
-                    bookName: '${widget.name}',
-                    horizontal: true,
-                    marginHorizontal: 18,
-                    marginVertical: 18,
-                    textIndent: 36,
-                    fontSize: $fontSize,
-                    textAlign: 1, //0 start,1 justify,2 end,3 center
-                    lineSpacing: $lineSpace,
-                    backgroundColor: '${Util.getJsColor(currentTheme.value.readerBackgroundColor)}',
-                    textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
-                    infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
-                    linkColor: '000000',
-                    topExtraHeight: ${mediaQueryPadding.top},
-                    bottomExtraHeight: ${mediaQueryPadding.bottom},
-                    infoBarHeight: 32,
-                    enableJsBridge:true,
-                    enableScroll:false,
-                    extraTitle: true
-                  })
-                """);
+                        // showErrorToast(context, "loadstop");
                       },
                       initialSettings: InAppWebViewSettings(
                           pageZoom: 1,
@@ -543,6 +555,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   key: menuTopKey,
                   title: widget.name,
                   currentTheme: currentTheme.value,
+                  onForceRefresh: () {
+                    initChapter(bookRecord.chapterIndex, force: true);
+                  },
                 ),
                 MenuCatalog(
                   key: menuCatalogKey,
@@ -665,7 +680,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   },
                 ),
                 loading.value
-                    ? Container(
+                    ?
+                    // const SizedBox.shrink()
+                    Container(
                         color: currentTheme.value.readerBackgroundColor,
                         alignment: Alignment.center,
                         child: Text(
@@ -677,6 +694,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             ),
             onWillPop: () async {
               Log.e("准备返回");
+              webViewController.value!.loadUrl(urlRequest: URLRequest(url: WebUri("about:blank")));
               // if (menuStatus.value != Menu.none) {
               //   if (menuStatus.value != Menu.wrapper) {
               //     closeAllSubMenus();

@@ -6,6 +6,7 @@ class MenuTop extends StatefulWidget {
   const MenuTop(
       {Key? key,
       required this.title,
+      required this.onForceRefresh,
       // required this.visible,
       // required this.backgroundColor,
       required this.currentTheme})
@@ -15,7 +16,7 @@ class MenuTop extends StatefulWidget {
   final String title;
   final ReaderTheme currentTheme;
 
-  // final void Function() onCatalogTap;
+  final void Function() onForceRefresh;
 
   @override
   State<MenuTop> createState() => MenuTopState();
@@ -84,9 +85,10 @@ class MenuTopState extends State<MenuTop> {
                         style:
                             TextStyle(fontWeight: FontWeight.bold, color: currentTheme.pannelTextColor, fontSize: 16),
                       )),
-                      const SizedBox(
-                        width: 36,
-                      )
+                      IconButton(onPressed: widget.onForceRefresh, icon: const Icon(Icons.refresh)),
+                      // const SizedBox(
+                      //   width: 36,
+                      // )
                     ],
                   ))),
         ));

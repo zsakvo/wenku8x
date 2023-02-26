@@ -71,7 +71,7 @@ class AppPages {
         builder: (context, state) {
           final aid = state.queryParams['aid']!;
           final name = state.queryParams['name']!;
-          return ReaderView(key: UniqueKey(), aid: aid, name: name);
+          return ReaderView(aid: aid, name: name);
         },
       ),
       GoRoute(

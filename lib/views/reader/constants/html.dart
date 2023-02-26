@@ -8,11 +8,6 @@ const READER_APP = """
   <meta charset="UTF-8" />
   <meta name="referrer" content="never" />
   <script src="./reader.js"></script>
-  <script type='text/javascript'>
-   
-  </script>
-  <!-- <script src="./src/demo.ts" defer></script> -->
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, user-scalable=no" />
   <title>Reader App</title>
 </head>
@@ -23,6 +18,11 @@ const READER_APP = """
     <div id="virtual-reader"></div>
   </div>
 </body>
+
+
+<script type='text/javascript'>
+  globalThis.JsBridge('loadSuccess', true)
+</script>
 
 </html>
 """;

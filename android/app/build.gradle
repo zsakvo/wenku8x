@@ -60,6 +60,12 @@ android {
     }
 
     signingConfigs {
+        debug {
+            storeFile file(keyProperties['storeFile'])
+            storePassword keyProperties['storePassword']
+            keyAlias keyProperties['keyAlias']
+            keyPassword keyProperties['keyPassword']
+        }
         release {
             storeFile file(keyProperties['storeFile'])
             storePassword keyProperties['storePassword']
