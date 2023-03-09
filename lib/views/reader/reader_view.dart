@@ -772,6 +772,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     final cid = catalog[index].cid;
     final title = catalog[index].name;
     final file = File("${docDir.path}/books/$aid/$cid.html");
+    force = true;
     if (file.existsSync() && !force) {
       Log.e(index, "内容以存在");
       return file.readAsStringSync();
@@ -794,7 +795,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       if (title == "插图") {
         content = """<div style="text-indent:0">$content</div>""";
       }
-      String html = """<body>$content</body>""";
+      String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title></title></head><body>$content</body></html>""";
+      Log.e(file.path);
       file.writeAsString(html);
       return html;
     }
