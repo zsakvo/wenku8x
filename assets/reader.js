@@ -16,7 +16,7 @@ globalThis.ReaderJs = (() => {
   let virtualReaderContainerSelector = "";
   let pageHorizontalMargin;
   let pageWidth;
-  let windowWidth = innerWidth;
+  let windowWidth = "";
   const tanslateImg = `<img id="translate-img" class="translate-img" src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH/C1hNUCBEYXRhWE1QPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNS41LWMwMTQgNzkuMTUxNDgxLCAyMDEzLzAzLzEzLTEyOjA5OjE1ICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdFJlZj0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlUmVmIyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ0MgKE1hY2ludG9zaCkiIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6MjI2ODJCNzlCQTVCMTFFNDk4RTVBQjQ2RjYyOTA1QzgiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6MjI2ODJCN0FCQTVCMTFFNDk4RTVBQjQ2RjYyOTA1QzgiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDoyMjY4MkI3N0JBNUIxMUU0OThFNUFCNDZGNjI5MDVDOCIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDoyMjY4MkI3OEJBNUIxMUU0OThFNUFCNDZGNjI5MDVDOCIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PgH//v38+/r5+Pf29fTz8vHw7+7t7Ovq6ejn5uXk4+Lh4N/e3dzb2tnY19bV1NPS0dDPzs3My8rJyMfGxcTDwsHAv769vLu6ubi3trW0s7KxsK+urayrqqmop6alpKOioaCfnp2cm5qZmJeWlZSTkpGQj46NjIuKiYiHhoWEg4KBgH9+fXx7enl4d3Z1dHNycXBvbm1sa2ppaGdmZWRjYmFgX15dXFtaWVhXVlVUU1JRUE9OTUxLSklIR0ZFRENCQUA/Pj08Ozo5ODc2NTQzMjEwLy4tLCsqKSgnJiUkIyIhIB8eHRwbGhkYFxYVFBMSERAPDg0MCwoJCAcGBQQDAgEAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" />`;
   function init(cfg) {
     config = cfg;
@@ -33,6 +33,7 @@ globalThis.ReaderJs = (() => {
     readerStyleElement.setAttribute("type", "text/css");
     document.head.appendChild(readerStyleElement);
     updateReaderStyleElement();
+    windowWidth = window.innerWidth + "px";
     globalThis.JsBridge("initDone", window.innerWidth, window.innerHeight);
   }
   function updateReaderStyleElement() {
@@ -53,7 +54,8 @@ globalThis.ReaderJs = (() => {
     const bodyReg = /\<\/body\>/;
     const a = html.match(headerReg);
     console.log(a == null ? void 0 : a.index, "match");
-    let styleString = `<style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth}px;overflow:hidden;
+    console.log("uedk", windowWidth);
+    let styleString = `<style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
       padding: ${config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px"} ${config.marginHorizontal + "px"} ${config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px"} ${config.marginHorizontal + "px"} !important;
       height: ${getFullHeight()} !important;
       box-sizing:border-box !important;
@@ -114,7 +116,7 @@ globalThis.ReaderJs = (() => {
       headerWrapper.style.position = "absolute";
       headerWrapper.style.fontSize = "13px";
       headerWrapper.style.color = "#" + config.infoColor;
-      headerWrapper.innerText = `${i + 1} / ${pages + 1}`;
+      headerWrapper.innerText = `${i + 1} / ${pages}`;
       headerWrapper.style.setProperty(
         "line-height",
         config.infoBarHeight + "px",

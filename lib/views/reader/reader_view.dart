@@ -407,11 +407,13 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       infoBarHeight: 32,
                       enableJsBridge:true,
                       enableScroll:false,
-                      extraTitle: true
+                      extraTitle: true,
+                      isIOS: navigator.userAgent.includes('iPhone')
                     })
                   """);
                   break;
                 case 'initDone':
+                  Log.e(args);
                   pageWidth = args[1] * extraRate;
                   initChapter(bookRecord.chapterIndex);
                   break;
