@@ -114,7 +114,7 @@ class MenuTextState extends State<MenuText> {
                                     max: 2.0,
                                     onChanged: (val) {
                                       setState(() {
-                                        fontSize = val.round() * 1.0;
+                                        fontSize = val;
                                       });
                                     },
                                     onChangeEnd: (val) => widget.onFontSizeSlideBarValueChangeEnd(fontSize))),

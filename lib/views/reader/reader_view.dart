@@ -798,7 +798,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         content = """<div style="text-indent:0">$content</div>""";
       }
       String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
-    <title></title></head><style>p{text-align:justify;text-indent:2em;}h4{margin-bottom:42px;}</style><body><h4>$title</h4>$content</body></html>""";
+    <title></title></head><style>p{text-align:justify;text-indent:2em;}h4{margin-bottom:42px;}</style><body>${title == '插图' ? '' : '<h4>$title</h4>'}$content</body></html>""";
       Log.e(file.path);
       file.writeAsString(html);
       return html;

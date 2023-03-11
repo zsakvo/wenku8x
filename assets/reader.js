@@ -55,13 +55,16 @@ globalThis.ReaderJs = (() => {
     const a = html.match(headerReg);
     console.log(a == null ? void 0 : a.index, "match");
     console.log("uedk", windowWidth);
-    let styleString = `<style id="reader-style-x" type="text/css">${getReaderStyleText()}</style><style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
+    let styleString = `<style class="reader-style-x" type="text/css">${getReaderStyleText()}</style><style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
       padding: ${config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px"} ${config.marginHorizontal + "px"} ${config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px"} ${config.marginHorizontal + "px"} !important;
       height: ${getFullHeight()} !important;
       box-sizing:border-box !important;
       margin:0 !important;
       column-width: ${pageWidth}px;
-      column-gap: ${config.marginHorizontal * 2}px !important;} ${getBodyStyle()}</style>`;
+      column-gap: ${config.marginHorizontal * 2}px !important;} img {
+        max-width: 100% !important;
+      }
+       ${getBodyStyle()}</style>`;
     if (a) {
       styleString = "<head>" + styleString;
       html = html.replace(headerReg, styleString);
@@ -80,60 +83,79 @@ globalThis.ReaderJs = (() => {
     return config.isIOS ? "100vh" : "100vh";
   }
   function setPageHeader(body, title, pages) {
+    const headerWrapper = document.createElement("div");
+    headerWrapper.className = "header-wrapper";
     for (let i = 0; i < pages; i++) {
-      const left = i * body.clientWidth;
-      const headerWrapper = document.createElement("div");
-      headerWrapper.style.left = left + "px";
-      headerWrapper.style.height = config.infoBarHeight + "px";
-      headerWrapper.style.width = body.clientWidth + "px";
-      headerWrapper.style.top = config.topExtraHeight + "px";
-      headerWrapper.style.boxSizing = "border-box";
-      headerWrapper.style.paddingLeft = config.marginHorizontal + "px";
-      headerWrapper.style.position = "absolute";
-      headerWrapper.style.fontSize = "13px";
-      headerWrapper.style.color = "#" + config.infoColor;
-      headerWrapper.innerText = i === 0 ? config.bookName : title;
-      headerWrapper.style.setProperty(
-        "line-height",
-        config.infoBarHeight + "px",
-        "important"
-      );
+      const text = document.createElement("div");
+      text.className = "info-text";
+      text.innerText = i === 0 ? config.bookName : title;
+      headerWrapper.appendChild(text);
       body.appendChild(headerWrapper);
     }
   }
   function setPageFooter(body, pages) {
+    const footerWrapper = document.createElement("div");
+    footerWrapper.className = "foot-wrapper";
     for (let i = 0; i < pages; i++) {
-      const left = i * body.clientWidth;
-      const headerWrapper = document.createElement("div");
-      headerWrapper.style.left = left + "px";
-      headerWrapper.style.height = config.infoBarHeight + "px";
-      headerWrapper.style.textAlign = "end";
-      headerWrapper.style.width = body.clientWidth + "px";
-      headerWrapper.style.bottom = config.bottomExtraHeight + "px";
-      headerWrapper.style.boxSizing = "border-box";
-      headerWrapper.style.paddingLeft = config.marginHorizontal + "px";
-      headerWrapper.style.paddingRight = config.marginHorizontal + "px";
-      headerWrapper.style.position = "absolute";
-      headerWrapper.style.fontSize = "13px";
-      headerWrapper.style.color = "#" + config.infoColor;
-      headerWrapper.innerText = `${i + 1} / ${pages}`;
-      headerWrapper.style.setProperty(
-        "line-height",
-        config.infoBarHeight + "px",
-        "important"
-      );
-      body.appendChild(headerWrapper);
+      const text = document.createElement("div");
+      text.className = "info-text";
+      text.innerText = `${i + 1} / ${pages}`;
+      footerWrapper.appendChild(text);
+      body.appendChild(footerWrapper);
     }
   }
   function getReaderStyleText() {
     const styleText = `html{background:#${config.backgroundColor};
-  font-size:${config.fontSize * 100}%
-  }`;
+  font-size:${config.fontSize * 100}%;
+  color:#${config.textColor};
+  }
+  .header-wrapper{
+    left:0px;
+    display:flex;
+    height:${config.infoBarHeight}px;
+    top:${config.topExtraHeight}px;
+    box-sizing:border-box;
+    padding-left:${config.marginHorizontal}px;
+    position:absolute;
+    font-size:13px;
+    color:#${config.infoColor};
+    line-height:${config.infoBarHeight}px !important;
+  } .foot-wrapper{
+    left:0px;
+    display:flex;
+    text-align:end;
+    height:${config.infoBarHeight}px;
+    bottom:${config.bottomExtraHeight}px;
+    box-sizing:border-box;
+    margin-left:-${config.marginHorizontal}px;
+    position:absolute;
+    font-size:13px;
+    color:#${config.infoColor};
+    line-height:${config.infoBarHeight}px !important;
+  } .info-text{
+    width:${pageWidth + config.marginHorizontal * 2}px;
+  }
+  `;
     return styleText;
   }
+  function updateReaderStyle() {
+    const styleText = getReaderStyleText();
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      var _a;
+      var html = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document);
+      html.querySelector(".reader-style-x").innerText = styleText;
+    });
+  }
+  function updateTheme(backgroundColor, textColor, infoColor) {
+    console.log(backgroundColor, textColor, infoColor);
+    config.backgroundColor = backgroundColor;
+    config.textColor = textColor;
+    config.infoColor = infoColor;
+    updateReaderStyle();
+  }
   async function appendChapter(html, title, index) {
+    console.log(index);
     html = getHeader(html);
-    console.log("追加内容", title, html.length, index);
     const chapterDiv = document.createElement("div");
     chapterDiv.style.breakInside = "avoid";
     const iframe = document.createElement("iframe");
@@ -145,27 +167,37 @@ globalThis.ReaderJs = (() => {
     let currentPages = 0;
     iframe.addEventListener("load", (_) => {
       var _a, _b;
-      var iframeDoc = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
-      var img = iframeDoc.querySelector("#translate-img");
-      img.style.left = iframeDoc.scrollWidth + "px";
-      console.log(iframeDoc == null ? void 0 : iframeDoc.scrollWidth);
-      iframe.style.width = iframeDoc.scrollWidth + config.marginHorizontal + "px";
-      const pages = Math.round(iframeDoc.scrollWidth / innerWidth);
-      setPageHeader(iframeDoc, title, pages);
-      setPageFooter(iframeDoc, pages);
-      currentPages = pages;
+      var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      var img = iframeBody.querySelector("#translate-img");
+      img.style.left = iframeBody.scrollWidth + "px";
+      iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
+      const pages = Math.round(iframeBody.scrollWidth / innerWidth);
+      const imgs = iframeBody.querySelectorAll("img");
+      const imgCounts = imgs.length;
+      const intervalId = setInterval(() => {
+        let loadedImg = 0;
+        imgs.forEach((img2) => {
+          if (img2.complete) {
+            loadedImg++;
+          }
+        });
+        if (imgCounts === loadedImg) {
+          clearInterval(intervalId);
+          currentPages = pages;
+          globalThis.JsBridge("notifySize", pages);
+          setPageHeader(iframeBody, title, pages);
+          setPageFooter(iframeBody, pages);
+        }
+      }, 100);
     });
     chapterDiv.appendChild(iframe);
     virtualReader.appendChild(chapterDiv);
     function runLoop() {
-      const imgs = iframe.getElementsByTagName("img");
       let intervalId;
       const promise = new Promise((res) => {
         intervalId = setInterval(() => {
-          for (let img of imgs) {
-            if (!img.complete)
-              return;
-          }
+          if (currentPages === 0)
+            return;
           clearInterval(intervalId);
           res(true);
         }, 50);
@@ -177,8 +209,8 @@ globalThis.ReaderJs = (() => {
     return currentPages;
   }
   async function insertChapter(html, title, index) {
+    console.log(index);
     html = getHeader(html);
-    console.log("插入内容", title, html.length, index);
     const chapterDiv = document.createElement("div");
     chapterDiv.style.breakInside = "avoid";
     const iframe = document.createElement("iframe");
@@ -188,33 +220,40 @@ globalThis.ReaderJs = (() => {
       `border:none;width:100vw;height:${getFullHeight()};display:block;`
     );
     let currentPages = 0;
-    let jumpWidth = 0;
     iframe.addEventListener("load", (_) => {
       var _a, _b;
-      var iframeDoc = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
-      var img = iframeDoc.querySelector("#translate-img");
-      img.style.left = iframeDoc.scrollWidth + "px";
-      console.log(iframeDoc == null ? void 0 : iframeDoc.scrollWidth);
-      iframe.style.width = iframeDoc.scrollWidth + config.marginHorizontal + "px";
-      const pages = Math.round(iframeDoc.scrollWidth / innerWidth);
-      setPageHeader(iframeDoc, title, pages);
-      setPageFooter(iframeDoc, pages);
-      jumpWidth = iframeDoc.scrollWidth;
-      window.scrollBy(jumpWidth + config.marginHorizontal, 0);
-      currentPages = pages;
+      var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      var img = iframeBody.querySelector("#translate-img");
+      img.style.left = iframeBody.scrollWidth + "px";
+      iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
+      const pages = Math.round(iframeBody.scrollWidth / innerWidth);
+      const imgs = iframeBody.querySelectorAll("img");
+      const imgCounts = imgs.length;
+      const intervalId = setInterval(() => {
+        let loadedImg = 0;
+        imgs.forEach((img2) => {
+          if (img2.complete) {
+            loadedImg++;
+          }
+        });
+        if (imgCounts === loadedImg) {
+          clearInterval(intervalId);
+          currentPages = pages;
+          globalThis.JsBridge("notifySize", pages);
+          window.scrollBy(iframeBody.scrollWidth + config.marginHorizontal, 0);
+          setPageHeader(iframeBody, title, pages);
+          setPageFooter(iframeBody, pages);
+        }
+      }, 100);
     });
     chapterDiv.appendChild(iframe);
     virtualReader.insertBefore(chapterDiv, virtualReader.firstChild);
     function runLoop() {
-      const imgs = iframe.getElementsByTagName("img");
       let intervalId;
       const promise = new Promise((res) => {
         intervalId = setInterval(() => {
-          console.log(currentPages, jumpWidth, "currentPagescurrentPages");
-          for (let img of imgs) {
-            if (!img.complete)
-              return;
-          }
+          if (currentPages === 0)
+            return;
           clearInterval(intervalId);
           res(true);
         }, 50);
@@ -222,12 +261,23 @@ globalThis.ReaderJs = (() => {
       return promise;
     }
     await runLoop();
-    console.log(currentPages, jumpWidth, "当前页数");
+    console.log(currentPages, "当前页数");
     return currentPages;
   }
   async function refreshChapter(html, title, index) {
     virtualReader.innerHTML = "";
     return await appendChapter(html, title, index);
   }
-  return { init, appendChapter, insertChapter, refreshChapter };
+  function setFontSize(size) {
+    config.fontSize = size;
+    updateReaderStyle();
+  }
+  return {
+    init,
+    appendChapter,
+    insertChapter,
+    refreshChapter,
+    setFontSize,
+    updateTheme
+  };
 })();
