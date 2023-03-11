@@ -110,8 +110,8 @@ class MenuTextState extends State<MenuText> {
                                 ),
                                 child: Slider(
                                     value: fontSize,
-                                    min: 16,
-                                    max: 28,
+                                    min: 0.8,
+                                    max: 2.0,
                                     onChanged: (val) {
                                       setState(() {
                                         fontSize = val.round() * 1.0;

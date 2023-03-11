@@ -55,7 +55,7 @@ globalThis.ReaderJs = (() => {
     const a = html.match(headerReg);
     console.log(a == null ? void 0 : a.index, "match");
     console.log("uedk", windowWidth);
-    let styleString = `<style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
+    let styleString = `<style id="reader-style-x" type="text/css">${getReaderStyleText()}</style><style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
       padding: ${config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px"} ${config.marginHorizontal + "px"} ${config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px"} ${config.marginHorizontal + "px"} !important;
       height: ${getFullHeight()} !important;
       box-sizing:border-box !important;
@@ -125,6 +125,12 @@ globalThis.ReaderJs = (() => {
       body.appendChild(headerWrapper);
     }
   }
+  function getReaderStyleText() {
+    const styleText = `html{background:#${config.backgroundColor};
+  font-size:${config.fontSize * 100}%
+  }`;
+    return styleText;
+  }
   async function appendChapter(html, title, index) {
     html = getHeader(html);
     console.log("追加内容", title, html.length, index);
@@ -137,9 +143,8 @@ globalThis.ReaderJs = (() => {
       `border:none;width:100vw;height:${getFullHeight()};display:block;`
     );
     let currentPages = 0;
-    iframe.addEventListener("load", (e) => {
+    iframe.addEventListener("load", (_) => {
       var _a, _b;
-      console.log(e, 2333);
       var iframeDoc = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
       var img = iframeDoc.querySelector("#translate-img");
       img.style.left = iframeDoc.scrollWidth + "px";
@@ -184,9 +189,8 @@ globalThis.ReaderJs = (() => {
     );
     let currentPages = 0;
     let jumpWidth = 0;
-    iframe.addEventListener("load", (e) => {
+    iframe.addEventListener("load", (_) => {
       var _a, _b;
-      console.log(e, 2333);
       var iframeDoc = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
       var img = iframeDoc.querySelector("#translate-img");
       img.style.left = iframeDoc.scrollWidth + "px";

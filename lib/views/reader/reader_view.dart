@@ -104,7 +104,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
 
   // 字体大小
-  final fontSize = spInstance.getDouble("fontSize") ?? 18;
+  final fontSize = spInstance.getDouble("fontSize") ?? 1.2;
   // 字间距
   final lineSpace = spInstance.getDouble("lineSpace") ?? 1.5;
 
@@ -798,7 +798,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         content = """<div style="text-indent:0">$content</div>""";
       }
       String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
-    <title></title></head><body>$content</body></html>""";
+    <title></title></head><style>p{text-align:justify;text-indent:2em;}h4{margin-bottom:42px;}</style><body><h4>$title</h4>$content</body></html>""";
       Log.e(file.path);
       file.writeAsString(html);
       return html;
