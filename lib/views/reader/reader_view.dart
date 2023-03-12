@@ -774,7 +774,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     final cid = catalog[index].cid;
     final title = catalog[index].name;
     final file = File("${docDir.path}/books/$aid/$cid.html");
-    force = true;
+    // force = true;
     if (file.existsSync() && !force) {
       Log.e(index, "内容以存在");
       return file.readAsStringSync();
@@ -785,18 +785,25 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       }
       var res = await API.getNovelContent(aid, cid);
       List<String> arr = res.split(RegExp(r"\n\s*|\s{2,}"));
+      var exp = RegExp(r"<!--image-->\s*(.*?)\s*<!--image-->", dotAll: true);
       arr.removeRange(0, 2);
       String content = arr.map((e) {
-        if (title == "插图") {
-          if (e.trim().isNotEmpty) return """<img src="${e.replaceAll("<!--image-->", "")}"/>""";
-          return "";
-        } else {
+        // if (title == "插图") {
+        //   if (e.trim().isNotEmpty) return """<img src="${e.replaceAll("<!--image-->", "")}"/>""";
+        //   return "";
+        // } else {
+        //   return """<p>$e</p>""";
+        // }
+        final matchs = exp.allMatches(e);
+        if (matchs.isEmpty) {
           return """<p>$e</p>""";
+        } else {
+          return matchs.map((e) => """<img src="${e.group(1)}"></img>""").join("\n");
         }
       }).join("\n");
-      if (title == "插图") {
-        content = """<div style="text-indent:0">$content</div>""";
-      }
+      // if (title == "插图") {
+      //   content = """<div style="text-indent:0">$content</div>""";
+      // }
       String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
     <title></title></head><style>p{text-align:justify;text-indent:2em;}h4{margin-bottom:42px;}</style><body>${title == '插图' ? '' : '<h4>$title</h4>'}$content</body></html>""";
       Log.e(file.path);
