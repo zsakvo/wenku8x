@@ -786,7 +786,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     final cid = catalog[index].cid;
     final title = catalog[index].name;
     final file = File("${docDir.path}/books/$aid/$cid.html");
-    force = true;
+    // force = true;
     if (file.existsSync() && !force) {
       Log.e(index, "内容以存在");
       return file.readAsStringSync();

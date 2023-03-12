@@ -64,6 +64,8 @@ dependencies:
   isar: ^3.0.5
   isar_flutter_libs: ^3.0.5
   shared_preferences: ^2.0.17
+  html: ^0.15.2
+  quiver: ^3.2.1
 
 dev_dependencies:
   flutter_test:
