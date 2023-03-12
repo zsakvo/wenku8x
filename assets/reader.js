@@ -22,6 +22,7 @@ globalThis.ReaderJs = (() => {
     config = cfg;
     console.log(config);
     initValues();
+    document.getElementsByTagName("html")[0].style.background = "#" + config.backgroundColor;
     virtualReader = document.getElementById("virtual-reader");
     for (let i = 0; i < 8; i++) {
       let className = "__reader_x_" + i;
@@ -33,7 +34,9 @@ globalThis.ReaderJs = (() => {
     readerStyleElement.setAttribute("type", "text/css");
     document.head.appendChild(readerStyleElement);
     updateReaderStyleElement();
+    console.log("???", window.innerWidth + "px");
     windowWidth = window.innerWidth + "px";
+    console.log("initDone", window.innerWidth, window.innerHeight);
     globalThis.JsBridge("initDone", window.innerWidth, window.innerHeight);
   }
   function updateReaderStyleElement() {
@@ -118,8 +121,8 @@ globalThis.ReaderJs = (() => {
     padding-left:${config.marginHorizontal}px;
     position:absolute;
     font-size:13px;
-    color:#${config.infoColor};
-    line-height:${config.infoBarHeight}px !important;
+    color:#${config.infoColor}; 
+    align-items:flex-end;
   } .foot-wrapper{
     left:0px;
     display:flex;
@@ -130,8 +133,8 @@ globalThis.ReaderJs = (() => {
     margin-left:-${config.marginHorizontal}px;
     position:absolute;
     font-size:13px;
-    color:#${config.infoColor};
-    line-height:${config.infoBarHeight}px !important;
+    color:#${config.infoColor}; 
+    align-items:flex-start;
   } .info-text{
     width:${pageWidth + config.marginHorizontal * 2}px;
   }
@@ -153,8 +156,7 @@ globalThis.ReaderJs = (() => {
     config.infoColor = infoColor;
     updateReaderStyle();
   }
-  async function appendChapter(html, title, index) {
-    console.log(index);
+  async function appendChapter(html, title) {
     html = getHeader(html);
     const chapterDiv = document.createElement("div");
     chapterDiv.style.breakInside = "avoid";
@@ -172,23 +174,11 @@ globalThis.ReaderJs = (() => {
       img.style.left = iframeBody.scrollWidth + "px";
       iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
       const pages = Math.round(iframeBody.scrollWidth / innerWidth);
-      const imgs = iframeBody.querySelectorAll("img");
-      const imgCounts = imgs.length;
-      const intervalId = setInterval(() => {
-        let loadedImg = 0;
-        imgs.forEach((img2) => {
-          if (img2.complete) {
-            loadedImg++;
-          }
-        });
-        if (imgCounts === loadedImg) {
-          clearInterval(intervalId);
-          currentPages = pages;
-          globalThis.JsBridge("notifySize", pages);
-          setPageHeader(iframeBody, title, pages);
-          setPageFooter(iframeBody, pages);
-        }
-      }, 100);
+      currentPages = pages;
+      console.log(currentPages, title, "currentPagescurrentPages");
+      globalThis.JsBridge("notifySize", pages);
+      setPageHeader(iframeBody, title, pages);
+      setPageFooter(iframeBody, pages);
     });
     chapterDiv.appendChild(iframe);
     virtualReader.appendChild(chapterDiv);
@@ -208,11 +198,11 @@ globalThis.ReaderJs = (() => {
     console.log(currentPages, "当前页数");
     return currentPages;
   }
-  async function insertChapter(html, title, index) {
-    console.log(index);
+  async function insertChapter(html, title) {
     html = getHeader(html);
     const chapterDiv = document.createElement("div");
     chapterDiv.style.breakInside = "avoid";
+    const shadow = document.getElementById("shadow");
     const iframe = document.createElement("iframe");
     iframe.srcdoc = html;
     iframe.setAttribute(
@@ -220,6 +210,7 @@ globalThis.ReaderJs = (() => {
       `border:none;width:100vw;height:${getFullHeight()};display:block;`
     );
     let currentPages = 0;
+    let scrollWidth = 0;
     iframe.addEventListener("load", (_) => {
       var _a, _b;
       var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
@@ -227,27 +218,15 @@ globalThis.ReaderJs = (() => {
       img.style.left = iframeBody.scrollWidth + "px";
       iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
       const pages = Math.round(iframeBody.scrollWidth / innerWidth);
-      const imgs = iframeBody.querySelectorAll("img");
-      const imgCounts = imgs.length;
-      const intervalId = setInterval(() => {
-        let loadedImg = 0;
-        imgs.forEach((img2) => {
-          if (img2.complete) {
-            loadedImg++;
-          }
-        });
-        if (imgCounts === loadedImg) {
-          clearInterval(intervalId);
-          currentPages = pages;
-          globalThis.JsBridge("notifySize", pages);
-          window.scrollBy(iframeBody.scrollWidth + config.marginHorizontal, 0);
-          setPageHeader(iframeBody, title, pages);
-          setPageFooter(iframeBody, pages);
-        }
-      }, 100);
+      currentPages = pages;
+      console.log(currentPages, title, "currentPagescurrentPages");
+      scrollWidth = iframeBody.scrollWidth;
+      globalThis.JsBridge("notifySize", pages);
+      setPageHeader(iframeBody, title, pages);
+      setPageFooter(iframeBody, pages);
     });
     chapterDiv.appendChild(iframe);
-    virtualReader.insertBefore(chapterDiv, virtualReader.firstChild);
+    shadow.appendChild(chapterDiv);
     function runLoop() {
       let intervalId;
       const promise = new Promise((res) => {
@@ -261,16 +240,18 @@ globalThis.ReaderJs = (() => {
       return promise;
     }
     await runLoop();
+    virtualReader.insertBefore(shadow.firstChild, virtualReader.firstChild);
+    window.scrollBy(scrollWidth + config.marginHorizontal, 0);
     console.log(currentPages, "当前页数");
+    shadow.innerHTML = "";
     return currentPages;
   }
-  async function refreshChapter(html, title, index) {
+  async function refreshChapter(html, title) {
     virtualReader.innerHTML = "";
-    return await appendChapter(html, title, index);
+    return await appendChapter(html, title);
   }
   function setFontSize(size) {
     config.fontSize = size;
-    updateReaderStyle();
   }
   return {
     init,
@@ -281,3 +262,7 @@ globalThis.ReaderJs = (() => {
     updateTheme
   };
 })();
+window.addEventListener(
+  "resize",
+  () => globalThis.JsBridge("loadSuccess", true)
+);

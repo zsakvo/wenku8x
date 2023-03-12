@@ -7,22 +7,19 @@ const READER_APP = """
 <head>
   <meta charset="UTF-8" />
   <meta name="referrer" content="never" />
-  <script src="./reader.js"></script>
   <meta name="viewport" content="width=device-width, user-scalable=no" />
   <title>Reader App</title>
 </head>
 
 <body>
-  <!-- <div id="reader"></div> -->
   <div id="virtual-wrapper">
-    <div id="virtual-reader"></div>
+    <div id="virtual-reader">233</div>
   </div>
+  <div id="shadow" style="width: 0;height: 0;overflow:hidden;"></div>
 </body>
 
 
-<script type='text/javascript'>
-  globalThis.JsBridge('loadSuccess', true)
-</script>
+<script src="./reader.js"></script> 
 
 </html>
 """;

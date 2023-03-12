@@ -110,6 +110,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
+    final log = useState("");
     // 当前主题
     final currentTheme = useState<ReaderTheme>(readerThemeList[spInstance.getInt("reader_theme") ?? 0]);
     // final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
@@ -187,22 +188,22 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
     // 设置字号
     setFontSize(double size) async {
-      final res = (await webViewController.value!.evaluateJavascript(source: """
+      await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.setFontSize($size,${currentIndex.value})
-      """) as Map);
+      """);
       chapterPagesMap.clear();
-      int t = 0;
-      for (var k in res.keys) {
-        Log.d([k, res[k]]);
-        int i = int.parse(k);
-        int p = (Platform.isIOS ? (res[k] as double).toInt() : res[k]) as int;
-        if (i < bookRecord.chapterIndex) {
-          t += p;
-        }
-        chapterPagesMap[i] = p;
-      }
-      currentIndex.value = t + bookRecord.pageIndex;
-      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
+      // int t = 0;
+      // for (var k in res.keys) {
+      //   Log.d([k, res[k]]);
+      //   int i = int.parse(k);
+      //   int p = (Platform.isIOS ? (res[k] as double).toInt() : res[k]) as int;
+      //   if (i < bookRecord.chapterIndex) {
+      //     t += p;
+      //   }
+      //   chapterPagesMap[i] = p;
+      // }
+      // currentIndex.value = t + bookRecord.pageIndex;
+      // webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
     }
 
     // 设置间距
@@ -310,9 +311,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     onPointerDown(PointerDownEvent event) {
       // if (longHitStatus != LongHitStatus.c) return;
       moveX = 0;
-      webViewController.value!.evaluateJavascript(source: """
-        ReaderJs.enableLongHit()
-      """);
+      // webViewController.value!.evaluateJavascript(source: """
+      //   ReaderJs.enableLongHit()
+      // """);
       tapDownPos = event.position.dx;
       tapDownPosY = event.position.dy;
     }
@@ -338,9 +339,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 初始化章节
-    initChapter(int index, {force = false}) async {
+    initChapter(int index, {force = false, showLoading = true}) async {
       chapterPagesMap.clear();
-      loading.value = true;
+      if (showLoading) loading.value = true;
       currentIndex.value = 0;
       await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
       // 直接一次性加载三章内容，滚动到正确位置后再展示
@@ -524,11 +525,13 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       onRenderProcessGone: (controller, detail) {
                         showErrorToast(context, detail.didCrash);
                       },
+                      onContentSizeChanged: (controller, oldContentSize, newContentSize) {},
                       onWebViewCreated: (controller) {
                         webViewController.value = controller;
                       },
                       onConsoleMessage: (controller, consoleMessage) {
                         // showErrorToast(context, consoleMessage.message);
+                        log.value += "${consoleMessage.message}\n";
                         Log.d(consoleMessage.message);
                       },
                       onLongPressHitTestResult: (controller, hitTestResult) {
@@ -613,15 +616,15 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   fontSize: fontSize,
                   lineSpace: lineSpace,
                   currentTheme: currentTheme.value,
-                  onFontSizeSlideBarValueChangeEnd: (p0) {
-                    setFontSize(p0);
+                  onFontSizeSlideBarValueChangeEnd: (p0) async {
+                    await setFontSize(p0);
                     spInstance.setDouble("fontSize", p0);
-                    // initChapter(bookRecord.chapterIndex);
+                    await initChapter(bookRecord.chapterIndex, showLoading: false);
                   },
                   onTextSpaceSlideBarValueChangeEnd: (p0) {
                     setLineSpacing(p0);
                     spInstance.setDouble("lineSpace", p0);
-                    // initChapter(bookRecord.chapterIndex);
+                    initChapter(bookRecord.chapterIndex);
                   },
                   // backgroundColor: Colors.black,
                   // primaryColor: Theme.of(context).colorScheme.primary,
@@ -691,7 +694,16 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                           "章节加载中，请稍候",
                           style: TextStyle(fontSize: 15, color: currentTheme.value.readerInfoColor),
                         ))
-                    : const SizedBox.shrink()
+                    : const SizedBox.shrink(),
+                // Container(
+                //   padding: EdgeInsets.symmetric(vertical: MediaQuery.of(context).padding.top, horizontal: 16),
+                //   width: MediaQuery.of(context).size.width,
+                //   height: 360,
+                //   color: Colors.green[50]!.withOpacity(0.7),
+                //   child: SingleChildScrollView(
+                //     child: Text(log.value),
+                //   ),
+                // )
               ],
             ),
             onWillPop: () async {
@@ -774,7 +786,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     final cid = catalog[index].cid;
     final title = catalog[index].name;
     final file = File("${docDir.path}/books/$aid/$cid.html");
-    // force = true;
+    force = true;
     if (file.existsSync() && !force) {
       Log.e(index, "内容以存在");
       return file.readAsStringSync();
@@ -798,14 +810,17 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         if (matchs.isEmpty) {
           return """<p>$e</p>""";
         } else {
-          return matchs.map((e) => """<img src="${e.group(1)}"></img>""").join("\n");
+          return matchs
+              .map((e) =>
+                  """<div style="min-width:100%;min-height:100%;" ><img loading="lazy" src="${e.group(1)}"></img></div>""")
+              .join("\n");
         }
       }).join("\n");
       // if (title == "插图") {
       //   content = """<div style="text-indent:0">$content</div>""";
       // }
       String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
-    <title></title></head><style>p{text-align:justify;text-indent:2em;}h4{margin-bottom:42px;}</style><body>${title == '插图' ? '' : '<h4>$title</h4>'}$content</body></html>""";
+    <title></title></head><style>p{text-align:justify;text-indent:2em;}h3{margin-bottom:42px;}</style><body>${title == '插图' ? '' : '<h3>$title</h3>'}$content</body></html>""";
       Log.e(file.path);
       file.writeAsString(html);
       return html;
