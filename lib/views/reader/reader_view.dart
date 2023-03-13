@@ -747,36 +747,44 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     docDir = await getApplicationDocumentsDirectory();
     final dir = Directory("${docDir.path}/books/$aid");
     final file = File("${dir.path}/catalog.json");
-    if (!dir.existsSync()) dir.createSync(recursive: true);
-    List<Chapter> cpts = [];
-    var res = await API.getNovelIndex(aid);
-    if (res != null) {
-      for (var element in res.children[2].children) {
-        if (element.toString().length > 2) {
-          int i = 0;
-          for (var node in element.children) {
-            if (node.toString().length > 2) {
-              if (i != 0) {
-                cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
-              }
-            }
-            i++;
-          }
-        }
-      }
-      final cptJson = cpts
-          .map((element) {
-            // Log.e(element.json);
-            return element.json;
-          })
-          .toList()
-          .toString();
-      file.writeAsString(cptJson);
-      catalog.clear();
+    if (file.existsSync()) {
+      var cpts = json.decode(file.readAsStringSync()).map((e) {
+        return Chapter(e["cid"], e["name"]);
+      });
       catalog.addAll(cpts);
       return true;
     } else {
-      return false;
+      if (!dir.existsSync()) dir.createSync(recursive: true);
+      List<Chapter> cpts = [];
+      var res = await API.getNovelIndex(aid);
+      if (res != null) {
+        for (var element in res.children[2].children) {
+          if (element.toString().length > 2) {
+            int i = 0;
+            for (var node in element.children) {
+              if (node.toString().length > 2) {
+                if (i != 0) {
+                  cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
+                }
+              }
+              i++;
+            }
+          }
+        }
+        final cptJson = cpts
+            .map((element) {
+              // Log.e(element.json);
+              return element.json;
+            })
+            .toList()
+            .toString();
+        file.writeAsString(cptJson);
+        catalog.clear();
+        catalog.addAll(cpts);
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 
