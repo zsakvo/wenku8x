@@ -304,7 +304,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         }
       }
       await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
-      currentIndex.value = tmpIndex;
+      // 延迟更新页码，保证翻页完成后插入新章节 :_)
+      Future.delayed(const Duration(milliseconds: 500)).then((_) => currentIndex.value = tmpIndex);
     }
 
     // 手指落下
