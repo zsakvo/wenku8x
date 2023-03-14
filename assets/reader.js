@@ -156,6 +156,22 @@ globalThis.ReaderJs = (() => {
     config.infoColor = infoColor;
     updateReaderStyle();
   }
+  function disableLongHit() {
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      var _a, _b;
+      var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      if (iframeBody)
+        iframeBody.style.userSelect = "none";
+    });
+  }
+  function enableLongHit() {
+    document.querySelectorAll("iframe").forEach((iframe) => {
+      var _a, _b;
+      var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      if (iframeBody)
+        iframeBody.style.userSelect = "unset";
+    });
+  }
   async function appendChapter(html, title) {
     html = getHeader(html);
     const chapterDiv = document.createElement("div");
@@ -259,7 +275,9 @@ globalThis.ReaderJs = (() => {
     insertChapter,
     refreshChapter,
     setFontSize,
-    updateTheme
+    updateTheme,
+    disableLongHit,
+    enableLongHit
   };
 })();
 window.addEventListener(
