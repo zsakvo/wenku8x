@@ -75,6 +75,7 @@ class _HomeViewState extends ConsumerState<HomeView> {
                               desc1: "更新时间：${book.updateTime}",
                               desc2: "最新章节：${book.lastChapter}", onTap: () {
                             GoRouter.of(context).push("/reader?aid=${book.aid}&name=${book.bookName}");
+                            ref.read(booksListProvider.notifier).sortBooks(book);
                           }))
                       .toList()))),
               const FooterLocator.sliver(),

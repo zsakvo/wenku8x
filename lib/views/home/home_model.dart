@@ -35,15 +35,22 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
     }
     state = isar!.caseBooks.where().findAllSync();
     var res = await API.getShelfBookList();
-    state = res;
-    if (res.isNotEmpty) {
-      await isar!.writeTxn(() async {
-        await isar!.caseBooks.clear();
-        for (var element in res) {
-          await isar!.caseBooks.put(element);
-        }
-      });
-    }
+    var localAids = state.map((e) => e.aid).toSet();
+    var remoteAids = res.map((e) => e.aid).toSet();
+    var delAids = localAids.difference(remoteAids);
+    var newAids = remoteAids.difference(localAids);
+    state = [
+      ...res.where((element) => newAids.contains(element.aid)),
+      ...state.where((element) => !delAids.contains(element.aid))
+    ];
+    // if (res.isNotEmpty) {
+    await isar!.writeTxn(() async {
+      await isar!.caseBooks.clear();
+      for (var element in state) {
+        await isar!.caseBooks.put(element);
+      }
+    });
+    // }
   }
 
   void addBook(CaseBook book) async {
@@ -57,6 +64,20 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
     state = state.where((element) => element.aid != aid).toList();
     await isar!.writeTxn(() async {
       await isar!.caseBooks.filter().aidEqualTo(aid).deleteAll();
+    });
+  }
+
+  void sortBooks(CaseBook book) {
+    state = [book, ...state.where((element) => element.id != book.id)];
+    isar!.writeTxnSync(() {
+      isar!.caseBooks.clearSync();
+      for (var element in state) {
+        isar!.caseBooks.putSync(element);
+      }
+
+      isar!.caseBooks.where().findAllSync().forEach((element) {
+        Log.e(element.bookName);
+      });
     });
   }
 }
