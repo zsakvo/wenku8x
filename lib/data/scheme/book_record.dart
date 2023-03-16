@@ -16,6 +16,8 @@ class BookRecord {
 
   int pageIndex = 0;
 
+  String? cfi;
+
   nextPage() {
     pageIndex++;
   }

@@ -227,7 +227,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
     }
 
-    saveRecord() {
+    saveRecord() async {
+      String cfi = await webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.getCFI();
+      """);
+      bookRecord.cfi = cfi;
+      Log.e(cfi, "cfi");
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord);
@@ -303,9 +308,13 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
           }
         }
       }
-      await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
+      webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
       // 延迟更新页码，保证翻页完成后插入新章节 :_)
-      Future.delayed(const Duration(milliseconds: 500)).then((_) => currentIndex.value = tmpIndex);
+      Future.delayed(const Duration(milliseconds: 300)).then((_) {
+        currentIndex.value = tmpIndex;
+        saveRecord();
+      });
+      // currentIndex.value = tmpIndex;
     }
 
     // 手指落下
@@ -342,14 +351,19 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     // 初始化章节
     initChapter(int index, {force = false, showLoading = true}) async {
       chapterPagesMap.clear();
-      if (showLoading) loading.value = true;
-      currentIndex.value = 0;
+      // if (showLoading) {
+      loading.value = true;
       await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
+      // }
+      currentIndex.value = 0;
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index, force: force);
       await refreshChapter(content, catalog[index].name, index);
       currentIndex.value += bookRecord.pageIndex;
-      await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
+      // await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
+      await webViewController.value!.evaluateJavascript(source: """
+        ReaderJs.jumpByCFI("${bookRecord.cfi}");
+      """);
 
       if (index > 0) {
         final preContent = await fetchContent(index - 1, force: force);
@@ -452,7 +466,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             });
           }
         }
-        saveRecord();
+        // saveRecord();
       }
       return () {};
     }, [currentIndex.value, loading.value]);

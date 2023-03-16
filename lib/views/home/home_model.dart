@@ -75,9 +75,9 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
         isar!.caseBooks.putSync(element);
       }
 
-      isar!.caseBooks.where().findAllSync().forEach((element) {
-        Log.e(element.bookName);
-      });
+      // isar!.caseBooks.where().findAllSync().forEach((element) {
+      //   Log.e(element.bookName);
+      // });
     });
   }
 }

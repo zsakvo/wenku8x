@@ -22,13 +22,18 @@ const BookRecordSchema = CollectionSchema(
       name: r'aid',
       type: IsarType.string,
     ),
-    r'chapterIndex': PropertySchema(
+    r'cfi': PropertySchema(
       id: 1,
+      name: r'cfi',
+      type: IsarType.string,
+    ),
+    r'chapterIndex': PropertySchema(
+      id: 2,
       name: r'chapterIndex',
       type: IsarType.long,
     ),
     r'pageIndex': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'pageIndex',
       type: IsarType.long,
     )
@@ -54,6 +59,12 @@ int _bookRecordEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.aid.length * 3;
+  {
+    final value = object.cfi;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
   return bytesCount;
 }
 
@@ -64,8 +75,9 @@ void _bookRecordSerialize(
   Map<Type, List<int>> allOffsets,
 ) {
   writer.writeString(offsets[0], object.aid);
-  writer.writeLong(offsets[1], object.chapterIndex);
-  writer.writeLong(offsets[2], object.pageIndex);
+  writer.writeString(offsets[1], object.cfi);
+  writer.writeLong(offsets[2], object.chapterIndex);
+  writer.writeLong(offsets[3], object.pageIndex);
 }
 
 BookRecord _bookRecordDeserialize(
@@ -76,9 +88,10 @@ BookRecord _bookRecordDeserialize(
 ) {
   final object = BookRecord();
   object.aid = reader.readString(offsets[0]);
-  object.chapterIndex = reader.readLong(offsets[1]);
+  object.cfi = reader.readStringOrNull(offsets[1]);
+  object.chapterIndex = reader.readLong(offsets[2]);
   object.id = id;
-  object.pageIndex = reader.readLong(offsets[2]);
+  object.pageIndex = reader.readLong(offsets[3]);
   return object;
 }
 
@@ -92,8 +105,10 @@ P _bookRecordDeserializeProp<P>(
     case 0:
       return (reader.readString(offset)) as P;
     case 1:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 2:
+      return (reader.readLong(offset)) as P;
+    case 3:
       return (reader.readLong(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -321,6 +336,152 @@ extension BookRecordQueryFilter
     });
   }
 
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'cfi',
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'cfi',
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'cfi',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'cfi',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'cfi',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'cfi',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition> cfiIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'cfi',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<BookRecord, BookRecord, QAfterFilterCondition>
       chapterIndexEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
@@ -505,6 +666,18 @@ extension BookRecordQuerySortBy
     });
   }
 
+  QueryBuilder<BookRecord, BookRecord, QAfterSortBy> sortByCfi() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cfi', Sort.asc);
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterSortBy> sortByCfiDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cfi', Sort.desc);
+    });
+  }
+
   QueryBuilder<BookRecord, BookRecord, QAfterSortBy> sortByChapterIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'chapterIndex', Sort.asc);
@@ -541,6 +714,18 @@ extension BookRecordQuerySortThenBy
   QueryBuilder<BookRecord, BookRecord, QAfterSortBy> thenByAidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'aid', Sort.desc);
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterSortBy> thenByCfi() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cfi', Sort.asc);
+    });
+  }
+
+  QueryBuilder<BookRecord, BookRecord, QAfterSortBy> thenByCfiDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'cfi', Sort.desc);
     });
   }
 
@@ -590,6 +775,13 @@ extension BookRecordQueryWhereDistinct
     });
   }
 
+  QueryBuilder<BookRecord, BookRecord, QDistinct> distinctByCfi(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'cfi', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<BookRecord, BookRecord, QDistinct> distinctByChapterIndex() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'chapterIndex');
@@ -614,6 +806,12 @@ extension BookRecordQueryProperty
   QueryBuilder<BookRecord, String, QQueryOperations> aidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'aid');
+    });
+  }
+
+  QueryBuilder<BookRecord, String?, QQueryOperations> cfiProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'cfi');
     });
   }
 
