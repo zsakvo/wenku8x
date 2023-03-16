@@ -136,12 +136,17 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final menuStatus = useState<Menu>(Menu.none);
     // -----
 
+    parseJsNumberToInt(dynamic arg) {
+      return (Platform.isIOS ? (arg as double).toInt() : arg) as int;
+    }
+
     // 追加章节
     appendChapter(String content, String title, int index) async {
       final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
 return await ReaderJs.appendChapter(`$content`,"$title",$index);
 """));
-      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      final page = parseJsNumberToInt(res!.value);
       Log.e(page, "refreshChapter");
       chapterPagesMap[index] = page;
       return page;
@@ -152,7 +157,8 @@ return await ReaderJs.appendChapter(`$content`,"$title",$index);
       final res = await webViewController.value?.callAsyncJavaScript(functionBody: """
 return ReaderJs.insertChapter(`$content`,"$title",$index);
 """);
-      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      final page = parseJsNumberToInt(res!.value);
       chapterPagesMap[index] = page;
       currentIndex.value += page;
       return page;
@@ -163,7 +169,8 @@ return ReaderJs.insertChapter(`$content`,"$title",$index);
       final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
 return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 """));
-      final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
+      final page = parseJsNumberToInt(res!.value);
       Log.e(page, "refreshChapter");
       chapterPagesMap[index] = page;
       return page;
@@ -232,7 +239,6 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         ReaderJs.getCFI();
       """);
       bookRecord.cfi = cfi;
-      Log.e(cfi, "cfi");
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord);
@@ -353,18 +359,18 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       chapterPagesMap.clear();
       // if (showLoading) {
       loading.value = true;
-      await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
+      // await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
       // }
       currentIndex.value = 0;
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index, force: force);
       await refreshChapter(content, catalog[index].name, index);
-      currentIndex.value += bookRecord.pageIndex;
       // await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
-      await webViewController.value!.evaluateJavascript(source: """
+      final res = await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.jumpByCFI("${bookRecord.cfi}");
       """);
-
+      final page = parseJsNumberToInt(res);
+      currentIndex.value += page;
       if (index > 0) {
         final preContent = await fetchContent(index - 1, force: force);
         await insertChapter(preContent, catalog[index - 1].name, index - 1);

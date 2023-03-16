@@ -1203,6 +1203,10 @@ globalThis.ReaderJs = (() => {
     });
     const x = target.getBoundingClientRect().x;
     window.scrollTo(x - config.marginHorizontal, 0);
+    const pageIndex = Math.floor(
+      (x - config.marginHorizontal) / (pageWidth + config.marginHorizontal * 2)
+    );
+    return pageIndex;
   }
   return {
     init,
