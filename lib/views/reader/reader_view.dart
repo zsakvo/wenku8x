@@ -358,10 +358,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     // 初始化章节
     initChapter(int index, {force = false, showLoading = true}) async {
       chapterPagesMap.clear();
-      // if (showLoading) {
-      loading.value = true;
-      // await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
-      // }
+      if (showLoading) {
+        loading.value = true;
+        // await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
+      }
       currentIndex.value = 0;
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index, force: force);
