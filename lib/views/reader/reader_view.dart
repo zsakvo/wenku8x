@@ -137,6 +137,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // -----
 
     parseJsNumberToInt(dynamic arg) {
+      if (arg == null) return 0;
       return (Platform.isIOS ? (arg as double).toInt() : arg) as int;
     }
 
