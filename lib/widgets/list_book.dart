@@ -10,7 +10,8 @@ Widget ListBookTile(context,
     required String desc1,
     String? desc2,
     String? desc3,
-    Function? onTap}) {
+    Function? onTap,
+    Function? onLongTap}) {
   var descSize = 25.sp;
   var titleSize = 30.sp;
   if (desc3 != null) {
@@ -55,10 +56,7 @@ Widget ListBookTile(context,
                 style: TextStyle(
                     fontSize: descSize,
                     height: 1.4,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onBackground
-                        .withOpacity(0.5)),
+                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
               ),
               desc2 != null
                   ? Text(
@@ -68,10 +66,7 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5)),
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
                     )
                   : const SizedBox.shrink(),
               desc3 != null
@@ -82,10 +77,7 @@ Widget ListBookTile(context,
                       style: TextStyle(
                           fontSize: descSize,
                           height: 1.4,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onBackground
-                              .withOpacity(0.5)),
+                          color: Theme.of(context).colorScheme.onBackground.withOpacity(0.5)),
                     )
                   : const SizedBox.shrink()
             ],
@@ -96,6 +88,11 @@ Widget ListBookTile(context,
     onTap: () {
       if (onTap != null) {
         onTap();
+      }
+    },
+    onLongPress: () {
+      if (onLongTap != null) {
+        onLongTap();
       }
     },
   );

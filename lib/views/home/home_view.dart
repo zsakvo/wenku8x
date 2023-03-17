@@ -69,14 +69,125 @@ class _HomeViewState extends ConsumerState<HomeView> {
               const SliverPadding(padding: EdgeInsets.only(bottom: 16)),
               SliverList(
                   delegate: SliverChildListDelegate((booksList
-                      .map((book) => ListBookTile(context,
-                              cover: book.cover,
-                              name: book.bookName,
-                              desc1: "更新时间：${book.updateTime}",
-                              desc2: "最新章节：${book.lastChapter}", onTap: () {
+                      .map(
+                        (book) => ListBookTile(
+                          context,
+                          cover: book.cover,
+                          name: book.bookName,
+                          desc1: "更新时间：${book.updateTime}",
+                          desc2: "最新章节：${book.lastChapter}",
+                          onTap: () {
                             GoRouter.of(context).push("/reader?aid=${book.aid}&name=${book.bookName}");
                             ref.read(booksListProvider.notifier).sortBooks(book);
-                          }))
+                          },
+                          onLongTap: () {
+                            showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return SafeArea(
+                                    child: Wrap(
+                                  children: [
+                                    Container(
+                                      alignment: Alignment.center,
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      child: Container(
+                                        width: 36,
+                                        height: 4,
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(12),
+                                          color: Theme.of(context).colorScheme.secondary,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
+                                      child: Row(children: [
+                                        CachedNetworkImage(
+                                          imageUrl: book.cover,
+                                          width: 50,
+                                          height: 68,
+                                        ),
+                                        Expanded(
+                                            child: Padding(
+                                          padding: const EdgeInsets.only(left: 16, right: 16),
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                book.bookName,
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                                              ),
+                                              const SizedBox(
+                                                height: 8,
+                                              ),
+                                              Text(
+                                                "最新章节：${book.lastChapter}",
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                                style: TextStyle(
+                                                    fontSize: 13,
+                                                    fontWeight: FontWeight.normal,
+                                                    color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
+                                              )
+                                            ],
+                                          ),
+                                        ))
+                                      ]),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 20, right: 20, top: 8),
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.background,
+                                          borderRadius: BorderRadius.circular(16)),
+                                      child: Column(children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.alternate_email,
+                                            color: Theme.of(context).colorScheme.onBackground,
+                                          ),
+                                          title: Text("详情"),
+                                          horizontalTitleGap: 0,
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.camera_outlined,
+                                            color: Theme.of(context).colorScheme.onBackground,
+                                          ),
+                                          title: Text("封面"),
+                                          horizontalTitleGap: 0,
+                                        )
+                                      ]),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 20, right: 20, top: 18, bottom: 12),
+                                      decoration: BoxDecoration(
+                                          color: Theme.of(context).colorScheme.background,
+                                          borderRadius: BorderRadius.circular(16)),
+                                      child: Column(children: [
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.delete_outlined,
+                                            color: Theme.of(context).colorScheme.error,
+                                          ),
+                                          title: Text(
+                                            "删除",
+                                            style: TextStyle(
+                                              color: Theme.of(context).colorScheme.error,
+                                            ),
+                                          ),
+                                          horizontalTitleGap: 0,
+                                        ),
+                                      ]),
+                                    )
+                                  ],
+                                ));
+                              },
+                            );
+                          },
+                        ),
+                      )
                       .toList()))),
               const FooterLocator.sliver(),
             ])),
