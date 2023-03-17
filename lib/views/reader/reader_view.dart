@@ -370,6 +370,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       final res = await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.jumpByCFI("${bookRecord.cfi}");
       """);
+      loading.value = false;
       final page = parseJsNumberToInt(res);
       currentIndex.value += page;
       if (index > 0) {
@@ -380,7 +381,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         final nextContent = await fetchContent(index + 1, force: force);
         await appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
-      loading.value = false;
+      // loading.value = false;
     }
 
     // 初始化信息
