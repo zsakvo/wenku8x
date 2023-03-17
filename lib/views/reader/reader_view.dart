@@ -570,6 +570,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       },
                       onLoadStop: (controller, url) {
                         // showErrorToast(context, "loadstop");
+                        if (Platform.isIOS) {
+                          controller.evaluateJavascript(source: """globalThis.JsBridge('loadSuccess', true)""");
+                        }
                       },
                       initialSettings: InAppWebViewSettings(
                           pageZoom: 1,
