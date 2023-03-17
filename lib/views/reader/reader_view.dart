@@ -14,6 +14,7 @@ import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/main.dart';
 import 'package:wenku8x/modals/chapter.dart';
+import 'package:wenku8x/utils/epub_cfi/_parser.dart';
 import 'package:wenku8x/utils/flash.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/utils/util.dart';
@@ -356,24 +357,26 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 初始化章节
-    initChapter(int index, {force = false, showLoading = true}) async {
+    initChapter(int index, {force = false, showLoading = true, resetCFI = false}) async {
       chapterPagesMap.clear();
-      if (showLoading) {
-        loading.value = true;
-        // await webViewController.value!.scrollTo(x: 0, y: 0, animated: false);
-      }
+      loading.value = showLoading;
       currentIndex.value = 0;
       // 直接一次性加载三章内容，滚动到正确位置后再展示
       final content = await fetchContent(index, force: force);
       await refreshChapter(content, catalog[index].name, index);
-      // await webViewController.value!.scrollTo(x: (pageWidth * (bookRecord.pageIndex)).round(), y: 0, animated: false);
-      final res = await webViewController.value!.evaluateJavascript(source: """
+      // 使用js跳转 CFI 指向的 DOM，同时回调当前页数
+      if (resetCFI) {
+        currentIndex.value = 0;
+        bookRecord.pageIndex = 0;
+        saveRecord();
+      } else {
+        final res = await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.jumpByCFI("${bookRecord.cfi}");
       """);
-      loading.value = false;
-      final page = parseJsNumberToInt(res);
-      currentIndex.value += page;
-      bookRecord.pageIndex = page;
+        final page = parseJsNumberToInt(res);
+        currentIndex.value += page;
+        bookRecord.pageIndex = page;
+      }
       if (index > 0) {
         final preContent = await fetchContent(index - 1, force: force);
         await insertChapter(preContent, catalog[index - 1].name, index - 1);
@@ -382,7 +385,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         final nextContent = await fetchContent(index + 1, force: force);
         await appendChapter(nextContent, catalog[index + 1].name, index + 1);
       }
-      // loading.value = false;
+      loading.value = false;
     }
 
     // 初始化信息
@@ -601,7 +604,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                     bookRecord.pageIndex = 0;
                     menuStatus.value = Menu.none;
                     bookRecord.chapterIndex = index;
-                    initChapter(index);
+                    initChapter(index, resetCFI: true);
                     // fetchStatus = Fetching.none;
                     // loading.value = true;
                     // totalPage = 0;
