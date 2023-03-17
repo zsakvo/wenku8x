@@ -957,7 +957,7 @@ globalThis.ReaderJs = (() => {
     readerStyleElement.innerText = virtualReaderContainerSelector + " { " + style + " } " + bookTextStyle + infoStyle;
   }
   function getBodyStyle() {
-    var style = "line-height: " + config.lineSpacing + " !important;/*font-size: " + config.fontSize + "px !important;*/";
+    var style = "line-height: " + config.lineHeight + " !important;/*font-size: " + config.fontSize + "px !important;*/";
     const infoStyle = ` .reader-app-page-info {color:#${config.infoColor} !important;}`;
     const bookTextStyle = `.book-container {color:#${config.textColor} !important}`;
     return "body * { " + style + " } " + bookTextStyle + infoStyle;
@@ -1194,11 +1194,13 @@ globalThis.ReaderJs = (() => {
   function jumpByCFI(str) {
     console.log(str);
     const cfi = new epubCfiResolver(str);
-    const cfiArr = cfi.get()[0];
-    console.log(cfiArr);
+    console.log(cfi);
+    const cfiArr = cfi.get();
+    const cptCfi = cfiArr[cfiArr.length - 1];
+    console.log(cptCfi);
     const doc = virtualReader.firstChild.firstChild.contentDocument;
     let target = doc;
-    cfiArr.forEach((c) => {
+    cptCfi.forEach((c) => {
       target = target.children[c.nodeIndex / 2 - 1];
     });
     const x = target.getBoundingClientRect().x;
@@ -1207,6 +1209,9 @@ globalThis.ReaderJs = (() => {
       (x - config.marginHorizontal) / (pageWidth + config.marginHorizontal * 2)
     );
     return pageIndex;
+  }
+  function setLineHeight(num) {
+    config.lineHeight = num;
   }
   return {
     init,
@@ -1218,7 +1223,8 @@ globalThis.ReaderJs = (() => {
     getCFI,
     jumpByCFI,
     disableLongHit,
-    enableLongHit
+    enableLongHit,
+    setLineHeight
   };
 })();
 window.addEventListener(
