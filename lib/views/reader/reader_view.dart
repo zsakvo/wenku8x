@@ -373,6 +373,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       loading.value = false;
       final page = parseJsNumberToInt(res);
       currentIndex.value += page;
+      bookRecord.pageIndex = page;
       if (index > 0) {
         final preContent = await fetchContent(index - 1, force: force);
         await insertChapter(preContent, catalog[index - 1].name, index - 1);
