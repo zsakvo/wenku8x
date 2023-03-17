@@ -68,16 +68,10 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
   }
 
   void sortBooks(CaseBook book) {
-    state = [book, ...state.where((element) => element.id != book.id)];
+    state = [book, ...state.where((element) => element.aid != book.aid)];
     isar!.writeTxnSync(() {
       isar!.caseBooks.clearSync();
-      for (var element in state) {
-        isar!.caseBooks.putSync(element);
-      }
-
-      // isar!.caseBooks.where().findAllSync().forEach((element) {
-      //   Log.e(element.bookName);
-      // });
+      isar!.caseBooks.putAllSync(state.map((e) => CaseBook.fromJson(e.toJson())).toList());
     });
   }
 }
