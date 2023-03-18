@@ -956,11 +956,18 @@ globalThis.ReaderJs = (() => {
     const bookTextStyle = `.book-container {color:#${config.textColor}}`;
     readerStyleElement.innerText = virtualReaderContainerSelector + " { " + style + " } " + bookTextStyle + infoStyle;
   }
-  function getBodyStyle() {
-    var style = "line-height: " + config.lineHeight + " !important;/*font-size: " + config.fontSize + "px !important;*/";
-    const infoStyle = ` .reader-app-page-info {color:#${config.infoColor} !important;}`;
-    const bookTextStyle = `.book-container {color:#${config.textColor} !important}`;
-    return "body * { " + style + " } " + bookTextStyle + infoStyle;
+  function getAlignText() {
+    switch (config.textAlign) {
+      case 0:
+        return "initial;";
+      case 1:
+        return "justify;";
+      case 2:
+        return "end;";
+      case 3:
+        return "center;";
+    }
+    return "unset";
   }
   function getHeader(html) {
     const headerReg = /\<head\>/;
@@ -978,7 +985,7 @@ globalThis.ReaderJs = (() => {
       column-gap: ${config.marginHorizontal * 2}px !important;} img {
         max-width: 100% !important;
       }
-       ${getBodyStyle()}</style>`;
+    </style>`;
     if (a) {
       styleString = "<head>" + styleString;
       html = html.replace(headerReg, styleString);
@@ -1022,6 +1029,10 @@ globalThis.ReaderJs = (() => {
     const styleText = `html{background:#${config.backgroundColor};
   font-size:${config.fontSize * 100}%;
   color:#${config.textColor};
+  text-align:${getAlignText()};
+  }
+  body{
+    background-size:cover !important;
   }
   .header-wrapper{
     left:0px;
