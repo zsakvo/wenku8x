@@ -591,6 +591,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   title: widget.name,
                   currentTheme: currentTheme.value,
                   onForceRefresh: () {
+                    menuStatus.value = Menu.none;
                     initChapter(bookRecord.chapterIndex, force: true);
                   },
                 ),
