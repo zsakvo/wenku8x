@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
+import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/utils/log.dart';
 
@@ -64,6 +65,7 @@ class BookListNotifier extends StateNotifier<List<CaseBook>> {
     state = state.where((element) => element.aid != aid).toList();
     await isar!.writeTxn(() async {
       await isar!.caseBooks.filter().aidEqualTo(aid).deleteAll();
+      await isar!.bookRecords.filter().aidEqualTo(aid).deleteAll();
     });
   }
 

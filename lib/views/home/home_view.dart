@@ -147,15 +147,19 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             Icons.alternate_email,
                                             color: Theme.of(context).colorScheme.onBackground,
                                           ),
-                                          title: Text("详情"),
+                                          title: const Text("详情"),
                                           horizontalTitleGap: 0,
+                                          onTap: () {
+                                            GoRouter.of(context).push("/book_detail/${book.aid}");
+                                            GoRouter.of(context).pop();
+                                          },
                                         ),
                                         ListTile(
                                           leading: Icon(
                                             Icons.camera_outlined,
                                             color: Theme.of(context).colorScheme.onBackground,
                                           ),
-                                          title: Text("封面"),
+                                          title: const Text("封面"),
                                           horizontalTitleGap: 0,
                                         )
                                       ]),
@@ -178,6 +182,10 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                             ),
                                           ),
                                           horizontalTitleGap: 0,
+                                          onTap: () {
+                                            ref.read(booksListProvider.notifier).delBook(book.aid);
+                                            GoRouter.of(context).pop();
+                                          },
                                         ),
                                       ]),
                                     )
