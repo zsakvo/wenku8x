@@ -285,11 +285,16 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         // if (longHitStatus != LongHitStatus.c) return;
 
         if (res < 0) {
-          tmpIndex = currentIndex.value + 1;
-          bookRecord.pageIndex++;
+          if (!(bookRecord.chapterIndex == catalog.length - 1 &&
+              bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] - 1)) {
+            tmpIndex = currentIndex.value + 1;
+            bookRecord.pageIndex++;
+          }
         } else {
-          tmpIndex = currentIndex.value - 1;
-          bookRecord.pageIndex--;
+          if (!(bookRecord.chapterIndex == 0 && bookRecord.pageIndex == 0)) {
+            tmpIndex = currentIndex.value - 1;
+            bookRecord.pageIndex--;
+          }
         }
       } else {
         // 点击事件
@@ -302,11 +307,16 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
         var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
         if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
-          tmpIndex = currentIndex.value + 1;
-          bookRecord.pageIndex++;
+          if (!(bookRecord.chapterIndex == catalog.length - 1 &&
+              bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] - 1)) {
+            tmpIndex = currentIndex.value + 1;
+            bookRecord.pageIndex++;
+          }
         } else if (tapUpPos < tempWidth / 3 && tapUpPos > 0) {
-          tmpIndex = currentIndex.value - 1;
-          bookRecord.pageIndex--;
+          if (!(bookRecord.chapterIndex == 0 && bookRecord.pageIndex == 0)) {
+            tmpIndex = currentIndex.value - 1;
+            bookRecord.pageIndex--;
+          }
         } else {
           Log.d("菜单响应");
           if (menuStatus.value == Menu.none) {
@@ -459,7 +469,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
     useEffect(() {
       if (!loading.value) {
-        if (bookRecord.pageIndex == -1) {
+        if (bookRecord.pageIndex == -1 && bookRecord.chapterIndex > 0) {
+          Log.e(bookRecord.chapterIndex, "pppp");
           // 到了上一章
           bookRecord.chapterIndex--;
           bookRecord.pageIndex = chapterPagesMap[bookRecord.chapterIndex] - 1;
@@ -468,7 +479,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
               insertChapter(content, catalog[bookRecord.chapterIndex - 1].name, bookRecord.chapterIndex - 1);
             });
           }
-        } else if (bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex]) {
+        } else if (bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] &&
+            bookRecord.chapterIndex < catalog.length - 1) {
           // 到了下一章
           bookRecord.chapterIndex++;
           bookRecord.pageIndex = 0;
