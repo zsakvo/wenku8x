@@ -161,6 +161,14 @@ class _HomeViewState extends ConsumerState<HomeView> {
                                           ),
                                           title: const Text("封面"),
                                           horizontalTitleGap: 0,
+                                        ),
+                                        ListTile(
+                                          leading: Icon(
+                                            Icons.rocket_launch_outlined,
+                                            color: Theme.of(context).colorScheme.onBackground,
+                                          ),
+                                          title: const Text("缓存"),
+                                          horizontalTitleGap: 0,
                                         )
                                       ]),
                                     ),

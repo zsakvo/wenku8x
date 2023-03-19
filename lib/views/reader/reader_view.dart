@@ -799,7 +799,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     if (file.existsSync()) {
       var cpts = json.decode(file.readAsStringSync()).map((e) {
         return Chapter(e["cid"], e["name"]);
-      });
+      }).toList();
       catalog.addAll(cpts);
       return true;
     } else {
