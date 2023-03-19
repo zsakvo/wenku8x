@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wenku8x/data/scheme/history_book.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/book_meta.dart';
@@ -114,7 +114,7 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
     scrollController.addListener(() {
       double pos = scrollController.position.pixels;
       // ref.read(appBarTitleProvider.notifier).setTitle(pos <= 50.w);
-      showAppBarTitle.value = pos > 50.w;
+      showAppBarTitle.value = pos > 20.0;
     });
 
     useEffect(() {
@@ -142,9 +142,10 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
         return Material(
           child: Container(
               alignment: Alignment.center,
+              // ignore: prefer_const_constructors
               child: SizedBox(
-                width: 84.w,
-                height: 84.w,
+                width: 42,
+                height: 42,
                 child: const CircularProgressIndicator(),
               )),
         );
@@ -162,35 +163,32 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
             slivers: [
               SliverAppBar(
                   pinned: true,
-                  leading: Transform.translate(
-                    offset: const Offset(0, 2),
-                    child: IconButton(
-                      icon: const Icon(Icons.arrow_back),
-                      onPressed: () {
-                        GoRouter.of(context).pop();
-                      },
-                    ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: () {
+                      GoRouter.of(context).pop();
+                    },
                   ),
                   actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
                   centerTitle: false,
                   title: Text(
                     appBarTitle.value,
-                    style: TextStyle(fontSize: 32.sp),
+                    style: const TextStyle(fontSize: 16),
                   )),
               SliverToBoxAdapter(
                   child: Container(
-                padding: EdgeInsets.symmetric(vertical: 30.w, horizontal: 40.w),
+                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 child: Row(children: [
                   CachedNetworkImage(
                     imageUrl: bookMeta.value!.cover,
-                    width: 160.w,
-                    height: 220.w,
+                    width: 72,
+                    height: 112,
                     fit: BoxFit.cover,
                   ),
                   Expanded(
                       child: Container(
-                    height: 240.w,
-                    padding: EdgeInsets.only(left: 40.w),
+                    height: 112,
+                    padding: const EdgeInsets.only(left: 20),
                     child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,24 +198,24 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                               bookMeta.value!.title!,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: 36.sp),
+                              style: const TextStyle(fontSize: 18.0),
                             ),
                           ),
                           Text(
                             bookMeta.value!.author!,
                             style: TextStyle(
-                                fontSize: 25.sp,
+                                fontSize: 12,
                                 height: 1.6,
                                 color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
                           ),
                           Text(bookMeta.value!.pressValue!,
                               style: TextStyle(
-                                  fontSize: 25.sp,
+                                  fontSize: 12,
                                   height: 1.6,
                                   color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
                           Text("${bookMeta.value!.status!} / ${bookMeta.value!.bookLength!}字",
                               style: TextStyle(
-                                  fontSize: 25.sp,
+                                  fontSize: 12,
                                   height: 1.6,
                                   color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
                         ]),
@@ -226,15 +224,15 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
               )),
               SliverToBoxAdapter(
                 child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Row(
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(right: 26.w),
+                          padding: const EdgeInsets.only(right: 16),
                           child: isInShelf.value
                               ? FilledButton.icon(
                                   style: FilledButton.styleFrom(
-                                      minimumSize: Size(124.w, 64.w),
+                                      minimumSize: const Size(72, 36),
                                       backgroundColor: Theme.of(context).colorScheme.error),
                                   onPressed: () async {
                                     var res = await API.delBookFromShelf(bookMeta.value!.aid);
@@ -243,19 +241,20 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                       ref.read(booksListProvider.notifier).delBook(widget.aid);
                                     }
                                   },
+                                  // ignore: prefer_const_constructors
                                   icon: Icon(
                                     Icons.remove_circle_outline,
-                                    size: 32.sp,
+                                    size: 18,
                                   ),
                                   label: Transform.translate(
-                                      offset: Offset(0, -2.w),
-                                      child: Text(
+                                      offset: const Offset(0, -0.1),
+                                      child: const Text(
                                         "移除此书籍",
-                                        style: TextStyle(fontSize: 26.sp),
+                                        style: TextStyle(fontSize: 14),
                                       )))
                               : OutlinedButton(
                                   style: OutlinedButton.styleFrom(
-                                      minimumSize: Size(124.w, 64.w),
+                                      minimumSize: const Size(72, 36),
                                       side: BorderSide(
                                           color: Theme.of(context).colorScheme.outline.withOpacity(0.5), width: 0.8)),
                                   onPressed: () async {
@@ -269,18 +268,18 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                   },
                                   child: Row(
                                     children: [
-                                      Padding(
-                                        padding: EdgeInsets.only(right: 12.w),
+                                      const Padding(
+                                        padding: EdgeInsets.only(right: 10),
                                         child: Icon(
                                           Icons.favorite_border,
-                                          size: 32.sp,
+                                          size: 18,
                                         ),
                                       ),
                                       Transform.translate(
-                                          offset: Offset(0, -2.w),
-                                          child: Text(
+                                          offset: const Offset(0, -0.1),
+                                          child: const Text(
                                             "添加至书架",
-                                            style: TextStyle(fontSize: 26.sp),
+                                            style: TextStyle(fontSize: 14),
                                           ))
                                     ],
                                   )),
@@ -302,46 +301,45 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 40.w),
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: RichText(
                       text: TextSpan(children: [
                     TextSpan(
                         text: "书籍简介\n",
-                        style:
-                            TextStyle(fontSize: 40.sp, height: 1, color: Theme.of(context).colorScheme.onBackground)),
-                    WidgetSpan(
+                        style: TextStyle(fontSize: 18, height: 1, color: Theme.of(context).colorScheme.onBackground)),
+                    const WidgetSpan(
                         child: SizedBox(
-                      height: 56.w,
+                      height: 36,
                     )),
                     TextSpan(
                         text: bookMeta.value!.intro,
-                        style: TextStyle(
-                            fontSize: 28.sp, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)))
+                        style:
+                            TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)))
                   ])),
                 ),
               ),
               SliverToBoxAdapter(
                 child: Container(
                     alignment: Alignment.center,
-                    padding: EdgeInsets.symmetric(vertical: 24.w, horizontal: 40.w),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     child: TextButton(
                         style: TextButton.styleFrom(
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                             backgroundColor: Theme.of(context).colorScheme.primary,
-                            minimumSize: Size(double.infinity, 80.w)),
+                            minimumSize: const Size(double.infinity, 48)),
                         onPressed: () {
                           GoRouter.of(context).push("/reader?aid=${bookMeta.value!.aid}&name=${bookMeta.value!.title}");
                         },
                         child: Text(
                           "开始阅读",
-                          style: TextStyle(fontSize: 26.sp, color: Theme.of(context).colorScheme.onPrimary),
+                          style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onPrimary),
                         ))),
               ),
               SliverFixedExtentList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) => index == 0
                         ? ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 40.w),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                             title: Text(
                               "共 ${catalog.value.length} 章",
                               style: TextStyle(color: Theme.of(context).colorScheme.primary),
@@ -352,12 +350,11 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                             ),
                           )
                         : ListTile(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 40.w),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                             title: Text(
                               catalog.value[index - 1].name,
-                              style: TextStyle(fontSize: 26.sp),
+                              style: const TextStyle(fontSize: 14),
                             ),
-                            trailing: const Icon(Icons.cloud_outlined),
                             shape: Border(
                               bottom:
                                   BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.1), width: 0.5),
@@ -365,7 +362,7 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                           ),
                     childCount: catalog.value.length + 1,
                   ),
-                  itemExtent: 104.w),
+                  itemExtent: 56),
               SliverToBoxAdapter(
                 child: SizedBox(height: MediaQuery.of(context).padding.bottom),
               )

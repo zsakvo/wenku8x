@@ -2,7 +2,6 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 Widget ListBookTile(context,
     {required String cover,
@@ -12,11 +11,11 @@ Widget ListBookTile(context,
     String? desc3,
     Function? onTap,
     Function? onLongTap}) {
-  var descSize = 25.sp;
-  var titleSize = 30.sp;
+  var descSize = 13.0;
+  var titleSize = 16.0;
   if (desc3 != null) {
-    descSize = 22.sp;
-    titleSize = 26.sp;
+    descSize = 12.0;
+    titleSize = 14.0;
   }
   return InkWell(
     child: Container(
