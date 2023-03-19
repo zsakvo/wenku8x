@@ -14,7 +14,6 @@ import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/main.dart';
 import 'package:wenku8x/modals/chapter.dart';
-import 'package:wenku8x/utils/epub_cfi/_parser.dart';
 import 'package:wenku8x/utils/flash.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/utils/util.dart';
