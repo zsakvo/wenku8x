@@ -107,7 +107,9 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   // 字体大小
   final fontSize = spInstance.getDouble("fontSize") ?? 1.2;
   // 字间距
-  final lineSpace = spInstance.getDouble("lineSpace") ?? 1.5;
+  final lineHeight = spInstance.getDouble("lineHeight") ?? 1.5;
+
+  bool isScrolling = false;
 
   @override
   Widget build(BuildContext context) {
@@ -216,9 +218,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 设置间距
-    setLineSpacing(double lineSpacing) async {
+    setLineHeight(double lineHeight) async {
       final res = (await webViewController.value!.evaluateJavascript(source: """
-        ReaderJs.setLineSpacing($lineSpacing,${currentIndex.value})
+        ReaderJs.setLineHeight($lineHeight)
       """) as Map<String, dynamic>);
       webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
       chapterPagesMap.clear();
@@ -241,6 +243,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         ReaderJs.getCFI();
       """);
       bookRecord.cfi = cfi;
+      isScrolling = false;
       isar.writeTxnSync(
         () {
           isar.bookRecords.putSync(bookRecord);
@@ -253,6 +256,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       tapUpPos = event.position.dx;
       tapUpPosY = event.position.dy;
       Log.d(longHitStatus, "up");
+      if (isScrolling) return;
       if (longHitStatus == LongHitStatus.a) {
         longHitStatus = LongHitStatus.b;
         return;
@@ -326,6 +330,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
           }
         }
       }
+      isScrolling = true;
       webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
       // 延迟更新页码，保证翻页完成后插入新章节 :_)
       Future.delayed(const Duration(milliseconds: 300)).then((_) {
@@ -337,6 +342,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
     // 手指落下
     onPointerDown(PointerDownEvent event) {
+      if (isScrolling) return;
       // if (longHitStatus != LongHitStatus.c) return;
       moveX = 0;
       // webViewController.value!.evaluateJavascript(source: """
@@ -348,7 +354,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
     // 手指移动
     onPointerMove(PointerMoveEvent event) {
-      if (longHitStatus != LongHitStatus.c) return;
+      if (longHitStatus != LongHitStatus.c || isScrolling) return;
       webViewController.value!.evaluateJavascript(source: """
         ReaderJs.disableLongHit()
       """);
@@ -435,7 +441,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       textIndent: 36,
                       fontSize: $fontSize,
                       textAlign: 1, //0 start,1 justify,2 end,3 center
-                      lineSpacing: $lineSpace,
+                      lineHeight: $lineHeight,
                       backgroundColor: '${Util.getJsColor(currentTheme.value.readerBackgroundColor)}',
                       textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
                       infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
@@ -657,17 +663,17 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                 MenuText(
                   key: menuTextKey,
                   fontSize: fontSize,
-                  lineSpace: lineSpace,
+                  lineSpace: lineHeight,
                   currentTheme: currentTheme.value,
                   onFontSizeSlideBarValueChangeEnd: (p0) async {
                     await setFontSize(p0);
                     spInstance.setDouble("fontSize", p0);
                     await initChapter(bookRecord.chapterIndex, showLoading: false);
                   },
-                  onTextSpaceSlideBarValueChangeEnd: (p0) {
-                    setLineSpacing(p0);
+                  onTextSpaceSlideBarValueChangeEnd: (p0) async {
+                    setLineHeight(p0);
                     spInstance.setDouble("lineSpace", p0);
-                    initChapter(bookRecord.chapterIndex);
+                    await initChapter(bookRecord.chapterIndex, showLoading: false);
                   },
                   // backgroundColor: Colors.black,
                   // primaryColor: Theme.of(context).colorScheme.primary,

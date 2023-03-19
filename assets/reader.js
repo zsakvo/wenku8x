@@ -970,7 +970,7 @@ globalThis.ReaderJs = (() => {
     return "unset";
   }
   function getHeader(html) {
-    const headerReg = /\<head\>/;
+    const headerReg = /\<\/head\>/;
     const htmlReg = /\<html\>/;
     const bodyReg = /\<\/body\>/;
     const a = html.match(headerReg);
@@ -987,7 +987,7 @@ globalThis.ReaderJs = (() => {
       }
     </style>`;
     if (a) {
-      styleString = "<head>" + styleString;
+      styleString = styleString + "</head>";
       html = html.replace(headerReg, styleString);
     } else {
       styleString = "<html><head>" + styleString + "</head>";
@@ -1027,9 +1027,16 @@ globalThis.ReaderJs = (() => {
   }
   function getReaderStyleText() {
     const styleText = `html{background:#${config.backgroundColor};
-  font-size:${config.fontSize * 100}%;
+  line-height:${config.lineHeight} !important;
   color:#${config.textColor};
+  font-size:${config.fontSize * 100}%;
   text-align:${getAlignText()};
+  }
+  body > p,   
+  body > div
+  {
+  line-height:${config.lineHeight} !important;
+  font-size:${config.fontSize * 100}%;
   }
   body{
     background-size:cover !important;
