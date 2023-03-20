@@ -1115,6 +1115,7 @@ globalThis.ReaderJs = (() => {
     iframe.addEventListener("load", (_) => {
       var _a, _b;
       var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      iframeBody.parentElement.style.background = iframeBody.style.background;
       var img = iframeBody.querySelector("#translate-img");
       img.style.left = iframeBody.scrollWidth + "px";
       iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
@@ -1159,6 +1160,7 @@ globalThis.ReaderJs = (() => {
     iframe.addEventListener("load", (_) => {
       var _a, _b;
       var iframeBody = (_b = iframe.contentDocument || ((_a = iframe.contentWindow) == null ? void 0 : _a.document)) == null ? void 0 : _b.body;
+      iframeBody.parentElement.style.background = iframeBody.style.background;
       var img = iframeBody.querySelector("#translate-img");
       img.style.left = iframeBody.scrollWidth + "px";
       iframe.style.width = iframeBody.scrollWidth + config.marginHorizontal + "px";
@@ -1212,10 +1214,8 @@ globalThis.ReaderJs = (() => {
   function jumpByCFI(str) {
     console.log(str);
     const cfi = new epubCfiResolver(str);
-    console.log(cfi);
     const cfiArr = cfi.get();
     const cptCfi = cfiArr[cfiArr.length - 1];
-    console.log(cptCfi);
     const doc = virtualReader.firstChild.firstChild.contentDocument;
     let target = doc;
     cptCfi.forEach((c) => {
@@ -1224,7 +1224,7 @@ globalThis.ReaderJs = (() => {
     const x = target.getBoundingClientRect().x;
     window.scrollTo(x - config.marginHorizontal, 0);
     const pageIndex = Math.floor(
-      (x - config.marginHorizontal) / (pageWidth + config.marginHorizontal * 2)
+      (x > 0 ? x - config.marginHorizontal : x) / (pageWidth + config.marginHorizontal * 2)
     );
     return pageIndex;
   }

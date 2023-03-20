@@ -389,6 +389,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         ReaderJs.jumpByCFI("${bookRecord.cfi}");
       """);
         final page = parseJsNumberToInt(res);
+        Log.e([res, bookRecord.cfi], 'pagepage');
         currentIndex.value += page;
         bookRecord.pageIndex = page;
       }
