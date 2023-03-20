@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,6 +19,7 @@ import 'package:wenku8x/router.dart';
 import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
 // import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
+import 'package:wenku8x/utils/log.dart';
 import 'package:wenku8x/utils/scroll.dart';
 
 import 'data/scheme/history_book.dart';
@@ -57,6 +59,9 @@ void main() async {
       );
   await Ajax.init();
   initLibs();
+  if (spInstance.getBool("highRefreshRate") ?? false) {
+    await FlutterDisplayMode.setHighRefreshRate();
+  }
   // await FlutterDisplayMode.setHighRefreshRate();
   runApp(const ProviderScope(child: MyApp()));
 }

@@ -338,10 +338,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_displaymode
-      sha256: "042f4910ccc5620c58bb598dead6f868261268cf73a22fa93c9f0c57c3c0e666"
+      sha256: "136b0314fdc78fe995b0b75061fe9ff8210dffca84f8f8110f8f71029479db3b"
       url: "https://pub.dev"
     source: hosted
-    version: "0.3.2"
+    version: "0.5.0"
   flutter_hooks:
     dependency: "direct main"
     description:
