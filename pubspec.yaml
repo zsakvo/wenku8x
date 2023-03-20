@@ -66,6 +66,7 @@ dependencies:
   shared_preferences: ^2.0.17
   html: ^0.15.2
   quiver: ^3.2.1
+  flutter_material_color_picker: ^1.1.0+2
 
 dev_dependencies:
   flutter_test:

@@ -17,6 +17,7 @@ import 'package:wenku8x/http/ajax.dart';
 
 import 'package:wenku8x/router.dart';
 import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
+import 'package:wenku8x/utils/color.dart';
 // import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
 import 'package:wenku8x/utils/log.dart';
@@ -66,7 +67,7 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends HookConsumerWidget {
   static const _defaultLightColorScheme = lightColorScheme;
 
   static const _defaultDarkColorScheme = darkColorScheme;
@@ -74,22 +75,27 @@ class MyApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final Color colorSeed = ref.watch(colorThemeProvider);
+    final monetEnabled = ref.watch(monetEnableProvider);
+    final defaultLightColor = ColorScheme.fromSeed(seedColor: colorSeed, brightness: Brightness.light);
+    final defaultDarkColor = ColorScheme.fromSeed(seedColor: colorSeed, brightness: Brightness.dark);
     return ScreenUtilInit(
         designSize: const Size(750, 1334),
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (context, child) {
           return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
+            if (lightColorScheme == null || darkColorScheme == null) {
+              supportMonet = false;
+            } else {
+              supportMonet = true;
+            }
             return MaterialApp.router(
               theme: ThemeData(
-                colorScheme: lightColorScheme ?? _defaultLightColorScheme,
-                useMaterial3: true,
-              ),
+                  colorScheme: (monetEnabled ? lightColorScheme : null) ?? defaultLightColor, useMaterial3: true),
               darkTheme: ThemeData(
-                colorScheme: darkColorScheme ?? _defaultDarkColorScheme,
-                useMaterial3: true,
-              ),
+                  colorScheme: (monetEnabled ? darkColorScheme : null) ?? defaultDarkColor, useMaterial3: true),
               routeInformationProvider: AppPages.router.routeInformationProvider,
               routeInformationParser: AppPages.router.routeInformationParser,
               routerDelegate: AppPages.router.routerDelegate,
@@ -99,3 +105,10 @@ class MyApp extends StatelessWidget {
         });
   }
 }
+
+final colorThemeProvider =
+    StateProvider((ref) => getMaterialColor(Color(spInstance.getInt("colorSeed") ?? 4294198070)));
+
+final monetEnableProvider = StateProvider((ref) => spInstance.getBool("dynamicColor") ?? false);
+
+bool supportMonet = false;

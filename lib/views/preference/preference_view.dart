@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wenku8x/main.dart';
 import 'package:wenku8x/utils/log.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 class PreferenceView extends StatefulHookConsumerWidget {
   const PreferenceView({Key? key}) : super(key: key);
@@ -99,6 +100,61 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                   ),
                 ),
               ),
+              dynamicColor.value
+                  ? const SizedBox.shrink()
+                  : ListTile(
+                      contentPadding: const EdgeInsets.only(bottom: 8, left: 16, right: 16),
+                      title: Text("选取颜色", style: titleStyle),
+                      onTap: () {
+                        final bakColor = ref.read(colorThemeProvider.notifier).state;
+                        final colorSeed = Color(spInstance.getInt("colorSeed") ?? 4294198070);
+                        // openMainColorPicker(context, colorSeed, (color) {
+                        //   ref.read(colorThemeProvider.notifier).state = color! as MaterialColor;
+                        // }, () {
+                        //   spInstance.setInt("colorSeed", ref.read(colorThemeProvider.notifier).state.value);
+                        //   GoRouter.of(context).pop();
+                        // }, () {
+                        //   ref.read(colorThemeProvider.notifier).state = bakColor;
+                        //   GoRouter.of(context).pop();
+                        // });
+                        showDialog(
+                          barrierDismissible: false,
+                          context: context,
+                          builder: (_) {
+                            return AlertDialog(
+                              contentPadding: const EdgeInsets.all(6.0),
+                              title: const Text("颜色选择器"),
+                              content: MaterialColorPicker(
+                                  elevation: 0,
+                                  spacing: 12,
+                                  selectedColor: colorSeed,
+                                  allowShades: false,
+                                  onMainColorChange: (ColorSwatch<dynamic>? color) {
+                                    ref.read(colorThemeProvider.notifier).state = color! as MaterialColor;
+                                  }),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      ref.read(colorThemeProvider.notifier).state = bakColor;
+                                      GoRouter.of(context).pop();
+                                    },
+                                    child: const Text("取消")),
+                                FilledButton(
+                                    onPressed: () {
+                                      spInstance.setInt("colorSeed", ref.read(colorThemeProvider.notifier).state.value);
+                                      GoRouter.of(context).pop();
+                                    },
+                                    child: const Text("确定"))
+                              ],
+                            );
+                          },
+                        );
+                      },
+                      subtitle: Text(
+                        "手动选择一个色彩，这将作为种子被应用",
+                        style: subTitleStyle,
+                      ),
+                    ),
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(vertical: 6, horizontal: 16),
                 title: Text("强制高刷", style: titleStyle),
