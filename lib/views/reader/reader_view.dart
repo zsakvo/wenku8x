@@ -137,6 +137,11 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 菜单状态
     final menuStatus = useState<Menu>(Menu.none);
     // -----
+    final horizontalPage = useState<bool>(spInstance.getBool("horizontalPage") ?? true);
+    final volumeController = useState<bool>(spInstance.getBool("volumeController") ?? true);
+    final fullTap = useState<bool>(spInstance.getBool("fullTap") ?? false);
+    final hideBars = useState<bool>(spInstance.getBool("hideBars") ?? false);
+    //
 
     parseJsNumberToInt(dynamic arg) {
       if (arg == null) return 0;
