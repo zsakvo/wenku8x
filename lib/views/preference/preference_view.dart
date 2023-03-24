@@ -26,6 +26,7 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
     final highRefreshRate = useState(false);
     final autoSign = useState(false);
     final traditionalChinese = useState(false);
+    final colorSeed = useState(Color(spInstance.getInt("colorSeed") ?? 4294198070));
     // final getSpInstance = useMemoized(() => SharedPreferences.getInstance());
     // final spInstance = useFuture(getSpInstance, initialData: null);
 
@@ -107,7 +108,6 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                       title: Text("选取颜色", style: titleStyle),
                       onTap: () {
                         final bakColor = ref.read(colorThemeProvider.notifier).state;
-                        final colorSeed = Color(spInstance.getInt("colorSeed") ?? 4294198070);
                         // openMainColorPicker(context, colorSeed, (color) {
                         //   ref.read(colorThemeProvider.notifier).state = color! as MaterialColor;
                         // }, () {
@@ -127,10 +127,11 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                               content: MaterialColorPicker(
                                   elevation: 0,
                                   spacing: 12,
-                                  selectedColor: colorSeed,
+                                  selectedColor: colorSeed.value,
                                   allowShades: false,
                                   onMainColorChange: (ColorSwatch<dynamic>? color) {
-                                    ref.read(colorThemeProvider.notifier).state = color! as MaterialColor;
+                                    colorSeed.value = color as MaterialColor;
+                                    ref.read(colorThemeProvider.notifier).state = color;
                                   }),
                               actions: [
                                 TextButton(
@@ -142,6 +143,7 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                                 FilledButton(
                                     onPressed: () {
                                       spInstance.setInt("colorSeed", ref.read(colorThemeProvider.notifier).state.value);
+                                      colorSeed.value = bakColor;
                                       GoRouter.of(context).pop();
                                     },
                                     child: const Text("确定"))
