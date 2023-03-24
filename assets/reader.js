@@ -1071,7 +1071,7 @@ globalThis.ReaderJs = (() => {
     height:${config.infoBarHeight}px;
     bottom:${config.bottomExtraHeight}px;
     box-sizing:border-box;
-    margin-left:-${config.marginHorizontal}px;
+    margin-left:${config.marginHorizontal}px;
     position:absolute;
     font-size:13px;
     color:#${config.infoColor}; 
