@@ -16,6 +16,7 @@ import 'package:wenku8x/data/scheme/case_book.dart';
 import 'package:wenku8x/http/ajax.dart';
 
 import 'package:wenku8x/router.dart';
+import 'package:wenku8x/service/observer.dart';
 import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
 import 'package:wenku8x/utils/color.dart';
 // import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
@@ -64,7 +65,7 @@ void main() async {
     await FlutterDisplayMode.setHighRefreshRate();
   }
   // await FlutterDisplayMode.setHighRefreshRate();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(ProviderScope(observers: [MyObserver()], child: const MyApp()));
 }
 
 class MyApp extends HookConsumerWidget {
