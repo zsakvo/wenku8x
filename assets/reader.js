@@ -976,7 +976,19 @@ globalThis.ReaderJs = (() => {
     const a = html.match(headerReg);
     console.log(a == null ? void 0 : a.index, "match");
     console.log("uedk", windowWidth);
-    let styleString = `<style class="reader-style-x" type="text/css">${getReaderStyleText()}</style><style type="text/css">html{width:100vw !important;height:${getFullHeight()} !important;padding:0 !important;margin：0 !important;} .translate-img{height:1px;width:1px;position:absolute;top:0;}  body{width: ${windowWidth};overflow:hidden;
+    let styleString = `<style class="reader-style-x" type="text/css">${getReaderStyleText()}</style>
+    <style type="text/css">
+    html{
+      width:100vw !important;
+      height:${getFullHeight()} !important;
+      padding:0 !important;margin：0 !important;
+      -webkit-writing-mode:unset !important;
+      -epub-writing-mode: unset important; 
+    } 
+    .translate-img{height:1px;width:1px;position:absolute;top:0;}  
+    body{
+      width: ${windowWidth};
+      overflow:hidden;
       padding: ${config.infoBarHeight + config.marginVertical + config.topExtraHeight + "px"} ${config.marginHorizontal + "px"} ${config.infoBarHeight + config.marginVertical + config.bottomExtraHeight + "px"} ${config.marginHorizontal + "px"} !important;
       height: ${getFullHeight()} !important;
       box-sizing:border-box !important;
@@ -993,7 +1005,7 @@ globalThis.ReaderJs = (() => {
       styleString = "<html><head>" + styleString + "</head>";
       html = html.replace(htmlReg, styleString);
     }
-    html = html.replace(bodyReg, `${tanslateImg}</body>`);
+    html = html.replace(bodyReg, `${tanslateImg}</body>`).replaceAll(/\<script\s.+?\/\>/g, "");
     return html;
   }
   function initValues() {
@@ -1066,6 +1078,11 @@ globalThis.ReaderJs = (() => {
     align-items:flex-start;
   } .info-text{
     width:${pageWidth + config.marginHorizontal * 2}px;
+    padding-right:${2 * config.marginHorizontal}px;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   `;
     return styleText;
