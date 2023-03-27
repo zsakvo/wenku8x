@@ -1048,7 +1048,8 @@ globalThis.ReaderJs = (() => {
   body > div
   {
   line-height:${config.lineHeight} !important;
-  font-size:${config.fontSize * 100}%;
+  font-size:${config.fontSize * 100}%; 
+  ${!!config.fontFamily ? `font-family:${config.fontFamily} !important;` : ""}
   }
   body{
     background-size:cover !important;
@@ -1063,7 +1064,7 @@ globalThis.ReaderJs = (() => {
     position:absolute;
     font-size:13px;
     color:#${config.infoColor}; 
-    align-items:flex-end;
+    align-items:flex-start;
   } .foot-wrapper{
     left:0px;
     display:flex;
@@ -1075,7 +1076,7 @@ globalThis.ReaderJs = (() => {
     position:absolute;
     font-size:13px;
     color:#${config.infoColor}; 
-    align-items:flex-start;
+    align-items:flex-end;
   } .info-text{
     width:${pageWidth + config.marginHorizontal * 2}px;
     padding-right:${2 * config.marginHorizontal}px;
