@@ -1,9 +1,5 @@
 import 'package:isar/isar.dart';
 
-import 'dart:convert';
-
-import 'package:equatable/equatable.dart';
-
 part 'book_record.g.dart';
 
 @collection

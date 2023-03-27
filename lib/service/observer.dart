@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+// import 'package:wenku8x/views/reader/constants/theme.dart';
 
 class MyObserver extends ProviderObserver {
   @override
@@ -8,10 +9,8 @@ class MyObserver extends ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    print('''
-{
-  "provider": "${provider.name ?? provider.runtimeType}",
-  "newValue": "$newValue"
-}''');
+    // if (provider.runtimeType.toString() == 'StateProvider<MaterialColor>') {
+    //   container.read(readerThemeProvider.notifier).update();
+    // }
   }
 }

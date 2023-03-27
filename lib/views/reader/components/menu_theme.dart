@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
 
 class MenuTheme extends StatefulWidget {
-  const MenuTheme({super.key, required this.currentTheme, required this.onThemeItemTap});
+  const MenuTheme({super.key, required this.currentTheme, required this.onThemeItemTap, required this.themes});
 
   final ReaderTheme currentTheme;
+  final List<ReaderTheme> themes;
   final void Function(ReaderTheme theme) onThemeItemTap;
 
   @override
@@ -63,7 +64,7 @@ class MenuThemeState extends State<MenuTheme> {
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: Row(
-                          children: readerThemeList.map((theme) {
+                          children: widget.themes.map((theme) {
                             return GestureDetector(
                               onTap: () {
                                 widget.onThemeItemTap(theme);

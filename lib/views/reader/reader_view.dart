@@ -114,7 +114,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   Widget build(BuildContext context) {
     final log = useState("");
     // 当前主题
-    final currentTheme = useState<ReaderTheme>(readerThemeList[spInstance.getInt("reader_theme") ?? 0]);
+    final readerThemes = ref.watch(readerThemeProvider);
+    final currentTheme = useState<ReaderTheme>(readerThemes[spInstance.getInt("reader_theme") ?? 0]);
     // final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
     // 加载状态
     final loading = useState(true);
@@ -544,7 +545,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }, [menuStatus.value]);
 
     useEffect(() {
-      spInstance.setInt("reader_theme", readerThemeList.indexOf(currentTheme.value));
+      spInstance.setInt("reader_theme", readerThemes.indexOf(currentTheme.value));
       return () {};
     }, [currentTheme.value]);
 
@@ -640,6 +641,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                 ),
                 MenuTheme(
                   key: menuThemeKey,
+                  themes: readerThemes,
                   currentTheme: currentTheme.value,
                   onThemeItemTap: (theme) async {
                     await updateElementStyle(

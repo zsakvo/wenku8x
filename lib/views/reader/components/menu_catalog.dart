@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:wenku8x/modals/chapter.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
-import 'package:wenku8x/views/reader/page_string.dart';
 
 class MenuCatalog extends StatefulWidget {
   const MenuCatalog(

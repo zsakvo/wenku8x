@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
-import 'package:wenku8x/views/reader/page_string.dart';
 
 class MenuConfig extends StatefulWidget {
   const MenuConfig(

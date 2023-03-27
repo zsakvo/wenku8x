@@ -17,11 +17,11 @@ import 'package:wenku8x/http/ajax.dart';
 
 import 'package:wenku8x/router.dart';
 import 'package:wenku8x/service/observer.dart';
-import 'package:wenku8x/themes/tokiwa/color_schemes.g.dart';
+
 import 'package:wenku8x/utils/color.dart';
 // import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
 import 'package:wenku8x/utils/libs.dart';
-import 'package:wenku8x/utils/log.dart';
+
 import 'package:wenku8x/utils/scroll.dart';
 
 import 'data/scheme/history_book.dart';
@@ -69,9 +69,9 @@ void main() async {
 }
 
 class MyApp extends HookConsumerWidget {
-  static const _defaultLightColorScheme = lightColorScheme;
+  // static const _defaultLightColorScheme = lightColorScheme;
 
-  static const _defaultDarkColorScheme = darkColorScheme;
+  // static const _defaultDarkColorScheme = darkColorScheme;
   const MyApp({super.key});
 
   // This widget is the root of your application.

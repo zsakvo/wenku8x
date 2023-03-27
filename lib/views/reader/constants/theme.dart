@@ -1,23 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/service/navigation.dart';
-
-final currentColorScheme = Theme.of(NavigationService.navigatorKey.currentContext!).colorScheme;
-
-final readerBackgroundColor = currentColorScheme.background;
-
-final readerTextColor = currentColorScheme.onBackground;
-
-final pannelBackgroundColor = currentColorScheme.primary.withOpacity(.08);
-
-final pannelTextColor = currentColorScheme.onBackground;
-
-final primaryColor = currentColorScheme.primary;
-
-final dividerColor = currentColorScheme.onBackground.withOpacity(.08);
-
-final pannelContainerColor = currentColorScheme.surfaceVariant.withOpacity(.8);
-
-final pannelContainerColorSelected = currentColorScheme.secondary.withOpacity(.8);
 
 class ReaderTheme {
   final Color readerBackgroundColor;
@@ -46,18 +29,18 @@ class ReaderTheme {
       required this.pannelContainerColorSelected});
 }
 
-final monet = ReaderTheme(
-    name: "莫奈",
-    key: 'monet',
-    readerBackgroundColor: readerBackgroundColor,
-    readerTextColor: readerTextColor,
-    readerInfoColor: readerTextColor,
-    pannelBackgroundColor: pannelBackgroundColor,
-    pannelTextColor: pannelTextColor,
-    primaryColor: primaryColor,
-    dividerColor: dividerColor,
-    pannelContainerColor: pannelContainerColor,
-    pannelContainerColorSelected: pannelContainerColorSelected);
+// final monet = ReaderTheme(
+//     name: "莫奈",
+//     key: 'monet',
+//     readerBackgroundColor: readerBackgroundColor,
+//     readerTextColor: readerTextColor,
+//     readerInfoColor: readerTextColor,
+//     pannelBackgroundColor: pannelBackgroundColor,
+//     pannelTextColor: pannelTextColor,
+//     primaryColor: primaryColor,
+//     dividerColor: dividerColor,
+//     pannelContainerColor: pannelContainerColor,
+//     pannelContainerColorSelected: pannelContainerColorSelected);
 
 final ama = ReaderTheme(
     name: "亚麻",
@@ -150,4 +133,51 @@ final karasubo = ReaderTheme(
     pannelContainerColor: const Color(0xff202122),
     pannelContainerColorSelected: const Color(0xff181a1b));
 
-final readerThemeList = [monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo];
+final readerThemeList = [ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo];
+
+class ReaderThemeNotifier extends StateNotifier<List<ReaderTheme>> {
+  ReaderThemeNotifier() : super([]) {
+    state = [getMonet(), ...readerThemeList];
+  }
+
+  update() {
+    state[0] = getMonet();
+  }
+
+  getMonet() {
+    final currentColorScheme = Theme.of(NavigationService.navigatorKey.currentContext!).colorScheme;
+
+    final readerBackgroundColor = currentColorScheme.background;
+
+    final readerTextColor = currentColorScheme.onBackground;
+
+    final pannelBackgroundColor = currentColorScheme.primary.withOpacity(.08);
+
+    final pannelTextColor = currentColorScheme.onBackground;
+
+    final primaryColor = currentColorScheme.primary;
+
+    final dividerColor = currentColorScheme.onBackground.withOpacity(.08);
+
+    final pannelContainerColor = currentColorScheme.surfaceVariant.withOpacity(.8);
+
+    final pannelContainerColorSelected = currentColorScheme.secondary.withOpacity(.8);
+
+    return ReaderTheme(
+        name: "莫奈",
+        key: 'monet',
+        readerBackgroundColor: readerBackgroundColor,
+        readerTextColor: readerTextColor,
+        readerInfoColor: readerTextColor,
+        pannelBackgroundColor: pannelBackgroundColor,
+        pannelTextColor: pannelTextColor,
+        primaryColor: primaryColor,
+        dividerColor: dividerColor,
+        pannelContainerColor: pannelContainerColor,
+        pannelContainerColorSelected: pannelContainerColorSelected);
+  }
+}
+
+final readerThemeProvider = StateNotifierProvider<ReaderThemeNotifier, List<ReaderTheme>>((ref) {
+  return ReaderThemeNotifier();
+});

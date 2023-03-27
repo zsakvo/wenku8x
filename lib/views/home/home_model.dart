@@ -2,7 +2,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:isar/isar.dart';
 import 'package:wenku8x/data/scheme/book_record.dart';
 import 'package:wenku8x/http/api.dart';
-import 'package:wenku8x/utils/log.dart';
 
 import '../../data/scheme/case_book.dart';
 import '../../data/scheme/history_book.dart';

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:wenku8x/main.dart';
 import 'package:wenku8x/utils/log.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
+import 'package:wenku8x/views/reader/constants/theme.dart';
 
 class PreferenceView extends StatefulHookConsumerWidget {
   const PreferenceView({Key? key}) : super(key: key);
@@ -144,6 +145,7 @@ class _PreferenceViewState extends ConsumerState<PreferenceView> {
                                     onPressed: () {
                                       spInstance.setInt("colorSeed", ref.read(colorThemeProvider.notifier).state.value);
                                       colorSeed.value = bakColor;
+                                      ref.read(readerThemeProvider.notifier).update();
                                       GoRouter.of(context).pop();
                                     },
                                     child: const Text("确定"))
