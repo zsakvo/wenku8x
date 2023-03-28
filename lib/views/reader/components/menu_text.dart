@@ -62,7 +62,7 @@ class MenuTextState extends State<MenuText> {
   @override
   Widget build(BuildContext context) {
     final currentTheme = widget.currentTheme;
-    final baseHeight = MediaQuery.of(context).viewPadding.bottom + 48 + 180;
+    final baseHeight = MediaQuery.of(context).viewPadding.bottom + 48 + 240;
     return Positioned(
         bottom: -baseHeight,
         left: 0,
@@ -100,12 +100,12 @@ class MenuTextState extends State<MenuText> {
                                 data: SliderTheme.of(context).copyWith(
                                   activeTrackColor: currentTheme.primaryColor,
                                   inactiveTrackColor: currentTheme.pannelContainerColor,
-                                  trackHeight: 12,
+                                  trackHeight: 16,
                                   overlayShape: SliderComponentShape.noOverlay,
                                   thumbColor: Colors.white, //滑块颜色
                                   thumbShape: const RoundSliderThumbShape(
-                                    disabledThumbRadius: 7, //禁用是滑块大小
-                                    enabledThumbRadius: 7, //滑块大小
+                                    disabledThumbRadius: 9, //禁用是滑块大小
+                                    enabledThumbRadius: 9, //滑块大小
                                   ),
                                 ),
                                 child: Slider(
@@ -151,12 +151,12 @@ class MenuTextState extends State<MenuText> {
                                 data: SliderTheme.of(context).copyWith(
                                   activeTrackColor: currentTheme.primaryColor,
                                   inactiveTrackColor: currentTheme.pannelContainerColor,
-                                  trackHeight: 12,
+                                  trackHeight: 16,
                                   overlayShape: SliderComponentShape.noOverlay,
                                   thumbColor: Colors.white, //滑块颜色
                                   thumbShape: const RoundSliderThumbShape(
-                                    disabledThumbRadius: 7, //禁用是滑块大小
-                                    enabledThumbRadius: 7, //滑块大小
+                                    disabledThumbRadius: 9, //禁用是滑块大小
+                                    enabledThumbRadius: 9, //滑块大小
                                   ),
                                 ),
                                 child: Slider(
@@ -183,6 +183,71 @@ class MenuTextState extends State<MenuText> {
                           ),
                         ],
                       ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        child: Row(
+                          children: [
+                            Flexible(
+                              flex: 1,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: Icon(
+                                      Icons.translate,
+                                      size: 22,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                        style: TextButton.styleFrom(
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                          backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                                          minimumSize: const Size(148, 24),
+                                        ),
+                                        onPressed: () {},
+                                        child: const Text(
+                                          "系统字体",
+                                          style: TextStyle(fontSize: 12),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 20,
+                            ),
+                            Flexible(
+                              flex: 1,
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 16),
+                                    child: Icon(
+                                      Icons.keyboard_command_key,
+                                      size: 22,
+                                      color: currentTheme.primaryColor,
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: TextButton(
+                                          style: TextButton.styleFrom(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                                            backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                                            minimumSize: const Size(148, 24),
+                                          ),
+                                          onPressed: () {},
+                                          child: const Text(
+                                            "页面边距",
+                                            style: TextStyle(fontSize: 12),
+                                          )))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     ])
                   ],
                 ))));
