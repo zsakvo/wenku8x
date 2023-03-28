@@ -3,12 +3,19 @@ import 'package:flutter/material.dart';
 import '../constants/theme.dart';
 
 class MenuFont extends StatefulWidget {
-  const MenuFont({super.key, required this.fonts, required this.currentTheme, required this.currentFont});
+  const MenuFont(
+      {super.key,
+      required this.fonts,
+      required this.currentTheme,
+      required this.currentFont,
+      required this.onFontChange});
 
   final List<Map<String, String>> fonts;
   final ReaderTheme currentTheme;
 
   final String currentFont;
+
+  final Function(String key) onFontChange;
 
   @override
   State<MenuFont> createState() => MenuFontState();
@@ -76,6 +83,7 @@ class MenuFontState extends State<MenuFont> {
                       setState(() {
                         currentFont = v!;
                       });
+                      widget.onFontChange(v!);
                     },
                     title: Text(
                       font["value"]!,

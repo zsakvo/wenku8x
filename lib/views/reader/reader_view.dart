@@ -707,13 +707,29 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   onChange: (key, value) {},
                 ),
                 MenuFont(
-                    key: menuFontKey,
-                    currentFont: "",
-                    fonts: const [
-                      {"value": "系统字体", "key": ""},
-                      {"value": "思源宋体", "key": "serif"}
-                    ],
-                    currentTheme: currentTheme.value),
+                  key: menuFontKey,
+                  currentFont: "",
+                  fonts: const [
+                    {"value": "系统字体", "key": ""},
+                    {"value": "思源宋体", "key": "serif"}
+                  ],
+                  currentTheme: currentTheme.value,
+                  onFontChange: (key) async {
+                    webViewController.value!.evaluateJavascript(source: """
+                      ReaderJs.setFont("$key");
+                    """);
+                    await initChapter(bookRecord.chapterIndex, showLoading: false);
+                    switch (key) {
+                      case "":
+                        Log.e("是系统字体");
+                        break;
+                      case "serif":
+                        Log.e("是思源宋体");
+                        break;
+                      default:
+                    }
+                  },
+                ),
                 MenuBottom(
                   key: menuBottomWrapperKey,
                   currentTheme: currentTheme.value,

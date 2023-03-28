@@ -1249,6 +1249,9 @@ globalThis.ReaderJs = (() => {
   function setLineHeight(num) {
     config.lineHeight = num;
   }
+  function setFont(font) {
+    config.font = font;
+  }
   return {
     init,
     appendChapter,
@@ -1260,7 +1263,8 @@ globalThis.ReaderJs = (() => {
     jumpByCFI,
     disableLongHit,
     enableLongHit,
-    setLineHeight
+    setLineHeight,
+    setFont
   };
 })();
 window.addEventListener(
