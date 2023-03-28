@@ -2,28 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:wenku8x/views/reader/constants/theme.dart';
 
 class MenuText extends StatefulWidget {
-  const MenuText({
-    Key? key,
-    required this.fontSize,
-    required this.lineSpace,
-    required this.onFontSizeSlideBarValueChangeEnd,
-    required this.onTextSpaceSlideBarValueChangeEnd,
-    required this.currentTheme,
-    // required this.backgroundColor,
-    // required this.primaryColor,
-    // required this.secondColor,
-    // required this.tertiaryColor
-  }) : super(key: key);
+  const MenuText(
+      {Key? key,
+      required this.fontSize,
+      required this.lineSpace,
+      required this.onFontSizeSlideBarValueChangeEnd,
+      required this.onTextSpaceSlideBarValueChangeEnd,
+      required this.currentTheme,
+      required this.onFontButtonTap,
+      required this.onPaddingButtonTap})
+      : super(key: key);
 
   final double fontSize;
   final double lineSpace;
   final ReaderTheme currentTheme;
-  // final Color backgroundColor;
-  // final Color primaryColor;
-  // final Color secondColor;
-  // final Color tertiaryColor;
   final void Function(double) onFontSizeSlideBarValueChangeEnd;
   final void Function(double) onTextSpaceSlideBarValueChangeEnd;
+
+  final void Function() onFontButtonTap;
+  final void Function() onPaddingButtonTap;
 
   @override
   State<MenuText> createState() => MenuTextState();
@@ -184,7 +181,7 @@ class MenuTextState extends State<MenuText> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
                         child: Row(
                           children: [
                             Flexible(
@@ -206,7 +203,7 @@ class MenuTextState extends State<MenuText> {
                                           backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
                                           minimumSize: const Size(148, 24),
                                         ),
-                                        onPressed: () {},
+                                        onPressed: () => widget.onFontButtonTap(),
                                         child: const Text(
                                           "系统字体",
                                           style: TextStyle(fontSize: 12),

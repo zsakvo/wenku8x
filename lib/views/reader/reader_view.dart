@@ -20,6 +20,7 @@ import 'package:wenku8x/utils/util.dart';
 import 'package:wenku8x/views/reader/components/menu_bottom.dart';
 import 'package:wenku8x/views/reader/components/menu_catalog.dart';
 import 'package:wenku8x/views/reader/components/menu_config.dart';
+import 'package:wenku8x/views/reader/components/menu_font.dart';
 import 'package:wenku8x/views/reader/components/menu_progress.dart';
 import 'package:wenku8x/views/reader/components/menu_text.dart';
 import 'package:wenku8x/views/reader/components/menu_top.dart';
@@ -28,7 +29,7 @@ import 'package:wenku8x/views/reader/constants/html.dart';
 import 'components/menu_theme.dart';
 import 'constants/theme.dart';
 
-enum Menu { none, wrapper, catalog, theme, progress, text, config }
+enum Menu { none, wrapper, catalog, theme, progress, text, config, font }
 
 enum ThemeX { monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo }
 
@@ -99,6 +100,7 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
   final menuCatalogKey = GlobalKey<MenuCatalogState>();
   final menuTextKey = GlobalKey<MenuTextState>();
   final menuConfigKey = GlobalKey<MenuConfigState>();
+  final menuFontKey = GlobalKey<MenuFontState>();
   final menuProgressKey = GlobalKey<MenuProgressState>();
 
   // final _regExpBody = r'<body[^>]*>([\s\S]*)<\/body>';
@@ -539,6 +541,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
           case Menu.config:
             menuConfigKey.currentState?.toggle();
             break;
+          case Menu.font:
+            menuFontKey.currentState?.toggle();
+            break;
         }
       }
       return () {};
@@ -682,6 +687,11 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                     spInstance.setDouble("lineSpace", p0);
                     await initChapter(bookRecord.chapterIndex, showLoading: false);
                   },
+                  onFontButtonTap: () {
+                    // menuFontKey.currentState!.open();
+                    menuStatus.value = Menu.font;
+                  },
+                  onPaddingButtonTap: () {},
                   // backgroundColor: Colors.black,
                   // primaryColor: Theme.of(context).colorScheme.primary,
                   // secondColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
@@ -696,6 +706,14 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   currentTheme: currentTheme.value,
                   onChange: (key, value) {},
                 ),
+                MenuFont(
+                    key: menuFontKey,
+                    currentFont: "",
+                    fonts: const [
+                      {"value": "系统字体", "key": ""},
+                      {"value": "思源宋体", "key": "serif"}
+                    ],
+                    currentTheme: currentTheme.value),
                 MenuBottom(
                   key: menuBottomWrapperKey,
                   currentTheme: currentTheme.value,
@@ -897,5 +915,6 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     menuTextKey.currentState?.close();
     menuThemeKey.currentState?.close();
     menuProgressKey.currentState?.close();
+    menuFontKey.currentState?.close();
   }
 }
