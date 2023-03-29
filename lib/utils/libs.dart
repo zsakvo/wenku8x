@@ -12,3 +12,19 @@ initLibs() async {
   libJsDest.writeAsBytesSync(libJs.buffer.asUint8List());
   Log.d(libJsDest.path, "libjs");
 }
+
+initFonts() async {
+  var docDir = await getApplicationDocumentsDirectory();
+  const oriFontDir = 'assets/font/';
+  const fontFiles = ["font.css", "serif_bold.ttf", "serif_medium.ttf"];
+
+  for (var file in fontFiles) {
+    copyAssetToFile("${oriFontDir}file", "${docDir.path}/font/$file");
+  }
+}
+
+Future<File> copyAssetToFile(String assetPath, String filePath) async {
+  final data = await rootBundle.load(assetPath);
+  final bytes = data.buffer.asUint8List();
+  return await File(filePath).writeAsBytes(bytes);
+}

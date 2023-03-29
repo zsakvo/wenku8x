@@ -61,6 +61,7 @@ void main() async {
       );
   await Ajax.init();
   initLibs();
+  initFonts();
   if (spInstance.getBool("highRefreshRate") ?? false) {
     await FlutterDisplayMode.setHighRefreshRate();
   }
