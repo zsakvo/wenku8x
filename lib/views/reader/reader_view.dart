@@ -523,7 +523,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         menuTopKey.currentState?.close();
         closeAllSubMenus();
         if (hideExtra.value) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
         }
       } else {
         menuTopKey.currentState?.close();
@@ -563,7 +563,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
     useEffect(() {
       if (hideExtra.value) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
       }
       return () {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
