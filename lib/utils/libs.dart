@@ -15,11 +15,13 @@ initLibs() async {
 
 initFonts() async {
   var docDir = await getApplicationDocumentsDirectory();
+  final fontDir = Directory("${docDir.path}/font");
+  if (!fontDir.existsSync()) fontDir.createSync(recursive: true);
   const oriFontDir = 'assets/font/';
   const fontFiles = ["font.css", "serif_bold.ttf", "serif_medium.ttf"];
 
   for (var file in fontFiles) {
-    copyAssetToFile("${oriFontDir}file", "${docDir.path}/font/$file");
+    copyAssetToFile("$oriFontDir$file", "${docDir.path}/font/$file");
   }
 }
 

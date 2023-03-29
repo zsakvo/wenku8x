@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide MenuTheme;
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -143,7 +144,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final horizontalPage = useState<bool>(spInstance.getBool("horizontalPage") ?? true);
     final volumeController = useState<bool>(spInstance.getBool("volumeController") ?? true);
     final fullTap = useState<bool>(spInstance.getBool("fullTap") ?? false);
-    final hideBars = useState<bool>(spInstance.getBool("hideBars") ?? false);
+    final hideExtra = useState<bool>(spInstance.getBool("hideExtra") ?? false);
+    final font = useState(spInstance.getString("font") ?? "");
     //
 
     parseJsNumberToInt(dynamic arg) {
@@ -445,7 +447,7 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       bookName: '${widget.name}',
                       horizontal: true,
                       marginHorizontal: 18,
-                      marginVertical: 18,
+                      marginVertical: 0,
                       textIndent: 36,
                       fontSize: $fontSize,
                       textAlign: 1, //0 start,1 justify,2 end,3 center
@@ -454,12 +456,13 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       textColor: '${Util.getJsColor(currentTheme.value.readerTextColor)}',
                       infoColor: '${Util.getJsColor(currentTheme.value.readerInfoColor)}',
                       linkColor: '000000',
-                      topExtraHeight: ${mediaQueryPadding.top},
-                      bottomExtraHeight: ${mediaQueryPadding.bottom},
+                      topExtraHeight: ${mediaQueryPadding.top + (hideExtra.value ? 12 : 0)},
+                      bottomExtraHeight: ${mediaQueryPadding.bottom + (hideExtra.value ? 12 : 0)},
                       infoBarHeight: 32,
                       enableJsBridge:true,
                       enableScroll:false,
                       extraTitle: true,
+                      fontFamily: "${font.value}",
                       isIOS: navigator.userAgent.includes('iPhone')
                     })
                   """);
@@ -512,12 +515,16 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     useEffect(() {
       final menu = menuStatus.value;
       if (menu == Menu.wrapper) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
         menuBottomWrapperKey.currentState?.open();
         menuTopKey.currentState?.open();
       } else if (menu == Menu.none) {
         menuBottomWrapperKey.currentState?.close();
         menuTopKey.currentState?.close();
         closeAllSubMenus();
+        if (hideExtra.value) {
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+        }
       } else {
         menuTopKey.currentState?.close();
         closeAllSubMenus();
@@ -554,11 +561,14 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       return () {};
     }, [currentTheme.value]);
 
-    // useEffect(() {
-    //   return () {
-    //     webViewController.value!.loadData(data: "<html></html>");
-    //   };
-    // }, []);
+    useEffect(() {
+      if (hideExtra.value) {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+      }
+      return () {
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+      };
+    }, []);
 
     // -----
 
@@ -702,19 +712,29 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   horizontal: true,
                   volumeKey: true,
                   fullNext: true,
-                  hideExtra: true,
+                  hideExtra: hideExtra.value,
                   currentTheme: currentTheme.value,
-                  onChange: (key, value) {},
+                  onChange: (key, value) {
+                    spInstance.setBool(key, value);
+                    switch (key) {
+                      case "hideExtra":
+                        hideExtra.value = value;
+                        break;
+                      default:
+                    }
+                  },
                 ),
                 MenuFont(
                   key: menuFontKey,
-                  currentFont: "",
+                  currentFont: font.value,
                   fonts: const [
                     {"value": "系统字体", "key": ""},
                     {"value": "思源宋体", "key": "serif"}
                   ],
                   currentTheme: currentTheme.value,
                   onFontChange: (key) async {
+                    spInstance.setString("font", key);
+                    font.value = key;
                     webViewController.value!.evaluateJavascript(source: """
                       ReaderJs.setFont("$key");
                     """);

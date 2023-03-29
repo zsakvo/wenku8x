@@ -1049,6 +1049,14 @@ globalThis.ReaderJs = (() => {
   {
   line-height:${config.lineHeight} !important;
   font-size:${config.fontSize * 100}%; 
+  }
+  body > p,   
+  body > div,
+  body > h1,
+  body > h2,
+  body > h3,
+  body > h4
+  {
   ${!!config.fontFamily ? `font-family:${config.fontFamily} !important;` : ""}
   }
   body{
@@ -1250,7 +1258,7 @@ globalThis.ReaderJs = (() => {
     config.lineHeight = num;
   }
   function setFont(font) {
-    config.font = font;
+    config.fontFamily = font;
   }
   return {
     init,

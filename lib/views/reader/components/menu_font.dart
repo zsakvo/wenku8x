@@ -87,7 +87,7 @@ class MenuFontState extends State<MenuFont> {
                     },
                     title: Text(
                       font["value"]!,
-                      style: const TextStyle(fontSize: 15),
+                      style: TextStyle(fontSize: 15, fontFamily: font["key"]),
                     ),
                   );
                 }).toList(),

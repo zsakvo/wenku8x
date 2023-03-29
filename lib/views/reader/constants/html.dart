@@ -8,6 +8,7 @@ const READER_APP = """
   <meta charset="UTF-8" />
   <meta name="referrer" content="never" />
   <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <link rel="stylesheet" href="./font/font.css">
   <title>Reader App</title>
 </head>
 

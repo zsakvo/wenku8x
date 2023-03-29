@@ -36,6 +36,21 @@ class MenuConfig extends StatefulWidget {
 
 class MenuConfigState extends State<MenuConfig> {
   bool visible = false;
+
+  bool horizontal = false;
+  bool volumeKey = false;
+  bool fullNext = false;
+  bool hideExtra = false;
+
+  @override
+  void initState() {
+    super.initState();
+    horizontal = widget.horizontal;
+    volumeKey = widget.volumeKey;
+    fullNext = widget.fullNext;
+    hideExtra = widget.hideExtra;
+  }
+
   void open() {
     setState(() {
       visible = true;
@@ -159,11 +174,16 @@ class MenuConfigState extends State<MenuConfig> {
                         children: [
                           CircleAvatar(
                             radius: 24,
-                            backgroundColor: widget.hideExtra
+                            backgroundColor: !hideExtra
                                 ? currentTheme.pannelContainerColor
                                 : currentTheme.pannelContainerColorSelected,
                             child: IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                widget.onChange("hideExtra", !hideExtra);
+                                setState(() {
+                                  hideExtra = !hideExtra;
+                                });
+                              },
                               iconSize: 24,
                               icon: const Icon(
                                 Icons.local_library_outlined,

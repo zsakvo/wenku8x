@@ -114,6 +114,9 @@ flutter:
     - family: Optima
       fonts:
         - asset: assets/font/optima.ttf
+    - family: serif
+      fonts:
+        - asset: assets/font/serif_medium.ttf
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
