@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wenku8x/utils/log.dart';
 
 class Util {
   static getCover(String aid) {
@@ -8,7 +9,8 @@ class Util {
 
   static getJsColor(Color color) {
     final colorHex = color.value.toRadixString(16);
-    final prefix = colorHex.substring(0, 2);
-    return colorHex.replaceAll(prefix, "") + prefix;
+    String firstTwoChars = colorHex.substring(0, 2);
+    String restOfString = colorHex.substring(2);
+    return restOfString + firstTwoChars;
   }
 }
