@@ -512,6 +512,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
+  i18n_extension:
+    dependency: "direct main"
+    description:
+      name: i18n_extension
+      sha256: cd25e5f648ad01364755faedc6d7bb1217201e8da954ec308d9abac4fd150efe
+      url: "https://pub.dev"
+    source: hosted
+    version: "8.0.0"
+  intl:
+    dependency: transitive
+    description:
+      name: intl
+      sha256: "910f85bce16fb5c6f614e117efa303e85a1731bb0081edf3604a2ae6e9a3cc91"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.17.0"
   io:
     dependency: transitive
     description:
@@ -808,13 +824,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
-  settings_ui:
-    dependency: "direct main"
-    description:
-      path: "modules/settings_ui"
-      relative: true
-    source: path
-    version: "2.0.3"
   shared_preferences:
     dependency: "direct main"
     description:
@@ -916,6 +925,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   sqflite:
     dependency: transitive
     description:
