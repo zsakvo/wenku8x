@@ -30,10 +30,10 @@ class Home extends StatelessWidget {
           elevation: 2,
           title: const Text("Material Theme Builder"),
         ),
-        body: Center(
+        body: const Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               Text(
                 'Update with your UI',
               ),

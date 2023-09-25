@@ -32,7 +32,16 @@ import 'constants/theme.dart';
 
 enum Menu { none, wrapper, catalog, theme, progress, text, config, font }
 
-enum ThemeX { monet, ama, hashibami, usuao, chigusa, sekichiku, namari, karasubo }
+enum ThemeX {
+  monet,
+  ama,
+  hashibami,
+  usuao,
+  chigusa,
+  sekichiku,
+  namari,
+  karasubo
+}
 
 enum Fetching { none, next, previous }
 
@@ -42,13 +51,15 @@ enum LongHitStatus { a, b, c }
 class ReaderView extends StatefulHookConsumerWidget {
   final String aid;
   final String name;
-  const ReaderView({required this.aid, required this.name, Key? key}) : super(key: key);
+  const ReaderView({required this.aid, required this.name, Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReaderViewState();
 }
 
-class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStateMixin {
+class _ReaderViewState extends ConsumerState<ReaderView>
+    with TickerProviderStateMixin {
   late Directory docDir;
   late double statusBarHeight;
   late double bottomBarHeight;
@@ -118,14 +129,17 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     final log = useState("");
     // 当前主题
     final readerThemes = ref.watch(readerThemeProvider);
-    final currentTheme = useState<ReaderTheme>(readerThemes[spInstance.getInt("reader_theme") ?? 0]);
+    final currentTheme = useState<ReaderTheme>(
+        readerThemes[spInstance.getInt("reader_theme") ?? 0]);
     // final currentTheme = useState<ReaderTheme>(readerThemeList[1]);
     // 加载状态
     final loading = useState(true);
     // 文档路径
-    final dirFuture = useFuture(useMemoized(getApplicationDocumentsDirectory), initialData: null);
+    final dirFuture = useFuture(useMemoized(getApplicationDocumentsDirectory),
+        initialData: null);
     // 目录请求
-    final catalogFuture = useFuture<bool>(useMemoized(getCatalog), initialData: false);
+    final catalogFuture =
+        useFuture<bool>(useMemoized(getCatalog), initialData: false);
     // webview-controller
     final webViewController = useState<InAppWebViewController?>(null);
     // 页面尺寸数据
@@ -141,9 +155,6 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
     // 菜单状态
     final menuStatus = useState<Menu>(Menu.none);
     // -----
-    final horizontalPage = useState<bool>(spInstance.getBool("horizontalPage") ?? true);
-    final volumeController = useState<bool>(spInstance.getBool("volumeController") ?? true);
-    final fullTap = useState<bool>(spInstance.getBool("fullTap") ?? false);
     final hideExtra = useState<bool>(spInstance.getBool("hideExtra") ?? false);
     final font = useState(spInstance.getString("font") ?? "");
     //
@@ -155,7 +166,8 @@ class _ReaderViewState extends ConsumerState<ReaderView> with TickerProviderStat
 
     // 追加章节
     appendChapter(String content, String title, int index) async {
-      final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
+      final res =
+          (await webViewController.value?.callAsyncJavaScript(functionBody: """
 return await ReaderJs.appendChapter(`$content`,"$title",$index);
 """));
       // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
@@ -167,7 +179,8 @@ return await ReaderJs.appendChapter(`$content`,"$title",$index);
 
     // 插入章节
     insertChapter(String content, String title, int index) async {
-      final res = await webViewController.value?.callAsyncJavaScript(functionBody: """
+      final res =
+          await webViewController.value?.callAsyncJavaScript(functionBody: """
 return ReaderJs.insertChapter(`$content`,"$title",$index);
 """);
       // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
@@ -179,7 +192,8 @@ return ReaderJs.insertChapter(`$content`,"$title",$index);
 
     // 刷新章节
     refreshChapter(String content, String title, int index) async {
-      final res = (await webViewController.value?.callAsyncJavaScript(functionBody: """
+      final res =
+          (await webViewController.value?.callAsyncJavaScript(functionBody: """
 return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 """));
       // final page = (Platform.isIOS ? (res!.value as double).toInt() : res!.value) as int;
@@ -190,7 +204,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 更新样式
-    updateElementStyle({required Color backgroundColor, required Color textColor, required Color infoColor}) async {
+    updateElementStyle(
+        {required Color backgroundColor,
+        required Color textColor,
+        required Color infoColor}) async {
       final bColor = Util.getJsColor(backgroundColor);
       final tColor = Util.getJsColor(textColor);
       final iColor = Util.getJsColor(infoColor);
@@ -231,7 +248,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       final res = (await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.setLineHeight($lineHeight)
       """) as Map<String, dynamic>);
-      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
+      webViewController.value!.scrollTo(
+          x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
       chapterPagesMap.clear();
       int t = 0;
       for (var k in res.keys) {
@@ -244,7 +262,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         }
       }
       currentIndex.value = t + bookRecord.pageIndex;
-      webViewController.value!.scrollTo(x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
+      webViewController.value!.scrollTo(
+          x: (pageWidth * currentIndex.value).round(), y: 0, animated: false);
     }
 
     saveRecord() async {
@@ -271,7 +290,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         return;
       } else if (longHitStatus == LongHitStatus.b) {
         // longHitStatus = LongHitStatus.c;
-        final d = sqrt(pow((tapUpPos - tapDownPos), 2) + pow((tapUpPosY - tapDownPosY), 2));
+        final d = sqrt(pow((tapUpPos - tapDownPos), 2) +
+            pow((tapUpPosY - tapDownPosY), 2));
         if (d < 10) {
           // 当作点击事件
           clearLongHits();
@@ -299,7 +319,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
 
         if (res < 0) {
           if (!(bookRecord.chapterIndex == catalog.length - 1 &&
-              bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] - 1)) {
+              bookRecord.pageIndex ==
+                  chapterPagesMap[bookRecord.chapterIndex] - 1)) {
             tmpIndex = currentIndex.value + 1;
             bookRecord.pageIndex++;
           }
@@ -321,7 +342,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         var tempWidth = pageWidth / (Platform.isAndroid ? devicePixelRatio : 1);
         if (tapUpPos > 2 * tempWidth / 3 && tapUpPos < tempWidth) {
           if (!(bookRecord.chapterIndex == catalog.length - 1 &&
-              bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] - 1)) {
+              bookRecord.pageIndex ==
+                  chapterPagesMap[bookRecord.chapterIndex] - 1)) {
             tmpIndex = currentIndex.value + 1;
             bookRecord.pageIndex++;
           }
@@ -340,7 +362,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         }
       }
       isScrolling = true;
-      webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
+      webViewController.value!
+          .scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: true);
       // 延迟更新页码，保证翻页完成后插入新章节 :_)
       Future.delayed(const Duration(milliseconds: 300)).then((_) {
         currentIndex.value = tmpIndex;
@@ -371,7 +394,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       moveX += dx;
       if (moveX.abs() >= distance) {
         if (menuStatus.value == Menu.none && longHitStatus == LongHitStatus.c) {
-          webViewController.value!.scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
+          webViewController.value!
+              .scrollBy(x: (-event.delta.dx * extraRate).round(), y: 0);
         }
       }
       // else {
@@ -382,7 +406,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }
 
     // 初始化章节
-    initChapter(int index, {force = false, showLoading = true, resetCFI = false}) async {
+    initChapter(int index,
+        {force = false, showLoading = true, resetCFI = false}) async {
       chapterPagesMap.clear();
       loading.value = showLoading;
       currentIndex.value = 0;
@@ -395,7 +420,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         bookRecord.pageIndex = 0;
         saveRecord();
       } else {
-        final res = await webViewController.value!.evaluateJavascript(source: """
+        final res =
+            await webViewController.value!.evaluateJavascript(source: """
         ReaderJs.jumpByCFI("${bookRecord.cfi}");
       """);
         final page = parseJsNumberToInt(res);
@@ -423,7 +449,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         Log.e("开始初始化");
         // 前置数据初始完毕，进入逻辑
         // 阅读记录
-        bookRecord = isar.bookRecords.filter().aidEqualTo(widget.aid).distinctByAid().findFirstSync() ?? BookRecord()
+        bookRecord = isar.bookRecords
+                .filter()
+                .aidEqualTo(widget.aid)
+                .distinctByAid()
+                .findFirstSync() ??
+            BookRecord()
           ..aid = widget.aid;
         // 临时初始化页面宽度
         pageWidth = (mediaQuerySize.width).floor();
@@ -476,7 +507,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             });
         // HTML容器加载
         webviewControllerValue.loadData(
-            data: READER_APP, baseUrl: WebUri.uri(dirData.uri), allowingReadAccessTo: WebUri.uri(dirData.uri));
+            data: READER_APP,
+            baseUrl: WebUri.uri(dirData.uri),
+            allowingReadAccessTo: WebUri.uri(dirData.uri));
         // webviewControllerValue.loadUrl(
         //     urlRequest: URLRequest(url: WebUri("http://10.0.2.2:5173/")),
         //     allowingReadAccessTo: WebUri.uri(dirData.uri));
@@ -491,19 +524,23 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
           // 到了上一章
           bookRecord.chapterIndex--;
           bookRecord.pageIndex = chapterPagesMap[bookRecord.chapterIndex] - 1;
-          if (chapterPagesMap[bookRecord.chapterIndex - 1] == null && bookRecord.chapterIndex > 0) {
+          if (chapterPagesMap[bookRecord.chapterIndex - 1] == null &&
+              bookRecord.chapterIndex > 0) {
             fetchContent(bookRecord.chapterIndex - 1).then((content) {
-              insertChapter(content, catalog[bookRecord.chapterIndex - 1].name, bookRecord.chapterIndex - 1);
+              insertChapter(content, catalog[bookRecord.chapterIndex - 1].name,
+                  bookRecord.chapterIndex - 1);
             });
           }
-        } else if (bookRecord.pageIndex == chapterPagesMap[bookRecord.chapterIndex] &&
+        } else if (bookRecord.pageIndex ==
+                chapterPagesMap[bookRecord.chapterIndex] &&
             bookRecord.chapterIndex < catalog.length - 1) {
           // 到了下一章
           bookRecord.chapterIndex++;
           bookRecord.pageIndex = 0;
           if (chapterPagesMap[bookRecord.chapterIndex + 1] == null) {
             fetchContent(bookRecord.chapterIndex + 1).then((content) {
-              appendChapter(content, catalog[bookRecord.chapterIndex + 1].name, bookRecord.chapterIndex + 1);
+              appendChapter(content, catalog[bookRecord.chapterIndex + 1].name,
+                  bookRecord.chapterIndex + 1);
             });
           }
         }
@@ -515,7 +552,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     useEffect(() {
       final menu = menuStatus.value;
       if (menu == Menu.wrapper) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+            overlays: [SystemUiOverlay.top]);
         menuBottomWrapperKey.currentState?.open();
         menuTopKey.currentState?.open();
       } else if (menu == Menu.none) {
@@ -523,7 +561,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
         menuTopKey.currentState?.close();
         closeAllSubMenus();
         if (hideExtra.value) {
-          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
+          SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
+              overlays: []);
         }
       } else {
         menuTopKey.currentState?.close();
@@ -557,16 +596,19 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
     }, [menuStatus.value]);
 
     useEffect(() {
-      spInstance.setInt("reader_theme", readerThemes.indexOf(currentTheme.value));
+      spInstance.setInt(
+          "reader_theme", readerThemes.indexOf(currentTheme.value));
       return () {};
     }, [currentTheme.value]);
 
     useEffect(() {
       if (hideExtra.value) {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: []);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive,
+            overlays: []);
       }
       return () {
-        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
+        SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
+            overlays: [SystemUiOverlay.top]);
       };
     }, []);
 
@@ -578,8 +620,10 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
               children: [
                 Listener(
                     onPointerCancel: (event) {
-                      webViewController.value!
-                          .scrollTo(x: (pageWidth * (currentIndex.value)).round(), y: 0, animated: true);
+                      webViewController.value!.scrollTo(
+                          x: (pageWidth * (currentIndex.value)).round(),
+                          y: 0,
+                          animated: true);
                     },
                     onPointerMove: onPointerMove,
                     onPointerUp: (event) => onPointerUp(
@@ -591,7 +635,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       onRenderProcessGone: (controller, detail) {
                         showErrorToast(context, detail.didCrash);
                       },
-                      onContentSizeChanged: (controller, oldContentSize, newContentSize) {},
+                      onContentSizeChanged:
+                          (controller, oldContentSize, newContentSize) {},
                       onWebViewCreated: (controller) {
                         webViewController.value = controller;
                       },
@@ -614,7 +659,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                       onLoadStop: (controller, url) {
                         // showErrorToast(context, "loadstop");
                         if (Platform.isIOS) {
-                          controller.evaluateJavascript(source: """globalThis.JsBridge('loadSuccess', true)""");
+                          controller.evaluateJavascript(
+                              source:
+                                  """globalThis.JsBridge('loadSuccess', true)""");
                         }
                       },
                       initialSettings: InAppWebViewSettings(
@@ -676,8 +723,12 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   onPreviousTap: () {},
                   onProgressBarValueChangeEnd: (p0) async {
                     final page = p0.toInt();
-                    final tmpIndex = currentIndex.value + (page - bookRecord.pageIndex);
-                    await webViewController.value!.scrollTo(x: (pageWidth * tmpIndex).round(), y: 0, animated: false);
+                    final tmpIndex =
+                        currentIndex.value + (page - bookRecord.pageIndex);
+                    await webViewController.value!.scrollTo(
+                        x: (pageWidth * tmpIndex).round(),
+                        y: 0,
+                        animated: false);
                     currentIndex.value = tmpIndex;
                     bookRecord.pageIndex = page;
                   },
@@ -690,12 +741,14 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                   onFontSizeSlideBarValueChangeEnd: (p0) async {
                     await setFontSize(p0);
                     spInstance.setDouble("fontSize", p0);
-                    await initChapter(bookRecord.chapterIndex, showLoading: false);
+                    await initChapter(bookRecord.chapterIndex,
+                        showLoading: false);
                   },
                   onTextSpaceSlideBarValueChangeEnd: (p0) async {
                     setLineHeight(p0);
                     spInstance.setDouble("lineSpace", p0);
-                    await initChapter(bookRecord.chapterIndex, showLoading: false);
+                    await initChapter(bookRecord.chapterIndex,
+                        showLoading: false);
                   },
                   onFontButtonTap: () {
                     // menuFontKey.currentState!.open();
@@ -738,7 +791,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                     webViewController.value!.evaluateJavascript(source: """
                       ReaderJs.setFont("$key");
                     """);
-                    await initChapter(bookRecord.chapterIndex, showLoading: false);
+                    await initChapter(bookRecord.chapterIndex,
+                        showLoading: false);
                     switch (key) {
                       case "":
                         Log.e("是系统字体");
@@ -802,7 +856,9 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
                         alignment: Alignment.center,
                         child: Text(
                           "章节加载中，请稍候",
-                          style: TextStyle(fontSize: 15, color: currentTheme.value.readerInfoColor),
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: currentTheme.value.readerInfoColor),
                         ))
                     : const SizedBox.shrink(),
                 // Container(
@@ -818,7 +874,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             ),
             onWillPop: () async {
               Log.e("准备返回");
-              webViewController.value!.loadUrl(urlRequest: URLRequest(url: WebUri("about:blank")));
+              webViewController.value!
+                  .loadUrl(urlRequest: URLRequest(url: WebUri("about:blank")));
               // if (menuStatus.value != Menu.none) {
               //   if (menuStatus.value != Menu.wrapper) {
               //     closeAllSubMenus();
@@ -874,7 +931,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
             for (var node in element.children) {
               if (node.toString().length > 2) {
                 if (i != 0) {
-                  cpts.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
+                  cpts.add(Chapter(
+                      node.getAttribute("cid").toString(), node.innerText));
                 }
               }
               i++;
@@ -937,7 +995,8 @@ return await ReaderJs.refreshChapter(`$content`,"$title",$index);
       // if (title == "插图") {
       //   content = """<div style="text-indent:0">$content</div>""";
       // }
-      String html = """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
+      String html =
+          """<html><head><meta name="viewport" content="width=device-width, user-scalable=no" />
     <title></title></head><style>p{text-align:justify;text-indent:2em;}h3{margin-bottom:42px;}</style><body>${title == '插图' ? '' : '<h3>$title</h3>'}$content</body></html>""";
       Log.e(file.path);
       file.writeAsString(html);

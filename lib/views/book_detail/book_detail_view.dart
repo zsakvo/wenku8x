@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:wenku8x/data/scheme/history_book.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/book_meta.dart';
@@ -63,8 +63,12 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
             bookLength: elements[8].getAttribute("value").toString(),
             latestSection: elements[10].innerText,
             intro: intro);
-        ref.read(historyBooksListProvider.notifier).addBook(HistoryBook(elements[0].innerText, widget.aid,
-            bookMeta.value!.cover, elements[9].getAttribute("value").toString(), elements[10].innerText));
+        ref.read(historyBooksListProvider.notifier).addBook(HistoryBook(
+            elements[0].innerText,
+            widget.aid,
+            bookMeta.value!.cover,
+            elements[9].getAttribute("value").toString(),
+            elements[10].innerText));
       } else {
         throw Exception("内容获取失败");
       }
@@ -80,7 +84,8 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
             for (var node in element.children) {
               if (node.toString().length > 2) {
                 if (i != 0) {
-                  chapters.add(Chapter(node.getAttribute("cid").toString(), node.innerText));
+                  chapters.add(Chapter(
+                      node.getAttribute("cid").toString(), node.innerText));
                 }
               }
               i++;
@@ -169,7 +174,9 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                       GoRouter.of(context).pop();
                     },
                   ),
-                  actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+                  actions: [
+                    IconButton(onPressed: () {}, icon: const Icon(Icons.search))
+                  ],
                   centerTitle: false,
                   title: Text(
                     appBarTitle.value,
@@ -177,7 +184,8 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                   )),
               SliverToBoxAdapter(
                   child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 child: Row(children: [
                   CachedNetworkImage(
                     imageUrl: bookMeta.value!.cover,
@@ -206,18 +214,28 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                             style: TextStyle(
                                 fontSize: 12,
                                 height: 1.6,
-                                color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onBackground
+                                    .withOpacity(0.7)),
                           ),
                           Text(bookMeta.value!.pressValue!,
                               style: TextStyle(
                                   fontSize: 12,
                                   height: 1.6,
-                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
-                          Text("${bookMeta.value!.status!} / ${bookMeta.value!.bookLength!}字",
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.7))),
+                          Text(
+                              "${bookMeta.value!.status!} / ${bookMeta.value!.bookLength!}字",
                               style: TextStyle(
                                   fontSize: 12,
                                   height: 1.6,
-                                  color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7))),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onBackground
+                                      .withOpacity(0.7))),
                         ]),
                   ))
                 ]),
@@ -233,12 +251,16 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                               ? FilledButton.icon(
                                   style: FilledButton.styleFrom(
                                       minimumSize: const Size(72, 36),
-                                      backgroundColor: Theme.of(context).colorScheme.error),
+                                      backgroundColor:
+                                          Theme.of(context).colorScheme.error),
                                   onPressed: () async {
-                                    var res = await API.delBookFromShelf(bookMeta.value!.aid);
+                                    var res = await API
+                                        .delBookFromShelf(bookMeta.value!.aid);
                                     if (res == "1") {
                                       isInShelf.value = false;
-                                      ref.read(booksListProvider.notifier).delBook(widget.aid);
+                                      ref
+                                          .read(booksListProvider.notifier)
+                                          .delBook(widget.aid);
                                     }
                                   },
                                   // ignore: prefer_const_constructors
@@ -256,14 +278,28 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
                                   style: OutlinedButton.styleFrom(
                                       minimumSize: const Size(72, 36),
                                       side: BorderSide(
-                                          color: Theme.of(context).colorScheme.outline.withOpacity(0.5), width: 0.8)),
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .outline
+                                              .withOpacity(0.5),
+                                          width: 0.8)),
                                   onPressed: () async {
-                                    var res = await API.addBookToShelf(bookMeta.value!.aid);
+                                    var res = await API
+                                        .addBookToShelf(bookMeta.value!.aid);
                                     if (res == "1") {
                                       isInShelf.value = true;
                                       var book = bookMeta.value!;
-                                      ref.read(booksListProvider.notifier).addBook(CaseBook(book.title!, book.aid!, "",
-                                          0, 0, book.cover, book.lastUpdate!, book.latestSection!));
+                                      ref
+                                          .read(booksListProvider.notifier)
+                                          .addBook(CaseBook(
+                                              book.title!,
+                                              book.aid!,
+                                              "",
+                                              0,
+                                              0,
+                                              book.cover,
+                                              book.lastUpdate!,
+                                              book.latestSection!));
                                     }
                                   },
                                   child: Row(
@@ -301,63 +337,88 @@ class _BookDetailViewState extends ConsumerState<BookDetailView> {
               ),
               SliverToBoxAdapter(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                   child: RichText(
                       text: TextSpan(children: [
                     TextSpan(
                         text: "书籍简介\n",
-                        style: TextStyle(fontSize: 18, height: 1, color: Theme.of(context).colorScheme.onBackground)),
+                        style: TextStyle(
+                            fontSize: 18,
+                            height: 1,
+                            color: Theme.of(context).colorScheme.onBackground)),
                     const WidgetSpan(
                         child: SizedBox(
                       height: 36,
                     )),
                     TextSpan(
                         text: bookMeta.value!.intro,
-                        style:
-                            TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onBackground.withOpacity(0.7)))
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onBackground
+                                .withOpacity(0.7)))
                   ])),
                 ),
               ),
               SliverToBoxAdapter(
                 child: Container(
                     alignment: Alignment.center,
-                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 12, horizontal: 16),
                     child: TextButton(
                         style: TextButton.styleFrom(
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-                            backgroundColor: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30)),
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
                             minimumSize: const Size(double.infinity, 48)),
                         onPressed: () {
-                          GoRouter.of(context).push("/reader?aid=${bookMeta.value!.aid}&name=${bookMeta.value!.title}");
+                          GoRouter.of(context).push(
+                              "/reader?aid=${bookMeta.value!.aid}&name=${bookMeta.value!.title}");
                         },
                         child: Text(
                           "开始阅读",
-                          style: TextStyle(fontSize: 14, color: Theme.of(context).colorScheme.onPrimary),
+                          style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ))),
               ),
               SliverFixedExtentList(
                   delegate: SliverChildBuilderDelegate(
                     (_, index) => index == 0
                         ? ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
                             title: Text(
                               "共 ${catalog.value.length} 章",
-                              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.primary),
                             ),
                             shape: Border(
-                              bottom:
-                                  BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.1), width: 0.5),
+                              bottom: BorderSide(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withOpacity(0.1),
+                                  width: 0.5),
                             ),
                           )
                         : ListTile(
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                            contentPadding:
+                                const EdgeInsets.symmetric(horizontal: 16),
                             title: Text(
                               catalog.value[index - 1].name,
                               style: const TextStyle(fontSize: 14),
                             ),
                             shape: Border(
-                              bottom:
-                                  BorderSide(color: Theme.of(context).colorScheme.outline.withOpacity(0.1), width: 0.5),
+                              bottom: BorderSide(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .outline
+                                      .withOpacity(0.1),
+                                  width: 0.5),
                             ),
                           ),
                     childCount: catalog.value.length + 1,

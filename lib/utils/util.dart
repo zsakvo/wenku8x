@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:wenku8x/utils/log.dart';
 
 class Util {
   static getCover(String aid) {

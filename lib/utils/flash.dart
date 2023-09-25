@@ -14,24 +14,27 @@ void _showToast(
   Duration? duration,
   Color? backgroundColor,
   Color? fontColor,
-  flashStyle = FlashBehavior.floating,
 }) {
-  showFlash(
-    context: context,
-    duration: duration,
+  context.showFlash(
     builder: (context, controller) {
-      return Flash(
-        controller: controller,
-        behavior: flashStyle,
-        backgroundColor: backgroundColor,
-        position: FlashPosition.bottom,
-        boxShadows: kElevationToShadow[4],
-        horizontalDismissDirection: HorizontalDismissDirection.horizontal,
-        child: FlashBar(
-          content: Text(
-            content,
-            maxLines: 12,
-            style: TextStyle(color: fontColor),
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Flash(
+          controller: controller,
+          position: FlashPosition.bottom,
+          dismissDirections: const [FlashDismissDirection.startToEnd],
+          child: const SizedBox(
+            width: double.infinity,
+            child: Material(
+              elevation: 24,
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('A custom with Flash'),
+                ),
+              ),
+            ),
           ),
         ),
       );

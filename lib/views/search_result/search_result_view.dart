@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/modals/book_meta.dart';
 import 'package:wenku8x/utils/log.dart';
@@ -16,7 +15,8 @@ class SearchResultView extends StatefulHookConsumerWidget {
   const SearchResultView(this.keyword, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SearchResultViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SearchResultViewState();
 }
 
 class _SearchResultViewState extends ConsumerState<SearchResultView> {
@@ -28,7 +28,8 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
     searchBooks() async {
       try {
         List bookAidList = [];
-        XmlDocument? authorRes = await API.searchNovelByAuthorName(widget.keyword);
+        XmlDocument? authorRes =
+            await API.searchNovelByAuthorName(widget.keyword);
         XmlDocument? nameRes = await API.searchNovelByNovelName(widget.keyword);
         if (authorRes != null) {
           authorRes.findAllElements("item").forEach((element) {
@@ -40,7 +41,8 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
             bookAidList.add(element.getAttribute("aid"));
           });
         }
-        var res = await Future.wait(bookAidList.map((aid) => API.getNovelFullMeta(aid)));
+        var res = await Future.wait(
+            bookAidList.map((aid) => API.getNovelFullMeta(aid)));
         for (var element in res) {
           var eles = element!.findAllElements("data").toList();
           bookList.value.add(BookMeta(
@@ -66,20 +68,23 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
         children: [
           Container(
             height: 48,
-            margin: EdgeInsets.only(left: 32.w, right: 32.w, top: 20.w, bottom: 20.w),
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            margin:
+                const EdgeInsets.only(left: 32, right: 32, top: 20, bottom: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.outline.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(30)),
             child: Row(
               children: [
-                IconButton(onPressed: () => GoRouter.of(context).pop(), icon: const Icon(Icons.arrow_back)),
+                IconButton(
+                    onPressed: () => GoRouter.of(context).pop(),
+                    icon: const Icon(Icons.arrow_back)),
                 Expanded(
                     child: Transform.translate(
-                  offset: Offset(0, -1.w),
+                  offset: const Offset(0, -1),
                   child: Text(
                     widget.keyword,
-                    style: TextStyle(fontSize: 32.w),
+                    style: const TextStyle(fontSize: 32),
                   ),
                 )),
                 IconButton(
@@ -97,12 +102,13 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
                   Expanded(
                       child: Material(
                     child: Container(
-                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 6),
+                        padding: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height / 6),
                         alignment: Alignment.center,
-                        child: SizedBox(
-                          width: 84.w,
-                          height: 84.w,
-                          child: const CircularProgressIndicator(),
+                        child: const SizedBox(
+                          width: 84,
+                          height: 84,
+                          child: CircularProgressIndicator(),
                         )),
                   ))
                 ];
@@ -111,7 +117,8 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
                   Expanded(
                       child: Material(
                     child: Container(
-                      padding: EdgeInsets.only(bottom: MediaQuery.of(context).size.height / 6),
+                      padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).size.height / 6),
                       alignment: Alignment.center,
                       child: const Text('Error: 出错了'),
                     ),
@@ -120,17 +127,19 @@ class _SearchResultViewState extends ConsumerState<SearchResultView> {
               case SearchStatus.success:
                 return [
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 40.w, vertical: 24.w),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 24),
                     child: Text(
                       "共 ${bookList.value.length} 条搜索结果",
-                      style: TextStyle(fontSize: 26.sp, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 26, fontWeight: FontWeight.bold),
                     ),
                   ),
                   Expanded(
                       child: ListView.builder(
                     itemCount: bookList.value.length,
                     shrinkWrap: true,
-                    itemExtent: 230.w,
+                    itemExtent: 230,
                     itemBuilder: (context, index) {
                       var book = bookList.value[index];
                       return ListBookTile(context,
