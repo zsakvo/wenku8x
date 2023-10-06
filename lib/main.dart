@@ -6,36 +6,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:isar/isar.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wenku8x/data/scheme/book_record.dart';
-import 'package:wenku8x/data/scheme/case_book.dart';
-import 'package:wenku8x/http/ajax.dart';
-
+import 'package:wenku8x/hooks/brightness.dart';
+import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/router.dart';
-import 'package:wenku8x/service/observer.dart';
 
-import 'package:wenku8x/utils/color.dart';
-// import 'package:wenku8x/themes/sakura/color_schemes.g.dart';
-import 'package:wenku8x/utils/libs.dart';
+import 'package:wenku8x/screen/profile/profile_provider.dart';
+import 'package:wenku8x/theme/extend.dart';
 
-import 'package:wenku8x/utils/scroll.dart';
+import 'http/ajax.dart';
 
-import 'data/scheme/history_book.dart';
+part 'main.freezed.dart';
 
-late final SharedPreferences spInstance;
+// late final Isar isar;
+late final SharedPreferences sp;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  spInstance = await SharedPreferences.getInstance();
-  Isar.openSync([CaseBookSchema, BookRecordSchema, HistoryBookSchema]);
+  sp = await SharedPreferences.getInstance();
+  // isar = Isar.openSync([BookItemSchema], directory: Isar.defaultName);
+  // 设置上下顶栏
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
       overlays: [SystemUiOverlay.top]);
-  const systemUiOverlayStyle = SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      systemNavigationBarColor: Colors.transparent);
   if (Platform.isAndroid || Platform.isIOS) {
+    const systemUiOverlayStyle = SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        systemNavigationBarColor: Colors.transparent);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
   }
   EasyRefresh.defaultHeaderBuilder = () => const ClassicHeader(
@@ -59,59 +58,72 @@ void main() async {
         failedText: '失败了',
         messageText: '最后更新于 %T',
       );
+  final container = ProviderContainer();
   await Ajax.init();
-  initLibs();
-  initFonts();
-  if (spInstance.getBool("highRefreshRate") ?? false) {
+  // 初始化个人信息
+  API.getUserInfo(container);
+  if (sp.getBool("highRefreshRate") ?? false) {
     await FlutterDisplayMode.setHighRefreshRate();
   }
-  // await FlutterDisplayMode.setHighRefreshRate();
-  runApp(ProviderScope(observers: [MyObserver()], child: const MyApp()));
+  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
 class MyApp extends HookConsumerWidget {
-  // static const _defaultLightColorScheme = lightColorScheme;
-
-  // static const _defaultDarkColorScheme = darkColorScheme;
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final Color colorSeed = ref.watch(colorThemeProvider);
-    final monetEnabled = ref.watch(monetEnableProvider);
-    final defaultLightColor = ColorScheme.fromSeed(
-        seedColor: colorSeed, brightness: Brightness.light);
-    final defaultDarkColor =
-        ColorScheme.fromSeed(seedColor: colorSeed, brightness: Brightness.dark);
-    return DynamicColorBuilder(builder: (lightColorScheme, darkColorScheme) {
-      if (lightColorScheme == null || darkColorScheme == null) {
-        supportMonet = false;
-      } else {
-        supportMonet = true;
-      }
+    // final colorSeed = ref.watch(colorSeedProvider);
+    final dynamicColor =
+        ref.watch(configProvider.select((value) => value.dynamicColor));
+    final colorSeed =
+        ref.watch(configProvider.select((value) => value.colorSeed));
+
+    final autoDarkMode =
+        ref.watch(configProvider.select((value) => value.autoDarkMode));
+    final darkModeProvider = configProvider.select((value) => value.isDarkMode);
+    final isDarkMode = ref.watch(darkModeProvider);
+
+    useBrightnessChanged(context,
+        autoDarkMode: autoDarkMode, isDarkMode: isDarkMode);
+
+    return DynamicColorBuilder(builder: (lightDynamic, darkDynamic) {
+      final lightCustom = ColorScheme.fromSeed(
+          seedColor: Color(colorSeed), brightness: Brightness.light);
+      final darkCustom = ColorScheme.fromSeed(
+          seedColor: Color(colorSeed), brightness: Brightness.dark);
+
+      final lightColor =
+          dynamicColor ? (lightDynamic ?? lightCustom) : lightCustom;
+
+      final darkColor = dynamicColor ? (darkDynamic ?? darkCustom) : darkCustom;
+
+      final lightExtendColor = ExtendColors(colorScheme: lightColor);
+      final darkExtendColor = ExtendColors(colorScheme: darkColor);
+
       return MaterialApp.router(
+        title: '轻小说文库',
+        themeMode: autoDarkMode
+            ? ThemeMode.system
+            : isDarkMode
+                ? ThemeMode.dark
+                : ThemeMode.light,
         theme: ThemeData(
-            colorScheme:
-                (monetEnabled ? lightColorScheme : null) ?? defaultLightColor,
-            useMaterial3: true),
+            colorScheme: lightColor,
+            brightness: Brightness.light,
+            useMaterial3: true,
+            extensions: [lightExtendColor]),
         darkTheme: ThemeData(
-            colorScheme:
-                (monetEnabled ? darkColorScheme : null) ?? defaultDarkColor,
-            useMaterial3: true),
-        routeInformationProvider: AppPages.router.routeInformationProvider,
-        routeInformationParser: AppPages.router.routeInformationParser,
-        routerDelegate: AppPages.router.routerDelegate,
-        scrollBehavior: CustScroll(),
+            colorScheme: darkColor,
+            brightness: Brightness.dark,
+            useMaterial3: true,
+            extensions: [darkExtendColor]),
+        routerConfig: router,
       );
     });
   }
 }
 
-final colorThemeProvider = StateProvider((ref) =>
-    getMaterialColor(Color(spInstance.getInt("colorSeed") ?? 4294198070)));
-
-final monetEnableProvider =
-    StateProvider((ref) => spInstance.getBool("dynamicColor") ?? false);
-
-bool supportMonet = false;
+@freezed
+class Main with _$Main {
+  const factory Main({@Default('deepPurple') String colorSeed}) = _Main;
+}

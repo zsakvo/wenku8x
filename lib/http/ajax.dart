@@ -1,21 +1,21 @@
-// ignore_for_file: non_constant_identifier_names, constant_identifier_names, unused_field, unused_element, use_build_context_synchronously
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'dart:convert' as convert;
-
+// import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wenku8x/http/api.dart';
-import 'package:wenku8x/service/navigation.dart';
+// import 'package:wenku8x/service/navigation.dart';
 import 'package:wenku8x/utils/flash.dart';
+import 'dart:convert' as convert;
 
 import 'package:xml/xml.dart';
 
 import '../utils/log.dart';
+import 'api.dart';
 
 class Ajax {
   static String BASEURL = "http://app.wenku8.com/android.php";
@@ -37,8 +37,8 @@ class Ajax {
     final cookieJar = PersistCookieJar(storage: FileStorage(appDocDir.path));
     _client = Dio(BaseOptions(
         baseUrl: BASEURL,
-        connectTimeout: CONNECT_TIMEOUT,
-        receiveTimeout: RECEIVE_TIMEOUT,
+        connectTimeout: const Duration(milliseconds: CONNECT_TIMEOUT),
+        receiveTimeout: const Duration(milliseconds: RECEIVE_TIMEOUT),
         contentType: Headers.formUrlEncodedContentType,
         headers: {
           "User-Agent": UA,
@@ -50,7 +50,8 @@ class Ajax {
     return convert.base64Encode(convert.utf8.encode(param));
   }
 
-  static Future<dynamic> post(String param, {bool isXml = true}) async {
+  static Future<dynamic> post(String param,
+      {bool isXml = true, download = false, savePath = ""}) async {
     // 判断是否是登陆请求
     bool isLogin = param.contains("action=login");
     FormData formData = FormData.fromMap({
@@ -61,10 +62,14 @@ class Ajax {
     Log.d({
       "appver": _APPVER,
       "request": param,
-      "timetoken": DateTime.now().millisecondsSinceEpoch
+      "timetoken": DateTime.now().millisecondsSinceEpoch,
+      "实际参数": _encrypt(param)
     }, "请求参数");
     try {
-      var res = await _client.post("", data: formData);
+      var res = download
+          ? await _client.download("", savePath,
+              data: formData, options: Options(method: "POST"))
+          : (await _client.post("", data: formData));
       if (isXml) {
         try {
           return XmlDocument.parse(res.data.toString());
@@ -92,8 +97,9 @@ class Ajax {
         }
       }
     } catch (err) {
-      showErrorToast(
-          NavigationService.navigatorKey.currentContext, err.toString());
+      Show.error(err.toString());
+      // GoRouter.of(NavigationService.navigatorKey.currentContext!)
+      //     .go("/error/$err");
       rethrow;
     }
   }
