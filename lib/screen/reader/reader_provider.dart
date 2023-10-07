@@ -249,7 +249,17 @@ class ReaderNotifier
         ctx,
         paragraphHeight: 20,
         textArr: textArr,
-        textStyle: state.computedTextStyle,
+        textStyle: state.computedTextStyle, testImage: (textLine) {
+      RegExp regex = RegExp(r'<!--image-->(.*?)<!--image-->');
+      Match? match = regex.firstMatch(textLine);
+
+      if (match != null) {
+        String imageUrl = match.group(1) ?? '';
+        return (true, imageUrl);
+      } else {
+        return (false, textLine);
+      }
+    },
         padding:
             const EdgeInsets.only(left: 20, right: 20, bottom: 64, top: 36));
     var t = DateTime.now();

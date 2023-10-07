@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class RenderUtil {
@@ -7,6 +8,7 @@ class RenderUtil {
       int? cIndex,
       String? text,
       List<String>? textArr,
+      (bool, String) Function(String textLine)? testImage,
       double paragraphHeight = 12.0,
       EdgeInsets padding = EdgeInsets.zero,
       TextStyle textStyle =
@@ -73,8 +75,44 @@ class RenderUtil {
 
     // 循环正文数组，直至待绘制内容为空
     while (textLines.isNotEmpty) {
-      final textLine = textLines.first;
+      String textLine = textLines.first;
       if (textLine.isEmpty) {
+        textLines.removeAt(0);
+        continue;
+      }
+      bool isImage = false;
+      if (testImage != null) {
+        final testImageRes = testImage(textLine);
+        isImage = testImageRes.$1;
+        textLine = testImageRes.$2;
+      }
+      if (isImage) {
+        if (curentPageSpans.isNotEmpty) {
+          if (curentPageSpans.length == 1) {
+            curentPageSpans = [];
+            currentRestHeight = renderHeight;
+          } else {
+            pages.add(curentPageSpans);
+            restHeights.add(currentRestHeight);
+            curentPageSpans = [];
+            currentRestHeight = renderHeight;
+          }
+        }
+
+        pages.add([
+          WidgetSpan(
+              child: Container(
+            height: renderHeight,
+            width: renderWidth,
+            alignment: Alignment.center,
+            child: CachedNetworkImage(
+              imageUrl: textLine,
+              // width: renderWidth,
+            ),
+          )),
+        ]);
+
+        restHeights.add(0);
         textLines.removeAt(0);
         continue;
       }
@@ -145,7 +183,7 @@ class RenderUtil {
     }
 
     // 最后一页
-    pages.add(curentPageSpans);
+    if (curentPageSpans.isNotEmpty) pages.add(curentPageSpans);
 
     int pi = 0;
     return pages
