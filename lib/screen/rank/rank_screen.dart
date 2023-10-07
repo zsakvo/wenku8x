@@ -33,6 +33,19 @@ class _RankScreenState extends ConsumerState<RankScreen> {
             rank.title,
             style: const TextStyle(fontSize: 18),
           ),
+          centerTitle: false,
+          leading: IconButton(
+              onPressed: () {
+                GoRouter.of(context).pop();
+              },
+              icon: SvgPicture.asset(
+                "assets/svg/ic_search_bar_back.svg",
+                width: 23,
+                height: 23,
+                // colorFilter: ColorFilter.mode(
+                //     Theme.of(context).colorScheme.secondary,
+                //     BlendMode.srcIn),
+              )),
           actions: [
             IconButton(
                 onPressed: () {
