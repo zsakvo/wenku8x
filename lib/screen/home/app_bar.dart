@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/screen/profile/profile_provider.dart';
 import 'package:wenku8x/service/navigation.dart';
 
@@ -25,10 +26,19 @@ class HomeAppBar extends HookConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profile = ref.watch(profileProvider);
     final colorScheme = getColorScheme(context);
-    final avatarFile = useFuture(useMemoized(() async {
-      final docDir = await getApplicationDocumentsDirectory();
-      return File("${docDir.path}/avatar.jpg");
-    }, [profile]));
+    final avatarUpdater = ref.watch(avatarExistProvider);
+    final avatarFile = useFuture(
+      useMemoized(() async {
+        final docDir = await getApplicationDocumentsDirectory();
+        var file = File("${docDir.path}/avatar.jpg");
+        return file.existsSync() ? file : null;
+      }, [profile, avatarUpdater]),
+    );
+
+    useEffect(() {
+      API.getUserInfo(ref);
+      return null;
+    }, []);
     return SafeArea(
         child: Padding(
             padding:
@@ -96,18 +106,24 @@ class HomeAppBar extends HookConsumerWidget implements PreferredSizeWidget {
                     // 原形头像
                     GestureDetector(
                       child: ClipOval(
-                          child: Image.file(
-                        avatarFile.data ?? File("assets/image/akari.jpg"),
-                        width: 40,
-                        height: 40,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Image.asset(
-                            "assets/image/akari.jpg",
-                            width: 40,
-                            height: 40,
-                          );
-                        },
-                      )),
+                          child: avatarFile.data == null
+                              ? Image.asset(
+                                  "assets/image/akari.jpg",
+                                  width: 40,
+                                  height: 40,
+                                )
+                              : Image.file(
+                                  avatarFile.data!,
+                                  width: 40,
+                                  height: 40,
+                                  // errorBuilder: (context, error, stackTrace) {
+                                  //   return Image.asset(
+                                  //     "assets/image/akari.jpg",
+                                  //     width: 40,
+                                  //     height: 40,
+                                  //   );
+                                  // },
+                                )),
                       onTap: () {
                         onAvatarTap();
                       },

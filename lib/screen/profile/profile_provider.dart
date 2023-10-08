@@ -100,7 +100,7 @@ final configProvider =
     NotifierProvider<ConfigNotifier, Config>(ConfigNotifier.new);
 
 final profileProvider = StateProvider<UserInfo>((ref) {
-  return const UserInfo(nickname: "佚名", rank: "", score: 0);
+  return const UserInfo(nickname: "-", rank: "-", score: 0);
 });
 
 clearCache() async {
@@ -119,3 +119,7 @@ clearCache() async {
   });
   Show.success("缓存清除成功");
 }
+
+final avatarExistProvider = StateProvider<int>((ref) {
+  return DateTime.now().millisecondsSinceEpoch;
+});

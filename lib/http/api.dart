@@ -3,6 +3,7 @@ import 'package:wenku8x/screen/home/home_provider.dart';
 import 'package:wenku8x/screen/profile/profile_provider.dart';
 import 'package:wenku8x/screen/reader/reader_provider.dart';
 import 'package:wenku8x/utils/flash.dart';
+import 'package:wenku8x/utils/log.dart';
 
 import 'package:wenku8x/utils/util.dart';
 import 'package:xml/xml.dart';
@@ -105,7 +106,9 @@ class API {
 
   static Future getUserInfo(dynamic container) async {
     XmlDocument? res = await Ajax.post("action=userinfo");
-    getUserAvatar();
+    getUserAvatar().then((_) => container
+        .read(avatarExistProvider.notifier)
+        .state = DateTime.now().millisecondsSinceEpoch);
     if (res != null) {
       final children = res.children[2].children;
       // Log.e(res.children);
@@ -134,6 +137,7 @@ class API {
 
   static Future getUserAvatar() async {
     final docDir = await getApplicationDocumentsDirectory();
+    Log.e(docDir.path);
     await Ajax.post("action=avatar",
         isXml: false, download: true, savePath: "${docDir.path}/avatar.jpg");
   }
