@@ -187,15 +187,17 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     child: TapCard(
                   title: "颜色样式",
                   subtitle: "选择一组你喜欢的颜色组合，将之应用到APP内",
-                  onTap: () {},
-                  trailing: IconButton.filledTonal(
-                      onPressed: () {
-                        GoRouter.of(context).push("/palette");
-                      },
-                      icon: Icon(
-                        Icons.palette_outlined,
-                        color: Theme.of(context).colorScheme.primary,
-                      )),
+                  onTap: () {
+                    GoRouter.of(context).push("/palette");
+                  },
+                  trailing: CircleAvatar(
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primaryContainer,
+                    child: Icon(
+                      Icons.palette_outlined,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
                 )),
               // SliverToBoxAdapter(
               //     child: SwitchCard(
@@ -225,33 +227,35 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               // )),
               SliverToBoxAdapter(
                   child: TapCard(
-                title: "清除缓存",
-                subtitle: "移除图书的章节和目录缓存（这理应不会移除你的阅读进度）",
-                onTap: () {},
-                trailing: IconButton.filledTonal(
-                    onPressed: () {
-                      clearCache();
-                    },
-                    icon: Icon(
-                      Icons.delete_outline,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
-              )),
+                      title: "清除缓存",
+                      subtitle: "移除图书的章节和目录缓存（这理应不会移除你的阅读进度）",
+                      onTap: () {
+                        clearCache();
+                      },
+                      trailing: CircleAvatar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        child: Icon(
+                          Icons.delete_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ))),
               SliverToBoxAdapter(
                   child: TapCard(
-                title: "意见反馈",
-                subtitle: "无论你有什么意见和建议，都欢迎找我聊聊。当然，这不代表一定会被实现。",
-                onTap: () {},
-                trailing: IconButton.filledTonal(
-                    onPressed: () {
-                      launchUrl(Uri.parse(
-                          'https://github.com/zsakvo/wenku8x/issues/new'));
-                    },
-                    icon: Icon(
-                      Icons.lightbulb_outline,
-                      color: Theme.of(context).colorScheme.primary,
-                    )),
-              )),
+                      title: "意见反馈",
+                      subtitle: "无论你有什么意见和建议，都欢迎找我聊聊。当然，这不代表一定会被实现。",
+                      onTap: () {
+                        launchUrl(Uri.parse(
+                            'https://github.com/zsakvo/wenku8x/issues/new'));
+                      },
+                      trailing: CircleAvatar(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        child: Icon(
+                          Icons.lightbulb_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ))),
               SliverToBoxAdapter(
                   child: TapCard(
                 title: "退出登录",
@@ -260,7 +264,15 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 subtitle: "你的历史数据会被保留，除非额外点一下清除缓存。",
                 subTitleColor:
                     Theme.of(context).colorScheme.error.withOpacity(1),
-                onTap: () async {},
+                onTap: () async {
+                  Directory appDocDir =
+                      await getApplicationDocumentsDirectory();
+                  final cookieJar =
+                      PersistCookieJar(storage: FileStorage(appDocDir.path));
+                  cookieJar.deleteAll();
+                  // ignore: use_build_context_synchronously
+                  GoRouter.of(context).go("/login");
+                },
                 trailing: IconButton.filled(
                     onPressed: () async {
                       Directory appDocDir =
