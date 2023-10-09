@@ -96,15 +96,16 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                         .elevationBackground,
                     actions: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 4),
-                        child: IconButton.filledTonal(
+                        padding: const EdgeInsets.only(right: 4, left: 4),
+                        child: FilledButton.tonalIcon(
                             onPressed: () {
                               GoRouter.of(context)
                                   .push("/search", extra: detail.author);
                             },
+                            label: const Text("搜索作者"),
                             icon: SvgPicture.asset(
                               "assets/svg/ic_topbar_person_search.svg",
-                              width: 22,
+                              width: 18,
                             )),
                       )
                     ],
