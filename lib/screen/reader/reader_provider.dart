@@ -34,14 +34,15 @@ class Chapter with _$Chapter {
 @freezed
 class ReaderMenuState with _$ReaderMenuState {
   const ReaderMenuState._();
-  const factory ReaderMenuState({
-    @Default(false) bool menuBottomVisible,
-    @Default(false) bool menuTopVisible,
-    @Default(false) bool menuCatalogVisible,
-    @Default(false) bool menuThemeVisible,
-    @Default(false) bool menuTextVisible,
-    @Default(false) bool menuConfigVisible,
-  }) = _ReaderMenuState;
+  const factory ReaderMenuState(
+      {@Default(false) bool menuBottomVisible,
+      @Default(false) bool menuTopVisible,
+      @Default(false) bool menuCatalogVisible,
+      @Default(false) bool menuThemeVisible,
+      @Default(false) bool menuTextVisible,
+      @Default(false) bool menuConfigVisible,
+      @Default(false) bool progressVisible,
+      @Default(0) double bottomBarHeight}) = _ReaderMenuState;
 
   bool get subMenusVisible {
     return menuThemeVisible ||
@@ -137,8 +138,17 @@ class ReaderMenuNotifier extends AutoDisposeNotifier<ReaderMenuState> {
         menuTopVisible: !state.menuTopVisible);
   }
 
+  void showInitialBars() {
+    state = state.copyWith(
+        progressVisible: true, menuBottomVisible: true, menuTopVisible: true);
+  }
+
   void reset() {
     state = const ReaderMenuState();
+  }
+
+  void setBottomBarHeight(double height) {
+    state = state.copyWith(bottomBarHeight: height);
   }
 
   void dispatch({
@@ -148,6 +158,7 @@ class ReaderMenuNotifier extends AutoDisposeNotifier<ReaderMenuState> {
     bool? menuThemeVisible,
     bool? menuTextVisible,
     bool? menuConfigVisible,
+    bool? progressVisible,
   }) {
     state = state.copyWith(
       menuBottomVisible: menuBottomVisible ?? state.menuBottomVisible,
@@ -156,6 +167,7 @@ class ReaderMenuNotifier extends AutoDisposeNotifier<ReaderMenuState> {
       menuThemeVisible: menuThemeVisible ?? state.menuThemeVisible,
       menuTextVisible: menuTextVisible ?? state.menuTextVisible,
       menuConfigVisible: menuConfigVisible ?? state.menuConfigVisible,
+      progressVisible: progressVisible ?? state.progressVisible,
     );
   }
 }

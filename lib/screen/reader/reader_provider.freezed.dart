@@ -179,6 +179,8 @@ mixin _$ReaderMenuState {
   bool get menuThemeVisible => throw _privateConstructorUsedError;
   bool get menuTextVisible => throw _privateConstructorUsedError;
   bool get menuConfigVisible => throw _privateConstructorUsedError;
+  bool get progressVisible => throw _privateConstructorUsedError;
+  double get bottomBarHeight => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ReaderMenuStateCopyWith<ReaderMenuState> get copyWith =>
@@ -197,7 +199,9 @@ abstract class $ReaderMenuStateCopyWith<$Res> {
       bool menuCatalogVisible,
       bool menuThemeVisible,
       bool menuTextVisible,
-      bool menuConfigVisible});
+      bool menuConfigVisible,
+      bool progressVisible,
+      double bottomBarHeight});
 }
 
 /// @nodoc
@@ -219,6 +223,8 @@ class _$ReaderMenuStateCopyWithImpl<$Res, $Val extends ReaderMenuState>
     Object? menuThemeVisible = null,
     Object? menuTextVisible = null,
     Object? menuConfigVisible = null,
+    Object? progressVisible = null,
+    Object? bottomBarHeight = null,
   }) {
     return _then(_value.copyWith(
       menuBottomVisible: null == menuBottomVisible
@@ -245,6 +251,14 @@ class _$ReaderMenuStateCopyWithImpl<$Res, $Val extends ReaderMenuState>
           ? _value.menuConfigVisible
           : menuConfigVisible // ignore: cast_nullable_to_non_nullable
               as bool,
+      progressVisible: null == progressVisible
+          ? _value.progressVisible
+          : progressVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
+      bottomBarHeight: null == bottomBarHeight
+          ? _value.bottomBarHeight
+          : bottomBarHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -263,7 +277,9 @@ abstract class _$$_ReaderMenuStateCopyWith<$Res>
       bool menuCatalogVisible,
       bool menuThemeVisible,
       bool menuTextVisible,
-      bool menuConfigVisible});
+      bool menuConfigVisible,
+      bool progressVisible,
+      double bottomBarHeight});
 }
 
 /// @nodoc
@@ -283,6 +299,8 @@ class __$$_ReaderMenuStateCopyWithImpl<$Res>
     Object? menuThemeVisible = null,
     Object? menuTextVisible = null,
     Object? menuConfigVisible = null,
+    Object? progressVisible = null,
+    Object? bottomBarHeight = null,
   }) {
     return _then(_$_ReaderMenuState(
       menuBottomVisible: null == menuBottomVisible
@@ -309,6 +327,14 @@ class __$$_ReaderMenuStateCopyWithImpl<$Res>
           ? _value.menuConfigVisible
           : menuConfigVisible // ignore: cast_nullable_to_non_nullable
               as bool,
+      progressVisible: null == progressVisible
+          ? _value.progressVisible
+          : progressVisible // ignore: cast_nullable_to_non_nullable
+              as bool,
+      bottomBarHeight: null == bottomBarHeight
+          ? _value.bottomBarHeight
+          : bottomBarHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -322,7 +348,9 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
       this.menuCatalogVisible = false,
       this.menuThemeVisible = false,
       this.menuTextVisible = false,
-      this.menuConfigVisible = false})
+      this.menuConfigVisible = false,
+      this.progressVisible = false,
+      this.bottomBarHeight = 0})
       : super._();
 
   @override
@@ -343,10 +371,16 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
   @override
   @JsonKey()
   final bool menuConfigVisible;
+  @override
+  @JsonKey()
+  final bool progressVisible;
+  @override
+  @JsonKey()
+  final double bottomBarHeight;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'ReaderMenuState(menuBottomVisible: $menuBottomVisible, menuTopVisible: $menuTopVisible, menuCatalogVisible: $menuCatalogVisible, menuThemeVisible: $menuThemeVisible, menuTextVisible: $menuTextVisible, menuConfigVisible: $menuConfigVisible)';
+    return 'ReaderMenuState(menuBottomVisible: $menuBottomVisible, menuTopVisible: $menuTopVisible, menuCatalogVisible: $menuCatalogVisible, menuThemeVisible: $menuThemeVisible, menuTextVisible: $menuTextVisible, menuConfigVisible: $menuConfigVisible, progressVisible: $progressVisible, bottomBarHeight: $bottomBarHeight)';
   }
 
   @override
@@ -359,7 +393,9 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
       ..add(DiagnosticsProperty('menuCatalogVisible', menuCatalogVisible))
       ..add(DiagnosticsProperty('menuThemeVisible', menuThemeVisible))
       ..add(DiagnosticsProperty('menuTextVisible', menuTextVisible))
-      ..add(DiagnosticsProperty('menuConfigVisible', menuConfigVisible));
+      ..add(DiagnosticsProperty('menuConfigVisible', menuConfigVisible))
+      ..add(DiagnosticsProperty('progressVisible', progressVisible))
+      ..add(DiagnosticsProperty('bottomBarHeight', bottomBarHeight));
   }
 
   @override
@@ -378,7 +414,11 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
             (identical(other.menuTextVisible, menuTextVisible) ||
                 other.menuTextVisible == menuTextVisible) &&
             (identical(other.menuConfigVisible, menuConfigVisible) ||
-                other.menuConfigVisible == menuConfigVisible));
+                other.menuConfigVisible == menuConfigVisible) &&
+            (identical(other.progressVisible, progressVisible) ||
+                other.progressVisible == progressVisible) &&
+            (identical(other.bottomBarHeight, bottomBarHeight) ||
+                other.bottomBarHeight == bottomBarHeight));
   }
 
   @override
@@ -389,7 +429,9 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
       menuCatalogVisible,
       menuThemeVisible,
       menuTextVisible,
-      menuConfigVisible);
+      menuConfigVisible,
+      progressVisible,
+      bottomBarHeight);
 
   @JsonKey(ignore: true)
   @override
@@ -405,7 +447,9 @@ abstract class _ReaderMenuState extends ReaderMenuState {
       final bool menuCatalogVisible,
       final bool menuThemeVisible,
       final bool menuTextVisible,
-      final bool menuConfigVisible}) = _$_ReaderMenuState;
+      final bool menuConfigVisible,
+      final bool progressVisible,
+      final double bottomBarHeight}) = _$_ReaderMenuState;
   const _ReaderMenuState._() : super._();
 
   @override
@@ -420,6 +464,10 @@ abstract class _ReaderMenuState extends ReaderMenuState {
   bool get menuTextVisible;
   @override
   bool get menuConfigVisible;
+  @override
+  bool get progressVisible;
+  @override
+  double get bottomBarHeight;
   @override
   @JsonKey(ignore: true)
   _$$_ReaderMenuStateCopyWith<_$_ReaderMenuState> get copyWith =>

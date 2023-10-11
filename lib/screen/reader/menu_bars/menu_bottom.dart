@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,12 +18,21 @@ class _MenuBottomState extends ConsumerState<MenuBottom>
   Widget build(BuildContext context) {
     final state = ref.watch(readerMenuStateProvider);
     final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    useEffect(() {
+      if (state.bottomBarHeight == 0) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ref.read(readerMenuStateProvider.notifier).setBottomBarHeight(
+              context.findRenderObject()!.paintBounds.size.height);
+        });
+      }
+      return null;
+    }, [state]);
+
     return AnimatedPositioned(
-      bottom: state.menuBottomVisible ? 0 : -100,
+      bottom: state.menuBottomVisible ? 0 : -state.bottomBarHeight,
       left: 0,
       duration: const Duration(milliseconds: 200),
       child: Container(
-          height: 42 + bottomPadding,
           width: MediaQuery.of(context).size.width,
           padding: EdgeInsets.only(bottom: bottomPadding),
           decoration: BoxDecoration(

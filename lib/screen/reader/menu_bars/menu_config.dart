@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/utils/flash.dart';
 
@@ -17,17 +18,25 @@ class _MenuConfigState extends ConsumerState<MenuConfig>
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
+    final bottomPos = useState(-height);
 
-    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    // final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
     final state = ref.watch(
         readerMenuStateProvider.select((value) => value.menuConfigVisible));
+    final bottomHeight = ref.watch(
+        readerMenuStateProvider.select((value) => value.bottomBarHeight));
     final config = ref.watch(widget.provider.select((value) => value.config));
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        bottomPos.value = -context.findRenderObject()!.paintBounds.size.height;
+      });
+      return null;
+    }, []);
     return AnimatedPositioned(
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 200),
         left: 0,
-        bottom: state ? 42 + bottomPadding : -height,
+        bottom: state ? bottomHeight : bottomPos.value,
         child: Container(
-            // padding: const EdgeInsets.only(bottom: 0),
             color: Theme.of(context).colorScheme.surface,
             width: MediaQuery.of(context).size.width,
             child:

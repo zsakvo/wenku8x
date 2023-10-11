@@ -17,24 +17,33 @@ class _MenuCatalogState extends ConsumerState<MenuCatalog>
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final bottomPos = useState(-height);
+    // final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
     final scrollController = useScrollController(keepScrollOffset: true);
     final reader = ref.watch(widget.provider);
     final state = ref.watch(
         readerMenuStateProvider.select((value) => value.menuCatalogVisible));
-
+    final bottomHeight = ref.watch(
+        readerMenuStateProvider.select((value) => value.bottomBarHeight));
     useEffect(() {
       if (state) {
         scrollController.jumpTo(reader.cIndex * 46.0);
       }
       return null;
     }, [state]);
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        bottomPos.value = -context.findRenderObject()!.paintBounds.size.height;
+      });
+      return null;
+    }, []);
     return AnimatedPositioned(
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 200),
       left: 0,
-      bottom: state ? 42 + bottomPadding : -height,
+      bottom: state ? bottomHeight : bottomPos.value,
       child: Container(
-        height: height - 142,
+        constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height - bottomHeight - 64),
         width: MediaQuery.of(context).size.width,
         color: Theme.of(context).colorScheme.surface,
         child: Column(
@@ -59,6 +68,7 @@ class _MenuCatalogState extends ConsumerState<MenuCatalog>
                         physics: const ClampingScrollPhysics(),
                         controller: scrollController,
                         cacheExtent: 46,
+                        shrinkWrap: true,
                         itemBuilder: (context, index) {
                           if (index == 0) {
                             return const SizedBox(

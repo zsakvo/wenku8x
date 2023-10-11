@@ -18,16 +18,25 @@ class _MenuTextState extends ConsumerState<MenuText>
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
-    final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final bottomPos = useState(-height);
+    // final bottomPadding = MediaQuery.of(context).viewPadding.bottom;
+    final bottomHeight = ref.watch(
+        readerMenuStateProvider.select((value) => value.bottomBarHeight));
     final state = ref.watch(
         readerMenuStateProvider.select((value) => value.menuTextVisible));
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        bottomPos.value = -context.findRenderObject()!.paintBounds.size.height;
+      });
+      return null;
+    }, []);
     final reader = ref.watch<Reader>(widget.provider);
     final sizeVal = useState(reader.textStyle.fontSize ?? 17.0);
     final heightVal = useState(reader.textStyle.height ?? 1.7);
     return AnimatedPositioned(
-        duration: const Duration(milliseconds: 250),
+        duration: const Duration(milliseconds: 200),
         left: 0,
-        bottom: state ? 42 + bottomPadding : -height,
+        bottom: state ? bottomHeight : bottomPos.value,
         child: Container(
             color: Theme.of(context).colorScheme.surface,
             width: MediaQuery.of(context).size.width,
