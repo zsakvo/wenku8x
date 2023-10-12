@@ -55,6 +55,9 @@ class _ProgressBarState extends ConsumerState<ProgressBar> {
                           inactiveTrackColor:
                               Theme.of(context).colorScheme.background,
                           trackHeight: 16,
+                          valueIndicatorColor: Colors.transparent,
+                          tickMarkShape: SliderTickMarkShape.noTickMark,
+                          overlayColor: Colors.transparent,
                           overlayShape: SliderComponentShape.noOverlay,
                           thumbColor: Theme.of(context).colorScheme.surface,
                           thumbShape: const RoundSliderThumbShape(
