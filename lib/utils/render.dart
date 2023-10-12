@@ -186,6 +186,7 @@ class RenderUtil {
     if (curentPageSpans.isNotEmpty) pages.add(curentPageSpans);
 
     int pi = 0;
+    final pagesLength = pages.length;
     return pages
         .asMap()
         .map((index, item) {
@@ -221,7 +222,8 @@ class RenderUtil {
           return MapEntry(
               index,
               Stack(
-                key: ValueKey({"cIndex": cIndex, 'pIndex': pi}),
+                key: ValueKey(
+                    {"cIndex": cIndex, 'pIndex': pi, "allPages": pagesLength}),
                 children: [
                   Padding(
                     padding: padding.copyWith(bottom: 0),

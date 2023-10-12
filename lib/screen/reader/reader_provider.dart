@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wenku8x/http/api.dart';
 import 'package:wenku8x/main.dart';
+import 'package:wenku8x/screen/reader/menu_bars/progress_bar_provider.dart';
 import 'package:wenku8x/screen/reader/themes/cherry.dart';
 import 'package:wenku8x/screen/reader/themes/glacier.dart';
 import 'package:wenku8x/screen/reader/themes/mulberry.dart';
@@ -138,9 +139,11 @@ class ReaderMenuNotifier extends AutoDisposeNotifier<ReaderMenuState> {
         menuTopVisible: !state.menuTopVisible);
   }
 
-  void showInitialBars() {
+  void toggleInitialBars() {
     state = state.copyWith(
-        progressVisible: true, menuBottomVisible: true, menuTopVisible: true);
+        menuBottomVisible: !state.menuBottomVisible,
+        menuTopVisible: !state.menuTopVisible,
+        progressVisible: !state.progressVisible);
   }
 
   void reset() {
@@ -413,6 +416,11 @@ class ReaderNotifier
     final page = pageController.page!.round();
     final values = Map.from((state.pages[page].key as ValueKey).value);
     int currentChapterIndex = values['cIndex'];
+    int currentChapterPages = values['allPages'];
+    ref.read(progressProvider.notifier).update(ChapterProgress(
+        chapterIndex: currentChapterIndex,
+        totalPages: currentChapterPages,
+        currentIndex: 0));
     if (state.cIndex != currentChapterIndex) {
       Future(() {
         state = state.copyWith(cIndex: currentChapterIndex);
@@ -507,12 +515,14 @@ class ReaderNotifier
         return;
       } else {
         if (ref.read(readerMenuStateProvider).menuBottomVisible) {
-          ref.read(readerMenuStateProvider.notifier).toggleBottomAndTop();
+          // ref.read(readerMenuStateProvider.notifier).toggleBottomAndTop();
+          ref.read(readerMenuStateProvider.notifier).toggleInitialBars();
         } else {
           // 仅在屏幕中央 1/3 的区域内点击才会触发菜单栏
           if ((dy > screenHeight / 3 && dy < screenHeight / 3 * 2) &&
               (dx > screenWidth / 3 && dx < screenWidth / 3 * 2)) {
-            ref.read(readerMenuStateProvider.notifier).toggleBottomAndTop();
+            // ref.read(readerMenuStateProvider.notifier).toggleBottomAndTop();
+            ref.read(readerMenuStateProvider.notifier).toggleInitialBars();
           }
           // 如果点击屏幕右侧 1/3 则翻到下一页
           else if (dx > screenWidth / 3 * 2) {

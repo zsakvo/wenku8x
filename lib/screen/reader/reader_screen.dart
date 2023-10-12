@@ -8,6 +8,7 @@ import 'package:wenku8x/screen/reader/menu_bars/menu_catalog.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_config.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_text.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_top.dart';
+import 'package:wenku8x/screen/reader/menu_bars/progress_bar.dart';
 import 'package:wenku8x/screen/reader/scroll_reader.dart';
 
 import 'menu_bars/menu_bottom.dart';
@@ -33,10 +34,6 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   Widget build(BuildContext context) {
     final provider = readerProvider((widget.name, widget.aid, widget.cIndex));
     final reader = ref.watch(provider);
-
-    // final loading = useMemoized(() {
-    //   return reader.pages.isEmpty;
-    // }, [reader.pages]);
     final loading = ref.watch(loadingProvider);
 
     useEffect(() {
@@ -71,8 +68,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                       onPageScrollEnd:
                           ref.read(provider.notifier).onPageScrollEnd),
                 )),
-            MenuCatalog(provider),
             const MenuBottom(),
+            const ProgressBar(),
+            MenuCatalog(provider),
             MenuTop(provider),
             MenuPalette(provider),
             MenuText(provider),
