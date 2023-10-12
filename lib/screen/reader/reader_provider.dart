@@ -341,6 +341,12 @@ class ReaderNotifier
       final meta =
           RecordMeta.fromJson(json.decode(metaFile.readAsStringSync()));
       pageIndex = getPageIndex(meta.pIndex, pages);
+      Future(() {
+        ref.read(progressProvider.notifier).update(ChapterProgress(
+            chapterIndex: 0,
+            totalPages: pages.length,
+            currentIndex: pageIndex));
+      });
     }
     pageController.jumpToPage(initCIndex != null ? 0 : (pIndex ?? pageIndex));
     // pageController = PageController(
@@ -417,10 +423,12 @@ class ReaderNotifier
     final values = Map.from((state.pages[page].key as ValueKey).value);
     int currentChapterIndex = values['cIndex'];
     int currentChapterPages = values['allPages'];
-    ref.read(progressProvider.notifier).update(ChapterProgress(
-        chapterIndex: currentChapterIndex,
-        totalPages: currentChapterPages,
-        currentIndex: 0));
+    Future(() {
+      ref.read(progressProvider.notifier).update(ChapterProgress(
+          chapterIndex: 0,
+          totalPages: currentChapterPages,
+          currentIndex: currentChapterIndex));
+    });
     if (state.cIndex != currentChapterIndex) {
       Future(() {
         state = state.copyWith(cIndex: currentChapterIndex);
@@ -582,6 +590,23 @@ class ReaderNotifier
     if (pageController.hasClients) {
       pageController.jumpToPage(0);
     }
+  }
+
+  void nextPage() {
+    if (_checkLastPage()) return;
+    pageController.nextPage(
+        duration: const Duration(milliseconds: 0), curve: Curves.easeInOut);
+  }
+
+  void previousPage() {
+    if (_checkFirstPage()) return;
+    pageController.previousPage(
+        duration: const Duration(milliseconds: 0), curve: Curves.easeInOut);
+  }
+
+  void jumpToPage(int index) {
+    final currentIndex = pageController.page!.round();
+    pageController.jumpToPage(currentIndex + index);
   }
 
   void jumpToIndex(int index) {

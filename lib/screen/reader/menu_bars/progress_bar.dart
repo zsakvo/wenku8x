@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/screen/reader/menu_bars/progress_bar_provider.dart';
-
 import '../reader_provider.dart';
 
 class ProgressBar extends StatefulHookConsumerWidget {
-  const ProgressBar({super.key});
+  const ProgressBar(this.provider, {super.key});
+  final dynamic provider;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProgressBarState();
@@ -68,13 +68,18 @@ class _ProgressBarState extends ConsumerState<ProgressBar> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4),
                           child: Slider(
-                            max: progress.totalPages.toDouble(),
+                            max: progress.totalPages.toDouble() - 1,
                             value: progress.currentIndex.toDouble(),
                             divisions: progress.totalPages,
                             onChanged: (value) {
                               ref
                                   .read(progressProvider.notifier)
                                   .updateProgress(value.round());
+                            },
+                            onChangeEnd: (value) {
+                              ref
+                                  .read(widget.provider.notifier)
+                                  .jumpToPage(value.round());
                             },
                           ),
                         ))),

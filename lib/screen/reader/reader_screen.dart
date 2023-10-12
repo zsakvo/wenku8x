@@ -69,7 +69,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                           ref.read(provider.notifier).onPageScrollEnd),
                 )),
             const MenuBottom(),
-            const ProgressBar(),
+            ProgressBar(provider),
             MenuCatalog(provider),
             MenuTop(provider),
             MenuPalette(provider),
