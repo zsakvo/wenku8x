@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -17,10 +18,19 @@ class _MenuTopState extends ConsumerState<MenuTop>
   @override
   Widget build(BuildContext context) {
     final reader = ref.watch(widget.provider);
+    final height = MediaQuery.of(context).size.height;
+    final topPos = useState(-height);
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        topPos.value = -context.findRenderObject()!.paintBounds.size.height;
+      });
+      return null;
+    }, []);
+
     final state = ref
         .watch(readerMenuStateProvider.select((value) => value.menuTopVisible));
     return AnimatedPositioned(
-        top: state ? 0 : -100,
+        top: state ? 0 : topPos.value,
         left: 0,
         duration: const Duration(milliseconds: 200),
         child: Material(

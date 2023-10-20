@@ -37,7 +37,7 @@ class _ProgressBarState extends ConsumerState<ProgressBar> {
             color: Theme.of(context).colorScheme.surface,
             width: MediaQuery.of(context).size.width,
             padding:
-                const EdgeInsets.only(left: 16, right: 16, bottom: 8, top: 8),
+                const EdgeInsets.only(left: 4, right: 4, bottom: 0, top: 8),
             child: Row(
               children: [
                 TextButton(
@@ -49,40 +49,37 @@ class _ProgressBarState extends ConsumerState<ProgressBar> {
                     )),
                 Expanded(
                     child: SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                          activeTrackColor:
-                              Theme.of(context).colorScheme.outline,
-                          inactiveTrackColor:
-                              Theme.of(context).colorScheme.background,
-                          trackHeight: 16,
-                          valueIndicatorColor: Colors.transparent,
-                          tickMarkShape: SliderTickMarkShape.noTickMark,
-                          overlayColor: Colors.transparent,
-                          overlayShape: SliderComponentShape.noOverlay,
-                          thumbColor: Theme.of(context).colorScheme.surface,
-                          thumbShape: const RoundSliderThumbShape(
-                            disabledThumbRadius: 8, //禁用时滑块大小
-                            enabledThumbRadius: 8, //滑块大小
-                          ),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4),
-                          child: Slider(
-                            max: progress.totalPages.toDouble() - 1,
-                            value: progress.currentIndex.toDouble(),
-                            divisions: progress.totalPages,
-                            onChanged: (value) {
-                              ref
-                                  .read(progressProvider.notifier)
-                                  .updateProgress(value.round());
-                            },
-                            onChangeEnd: (value) {
-                              ref
-                                  .read(widget.provider.notifier)
-                                  .jumpToPage(value.round());
-                            },
-                          ),
-                        ))),
+                  data: SliderTheme.of(context).copyWith(
+                    activeTrackColor: Theme.of(context).colorScheme.outline,
+                    inactiveTrackColor:
+                        Theme.of(context).colorScheme.background,
+                    trackHeight: 16,
+                    valueIndicatorColor: Colors.transparent,
+                    tickMarkShape: SliderTickMarkShape.noTickMark,
+                    overlayColor: Colors.transparent,
+                    overlayShape: SliderComponentShape.noOverlay,
+                    thumbColor: Theme.of(context).colorScheme.surface,
+                    thumbShape: const RoundSliderThumbShape(
+                      disabledThumbRadius: 8, //禁用时滑块大小
+                      enabledThumbRadius: 8, //滑块大小
+                    ),
+                  ),
+                  child: Slider(
+                    max: progress.totalPages.toDouble() - 1,
+                    value: progress.currentIndex.toDouble(),
+                    divisions: progress.totalPages,
+                    onChanged: (value) {
+                      ref
+                          .read(progressProvider.notifier)
+                          .updateProgress(value.round());
+                    },
+                    onChangeEnd: (value) {
+                      ref
+                          .read(widget.provider.notifier)
+                          .jumpToPage(value.round());
+                    },
+                  ),
+                )),
                 TextButton(
                     onPressed: () {},
                     child: Text(
