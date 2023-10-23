@@ -187,6 +187,10 @@ class PageSplitter {
     );
   }
 
+  List<CustomPainter> getPainters() {
+    return List.generate(length, (index) => getPainterItem(index));
+  }
+
   Widget getWidgetItem(int index) {
     return CustomPaint(
       foregroundPainter: _PagePainter(
@@ -219,7 +223,7 @@ class PageConfig {
   final double pagePaddingTop;
 
   /// 页面右边距
-  late double pagePaddingRight;
+  final double pagePaddingRight;
 
   /// 页面下边距
   final double pagePaddingBottom;
@@ -246,7 +250,7 @@ class PageConfig {
   final double lineHeight;
 
   /// 段落间距
-  late double paragraphSpacing;
+  final double paragraphSpacing;
 
   /// 是否缩进
   final bool indent;
@@ -258,7 +262,7 @@ class PageConfig {
   final double titlePaddingBottom;
 
   /// 标题字体大小
-  late double titleFontSize;
+  final double titleFontSize;
 
   /// 顶/底部信息栏距离
   final double infoBarPadding;
@@ -273,11 +277,12 @@ class PageConfig {
   final EdgeInsets extraInfoBarEdgeInsets;
 
   // 构造函数
-  PageConfig(
+  const PageConfig(
       {this.debug = false,
       this.pagePaddingTop = 24,
       this.pagePaddingBottom = 24,
       this.pagePaddingLeft = 24,
+      this.pagePaddingRight = 24,
       this.background = Colors.white,
       this.backgroundImage,
       this.fontFamily,
@@ -285,16 +290,14 @@ class PageConfig {
       this.fontColor = const Color(0xff222222),
       this.lineHeight = 1.6,
       this.indent = false,
+      this.titleFontSize = 19,
+      this.paragraphSpacing = 18,
       this.titlePaddingTop = 20,
       this.titlePaddingBottom = 32,
       this.infoBarPadding = 16,
       this.infoBarFontSize = 12,
       this.infoBarFontColor = const Color(0xff999999),
-      this.extraInfoBarEdgeInsets = const EdgeInsets.all(0)}) {
-    pagePaddingRight = pagePaddingLeft;
-    titleFontSize = fontSize + 3;
-    paragraphSpacing = fontSize + 2;
-  }
+      this.extraInfoBarEdgeInsets = const EdgeInsets.all(0)});
 
   /// 顶部信息栏高度
   double get topInfoBarHeight =>

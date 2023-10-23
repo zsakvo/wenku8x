@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/screen/reader/core/cover/cover_reader.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_catalog.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_config.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_text.dart';
@@ -53,21 +54,26 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         child: Scaffold(
             body: Stack(
           children: [
-            Listener(
-                onPointerMove: ref.read(provider.notifier).onPointerMove,
-                onPointerUp: ref.read(provider.notifier).onPointerUp,
-                onPointerDown: ref.read(provider.notifier).onPointerDown,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: MediaQuery.of(context).padding.top,
-                    bottom: MediaQuery.of(context).padding.bottom,
-                  ),
-                  child: ScrollReader(
-                      reader.pages, ref.read(provider.notifier).pageController,
-                      loadNext: ref.read(provider.notifier).loadNextChapter,
-                      onPageScrollEnd:
-                          ref.read(provider.notifier).onPageScrollEnd),
-                )),
+            SizedBox.shrink(
+              child: PageView(
+                  controller: ref.read(provider.notifier).pageController),
+            ),
+            // Listener(
+            //     onPointerMove: ref.read(provider.notifier).onPointerMove,
+            //     onPointerUp: ref.read(provider.notifier).onPointerUp,
+            //     onPointerDown: ref.read(provider.notifier).onPointerDown,
+            //     child: Padding(
+            //       padding: EdgeInsets.only(
+            //         top: MediaQuery.of(context).padding.top,
+            //         bottom: MediaQuery.of(context).padding.bottom,
+            //       ),
+            //       child: ScrollReader(
+            //           reader.pages, ref.read(provider.notifier).pageController,
+            //           loadNext: ref.read(provider.notifier).loadNextChapter,
+            //           onPageScrollEnd:
+            //               ref.read(provider.notifier).onPageScrollEnd),
+            //     )),
+            CoverReader(name: widget.name, aid: widget.aid),
             const MenuBottom(),
             ProgressBar(provider),
             MenuCatalog(provider),
