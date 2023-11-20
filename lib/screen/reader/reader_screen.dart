@@ -17,8 +17,7 @@ import 'menu_bars/menu_theme.dart';
 import 'reader_provider.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
-  const ReaderScreen(
-      {required this.name, required this.aid, super.key, required this.cIndex});
+  const ReaderScreen({required this.name, required this.aid, super.key, required this.cIndex});
 
   final String name;
   final String aid;
@@ -55,8 +54,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             body: Stack(
           children: [
             SizedBox.shrink(
-              child: PageView(
-                  controller: ref.read(provider.notifier).pageController),
+              child: PageView(controller: ref.read(provider.notifier).pageController),
             ),
             // Listener(
             //     onPointerMove: ref.read(provider.notifier).onPointerMove,
@@ -87,8 +85,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: const Center(
-                  child: SizedBox(
-                      width: 96, height: 3, child: LinearProgressIndicator()),
+                  child: SizedBox(width: 96, height: 3, child: LinearProgressIndicator()),
                 ),
               )
           ],
