@@ -77,9 +77,10 @@ class _$SearchCopyWithImpl<$Res, $Val extends Search>
 }
 
 /// @nodoc
-abstract class _$$_SearchCopyWith<$Res> implements $SearchCopyWith<$Res> {
-  factory _$$_SearchCopyWith(_$_Search value, $Res Function(_$_Search) then) =
-      __$$_SearchCopyWithImpl<$Res>;
+abstract class _$$SearchImplCopyWith<$Res> implements $SearchCopyWith<$Res> {
+  factory _$$SearchImplCopyWith(
+          _$SearchImpl value, $Res Function(_$SearchImpl) then) =
+      __$$SearchImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -90,10 +91,11 @@ abstract class _$$_SearchCopyWith<$Res> implements $SearchCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_SearchCopyWithImpl<$Res>
-    extends _$SearchCopyWithImpl<$Res, _$_Search>
-    implements _$$_SearchCopyWith<$Res> {
-  __$$_SearchCopyWithImpl(_$_Search _value, $Res Function(_$_Search) _then)
+class __$$SearchImplCopyWithImpl<$Res>
+    extends _$SearchCopyWithImpl<$Res, _$SearchImpl>
+    implements _$$SearchImplCopyWith<$Res> {
+  __$$SearchImplCopyWithImpl(
+      _$SearchImpl _value, $Res Function(_$SearchImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -104,7 +106,7 @@ class __$$_SearchCopyWithImpl<$Res>
     Object? authors = null,
     Object? error = freezed,
   }) {
-    return _then(_$_Search(
+    return _then(_$SearchImpl(
       isLoading: freezed == isLoading ? _value.isLoading! : isLoading,
       names: null == names
           ? _value._names
@@ -124,8 +126,8 @@ class __$$_SearchCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Search extends _Search {
-  const _$_Search(
+class _$SearchImpl extends _Search {
+  const _$SearchImpl(
       {this.isLoading = false,
       final List<String> names = const [],
       final List<String> authors = const [],
@@ -168,7 +170,7 @@ class _$_Search extends _Search {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Search &&
+            other is _$SearchImpl &&
             const DeepCollectionEquality().equals(other.isLoading, isLoading) &&
             const DeepCollectionEquality().equals(other._names, _names) &&
             const DeepCollectionEquality().equals(other._authors, _authors) &&
@@ -186,8 +188,8 @@ class _$_Search extends _Search {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_SearchCopyWith<_$_Search> get copyWith =>
-      __$$_SearchCopyWithImpl<_$_Search>(this, _$identity);
+  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
+      __$$SearchImplCopyWithImpl<_$SearchImpl>(this, _$identity);
 }
 
 abstract class _Search extends Search {
@@ -195,7 +197,7 @@ abstract class _Search extends Search {
       {final dynamic isLoading,
       final List<String> names,
       final List<String> authors,
-      final String? error}) = _$_Search;
+      final String? error}) = _$SearchImpl;
   const _Search._() : super._();
 
   @override
@@ -208,6 +210,6 @@ abstract class _Search extends Search {
   String? get error;
   @override
   @JsonKey(ignore: true)
-  _$$_SearchCopyWith<_$_Search> get copyWith =>
+  _$$SearchImplCopyWith<_$SearchImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

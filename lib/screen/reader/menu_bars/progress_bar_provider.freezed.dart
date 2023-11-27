@@ -69,22 +69,22 @@ class _$ChapterProgressCopyWithImpl<$Res, $Val extends ChapterProgress>
 }
 
 /// @nodoc
-abstract class _$$_ChapterProgressCopyWith<$Res>
+abstract class _$$ChapterProgressImplCopyWith<$Res>
     implements $ChapterProgressCopyWith<$Res> {
-  factory _$$_ChapterProgressCopyWith(
-          _$_ChapterProgress value, $Res Function(_$_ChapterProgress) then) =
-      __$$_ChapterProgressCopyWithImpl<$Res>;
+  factory _$$ChapterProgressImplCopyWith(_$ChapterProgressImpl value,
+          $Res Function(_$ChapterProgressImpl) then) =
+      __$$ChapterProgressImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int chapterIndex, int totalPages, int currentIndex});
 }
 
 /// @nodoc
-class __$$_ChapterProgressCopyWithImpl<$Res>
-    extends _$ChapterProgressCopyWithImpl<$Res, _$_ChapterProgress>
-    implements _$$_ChapterProgressCopyWith<$Res> {
-  __$$_ChapterProgressCopyWithImpl(
-      _$_ChapterProgress _value, $Res Function(_$_ChapterProgress) _then)
+class __$$ChapterProgressImplCopyWithImpl<$Res>
+    extends _$ChapterProgressCopyWithImpl<$Res, _$ChapterProgressImpl>
+    implements _$$ChapterProgressImplCopyWith<$Res> {
+  __$$ChapterProgressImplCopyWithImpl(
+      _$ChapterProgressImpl _value, $Res Function(_$ChapterProgressImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -94,7 +94,7 @@ class __$$_ChapterProgressCopyWithImpl<$Res>
     Object? totalPages = null,
     Object? currentIndex = null,
   }) {
-    return _then(_$_ChapterProgress(
+    return _then(_$ChapterProgressImpl(
       chapterIndex: null == chapterIndex
           ? _value.chapterIndex
           : chapterIndex // ignore: cast_nullable_to_non_nullable
@@ -113,8 +113,8 @@ class __$$_ChapterProgressCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ChapterProgress extends _ChapterProgress {
-  const _$_ChapterProgress(
+class _$ChapterProgressImpl extends _ChapterProgress {
+  const _$ChapterProgressImpl(
       {required this.chapterIndex,
       required this.totalPages,
       required this.currentIndex})
@@ -138,7 +138,7 @@ class _$_ChapterProgress extends _ChapterProgress {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ChapterProgress &&
+            other is _$ChapterProgressImpl &&
             (identical(other.chapterIndex, chapterIndex) ||
                 other.chapterIndex == chapterIndex) &&
             (identical(other.totalPages, totalPages) ||
@@ -154,15 +154,16 @@ class _$_ChapterProgress extends _ChapterProgress {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChapterProgressCopyWith<_$_ChapterProgress> get copyWith =>
-      __$$_ChapterProgressCopyWithImpl<_$_ChapterProgress>(this, _$identity);
+  _$$ChapterProgressImplCopyWith<_$ChapterProgressImpl> get copyWith =>
+      __$$ChapterProgressImplCopyWithImpl<_$ChapterProgressImpl>(
+          this, _$identity);
 }
 
 abstract class _ChapterProgress extends ChapterProgress {
   const factory _ChapterProgress(
       {required final int chapterIndex,
       required final int totalPages,
-      required final int currentIndex}) = _$_ChapterProgress;
+      required final int currentIndex}) = _$ChapterProgressImpl;
   const _ChapterProgress._() : super._();
 
   @override
@@ -173,6 +174,6 @@ abstract class _ChapterProgress extends ChapterProgress {
   int get currentIndex;
   @override
   @JsonKey(ignore: true)
-  _$$_ChapterProgressCopyWith<_$_ChapterProgress> get copyWith =>
+  _$$ChapterProgressImplCopyWith<_$ChapterProgressImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

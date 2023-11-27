@@ -105,9 +105,10 @@ class _$ConfigCopyWithImpl<$Res, $Val extends Config>
 }
 
 /// @nodoc
-abstract class _$$_ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
-  factory _$$_ConfigCopyWith(_$_Config value, $Res Function(_$_Config) then) =
-      __$$_ConfigCopyWithImpl<$Res>;
+abstract class _$$ConfigImplCopyWith<$Res> implements $ConfigCopyWith<$Res> {
+  factory _$$ConfigImplCopyWith(
+          _$ConfigImpl value, $Res Function(_$ConfigImpl) then) =
+      __$$ConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -122,10 +123,11 @@ abstract class _$$_ConfigCopyWith<$Res> implements $ConfigCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ConfigCopyWithImpl<$Res>
-    extends _$ConfigCopyWithImpl<$Res, _$_Config>
-    implements _$$_ConfigCopyWith<$Res> {
-  __$$_ConfigCopyWithImpl(_$_Config _value, $Res Function(_$_Config) _then)
+class __$$ConfigImplCopyWithImpl<$Res>
+    extends _$ConfigCopyWithImpl<$Res, _$ConfigImpl>
+    implements _$$ConfigImplCopyWith<$Res> {
+  __$$ConfigImplCopyWithImpl(
+      _$ConfigImpl _value, $Res Function(_$ConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -140,7 +142,7 @@ class __$$_ConfigCopyWithImpl<$Res>
     Object? zhHant = null,
     Object? customAvataar = null,
   }) {
-    return _then(_$_Config(
+    return _then(_$ConfigImpl(
       autoDarkMode: null == autoDarkMode
           ? _value.autoDarkMode
           : autoDarkMode // ignore: cast_nullable_to_non_nullable
@@ -179,8 +181,8 @@ class __$$_ConfigCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Config extends _Config {
-  const _$_Config(
+class _$ConfigImpl extends _Config {
+  const _$ConfigImpl(
       {this.autoDarkMode = true,
       this.isDarkMode = false,
       this.dynamicColor = true,
@@ -225,7 +227,7 @@ class _$_Config extends _Config {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Config &&
+            other is _$ConfigImpl &&
             (identical(other.autoDarkMode, autoDarkMode) ||
                 other.autoDarkMode == autoDarkMode) &&
             (identical(other.isDarkMode, isDarkMode) ||
@@ -250,8 +252,8 @@ class _$_Config extends _Config {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ConfigCopyWith<_$_Config> get copyWith =>
-      __$$_ConfigCopyWithImpl<_$_Config>(this, _$identity);
+  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
+      __$$ConfigImplCopyWithImpl<_$ConfigImpl>(this, _$identity);
 }
 
 abstract class _Config extends Config {
@@ -263,7 +265,7 @@ abstract class _Config extends Config {
       final bool fixedSequence,
       final bool showImage,
       final bool zhHant,
-      final String customAvataar}) = _$_Config;
+      final String customAvataar}) = _$ConfigImpl;
   const _Config._() : super._();
 
   @override
@@ -284,7 +286,7 @@ abstract class _Config extends Config {
   String get customAvataar;
   @override
   @JsonKey(ignore: true)
-  _$$_ConfigCopyWith<_$_Config> get copyWith =>
+  _$$ConfigImplCopyWith<_$ConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -348,21 +350,22 @@ class _$UserInfoCopyWithImpl<$Res, $Val extends UserInfo>
 }
 
 /// @nodoc
-abstract class _$$_UserInfoCopyWith<$Res> implements $UserInfoCopyWith<$Res> {
-  factory _$$_UserInfoCopyWith(
-          _$_UserInfo value, $Res Function(_$_UserInfo) then) =
-      __$$_UserInfoCopyWithImpl<$Res>;
+abstract class _$$UserInfoImplCopyWith<$Res>
+    implements $UserInfoCopyWith<$Res> {
+  factory _$$UserInfoImplCopyWith(
+          _$UserInfoImpl value, $Res Function(_$UserInfoImpl) then) =
+      __$$UserInfoImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String? uname, String? nickname, int? score, String? rank});
 }
 
 /// @nodoc
-class __$$_UserInfoCopyWithImpl<$Res>
-    extends _$UserInfoCopyWithImpl<$Res, _$_UserInfo>
-    implements _$$_UserInfoCopyWith<$Res> {
-  __$$_UserInfoCopyWithImpl(
-      _$_UserInfo _value, $Res Function(_$_UserInfo) _then)
+class __$$UserInfoImplCopyWithImpl<$Res>
+    extends _$UserInfoCopyWithImpl<$Res, _$UserInfoImpl>
+    implements _$$UserInfoImplCopyWith<$Res> {
+  __$$UserInfoImplCopyWithImpl(
+      _$UserInfoImpl _value, $Res Function(_$UserInfoImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -373,7 +376,7 @@ class __$$_UserInfoCopyWithImpl<$Res>
     Object? score = freezed,
     Object? rank = freezed,
   }) {
-    return _then(_$_UserInfo(
+    return _then(_$UserInfoImpl(
       uname: freezed == uname
           ? _value.uname
           : uname // ignore: cast_nullable_to_non_nullable
@@ -396,8 +399,8 @@ class __$$_UserInfoCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_UserInfo extends _UserInfo {
-  const _$_UserInfo({this.uname, this.nickname, this.score, this.rank})
+class _$UserInfoImpl extends _UserInfo {
+  const _$UserInfoImpl({this.uname, this.nickname, this.score, this.rank})
       : super._();
 
   @override
@@ -418,7 +421,7 @@ class _$_UserInfo extends _UserInfo {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_UserInfo &&
+            other is _$UserInfoImpl &&
             (identical(other.uname, uname) || other.uname == uname) &&
             (identical(other.nickname, nickname) ||
                 other.nickname == nickname) &&
@@ -432,8 +435,8 @@ class _$_UserInfo extends _UserInfo {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_UserInfoCopyWith<_$_UserInfo> get copyWith =>
-      __$$_UserInfoCopyWithImpl<_$_UserInfo>(this, _$identity);
+  _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>
+      __$$UserInfoImplCopyWithImpl<_$UserInfoImpl>(this, _$identity);
 }
 
 abstract class _UserInfo extends UserInfo {
@@ -441,7 +444,7 @@ abstract class _UserInfo extends UserInfo {
       {final String? uname,
       final String? nickname,
       final int? score,
-      final String? rank}) = _$_UserInfo;
+      final String? rank}) = _$UserInfoImpl;
   const _UserInfo._() : super._();
 
   @override
@@ -454,6 +457,6 @@ abstract class _UserInfo extends UserInfo {
   String? get rank;
   @override
   @JsonKey(ignore: true)
-  _$$_UserInfoCopyWith<_$_UserInfo> get copyWith =>
+  _$$UserInfoImplCopyWith<_$UserInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

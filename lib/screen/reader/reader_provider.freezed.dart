@@ -66,20 +66,21 @@ class _$ChapterCopyWithImpl<$Res, $Val extends Chapter>
 }
 
 /// @nodoc
-abstract class _$$_ChapterCopyWith<$Res> implements $ChapterCopyWith<$Res> {
-  factory _$$_ChapterCopyWith(
-          _$_Chapter value, $Res Function(_$_Chapter) then) =
-      __$$_ChapterCopyWithImpl<$Res>;
+abstract class _$$ChapterImplCopyWith<$Res> implements $ChapterCopyWith<$Res> {
+  factory _$$ChapterImplCopyWith(
+          _$ChapterImpl value, $Res Function(_$ChapterImpl) then) =
+      __$$ChapterImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String cid, String name});
 }
 
 /// @nodoc
-class __$$_ChapterCopyWithImpl<$Res>
-    extends _$ChapterCopyWithImpl<$Res, _$_Chapter>
-    implements _$$_ChapterCopyWith<$Res> {
-  __$$_ChapterCopyWithImpl(_$_Chapter _value, $Res Function(_$_Chapter) _then)
+class __$$ChapterImplCopyWithImpl<$Res>
+    extends _$ChapterCopyWithImpl<$Res, _$ChapterImpl>
+    implements _$$ChapterImplCopyWith<$Res> {
+  __$$ChapterImplCopyWithImpl(
+      _$ChapterImpl _value, $Res Function(_$ChapterImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -88,7 +89,7 @@ class __$$_ChapterCopyWithImpl<$Res>
     Object? cid = null,
     Object? name = null,
   }) {
-    return _then(_$_Chapter(
+    return _then(_$ChapterImpl(
       cid: null == cid
           ? _value.cid
           : cid // ignore: cast_nullable_to_non_nullable
@@ -103,11 +104,11 @@ class __$$_ChapterCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_Chapter with DiagnosticableTreeMixin implements _Chapter {
-  const _$_Chapter({required this.cid, required this.name});
+class _$ChapterImpl with DiagnosticableTreeMixin implements _Chapter {
+  const _$ChapterImpl({required this.cid, required this.name});
 
-  factory _$_Chapter.fromJson(Map<String, dynamic> json) =>
-      _$$_ChapterFromJson(json);
+  factory _$ChapterImpl.fromJson(Map<String, dynamic> json) =>
+      _$$ChapterImplFromJson(json);
 
   @override
   final String cid;
@@ -132,7 +133,7 @@ class _$_Chapter with DiagnosticableTreeMixin implements _Chapter {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Chapter &&
+            other is _$ChapterImpl &&
             (identical(other.cid, cid) || other.cid == cid) &&
             (identical(other.name, name) || other.name == name));
   }
@@ -144,12 +145,12 @@ class _$_Chapter with DiagnosticableTreeMixin implements _Chapter {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ChapterCopyWith<_$_Chapter> get copyWith =>
-      __$$_ChapterCopyWithImpl<_$_Chapter>(this, _$identity);
+  _$$ChapterImplCopyWith<_$ChapterImpl> get copyWith =>
+      __$$ChapterImplCopyWithImpl<_$ChapterImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_ChapterToJson(
+    return _$$ChapterImplToJson(
       this,
     );
   }
@@ -157,9 +158,9 @@ class _$_Chapter with DiagnosticableTreeMixin implements _Chapter {
 
 abstract class _Chapter implements Chapter {
   const factory _Chapter(
-      {required final String cid, required final String name}) = _$_Chapter;
+      {required final String cid, required final String name}) = _$ChapterImpl;
 
-  factory _Chapter.fromJson(Map<String, dynamic> json) = _$_Chapter.fromJson;
+  factory _Chapter.fromJson(Map<String, dynamic> json) = _$ChapterImpl.fromJson;
 
   @override
   String get cid;
@@ -167,7 +168,7 @@ abstract class _Chapter implements Chapter {
   String get name;
   @override
   @JsonKey(ignore: true)
-  _$$_ChapterCopyWith<_$_Chapter> get copyWith =>
+  _$$ChapterImplCopyWith<_$ChapterImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -264,11 +265,11 @@ class _$ReaderMenuStateCopyWithImpl<$Res, $Val extends ReaderMenuState>
 }
 
 /// @nodoc
-abstract class _$$_ReaderMenuStateCopyWith<$Res>
+abstract class _$$ReaderMenuStateImplCopyWith<$Res>
     implements $ReaderMenuStateCopyWith<$Res> {
-  factory _$$_ReaderMenuStateCopyWith(
-          _$_ReaderMenuState value, $Res Function(_$_ReaderMenuState) then) =
-      __$$_ReaderMenuStateCopyWithImpl<$Res>;
+  factory _$$ReaderMenuStateImplCopyWith(_$ReaderMenuStateImpl value,
+          $Res Function(_$ReaderMenuStateImpl) then) =
+      __$$ReaderMenuStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -283,11 +284,11 @@ abstract class _$$_ReaderMenuStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ReaderMenuStateCopyWithImpl<$Res>
-    extends _$ReaderMenuStateCopyWithImpl<$Res, _$_ReaderMenuState>
-    implements _$$_ReaderMenuStateCopyWith<$Res> {
-  __$$_ReaderMenuStateCopyWithImpl(
-      _$_ReaderMenuState _value, $Res Function(_$_ReaderMenuState) _then)
+class __$$ReaderMenuStateImplCopyWithImpl<$Res>
+    extends _$ReaderMenuStateCopyWithImpl<$Res, _$ReaderMenuStateImpl>
+    implements _$$ReaderMenuStateImplCopyWith<$Res> {
+  __$$ReaderMenuStateImplCopyWithImpl(
+      _$ReaderMenuStateImpl _value, $Res Function(_$ReaderMenuStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -302,7 +303,7 @@ class __$$_ReaderMenuStateCopyWithImpl<$Res>
     Object? progressVisible = null,
     Object? bottomBarHeight = null,
   }) {
-    return _then(_$_ReaderMenuState(
+    return _then(_$ReaderMenuStateImpl(
       menuBottomVisible: null == menuBottomVisible
           ? _value.menuBottomVisible
           : menuBottomVisible // ignore: cast_nullable_to_non_nullable
@@ -341,8 +342,9 @@ class __$$_ReaderMenuStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
-  const _$_ReaderMenuState(
+class _$ReaderMenuStateImpl extends _ReaderMenuState
+    with DiagnosticableTreeMixin {
+  const _$ReaderMenuStateImpl(
       {this.menuBottomVisible = false,
       this.menuTopVisible = false,
       this.menuCatalogVisible = false,
@@ -402,7 +404,7 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReaderMenuState &&
+            other is _$ReaderMenuStateImpl &&
             (identical(other.menuBottomVisible, menuBottomVisible) ||
                 other.menuBottomVisible == menuBottomVisible) &&
             (identical(other.menuTopVisible, menuTopVisible) ||
@@ -436,8 +438,9 @@ class _$_ReaderMenuState extends _ReaderMenuState with DiagnosticableTreeMixin {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReaderMenuStateCopyWith<_$_ReaderMenuState> get copyWith =>
-      __$$_ReaderMenuStateCopyWithImpl<_$_ReaderMenuState>(this, _$identity);
+  _$$ReaderMenuStateImplCopyWith<_$ReaderMenuStateImpl> get copyWith =>
+      __$$ReaderMenuStateImplCopyWithImpl<_$ReaderMenuStateImpl>(
+          this, _$identity);
 }
 
 abstract class _ReaderMenuState extends ReaderMenuState {
@@ -449,7 +452,7 @@ abstract class _ReaderMenuState extends ReaderMenuState {
       final bool menuTextVisible,
       final bool menuConfigVisible,
       final bool progressVisible,
-      final double bottomBarHeight}) = _$_ReaderMenuState;
+      final double bottomBarHeight}) = _$ReaderMenuStateImpl;
   const _ReaderMenuState._() : super._();
 
   @override
@@ -470,7 +473,7 @@ abstract class _ReaderMenuState extends ReaderMenuState {
   double get bottomBarHeight;
   @override
   @JsonKey(ignore: true)
-  _$$_ReaderMenuStateCopyWith<_$_ReaderMenuState> get copyWith =>
+  _$$ReaderMenuStateImplCopyWith<_$ReaderMenuStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -582,9 +585,10 @@ class _$ReaderCopyWithImpl<$Res, $Val extends Reader>
 }
 
 /// @nodoc
-abstract class _$$_ReaderCopyWith<$Res> implements $ReaderCopyWith<$Res> {
-  factory _$$_ReaderCopyWith(_$_Reader value, $Res Function(_$_Reader) then) =
-      __$$_ReaderCopyWithImpl<$Res>;
+abstract class _$$ReaderImplCopyWith<$Res> implements $ReaderCopyWith<$Res> {
+  factory _$$ReaderImplCopyWith(
+          _$ReaderImpl value, $Res Function(_$ReaderImpl) then) =
+      __$$ReaderImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -603,10 +607,11 @@ abstract class _$$_ReaderCopyWith<$Res> implements $ReaderCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_ReaderCopyWithImpl<$Res>
-    extends _$ReaderCopyWithImpl<$Res, _$_Reader>
-    implements _$$_ReaderCopyWith<$Res> {
-  __$$_ReaderCopyWithImpl(_$_Reader _value, $Res Function(_$_Reader) _then)
+class __$$ReaderImplCopyWithImpl<$Res>
+    extends _$ReaderCopyWithImpl<$Res, _$ReaderImpl>
+    implements _$$ReaderImplCopyWith<$Res> {
+  __$$ReaderImplCopyWithImpl(
+      _$ReaderImpl _value, $Res Function(_$ReaderImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -622,7 +627,7 @@ class __$$_ReaderCopyWithImpl<$Res>
     Object? cachedText = null,
     Object? config = null,
   }) {
-    return _then(_$_Reader(
+    return _then(_$ReaderImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -665,8 +670,8 @@ class __$$_ReaderCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_Reader extends _Reader with DiagnosticableTreeMixin {
-  const _$_Reader(
+class _$ReaderImpl extends _Reader with DiagnosticableTreeMixin {
+  const _$ReaderImpl(
       {required this.name,
       required this.aid,
       this.cIndex = 0,
@@ -743,7 +748,7 @@ class _$_Reader extends _Reader with DiagnosticableTreeMixin {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Reader &&
+            other is _$ReaderImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.aid, aid) || other.aid == aid) &&
             (identical(other.cIndex, cIndex) || other.cIndex == cIndex) &&
@@ -773,8 +778,8 @@ class _$_Reader extends _Reader with DiagnosticableTreeMixin {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReaderCopyWith<_$_Reader> get copyWith =>
-      __$$_ReaderCopyWithImpl<_$_Reader>(this, _$identity);
+  _$$ReaderImplCopyWith<_$ReaderImpl> get copyWith =>
+      __$$ReaderImplCopyWithImpl<_$ReaderImpl>(this, _$identity);
 }
 
 abstract class _Reader extends Reader {
@@ -787,7 +792,7 @@ abstract class _Reader extends Reader {
       final TextStyle textStyle,
       final List<Widget> pages,
       final String cachedText,
-      final ReaderConfig config}) = _$_Reader;
+      final ReaderConfig config}) = _$ReaderImpl;
   const _Reader._() : super._();
 
   @override
@@ -810,7 +815,7 @@ abstract class _Reader extends Reader {
   ReaderConfig get config;
   @override
   @JsonKey(ignore: true)
-  _$$_ReaderCopyWith<_$_Reader> get copyWith =>
+  _$$ReaderImplCopyWith<_$ReaderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -869,22 +874,22 @@ class _$ReaderThemeCopyWithImpl<$Res, $Val extends ReaderTheme>
 }
 
 /// @nodoc
-abstract class _$$_ReaderThemeCopyWith<$Res>
+abstract class _$$ReaderThemeImplCopyWith<$Res>
     implements $ReaderThemeCopyWith<$Res> {
-  factory _$$_ReaderThemeCopyWith(
-          _$_ReaderTheme value, $Res Function(_$_ReaderTheme) then) =
-      __$$_ReaderThemeCopyWithImpl<$Res>;
+  factory _$$ReaderThemeImplCopyWith(
+          _$ReaderThemeImpl value, $Res Function(_$ReaderThemeImpl) then) =
+      __$$ReaderThemeImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String name, String id, ThemeData theme});
 }
 
 /// @nodoc
-class __$$_ReaderThemeCopyWithImpl<$Res>
-    extends _$ReaderThemeCopyWithImpl<$Res, _$_ReaderTheme>
-    implements _$$_ReaderThemeCopyWith<$Res> {
-  __$$_ReaderThemeCopyWithImpl(
-      _$_ReaderTheme _value, $Res Function(_$_ReaderTheme) _then)
+class __$$ReaderThemeImplCopyWithImpl<$Res>
+    extends _$ReaderThemeCopyWithImpl<$Res, _$ReaderThemeImpl>
+    implements _$$ReaderThemeImplCopyWith<$Res> {
+  __$$ReaderThemeImplCopyWithImpl(
+      _$ReaderThemeImpl _value, $Res Function(_$ReaderThemeImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -894,7 +899,7 @@ class __$$_ReaderThemeCopyWithImpl<$Res>
     Object? id = null,
     Object? theme = null,
   }) {
-    return _then(_$_ReaderTheme(
+    return _then(_$ReaderThemeImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -913,8 +918,8 @@ class __$$_ReaderThemeCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ReaderTheme with DiagnosticableTreeMixin implements _ReaderTheme {
-  const _$_ReaderTheme(
+class _$ReaderThemeImpl with DiagnosticableTreeMixin implements _ReaderTheme {
+  const _$ReaderThemeImpl(
       {required this.name, required this.id, required this.theme});
 
   @override
@@ -943,7 +948,7 @@ class _$_ReaderTheme with DiagnosticableTreeMixin implements _ReaderTheme {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReaderTheme &&
+            other is _$ReaderThemeImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.theme, theme) || other.theme == theme));
@@ -955,15 +960,15 @@ class _$_ReaderTheme with DiagnosticableTreeMixin implements _ReaderTheme {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReaderThemeCopyWith<_$_ReaderTheme> get copyWith =>
-      __$$_ReaderThemeCopyWithImpl<_$_ReaderTheme>(this, _$identity);
+  _$$ReaderThemeImplCopyWith<_$ReaderThemeImpl> get copyWith =>
+      __$$ReaderThemeImplCopyWithImpl<_$ReaderThemeImpl>(this, _$identity);
 }
 
 abstract class _ReaderTheme implements ReaderTheme {
   const factory _ReaderTheme(
       {required final String name,
       required final String id,
-      required final ThemeData theme}) = _$_ReaderTheme;
+      required final ThemeData theme}) = _$ReaderThemeImpl;
 
   @override
   String get name;
@@ -973,7 +978,7 @@ abstract class _ReaderTheme implements ReaderTheme {
   ThemeData get theme;
   @override
   @JsonKey(ignore: true)
-  _$$_ReaderThemeCopyWith<_$_ReaderTheme> get copyWith =>
+  _$$ReaderThemeImplCopyWith<_$ReaderThemeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1070,11 +1075,11 @@ class _$ReaderConfigCopyWithImpl<$Res, $Val extends ReaderConfig>
 }
 
 /// @nodoc
-abstract class _$$_ReaderConfigCopyWith<$Res>
+abstract class _$$ReaderConfigImplCopyWith<$Res>
     implements $ReaderConfigCopyWith<$Res> {
-  factory _$$_ReaderConfigCopyWith(
-          _$_ReaderConfig value, $Res Function(_$_ReaderConfig) then) =
-      __$$_ReaderConfigCopyWithImpl<$Res>;
+  factory _$$ReaderConfigImplCopyWith(
+          _$ReaderConfigImpl value, $Res Function(_$ReaderConfigImpl) then) =
+      __$$ReaderConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -1089,11 +1094,11 @@ abstract class _$$_ReaderConfigCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ReaderConfigCopyWithImpl<$Res>
-    extends _$ReaderConfigCopyWithImpl<$Res, _$_ReaderConfig>
-    implements _$$_ReaderConfigCopyWith<$Res> {
-  __$$_ReaderConfigCopyWithImpl(
-      _$_ReaderConfig _value, $Res Function(_$_ReaderConfig) _then)
+class __$$ReaderConfigImplCopyWithImpl<$Res>
+    extends _$ReaderConfigCopyWithImpl<$Res, _$ReaderConfigImpl>
+    implements _$$ReaderConfigImplCopyWith<$Res> {
+  __$$ReaderConfigImplCopyWithImpl(
+      _$ReaderConfigImpl _value, $Res Function(_$ReaderConfigImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1108,7 +1113,7 @@ class __$$_ReaderConfigCopyWithImpl<$Res>
     Object? fullScreen = null,
     Object? keepScreenOn = null,
   }) {
-    return _then(_$_ReaderConfig(
+    return _then(_$ReaderConfigImpl(
       horizontalScroll: null == horizontalScroll
           ? _value.horizontalScroll
           : horizontalScroll // ignore: cast_nullable_to_non_nullable
@@ -1147,8 +1152,8 @@ class __$$_ReaderConfigCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ReaderConfig with DiagnosticableTreeMixin implements _ReaderConfig {
-  const _$_ReaderConfig(
+class _$ReaderConfigImpl with DiagnosticableTreeMixin implements _ReaderConfig {
+  const _$ReaderConfigImpl(
       {this.horizontalScroll = true,
       this.verticalScroll = false,
       this.flickScroll = false,
@@ -1214,7 +1219,7 @@ class _$_ReaderConfig with DiagnosticableTreeMixin implements _ReaderConfig {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReaderConfig &&
+            other is _$ReaderConfigImpl &&
             (identical(other.horizontalScroll, horizontalScroll) ||
                 other.horizontalScroll == horizontalScroll) &&
             (identical(other.verticalScroll, verticalScroll) ||
@@ -1248,8 +1253,8 @@ class _$_ReaderConfig with DiagnosticableTreeMixin implements _ReaderConfig {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReaderConfigCopyWith<_$_ReaderConfig> get copyWith =>
-      __$$_ReaderConfigCopyWithImpl<_$_ReaderConfig>(this, _$identity);
+  _$$ReaderConfigImplCopyWith<_$ReaderConfigImpl> get copyWith =>
+      __$$ReaderConfigImplCopyWithImpl<_$ReaderConfigImpl>(this, _$identity);
 }
 
 abstract class _ReaderConfig implements ReaderConfig {
@@ -1261,7 +1266,7 @@ abstract class _ReaderConfig implements ReaderConfig {
       final bool buttonScroll,
       final bool globalNext,
       final bool fullScreen,
-      final bool keepScreenOn}) = _$_ReaderConfig;
+      final bool keepScreenOn}) = _$ReaderConfigImpl;
 
   @override
   bool get horizontalScroll;
@@ -1281,7 +1286,7 @@ abstract class _ReaderConfig implements ReaderConfig {
   bool get keepScreenOn;
   @override
   @JsonKey(ignore: true)
-  _$$_ReaderConfigCopyWith<_$_ReaderConfig> get copyWith =>
+  _$$ReaderConfigImplCopyWith<_$ReaderConfigImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
@@ -1339,22 +1344,22 @@ class _$RecordMetaCopyWithImpl<$Res, $Val extends RecordMeta>
 }
 
 /// @nodoc
-abstract class _$$_RecordMetaCopyWith<$Res>
+abstract class _$$RecordMetaImplCopyWith<$Res>
     implements $RecordMetaCopyWith<$Res> {
-  factory _$$_RecordMetaCopyWith(
-          _$_RecordMeta value, $Res Function(_$_RecordMeta) then) =
-      __$$_RecordMetaCopyWithImpl<$Res>;
+  factory _$$RecordMetaImplCopyWith(
+          _$RecordMetaImpl value, $Res Function(_$RecordMetaImpl) then) =
+      __$$RecordMetaImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int cIndex, int pIndex});
 }
 
 /// @nodoc
-class __$$_RecordMetaCopyWithImpl<$Res>
-    extends _$RecordMetaCopyWithImpl<$Res, _$_RecordMeta>
-    implements _$$_RecordMetaCopyWith<$Res> {
-  __$$_RecordMetaCopyWithImpl(
-      _$_RecordMeta _value, $Res Function(_$_RecordMeta) _then)
+class __$$RecordMetaImplCopyWithImpl<$Res>
+    extends _$RecordMetaCopyWithImpl<$Res, _$RecordMetaImpl>
+    implements _$$RecordMetaImplCopyWith<$Res> {
+  __$$RecordMetaImplCopyWithImpl(
+      _$RecordMetaImpl _value, $Res Function(_$RecordMetaImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -1363,7 +1368,7 @@ class __$$_RecordMetaCopyWithImpl<$Res>
     Object? cIndex = null,
     Object? pIndex = null,
   }) {
-    return _then(_$_RecordMeta(
+    return _then(_$RecordMetaImpl(
       cIndex: null == cIndex
           ? _value.cIndex
           : cIndex // ignore: cast_nullable_to_non_nullable
@@ -1378,11 +1383,11 @@ class __$$_RecordMetaCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$_RecordMeta with DiagnosticableTreeMixin implements _RecordMeta {
-  const _$_RecordMeta({this.cIndex = 0, this.pIndex = 0});
+class _$RecordMetaImpl with DiagnosticableTreeMixin implements _RecordMeta {
+  const _$RecordMetaImpl({this.cIndex = 0, this.pIndex = 0});
 
-  factory _$_RecordMeta.fromJson(Map<String, dynamic> json) =>
-      _$$_RecordMetaFromJson(json);
+  factory _$RecordMetaImpl.fromJson(Map<String, dynamic> json) =>
+      _$$RecordMetaImplFromJson(json);
 
   @override
   @JsonKey()
@@ -1409,7 +1414,7 @@ class _$_RecordMeta with DiagnosticableTreeMixin implements _RecordMeta {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RecordMeta &&
+            other is _$RecordMetaImpl &&
             (identical(other.cIndex, cIndex) || other.cIndex == cIndex) &&
             (identical(other.pIndex, pIndex) || other.pIndex == pIndex));
   }
@@ -1421,12 +1426,12 @@ class _$_RecordMeta with DiagnosticableTreeMixin implements _RecordMeta {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RecordMetaCopyWith<_$_RecordMeta> get copyWith =>
-      __$$_RecordMetaCopyWithImpl<_$_RecordMeta>(this, _$identity);
+  _$$RecordMetaImplCopyWith<_$RecordMetaImpl> get copyWith =>
+      __$$RecordMetaImplCopyWithImpl<_$RecordMetaImpl>(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$_RecordMetaToJson(
+    return _$$RecordMetaImplToJson(
       this,
     );
   }
@@ -1434,10 +1439,10 @@ class _$_RecordMeta with DiagnosticableTreeMixin implements _RecordMeta {
 
 abstract class _RecordMeta implements RecordMeta {
   const factory _RecordMeta({final int cIndex, final int pIndex}) =
-      _$_RecordMeta;
+      _$RecordMetaImpl;
 
   factory _RecordMeta.fromJson(Map<String, dynamic> json) =
-      _$_RecordMeta.fromJson;
+      _$RecordMetaImpl.fromJson;
 
   @override
   int get cIndex;
@@ -1445,6 +1450,6 @@ abstract class _RecordMeta implements RecordMeta {
   int get pIndex;
   @override
   @JsonKey(ignore: true)
-  _$$_RecordMetaCopyWith<_$_RecordMeta> get copyWith =>
+  _$$RecordMetaImplCopyWith<_$RecordMetaImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

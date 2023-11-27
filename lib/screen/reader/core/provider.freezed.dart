@@ -100,11 +100,11 @@ class _$ReaderCoreCopyWithImpl<$Res, $Val extends ReaderCore>
 }
 
 /// @nodoc
-abstract class _$$_ReaderCoreCopyWith<$Res>
+abstract class _$$ReaderCoreImplCopyWith<$Res>
     implements $ReaderCoreCopyWith<$Res> {
-  factory _$$_ReaderCoreCopyWith(
-          _$_ReaderCore value, $Res Function(_$_ReaderCore) then) =
-      __$$_ReaderCoreCopyWithImpl<$Res>;
+  factory _$$ReaderCoreImplCopyWith(
+          _$ReaderCoreImpl value, $Res Function(_$ReaderCoreImpl) then) =
+      __$$ReaderCoreImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -118,11 +118,11 @@ abstract class _$$_ReaderCoreCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_ReaderCoreCopyWithImpl<$Res>
-    extends _$ReaderCoreCopyWithImpl<$Res, _$_ReaderCore>
-    implements _$$_ReaderCoreCopyWith<$Res> {
-  __$$_ReaderCoreCopyWithImpl(
-      _$_ReaderCore _value, $Res Function(_$_ReaderCore) _then)
+class __$$ReaderCoreImplCopyWithImpl<$Res>
+    extends _$ReaderCoreCopyWithImpl<$Res, _$ReaderCoreImpl>
+    implements _$$ReaderCoreImplCopyWith<$Res> {
+  __$$ReaderCoreImplCopyWithImpl(
+      _$ReaderCoreImpl _value, $Res Function(_$ReaderCoreImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -136,7 +136,7 @@ class __$$_ReaderCoreCopyWithImpl<$Res>
     Object? themeId = null,
     Object? pageConfig = null,
   }) {
-    return _then(_$_ReaderCore(
+    return _then(_$ReaderCoreImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -171,8 +171,8 @@ class __$$_ReaderCoreCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ReaderCore extends _ReaderCore {
-  const _$_ReaderCore(
+class _$ReaderCoreImpl extends _ReaderCore {
+  const _$ReaderCoreImpl(
       {required this.name,
       required this.aid,
       required this.pagesScheduler,
@@ -210,7 +210,7 @@ class _$_ReaderCore extends _ReaderCore {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReaderCore &&
+            other is _$ReaderCoreImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.aid, aid) || other.aid == aid) &&
             (identical(other.pagesScheduler, pagesScheduler) ||
@@ -230,8 +230,8 @@ class _$_ReaderCore extends _ReaderCore {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReaderCoreCopyWith<_$_ReaderCore> get copyWith =>
-      __$$_ReaderCoreCopyWithImpl<_$_ReaderCore>(this, _$identity);
+  _$$ReaderCoreImplCopyWith<_$ReaderCoreImpl> get copyWith =>
+      __$$ReaderCoreImplCopyWithImpl<_$ReaderCoreImpl>(this, _$identity);
 }
 
 abstract class _ReaderCore extends ReaderCore {
@@ -242,7 +242,7 @@ abstract class _ReaderCore extends ReaderCore {
       final bool isLoading,
       final int cIndex,
       final String themeId,
-      final PageConfig pageConfig}) = _$_ReaderCore;
+      final PageConfig pageConfig}) = _$ReaderCoreImpl;
   const _ReaderCore._() : super._();
 
   @override
@@ -261,6 +261,6 @@ abstract class _ReaderCore extends ReaderCore {
   PageConfig get pageConfig;
   @override
   @JsonKey(ignore: true)
-  _$$_ReaderCoreCopyWith<_$_ReaderCore> get copyWith =>
+  _$$ReaderCoreImplCopyWith<_$ReaderCoreImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

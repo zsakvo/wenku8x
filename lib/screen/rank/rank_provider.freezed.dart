@@ -67,18 +67,20 @@ class _$RankCopyWithImpl<$Res, $Val extends Rank>
 }
 
 /// @nodoc
-abstract class _$$_RankCopyWith<$Res> implements $RankCopyWith<$Res> {
-  factory _$$_RankCopyWith(_$_Rank value, $Res Function(_$_Rank) then) =
-      __$$_RankCopyWithImpl<$Res>;
+abstract class _$$RankImplCopyWith<$Res> implements $RankCopyWith<$Res> {
+  factory _$$RankImplCopyWith(
+          _$RankImpl value, $Res Function(_$RankImpl) then) =
+      __$$RankImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String flag, List<BookItem> books, int subIndex});
 }
 
 /// @nodoc
-class __$$_RankCopyWithImpl<$Res> extends _$RankCopyWithImpl<$Res, _$_Rank>
-    implements _$$_RankCopyWith<$Res> {
-  __$$_RankCopyWithImpl(_$_Rank _value, $Res Function(_$_Rank) _then)
+class __$$RankImplCopyWithImpl<$Res>
+    extends _$RankCopyWithImpl<$Res, _$RankImpl>
+    implements _$$RankImplCopyWith<$Res> {
+  __$$RankImplCopyWithImpl(_$RankImpl _value, $Res Function(_$RankImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -88,7 +90,7 @@ class __$$_RankCopyWithImpl<$Res> extends _$RankCopyWithImpl<$Res, _$_Rank>
     Object? books = null,
     Object? subIndex = null,
   }) {
-    return _then(_$_Rank(
+    return _then(_$RankImpl(
       flag: null == flag
           ? _value.flag
           : flag // ignore: cast_nullable_to_non_nullable
@@ -107,8 +109,8 @@ class __$$_RankCopyWithImpl<$Res> extends _$RankCopyWithImpl<$Res, _$_Rank>
 
 /// @nodoc
 
-class _$_Rank extends _Rank {
-  const _$_Rank(
+class _$RankImpl extends _Rank {
+  const _$RankImpl(
       {required this.flag,
       final List<BookItem> books = const [],
       this.subIndex = 0})
@@ -139,7 +141,7 @@ class _$_Rank extends _Rank {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Rank &&
+            other is _$RankImpl &&
             (identical(other.flag, flag) || other.flag == flag) &&
             const DeepCollectionEquality().equals(other._books, _books) &&
             (identical(other.subIndex, subIndex) ||
@@ -153,15 +155,15 @@ class _$_Rank extends _Rank {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RankCopyWith<_$_Rank> get copyWith =>
-      __$$_RankCopyWithImpl<_$_Rank>(this, _$identity);
+  _$$RankImplCopyWith<_$RankImpl> get copyWith =>
+      __$$RankImplCopyWithImpl<_$RankImpl>(this, _$identity);
 }
 
 abstract class _Rank extends Rank {
   const factory _Rank(
       {required final String flag,
       final List<BookItem> books,
-      final int subIndex}) = _$_Rank;
+      final int subIndex}) = _$RankImpl;
   const _Rank._() : super._();
 
   @override
@@ -172,5 +174,6 @@ abstract class _Rank extends Rank {
   int get subIndex;
   @override
   @JsonKey(ignore: true)
-  _$$_RankCopyWith<_$_Rank> get copyWith => throw _privateConstructorUsedError;
+  _$$RankImplCopyWith<_$RankImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

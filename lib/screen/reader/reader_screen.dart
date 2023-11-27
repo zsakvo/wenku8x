@@ -10,14 +10,14 @@ import 'package:wenku8x/screen/reader/menu_bars/menu_config.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_text.dart';
 import 'package:wenku8x/screen/reader/menu_bars/menu_top.dart';
 import 'package:wenku8x/screen/reader/menu_bars/progress_bar.dart';
-import 'package:wenku8x/screen/reader/scroll_reader.dart';
 
 import 'menu_bars/menu_bottom.dart';
 import 'menu_bars/menu_theme.dart';
 import 'reader_provider.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
-  const ReaderScreen({required this.name, required this.aid, super.key, required this.cIndex});
+  const ReaderScreen(
+      {required this.name, required this.aid, super.key, required this.cIndex});
 
   final String name;
   final String aid;
@@ -34,7 +34,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   Widget build(BuildContext context) {
     final provider = readerProvider((widget.name, widget.aid, widget.cIndex));
     final reader = ref.watch(provider);
-    final loading = ref.watch(loadingProvider);
+    // final loading = ref.watch(loadingProvider);
 
     useEffect(() {
       Future(() {
@@ -54,7 +54,8 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             body: Stack(
           children: [
             SizedBox.shrink(
-              child: PageView(controller: ref.read(provider.notifier).pageController),
+              child: PageView(
+                  controller: ref.read(provider.notifier).pageController),
             ),
             // Listener(
             //     onPointerMove: ref.read(provider.notifier).onPointerMove,
@@ -79,15 +80,16 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             MenuPalette(provider),
             MenuText(provider),
             MenuConfig(provider),
-            if (loading)
-              Container(
-                color: Theme.of(context).colorScheme.background,
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: const Center(
-                  child: SizedBox(width: 96, height: 3, child: LinearProgressIndicator()),
-                ),
-              )
+            // if (loading)
+            //   Container(
+            //     color: Theme.of(context).colorScheme.background,
+            //     width: MediaQuery.of(context).size.width,
+            //     height: MediaQuery.of(context).size.height,
+            //     child: const Center(
+            //       child: SizedBox(
+            //           width: 96, height: 3, child: LinearProgressIndicator()),
+            //     ),
+            //   )
           ],
         )));
   }

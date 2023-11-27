@@ -127,10 +127,11 @@ class _$BookItemCopyWithImpl<$Res, $Val extends BookItem>
 }
 
 /// @nodoc
-abstract class _$$_BookItemCopyWith<$Res> implements $BookItemCopyWith<$Res> {
-  factory _$$_BookItemCopyWith(
-          _$_BookItem value, $Res Function(_$_BookItem) then) =
-      __$$_BookItemCopyWithImpl<$Res>;
+abstract class _$$BookItemImplCopyWith<$Res>
+    implements $BookItemCopyWith<$Res> {
+  factory _$$BookItemImplCopyWith(
+          _$BookItemImpl value, $Res Function(_$BookItemImpl) then) =
+      __$$BookItemImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -148,11 +149,11 @@ abstract class _$$_BookItemCopyWith<$Res> implements $BookItemCopyWith<$Res> {
 }
 
 /// @nodoc
-class __$$_BookItemCopyWithImpl<$Res>
-    extends _$BookItemCopyWithImpl<$Res, _$_BookItem>
-    implements _$$_BookItemCopyWith<$Res> {
-  __$$_BookItemCopyWithImpl(
-      _$_BookItem _value, $Res Function(_$_BookItem) _then)
+class __$$BookItemImplCopyWithImpl<$Res>
+    extends _$BookItemCopyWithImpl<$Res, _$BookItemImpl>
+    implements _$$BookItemImplCopyWith<$Res> {
+  __$$BookItemImplCopyWithImpl(
+      _$BookItemImpl _value, $Res Function(_$BookItemImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -170,7 +171,7 @@ class __$$_BookItemCopyWithImpl<$Res>
     Object? catalog = freezed,
     Object? isFav = null,
   }) {
-    return _then(_$_BookItem(
+    return _then(_$BookItemImpl(
       aid: null == aid
           ? _value.aid
           : aid // ignore: cast_nullable_to_non_nullable
@@ -221,8 +222,8 @@ class __$$_BookItemCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_BookItem extends _BookItem {
-  const _$_BookItem(
+class _$BookItemImpl extends _BookItem {
+  const _$BookItemImpl(
       {required this.aid,
       required this.name,
       this.cover,
@@ -278,7 +279,7 @@ class _$_BookItem extends _BookItem {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_BookItem &&
+            other is _$BookItemImpl &&
             (identical(other.aid, aid) || other.aid == aid) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.cover, cover) || other.cover == cover) &&
@@ -313,8 +314,8 @@ class _$_BookItem extends _BookItem {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_BookItemCopyWith<_$_BookItem> get copyWith =>
-      __$$_BookItemCopyWithImpl<_$_BookItem>(this, _$identity);
+  _$$BookItemImplCopyWith<_$BookItemImpl> get copyWith =>
+      __$$BookItemImplCopyWithImpl<_$BookItemImpl>(this, _$identity);
 }
 
 abstract class _BookItem extends BookItem {
@@ -329,7 +330,7 @@ abstract class _BookItem extends BookItem {
       final String? status,
       final String? intro,
       final List<Chapter>? catalog,
-      final bool isFav}) = _$_BookItem;
+      final bool isFav}) = _$BookItemImpl;
   const _BookItem._() : super._();
 
   @override
@@ -356,6 +357,6 @@ abstract class _BookItem extends BookItem {
   bool get isFav;
   @override
   @JsonKey(ignore: true)
-  _$$_BookItemCopyWith<_$_BookItem> get copyWith =>
+  _$$BookItemImplCopyWith<_$BookItemImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

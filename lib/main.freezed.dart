@@ -55,18 +55,20 @@ class _$MainCopyWithImpl<$Res, $Val extends Main>
 }
 
 /// @nodoc
-abstract class _$$_MainCopyWith<$Res> implements $MainCopyWith<$Res> {
-  factory _$$_MainCopyWith(_$_Main value, $Res Function(_$_Main) then) =
-      __$$_MainCopyWithImpl<$Res>;
+abstract class _$$MainImplCopyWith<$Res> implements $MainCopyWith<$Res> {
+  factory _$$MainImplCopyWith(
+          _$MainImpl value, $Res Function(_$MainImpl) then) =
+      __$$MainImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String colorSeed});
 }
 
 /// @nodoc
-class __$$_MainCopyWithImpl<$Res> extends _$MainCopyWithImpl<$Res, _$_Main>
-    implements _$$_MainCopyWith<$Res> {
-  __$$_MainCopyWithImpl(_$_Main _value, $Res Function(_$_Main) _then)
+class __$$MainImplCopyWithImpl<$Res>
+    extends _$MainCopyWithImpl<$Res, _$MainImpl>
+    implements _$$MainImplCopyWith<$Res> {
+  __$$MainImplCopyWithImpl(_$MainImpl _value, $Res Function(_$MainImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -74,7 +76,7 @@ class __$$_MainCopyWithImpl<$Res> extends _$MainCopyWithImpl<$Res, _$_Main>
   $Res call({
     Object? colorSeed = null,
   }) {
-    return _then(_$_Main(
+    return _then(_$MainImpl(
       colorSeed: null == colorSeed
           ? _value.colorSeed
           : colorSeed // ignore: cast_nullable_to_non_nullable
@@ -85,8 +87,8 @@ class __$$_MainCopyWithImpl<$Res> extends _$MainCopyWithImpl<$Res, _$_Main>
 
 /// @nodoc
 
-class _$_Main implements _Main {
-  const _$_Main({this.colorSeed = 'deepPurple'});
+class _$MainImpl implements _Main {
+  const _$MainImpl({this.colorSeed = 'deepPurple'});
 
   @override
   @JsonKey()
@@ -101,7 +103,7 @@ class _$_Main implements _Main {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_Main &&
+            other is _$MainImpl &&
             (identical(other.colorSeed, colorSeed) ||
                 other.colorSeed == colorSeed));
   }
@@ -112,16 +114,17 @@ class _$_Main implements _Main {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_MainCopyWith<_$_Main> get copyWith =>
-      __$$_MainCopyWithImpl<_$_Main>(this, _$identity);
+  _$$MainImplCopyWith<_$MainImpl> get copyWith =>
+      __$$MainImplCopyWithImpl<_$MainImpl>(this, _$identity);
 }
 
 abstract class _Main implements Main {
-  const factory _Main({final String colorSeed}) = _$_Main;
+  const factory _Main({final String colorSeed}) = _$MainImpl;
 
   @override
   String get colorSeed;
   @override
   @JsonKey(ignore: true)
-  _$$_MainCopyWith<_$_Main> get copyWith => throw _privateConstructorUsedError;
+  _$$MainImplCopyWith<_$MainImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

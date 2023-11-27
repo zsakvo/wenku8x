@@ -19,6 +19,7 @@ mixin _$CoverReader {
   String get name => throw _privateConstructorUsedError;
   String get aid => throw _privateConstructorUsedError;
   List<Widget> get pages => throw _privateConstructorUsedError;
+  ReaderCore? get readerCore => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CoverReaderCopyWith<CoverReader> get copyWith =>
@@ -31,7 +32,10 @@ abstract class $CoverReaderCopyWith<$Res> {
           CoverReader value, $Res Function(CoverReader) then) =
       _$CoverReaderCopyWithImpl<$Res, CoverReader>;
   @useResult
-  $Res call({String name, String aid, List<Widget> pages});
+  $Res call(
+      {String name, String aid, List<Widget> pages, ReaderCore? readerCore});
+
+  $ReaderCoreCopyWith<$Res>? get readerCore;
 }
 
 /// @nodoc
@@ -50,6 +54,7 @@ class _$CoverReaderCopyWithImpl<$Res, $Val extends CoverReader>
     Object? name = null,
     Object? aid = null,
     Object? pages = null,
+    Object? readerCore = freezed,
   }) {
     return _then(_value.copyWith(
       name: null == name
@@ -64,27 +69,47 @@ class _$CoverReaderCopyWithImpl<$Res, $Val extends CoverReader>
           ? _value.pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      readerCore: freezed == readerCore
+          ? _value.readerCore
+          : readerCore // ignore: cast_nullable_to_non_nullable
+              as ReaderCore?,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $ReaderCoreCopyWith<$Res>? get readerCore {
+    if (_value.readerCore == null) {
+      return null;
+    }
+
+    return $ReaderCoreCopyWith<$Res>(_value.readerCore!, (value) {
+      return _then(_value.copyWith(readerCore: value) as $Val);
+    });
   }
 }
 
 /// @nodoc
-abstract class _$$_CoverReaderCopyWith<$Res>
+abstract class _$$CoverReaderImplCopyWith<$Res>
     implements $CoverReaderCopyWith<$Res> {
-  factory _$$_CoverReaderCopyWith(
-          _$_CoverReader value, $Res Function(_$_CoverReader) then) =
-      __$$_CoverReaderCopyWithImpl<$Res>;
+  factory _$$CoverReaderImplCopyWith(
+          _$CoverReaderImpl value, $Res Function(_$CoverReaderImpl) then) =
+      __$$CoverReaderImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String name, String aid, List<Widget> pages});
+  $Res call(
+      {String name, String aid, List<Widget> pages, ReaderCore? readerCore});
+
+  @override
+  $ReaderCoreCopyWith<$Res>? get readerCore;
 }
 
 /// @nodoc
-class __$$_CoverReaderCopyWithImpl<$Res>
-    extends _$CoverReaderCopyWithImpl<$Res, _$_CoverReader>
-    implements _$$_CoverReaderCopyWith<$Res> {
-  __$$_CoverReaderCopyWithImpl(
-      _$_CoverReader _value, $Res Function(_$_CoverReader) _then)
+class __$$CoverReaderImplCopyWithImpl<$Res>
+    extends _$CoverReaderCopyWithImpl<$Res, _$CoverReaderImpl>
+    implements _$$CoverReaderImplCopyWith<$Res> {
+  __$$CoverReaderImplCopyWithImpl(
+      _$CoverReaderImpl _value, $Res Function(_$CoverReaderImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -93,8 +118,9 @@ class __$$_CoverReaderCopyWithImpl<$Res>
     Object? name = null,
     Object? aid = null,
     Object? pages = null,
+    Object? readerCore = freezed,
   }) {
-    return _then(_$_CoverReader(
+    return _then(_$CoverReaderImpl(
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -107,17 +133,22 @@ class __$$_CoverReaderCopyWithImpl<$Res>
           ? _value._pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      readerCore: freezed == readerCore
+          ? _value.readerCore
+          : readerCore // ignore: cast_nullable_to_non_nullable
+              as ReaderCore?,
     ));
   }
 }
 
 /// @nodoc
 
-class _$_CoverReader extends _CoverReader {
-  const _$_CoverReader(
+class _$CoverReaderImpl extends _CoverReader {
+  const _$CoverReaderImpl(
       {required this.name,
       required this.aid,
-      final List<Widget> pages = const []})
+      required final List<Widget> pages,
+      this.readerCore})
       : _pages = pages,
         super._();
 
@@ -127,7 +158,6 @@ class _$_CoverReader extends _CoverReader {
   final String aid;
   final List<Widget> _pages;
   @override
-  @JsonKey()
   List<Widget> get pages {
     if (_pages is EqualUnmodifiableListView) return _pages;
     // ignore: implicit_dynamic_type
@@ -135,36 +165,42 @@ class _$_CoverReader extends _CoverReader {
   }
 
   @override
+  final ReaderCore? readerCore;
+
+  @override
   String toString() {
-    return 'CoverReader(name: $name, aid: $aid, pages: $pages)';
+    return 'CoverReader(name: $name, aid: $aid, pages: $pages, readerCore: $readerCore)';
   }
 
   @override
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_CoverReader &&
+            other is _$CoverReaderImpl &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.aid, aid) || other.aid == aid) &&
-            const DeepCollectionEquality().equals(other._pages, _pages));
+            const DeepCollectionEquality().equals(other._pages, _pages) &&
+            (identical(other.readerCore, readerCore) ||
+                other.readerCore == readerCore));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, name, aid, const DeepCollectionEquality().hash(_pages));
+  int get hashCode => Object.hash(runtimeType, name, aid,
+      const DeepCollectionEquality().hash(_pages), readerCore);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_CoverReaderCopyWith<_$_CoverReader> get copyWith =>
-      __$$_CoverReaderCopyWithImpl<_$_CoverReader>(this, _$identity);
+  _$$CoverReaderImplCopyWith<_$CoverReaderImpl> get copyWith =>
+      __$$CoverReaderImplCopyWithImpl<_$CoverReaderImpl>(this, _$identity);
 }
 
 abstract class _CoverReader extends CoverReader {
   const factory _CoverReader(
       {required final String name,
       required final String aid,
-      final List<Widget> pages}) = _$_CoverReader;
+      required final List<Widget> pages,
+      final ReaderCore? readerCore}) = _$CoverReaderImpl;
   const _CoverReader._() : super._();
 
   @override
@@ -174,7 +210,9 @@ abstract class _CoverReader extends CoverReader {
   @override
   List<Widget> get pages;
   @override
+  ReaderCore? get readerCore;
+  @override
   @JsonKey(ignore: true)
-  _$$_CoverReaderCopyWith<_$_CoverReader> get copyWith =>
+  _$$CoverReaderImplCopyWith<_$CoverReaderImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
