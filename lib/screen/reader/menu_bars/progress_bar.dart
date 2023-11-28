@@ -66,7 +66,7 @@ class _ProgressBarState extends ConsumerState<ProgressBar> {
                   ),
                   child: Slider(
                     max: progress.totalPages.toDouble() - 1,
-                    value: progress.currentIndex.toDouble(),
+                    value: 0,
                     divisions: progress.totalPages,
                     onChanged: (value) {
                       ref

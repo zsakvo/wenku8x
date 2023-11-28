@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/screen/reader/core/background.dart';
 import 'package:wenku8x/screen/reader/core/provider.dart';
 import 'package:wenku8x/utils/log.dart';
 
@@ -37,7 +38,8 @@ class CoverReaderNotifier
   Widget getPaintedPage(CustomPainter painter) {
     return SizedBox.expand(
       child: CustomPaint(
-        painter: painter,
+        foregroundPainter: painter,
+        painter: BackgroundPainter(),
       ),
     );
   }
@@ -47,7 +49,7 @@ class CoverReaderNotifier
     if (pagePaintersMap.isEmpty) return;
     var pages = pagePaintersMap[0]!.map((e) => getPaintedPage(e)).toList();
     if (pagePaintersMap.isNotEmpty) {
-      state = state.copyWith(pages: [pages.first]);
+      state = state.copyWith(pages: pages);
     }
   }
 }
