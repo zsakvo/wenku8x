@@ -15,6 +15,8 @@ class CoverReader with _$CoverReader {
       {required String name,
       required String aid,
       required List<Widget> pages,
+      @Default(0) int currentChapter,
+      @Default(0) int currentPage,
       ReaderCore? readerCore}) = _CoverReader;
 }
 
@@ -44,12 +46,29 @@ class CoverReaderNotifier
     );
   }
 
+  updateRenderPages() {
+    var painters = ref
+        .read(readerCoreProvider(arg))
+        .pagesScheduler
+        .pagePaintersMap[state.currentChapter]!;
+    var pages = [
+      getPaintedPage(painters[state.currentPage + 1]),
+      Positioned(
+        left: 0,
+        top: 0,
+        child: getPaintedPage(painters[state.currentPage]),
+      )
+    ];
+    state = state.copyWith(pages: pages);
+  }
+
   onCoreChange(ReaderCore? c1, ReaderCore c2) {
     var pagePaintersMap = c1?.pagesScheduler.pagePaintersMap ?? {};
     if (pagePaintersMap.isEmpty) return;
-    var pages = pagePaintersMap[0]!.map((e) => getPaintedPage(e)).toList();
+    // var pages = pagePaintersMap[0]!.map((e) => getPaintedPage(e)).toList();
     if (pagePaintersMap.isNotEmpty) {
-      state = state.copyWith(pages: pages);
+      // state = state.copyWith(pages: pages);
+      updateRenderPages();
     }
   }
 }

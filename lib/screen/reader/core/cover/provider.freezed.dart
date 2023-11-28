@@ -19,6 +19,8 @@ mixin _$CoverReader {
   String get name => throw _privateConstructorUsedError;
   String get aid => throw _privateConstructorUsedError;
   List<Widget> get pages => throw _privateConstructorUsedError;
+  int get currentChapter => throw _privateConstructorUsedError;
+  int get currentPage => throw _privateConstructorUsedError;
   ReaderCore? get readerCore => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,7 +35,12 @@ abstract class $CoverReaderCopyWith<$Res> {
       _$CoverReaderCopyWithImpl<$Res, CoverReader>;
   @useResult
   $Res call(
-      {String name, String aid, List<Widget> pages, ReaderCore? readerCore});
+      {String name,
+      String aid,
+      List<Widget> pages,
+      int currentChapter,
+      int currentPage,
+      ReaderCore? readerCore});
 
   $ReaderCoreCopyWith<$Res>? get readerCore;
 }
@@ -54,6 +61,8 @@ class _$CoverReaderCopyWithImpl<$Res, $Val extends CoverReader>
     Object? name = null,
     Object? aid = null,
     Object? pages = null,
+    Object? currentChapter = null,
+    Object? currentPage = null,
     Object? readerCore = freezed,
   }) {
     return _then(_value.copyWith(
@@ -69,6 +78,14 @@ class _$CoverReaderCopyWithImpl<$Res, $Val extends CoverReader>
           ? _value.pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      currentChapter: null == currentChapter
+          ? _value.currentChapter
+          : currentChapter // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       readerCore: freezed == readerCore
           ? _value.readerCore
           : readerCore // ignore: cast_nullable_to_non_nullable
@@ -98,7 +115,12 @@ abstract class _$$CoverReaderImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {String name, String aid, List<Widget> pages, ReaderCore? readerCore});
+      {String name,
+      String aid,
+      List<Widget> pages,
+      int currentChapter,
+      int currentPage,
+      ReaderCore? readerCore});
 
   @override
   $ReaderCoreCopyWith<$Res>? get readerCore;
@@ -118,6 +140,8 @@ class __$$CoverReaderImplCopyWithImpl<$Res>
     Object? name = null,
     Object? aid = null,
     Object? pages = null,
+    Object? currentChapter = null,
+    Object? currentPage = null,
     Object? readerCore = freezed,
   }) {
     return _then(_$CoverReaderImpl(
@@ -133,6 +157,14 @@ class __$$CoverReaderImplCopyWithImpl<$Res>
           ? _value._pages
           : pages // ignore: cast_nullable_to_non_nullable
               as List<Widget>,
+      currentChapter: null == currentChapter
+          ? _value.currentChapter
+          : currentChapter // ignore: cast_nullable_to_non_nullable
+              as int,
+      currentPage: null == currentPage
+          ? _value.currentPage
+          : currentPage // ignore: cast_nullable_to_non_nullable
+              as int,
       readerCore: freezed == readerCore
           ? _value.readerCore
           : readerCore // ignore: cast_nullable_to_non_nullable
@@ -148,6 +180,8 @@ class _$CoverReaderImpl extends _CoverReader {
       {required this.name,
       required this.aid,
       required final List<Widget> pages,
+      this.currentChapter = 0,
+      this.currentPage = 0,
       this.readerCore})
       : _pages = pages,
         super._();
@@ -165,11 +199,17 @@ class _$CoverReaderImpl extends _CoverReader {
   }
 
   @override
+  @JsonKey()
+  final int currentChapter;
+  @override
+  @JsonKey()
+  final int currentPage;
+  @override
   final ReaderCore? readerCore;
 
   @override
   String toString() {
-    return 'CoverReader(name: $name, aid: $aid, pages: $pages, readerCore: $readerCore)';
+    return 'CoverReader(name: $name, aid: $aid, pages: $pages, currentChapter: $currentChapter, currentPage: $currentPage, readerCore: $readerCore)';
   }
 
   @override
@@ -180,13 +220,23 @@ class _$CoverReaderImpl extends _CoverReader {
             (identical(other.name, name) || other.name == name) &&
             (identical(other.aid, aid) || other.aid == aid) &&
             const DeepCollectionEquality().equals(other._pages, _pages) &&
+            (identical(other.currentChapter, currentChapter) ||
+                other.currentChapter == currentChapter) &&
+            (identical(other.currentPage, currentPage) ||
+                other.currentPage == currentPage) &&
             (identical(other.readerCore, readerCore) ||
                 other.readerCore == readerCore));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, name, aid,
-      const DeepCollectionEquality().hash(_pages), readerCore);
+  int get hashCode => Object.hash(
+      runtimeType,
+      name,
+      aid,
+      const DeepCollectionEquality().hash(_pages),
+      currentChapter,
+      currentPage,
+      readerCore);
 
   @JsonKey(ignore: true)
   @override
@@ -200,6 +250,8 @@ abstract class _CoverReader extends CoverReader {
       {required final String name,
       required final String aid,
       required final List<Widget> pages,
+      final int currentChapter,
+      final int currentPage,
       final ReaderCore? readerCore}) = _$CoverReaderImpl;
   const _CoverReader._() : super._();
 
@@ -209,6 +261,10 @@ abstract class _CoverReader extends CoverReader {
   String get aid;
   @override
   List<Widget> get pages;
+  @override
+  int get currentChapter;
+  @override
+  int get currentPage;
   @override
   ReaderCore? get readerCore;
   @override

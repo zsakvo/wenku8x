@@ -18,8 +18,13 @@ class _CoverReaderState extends ConsumerState<CoverReader> {
   Widget build(BuildContext context) {
     final coverReader =
         ref.watch(coverReaderProvider((context, widget.name, widget.aid)));
-    return Stack(
-      children: coverReader.pages,
+    return GestureDetector(
+      child: Stack(
+        children: coverReader.pages,
+      ),
+      onPanDown: (details) {},
+      onPanUpdate: (details) {},
+      onPanEnd: (details) {},
     );
   }
 }
