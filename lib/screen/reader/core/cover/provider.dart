@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/screen/reader/core/background.dart';
@@ -20,12 +21,22 @@ class CoverReader with _$CoverReader {
       ReaderCore readerCore}) = _CoverReader;
 }
 
-class CoverReaderNotifier
-    extends FamilyNotifier<CoverReader, (BuildContext, String, String)> {
+class CoverReaderNotifier extends FamilyNotifier<
+    CoverReader,
+    (
+      BuildContext,
+      String,
+      String,
+    )> {
   late double downPos;
+  late double currentPos;
+
+  late final _controller;
 
   @override
   CoverReader build(arg) {
+    _controller = useAnimationController(duration: Duration(milliseconds: 300));
+    _controller.addListener(pageControllerListener);
     // var core = ref.watch(readerCoreProvider(arg));
     ref.listen<ReaderCore>(readerCoreProvider(arg), onCoreChange);
     return CoverReader(name: arg.$2, aid: arg.$3, pages: [
@@ -82,15 +93,28 @@ class CoverReaderNotifier
   }
 
   onPanUpdate(DragUpdateDetails details) {
-    Log.d('onPanUpdate');
     var move = details.localPosition;
-    Log.d(move.dx);
+    currentPos = move.dx;
     var delta = move.dx - downPos;
     ref.read(currentPagePosProvider.notifier).state = delta;
   }
 
   onPanEnd(DragEndDetails details) {
     Log.d('onPanEnd');
+    toNextPage();
+  }
+
+  pageControllerListener() {
+    Log.d('pageControllerListener');
+  }
+
+  pageControllerStatusListener() {
+    Log.d('pageControllerStatusListener');
+  }
+
+  toNextPage() {
+    Log.d("松手了");
+    _controller.forward(from: 0.0);
   }
 }
 

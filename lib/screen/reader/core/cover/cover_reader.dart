@@ -1,5 +1,6 @@
 // 覆盖翻页
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/screen/reader/core/cover/provider.dart';
 
@@ -16,13 +17,24 @@ class CoverReader extends StatefulHookConsumerWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CoverReaderState();
 }
 
-class _CoverReaderState extends ConsumerState<CoverReader> {
+class _CoverReaderState extends ConsumerState<CoverReader>
+    with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    // final _controller =
+    //     useAnimationController(duration: const Duration(milliseconds: 300));
     final provider = coverReaderProvider((context, widget.name, widget.aid));
     final coverReader = ref.watch(provider);
     var pagesScheduler = coverReader.readerCore?.pagesScheduler;
     double currentPagePos = ref.watch(currentPagePosProvider);
+    // useEffect(() {
+    //   _controller
+    //       .addListener(ref.read(provider.notifier).pageControllerListener);
+    //   return () {
+    //     _controller
+    //         .removeListener(ref.read(provider.notifier).pageControllerListener);
+    //   };
+    // }, []);
     return GestureDetector(
       onPanDown: ref.read(provider.notifier).onPanDown,
       onPanUpdate: ref.read(provider.notifier).onPanUpdate,
