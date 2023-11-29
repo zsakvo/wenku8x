@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/screen/reader/core/background.dart';
@@ -21,24 +21,22 @@ class CoverReader with _$CoverReader {
       ReaderCore readerCore}) = _CoverReader;
 }
 
-class CoverReaderNotifier extends FamilyNotifier<
-    CoverReader,
-    (
-      BuildContext,
-      String,
-      String,
-    )> {
+class CoverReaderNotifier extends FamilyNotifier<CoverReader,
+    (BuildContext, String, String, AnimationController)> {
   late double downPos;
   late double currentPos;
 
-  late final _controller;
+  AnimationController get _controller => arg.$4;
+
+  // 初始化 controller 为 animationController
 
   @override
   CoverReader build(arg) {
-    _controller = useAnimationController(duration: Duration(milliseconds: 300));
     _controller.addListener(pageControllerListener);
+    _controller.addStatusListener(pageControllerStatusListener);
     // var core = ref.watch(readerCoreProvider(arg));
-    ref.listen<ReaderCore>(readerCoreProvider(arg), onCoreChange);
+    ref.listen<ReaderCore>(
+        readerCoreProvider((arg.$1, arg.$2, arg.$3)), onCoreChange);
     return CoverReader(name: arg.$2, aid: arg.$3, pages: [
       // const Center(
       //   child: SizedBox(
@@ -60,7 +58,7 @@ class CoverReaderNotifier extends FamilyNotifier<
 
   updateRenderPages() {
     var painters = ref
-        .read(readerCoreProvider(arg))
+        .read(readerCoreProvider((arg.$1, arg.$2, arg.$3)))
         .pagesScheduler
         .pagePaintersMap[state.currentChapter]!;
     var pages = [
@@ -101,15 +99,28 @@ class CoverReaderNotifier extends FamilyNotifier<
 
   onPanEnd(DragEndDetails details) {
     Log.d('onPanEnd');
+    Log.e(currentPos);
     toNextPage();
   }
 
   pageControllerListener() {
-    Log.d('pageControllerListener');
+    ref.read(currentPagePosProvider.notifier).state =
+        -currentPos + -_controller.value * MediaQuery.of(arg.$1).size.width;
   }
 
-  pageControllerStatusListener() {
-    Log.d('pageControllerStatusListener');
+  pageControllerStatusListener(AnimationStatus status) {
+    // Log.d('pageControllerStatusListener');
+    switch (status) {
+      case AnimationStatus.completed:
+        state = state.copyWith(currentPage: state.currentPage + 1);
+        // _controller.reset();
+        // ref.read(currentPagePosProvider.notifier).state =
+        //     -MediaQuery.of(arg.$1).size.width - 6;
+        break;
+      case AnimationStatus.dismissed:
+        break;
+      default:
+    }
   }
 
   toNextPage() {
@@ -118,8 +129,15 @@ class CoverReaderNotifier extends FamilyNotifier<
   }
 }
 
-final coverReaderProvider = NotifierProvider.family<CoverReaderNotifier,
-    CoverReader, (BuildContext, String, String)>(CoverReaderNotifier.new);
+final coverReaderProvider = NotifierProvider.family<
+    CoverReaderNotifier,
+    CoverReader,
+    (
+      BuildContext,
+      String,
+      String,
+      AnimationController
+    )>(CoverReaderNotifier.new);
 
 final currentPagePosProvider = StateProvider.autoDispose<double>((ref) {
   return 0.0;
