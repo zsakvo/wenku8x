@@ -17,32 +17,33 @@ class CoverReader with _$CoverReader {
       required List<Widget> pages,
       @Default(0) int currentChapter,
       @Default(0) int currentPage,
-      ReaderCore? readerCore}) = _CoverReader;
+      ReaderCore readerCore}) = _CoverReader;
 }
 
 class CoverReaderNotifier
     extends FamilyNotifier<CoverReader, (BuildContext, String, String)> {
+  late double downPos;
+
   @override
   CoverReader build(arg) {
     // var core = ref.watch(readerCoreProvider(arg));
     ref.listen<ReaderCore>(readerCoreProvider(arg), onCoreChange);
     return CoverReader(name: arg.$2, aid: arg.$3, pages: [
-      const Center(
-        child: SizedBox(
-          width: 32,
-          height: 32,
-          child: CircularProgressIndicator(),
-        ),
-      )
+      // const Center(
+      //   child: SizedBox(
+      //     width: 32,
+      //     height: 32,
+      //     child: CircularProgressIndicator(),
+      //   ),
+      // )
     ]);
   }
 
   Widget getPaintedPage(CustomPainter painter) {
-    return SizedBox.expand(
-      child: CustomPaint(
-        foregroundPainter: painter,
-        painter: BackgroundPainter(),
-      ),
+    return CustomPaint(
+      foregroundPainter: painter,
+      painter: BackgroundPainter(),
+      size: MediaQuery.of(arg.$1).size,
     );
   }
 
@@ -66,12 +67,36 @@ class CoverReaderNotifier
     var pagePaintersMap = c1?.pagesScheduler.pagePaintersMap ?? {};
     if (pagePaintersMap.isEmpty) return;
     // var pages = pagePaintersMap[0]!.map((e) => getPaintedPage(e)).toList();
+    Log.e([c1, c2], 'ccc');
     if (pagePaintersMap.isNotEmpty) {
       // state = state.copyWith(pages: pages);
-      updateRenderPages();
+      // updateRenderPages();
+      Log.e(c1?.pagesScheduler.pagePaintersMap, 'pagePaintersMap');
+      state = state.copyWith(readerCore: c1);
     }
+  }
+
+  onPanDown(DragDownDetails details) {
+    Log.d('onPanDown');
+    downPos = details.localPosition.dx;
+  }
+
+  onPanUpdate(DragUpdateDetails details) {
+    Log.d('onPanUpdate');
+    var move = details.localPosition;
+    Log.d(move.dx);
+    var delta = move.dx - downPos;
+    ref.read(currentPagePosProvider.notifier).state = delta;
+  }
+
+  onPanEnd(DragEndDetails details) {
+    Log.d('onPanEnd');
   }
 }
 
 final coverReaderProvider = NotifierProvider.family<CoverReaderNotifier,
     CoverReader, (BuildContext, String, String)>(CoverReaderNotifier.new);
+
+final currentPagePosProvider = StateProvider.autoDispose<double>((ref) {
+  return 0.0;
+});

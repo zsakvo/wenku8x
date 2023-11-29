@@ -57,6 +57,10 @@ class PagesScheduler {
     return pagePaintersMap[index]!;
   }
 
+  CustomPainter getPagePainter(int chapterIndex, int pageIndex) {
+    return pagePaintersMap[chapterIndex]![pageIndex];
+  }
+
   clear() {
     pagePaintersMap.clear();
   }
