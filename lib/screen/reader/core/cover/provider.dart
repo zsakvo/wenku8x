@@ -27,6 +27,7 @@ class CoverReaderNotifier extends FamilyNotifier<CoverReader,
   late double currentPos;
 
   AnimationController get _controller => arg.$4;
+  double get pageWidth => MediaQuery.of(arg.$1).size.width;
 
   // 初始化 controller 为 animationController
 
@@ -104,8 +105,9 @@ class CoverReaderNotifier extends FamilyNotifier<CoverReader,
   }
 
   pageControllerListener() {
-    ref.read(currentPagePosProvider.notifier).state =
-        -currentPos + -_controller.value * MediaQuery.of(arg.$1).size.width;
+    ref.read(currentPagePosProvider.notifier).state = -pageWidth +
+        currentPos +
+        -_controller.value * MediaQuery.of(arg.$1).size.width;
   }
 
   pageControllerStatusListener(AnimationStatus status) {
