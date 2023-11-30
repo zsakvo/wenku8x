@@ -52,7 +52,7 @@ class _CoverReaderState extends ConsumerState<CoverReader>
                     size: MediaQuery.of(context).size,
                   ),
                   Positioned(
-                    left: currentPagePos,
+                    left: currentPagePos - MediaQuery.of(context).size.width,
                     top: 0,
                     child: CustomPaint(
                       foregroundPainter: pagesScheduler.getPagePainter(
@@ -61,10 +61,28 @@ class _CoverReaderState extends ConsumerState<CoverReader>
                       size: MediaQuery.of(context).size,
                     ),
                   ),
+                  if (!coverReader.isFirstPage)
+                    Positioned(
+                      left: currentPagePos,
+                      top: 0,
+                      child: CustomPaint(
+                        foregroundPainter: pagesScheduler.getPagePainter(
+                            coverReader.currentChapter,
+                            coverReader.currentPage - 1),
+                        painter: BackgroundPainter(),
+                        size: MediaQuery.of(context).size,
+                      ),
+                    ),
                   Positioned(
                       left: currentPagePos +
                           MediaQuery.of(context).size.width -
                           1,
+                      child: CustomPaint(
+                        painter: BookPageShadowPainter(),
+                        size: Size(1, MediaQuery.of(context).size.height),
+                      )),
+                  Positioned(
+                      left: currentPagePos - 10,
                       child: CustomPaint(
                         painter: BookPageShadowPainter(),
                         size: Size(1, MediaQuery.of(context).size.height),

@@ -18,7 +18,11 @@ class CoverReader with _$CoverReader {
       required List<Widget> pages,
       @Default(0) int currentChapter,
       @Default(0) int currentPage,
-      ReaderCore readerCore}) = _CoverReader;
+      ReaderCore? readerCore}) = _CoverReader;
+
+  bool get isFirstPage {
+    return currentPage == 0 && currentChapter == 0;
+  }
 }
 
 class CoverReaderNotifier extends FamilyNotifier<CoverReader,
@@ -114,6 +118,7 @@ class CoverReaderNotifier extends FamilyNotifier<CoverReader,
     // Log.d('pageControllerStatusListener');
     switch (status) {
       case AnimationStatus.completed:
+        ref.read(currentPagePosProvider.notifier).state = 0;
         state = state.copyWith(currentPage: state.currentPage + 1);
         // _controller.reset();
         // ref.read(currentPagePosProvider.notifier).state =
