@@ -17,7 +17,7 @@ class API {
     String password,
   ) async {
     final username_encoded = Uri.encodeComponent(username);
-    final password_encoded = Uri.encodeComponent(username);
+    final password_encoded = Uri.encodeComponent(password);
     return await Ajax.post(
         "action=login&username=$username_encoded&password=$password_encoded",
         isXml: false);
