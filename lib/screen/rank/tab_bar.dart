@@ -2,18 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class RankTabBar extends HookConsumerWidget implements PreferredSizeWidget {
-  const RankTabBar(
-      {super.key,
-      this.selectedIndex = 0,
-      required this.tabs,
-      required this.onTabChange});
+  const RankTabBar({super.key, this.selectedIndex = 0, required this.tabs, required this.onTabChange});
   final int selectedIndex;
   final List<Map<String, dynamic>> tabs;
   final Function(String flag) onTabChange;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ButtonStyle buttonStyle = FilledButton.styleFrom(
-        minimumSize: const Size(72, 32),
+        minimumSize: const Size(72, 30),
         textStyle: const TextStyle(fontSize: 13),
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 8));
     return Padding(
@@ -37,7 +33,11 @@ class RankTabBar extends HookConsumerWidget implements PreferredSizeWidget {
                           onPressed: () {
                             onTabChange(e["flag"]);
                           },
-                          style: buttonStyle,
+                          style: buttonStyle.copyWith(
+                              backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                              side:
+                                  MaterialStateProperty.all(BorderSide(color: Theme.of(context).colorScheme.primary))),
+                          // side: MaterialStateProperty.all(BorderSide(color: Colors.transparent))),
                           child: Text(e["title"]),
                         ));
             })
