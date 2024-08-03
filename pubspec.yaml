@@ -2,7 +2,7 @@ name: wenku8x
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.2 <4.0.0'
+  sdk: ">=3.1.2 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -46,7 +46,7 @@ dependencies:
   xml: ^6.3.0
   logger: ^2.0.2+1
   dio_cookie_manager: ^3.1.0+1
-  easy_refresh: ^3.3.2+1
+  easy_refresh: ^3.4.0
   flutter_displaymode: ^0.6.0
   cached_network_image: ^3.3.0
   flutter_svg: ^2.0.7

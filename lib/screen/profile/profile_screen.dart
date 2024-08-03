@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,6 +12,7 @@ import 'package:wenku8x/screen/profile/profile_provider.dart';
 import 'package:wenku8x/screen/profile/switch_card.dart';
 import 'package:wenku8x/screen/profile/tap_card.dart';
 import 'package:wenku8x/theme/extend.dart';
+import 'package:wenku8x/utils/util.dart';
 
 class ProfileScreen extends StatefulHookConsumerWidget {
   const ProfileScreen({super.key});
@@ -36,9 +36,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
       });
       return null;
     }, []);
+    var backgroundColor =
+        Theme.of(context).extension<ExtendColors>()!.elevationBackground;
     return Scaffold(
-        backgroundColor:
-            Theme.of(context).extension<ExtendColors>()!.elevationBackground,
+        backgroundColor: backgroundColor,
+        appBar: Util.isDesktop()
+            ? AppBar(
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_rounded),
+                  tooltip: '返回',
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
+                backgroundColor: backgroundColor,
+              )
+            : null,
         body: SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,

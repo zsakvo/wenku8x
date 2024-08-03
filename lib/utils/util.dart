@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 class Util {
@@ -11,5 +12,9 @@ class Util {
     String firstTwoChars = colorHex.substring(0, 2);
     String restOfString = colorHex.substring(2);
     return restOfString + firstTwoChars;
+  }
+
+  static isDesktop() {
+    return Platform.isLinux || Platform.isMacOS || Platform.isWindows;
   }
 }
