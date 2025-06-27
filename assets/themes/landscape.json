@@ -1,0 +1,19 @@
+{
+  "id": "landscape",
+  "name": "山水",
+  "author": "zsakvo",
+  "light": {
+    "primary": "ff5c631d",
+    "secondary": "ff5e6044",
+    "tertiary": "ff3b665a",
+    "surface": "fffcfaec",
+    "onSurface": "ff1c1c14"
+  },
+  "dark": {
+    "primary": "ffc4cd7b",
+    "secondary": "ffc7c9a6",
+    "tertiary": "ffa2d0c1",
+    "surface": "ff13140d",
+    "onSurface": "ffe5e3d6"
+  }
+}

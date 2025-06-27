@@ -1,0 +1,19 @@
+{
+  "id": "drift",
+  "name": "漂移",
+  "author": "zsakvo",
+  "light": {
+    "primary": "ff904b3d",
+    "secondary": "ff775750",
+    "tertiary": "ff6e5c2e",
+    "surface": "fffff8f6",
+    "onSurface": "ff231918"
+  },
+  "dark": {
+    "primary": "ffffb4a5",
+    "secondary": "ffe7bdb5",
+    "tertiary": "ffdcc48c",
+    "surface": "ff1a1110",
+    "onSurface": "fff1dfdb"
+  }
+}

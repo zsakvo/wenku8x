@@ -1,0 +1,19 @@
+{
+  "id": "clearnight",
+  "name": "晴夜",
+  "author": "zsakvo",
+  "light": {
+    "primary": "ff445e91",
+    "secondary": "ff575e71",
+    "tertiary": "ff715573",
+    "surface": "fff9f9ff",
+    "onSurface": "ff1a1b20"
+  },
+  "dark": {
+    "primary": "ffadc6ff",
+    "secondary": "ffbfc6dc",
+    "tertiary": "ffdebcdf",
+    "surface": "ff111318",
+    "onSurface": "ffe2e2e9"
+  }
+}
