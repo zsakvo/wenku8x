@@ -43,6 +43,17 @@ dependencies:
   collection: ^1.19.1
   flutter_svg: ^2.2.0
   cached_network_image: ^3.4.1
+  riverpod_sqflite: ^0.1.2
+  dio: ^5.8.0+1
+  path_provider: ^2.1.5
+  ubuntu_logger: ^0.2.1+1
+  path: ^1.9.1
+  jiffy: ^6.4.3
+  dio_cookie_manager: ^3.2.0
+  cookie_jar: ^4.0.8
+  flash: ^3.1.1
+  xml: ^6.5.0
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

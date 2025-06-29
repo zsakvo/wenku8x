@@ -1,12 +1,13 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wenku8x/app/libs/request/cookie.dart';
+import 'package:wenku8x/app/libs/request/dio.dart';
 import 'package:wenku8x/app/ui/components/bottom_nav.dart';
 import 'package:wenku8x/app/ui/components/keep_alive.dart';
 import 'package:wenku8x/discover/ui/discover_screen.dart';
+import 'package:wenku8x/login/ui/login_screen.dart';
 import 'package:wenku8x/preference/ui/preference_screen.dart';
 import 'package:wenku8x/shelf/ui/shelf_screen.dart';
-
-final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =
@@ -71,6 +72,14 @@ final router = GoRouter(
           ],
         ),
       ],
+      redirect: (context, state) async {
+        var cookieJar = prepareJar();
+        var cookies = await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
+        if (cookies.isEmpty) {
+          return "/login";
+        }
+        return null; // 不重定向
+      },
     ),
     // GoRoute(
     //   path: "/search",
@@ -79,5 +88,11 @@ final router = GoRouter(
     //     return SearchScreen(keyword: keyword);
     //   },
     // ),
+    GoRoute(
+      path: "/login",
+      builder: (context, state) {
+        return LoginScreen();
+      },
+    ),
   ],
 );

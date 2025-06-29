@@ -8,8 +8,13 @@
 # The following line activates a set of recommended lints for Flutter apps,
 # packages, and plugins designed to encourage good coding practices.
 analyzer:
+  plugins:
+    - custom_lint
   errors:
+    constant_identifier_names: ignore
     no_leading_underscores_for_local_identifiers: ignore
+    non_constant_identifier_names: ignore
+    unused_element: ignore
 include: package:flutter_lints/flutter.yaml
 
 linter:

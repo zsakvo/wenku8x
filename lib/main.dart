@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/hooks/use_brightness.dart';
+import 'package:wenku8x/app/services/app.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/app/ui/theme/theme.dart';
 
-void main() {
-  runApp(const ProviderScope(child: ReaderApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AppService().initialize();
+  runApp(ProviderScope(retry: (retryCount, error) => null, child: ReaderApp()));
 }
 
 class ReaderApp extends ConsumerWidget {
