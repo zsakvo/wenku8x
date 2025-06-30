@@ -30,7 +30,7 @@ final class BooksProvider
   Books create() => Books();
 }
 
-String _$booksHash() => r'27109bd5f5ceddac72df9d930487ce892dda9d42';
+String _$booksHash() => r'5b15010171e075974fbd37748d45409e6c97431d';
 
 abstract class _$Books extends $AsyncNotifier<List<BookModel>> {
   FutureOr<List<BookModel>> build();

@@ -95,4 +95,26 @@ class Api {
     }
     return null;
   }
+
+  static Future<List<BookModel>?> getNovelList(String sorter, int page) async {
+    XmlDocument? res = await Ajax.post(
+      "action=novellist&sort=$sorter&page=$page&t=0",
+    );
+    if (res != null) {
+      return res.findAllElements("item").map((element) {
+        var elements = element.children
+            .where((p0) => p0.toString().length > 2)
+            .toList();
+        final aid = element.getAttribute("aid")!;
+        return BookModel(
+          aid: aid,
+          name: elements[0].innerText,
+          author: elements[4].getAttribute("value").toString(),
+          status: elements[5].getAttribute("value").toString(),
+          lastUpdate: elements[6].getAttribute("value").toString(),
+        );
+      }).toList();
+    }
+    return [];
+  }
 }
