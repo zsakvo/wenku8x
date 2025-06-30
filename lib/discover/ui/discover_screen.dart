@@ -181,7 +181,7 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
 
   Widget _buildBookRow(BookModel book, Color accentColor, int index) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 24),
+      padding: EdgeInsets.only(bottom: index == 5 ? 0 : 24),
       child: Row(
         children: [
           // 排名

@@ -22,8 +22,8 @@ class _BookItemState extends ConsumerState<BookItem> {
           // Handle book item tap
         },
         child: Container(
-          height: 128,
-          padding: const EdgeInsets.all(12),
+          height: 118,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             spacing: 12,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +43,10 @@ class _BookItemState extends ConsumerState<BookItem> {
                   children: [
                     Text(
                       widget.book.name,
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
@@ -54,6 +57,7 @@ class _BookItemState extends ConsumerState<BookItem> {
                         color: Theme.of(
                           context,
                         ).colorScheme.onSurface.withAlpha(150),
+                        fontSize: 13,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -64,6 +68,7 @@ class _BookItemState extends ConsumerState<BookItem> {
                         color: Theme.of(
                           context,
                         ).colorScheme.onSurface.withAlpha(150),
+                        fontSize: 13,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
