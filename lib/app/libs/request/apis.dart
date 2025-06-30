@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
+import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/models/user.dart';
 import 'package:wenku8x/app/services/path.dart';
 import 'package:xml/xml.dart';
@@ -52,6 +55,10 @@ class Api {
 
   static Future<String> getUserAvatar() async {
     final path = "${PathService().applicationDocumentsDirectory}/avatar.jpg";
+    if (await File(path).exists()) {
+      logger.debug("头像已存在，删除旧头像");
+      await File(path).delete();
+    }
     await Ajax.post(
       "action=avatar",
       isXml: false,
@@ -59,5 +66,33 @@ class Api {
       savePath: path,
     );
     return path;
+  }
+
+  static Future<List<BookModel>?> getShelfBookList() async {
+    XmlDocument? res = await Ajax.post("action=bookcase&t=SC");
+    if (res != null) {
+      List<BookModel> books = [];
+      var elements = res.children[2].children
+          .where((element) => element.toString().length > 4)
+          .toList();
+      for (var i = 0; i < elements.length; i++) {
+        var element = elements[i];
+        var ec = element.children;
+        String aid = element.getAttribute("aid")!;
+        logger.debug("获取书籍", element);
+        books.add(
+          BookModel(
+            aid: aid,
+            name: ec[1].innerText,
+            lastUpdate: element.getAttribute("date")!,
+            lastChapterId: ec[3].getAttribute("cid")!,
+            lastChapter: ec[3].innerText,
+            // author: ec[5].innerText,
+          ),
+        );
+      }
+      return books;
+    }
+    return null;
   }
 }

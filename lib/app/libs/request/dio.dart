@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/libs/request/cookie.dart';
+import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/app/utils/flash.dart';
 import 'dart:convert' as convert;
 
@@ -76,16 +78,17 @@ class Ajax {
         } catch (err) {
           logger.error("请求失败，结果为：${res.data}");
           if (res.data == "4") {
-            final username = sp.getString("username") ?? "";
-            final password = sp.getString("password") ?? "";
-            if (username.isNotEmpty && password.isNotEmpty) {
-              var res = await Api.login(username, password);
-              logger.debug(res, "relogin");
-              if (res) {
-                post(param, isXml: isXml);
-              }
-            }
+            // final username = sp.getString("username") ?? "";
+            // final password = sp.getString("password") ?? "";
+            // if (username.isNotEmpty && password.isNotEmpty) {
+            //   var res = await Api.login(username, password);
+            //   logger.debug(res, "relogin");
+            //   if (res) {
+            //     post(param, isXml: isXml);
+            //   }
+            // }
             // showErrorToast(NavigationService.navigatorKey.currentContext, "鉴权信息失效，请重新登陆账户");
+            rootNavigatorKey.currentContext?.go("/login");
           }
           return null;
         }
