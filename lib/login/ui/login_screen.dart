@@ -22,6 +22,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final usernameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final canLogin = useState(false);
+    final showPassword = useState(false);
 
     void updateCanLogin() {
       canLogin.value =
@@ -39,6 +40,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }, [usernameController, passwordController]);
     return Scaffold(
       appBar: AppTopBar(title: ""),
+      resizeToAvoidBottomInset: false,
       body: ConstrainedBox(
         constraints: BoxConstraints.expand(),
         child: Stack(
@@ -97,6 +99,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     SizedBox(height: 16),
                     TextField(
                       controller: passwordController,
+                      obscureText: showPassword.value,
                       decoration: InputDecoration(
                         labelText: '请输入密码',
                         border: OutlineInputBorder(
@@ -110,6 +113,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           right: 24,
                           top: 14,
                           bottom: 14,
+                        ),
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.only(right: 4),
+                          child: IconButton(
+                            icon: Icon(
+                              showPassword.value
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              size: 20,
+                            ),
+                            onPressed: () {
+                              showPassword.value = !showPassword.value;
+                            },
+                          ),
                         ),
                       ),
                     ),

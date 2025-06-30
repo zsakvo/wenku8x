@@ -1,6 +1,12 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ubuntu_logger/ubuntu_logger.dart';
+import 'package:wenku8x/app/models/user.dart';
+import 'package:wenku8x/app/services/path.dart';
+import 'package:xml/xml.dart';
 
 import 'dio.dart';
+
+final logger = Logger("Api");
 
 class Api {
   /// 登陆
@@ -18,5 +24,40 @@ class Api {
       }
       return value;
     });
+  }
+
+  static Future getUserInfo() async {
+    XmlDocument? res = await Ajax.post("action=userinfo");
+    if (res != null) {
+      logger.debug(res, "获取用户信息");
+      final children = res.children[2].children;
+      return UserModel(
+        uname: children[1].innerText,
+        nickname: children[3].innerText,
+        score: int.parse(children[5].innerText),
+        rank: children[9].innerText,
+      );
+    }
+  }
+
+  // static Future getUserSign(dynamic ref) async {
+  //   var res = await Ajax.post("action=block&do=sign", isXml: false);
+  //   if (res.toString() == "9") {
+  //     // Show.error("一天只能签到一次噢~");
+  //   } else {
+  //     // Show.success("签到成功，积分可能需要稍等一会儿才会刷新~");
+  //     getUserInfo(ref);
+  //   }
+  // }
+
+  static Future<String> getUserAvatar() async {
+    final path = "${PathService().applicationDocumentsDirectory}/avatar.jpg";
+    await Ajax.post(
+      "action=avatar",
+      isXml: false,
+      download: true,
+      savePath: path,
+    );
+    return path;
   }
 }

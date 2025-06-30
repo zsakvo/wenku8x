@@ -54,6 +54,8 @@ dependencies:
   flash: ^3.1.1
   xml: ^6.5.0
   shared_preferences: ^2.5.3
+  freezed_annotation: ^3.0.0
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -69,6 +71,8 @@ dev_dependencies:
   riverpod_lint: ^3.0.0-dev.16
   build_runner: ^2.5.4
   custom_lint: ^0.7.5
+  freezed: ^3.0.6
+  json_serializable: ^6.9.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

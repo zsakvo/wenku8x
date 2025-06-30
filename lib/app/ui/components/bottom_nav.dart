@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/app/providers/user.dart';
 
 class BottomNav extends ConsumerWidget {
   const BottomNav(this.navigationShell, {super.key, required this.items});
@@ -13,6 +14,7 @@ class BottomNav extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
+    ref.read(userProvider);
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(

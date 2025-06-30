@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/app/libs/request/dio.dart';
+import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 
 class ShelfScreen extends StatefulHookConsumerWidget {
@@ -17,13 +19,29 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     // final books = ref.watch(bookProviderProvider);
+    // final userId = ref.watch(userProvider.select((value) => value.asData?.value.));
+    final avatarPath = ref.watch(userAvatarProvider);
     return Scaffold(
       appBar: AppTopBar(
         title: ClipOval(
-          child: CachedNetworkImage(
-            imageUrl: "https://avatars.githubusercontent.com/u/25399519?v=4",
-            width: 32,
-          ),
+          child: switch (avatarPath) {
+            AsyncValue(:final value?) => CachedNetworkImage(
+              imageUrl: value,
+              width: 32,
+              height: 32,
+              fit: BoxFit.cover,
+              errorWidget: (context, url, error) => SvgPicture.asset(
+                "assets/svg/ic_avatar.svg",
+                width: 32,
+                height: 32,
+              ),
+            ),
+            _ => SvgPicture.asset(
+              "assets/svg/ic_avatar.svg",
+              width: 32,
+              height: 32,
+            ),
+          },
         ),
         canPop: false,
         titleLeftPadding: 20,
