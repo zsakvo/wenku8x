@@ -1,141 +1,195 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/color.dart';
 import 'package:wenku8x/discover/providers/discover.dart';
 
-class DiscoverScreen extends ConsumerStatefulWidget {
+class DiscoverScreen extends StatefulHookConsumerWidget {
   const DiscoverScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DiscoverScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _State();
 }
 
-class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
-  final List<RankingCategory> _rankings = [
-    RankingCategory(
-      title: '总榜',
-      icon: Icons.trending_up,
-      accentColor: const Color(0xFF2196F3),
-      books: [
-        BookItem(title: '修仙传奇', author: '天下归元', rank: 1),
-        BookItem(title: '仙路至尊', author: '梦入神机', rank: 2),
-        BookItem(title: '万界神帝', author: '唐家三少', rank: 3),
-      ],
-    ),
-    RankingCategory(
-      title: '月票榜',
-      icon: Icons.ballot,
-      accentColor: const Color(0xFF9C27B0),
-      books: [
-        BookItem(title: '星辰变', author: '我吃西红柿', rank: 1),
-        BookItem(title: '斗破苍穹', author: '天蚕土豆', rank: 2),
-        BookItem(title: '完美世界', author: '辰东', rank: 3),
-      ],
-    ),
-    RankingCategory(
-      title: '推荐榜',
-      icon: Icons.favorite_border,
-      accentColor: const Color(0xFF4CAF50),
-      books: [
-        BookItem(title: '神墓', author: '辰东', rank: 1),
-        BookItem(title: '择天记', author: '猫腻', rank: 2),
-        BookItem(title: '庆余年', author: '猫腻', rank: 3),
-      ],
-    ),
-    RankingCategory(
-      title: '字数榜',
-      icon: Icons.format_list_numbered,
-      accentColor: const Color(0xFFFF9800),
-      books: [
-        BookItem(title: '一念永恒', author: '耳根', rank: 1),
-        BookItem(title: '武动乾坤', author: '天蚕土豆', rank: 2),
-        BookItem(title: '大主宰', author: '天蚕土豆', rank: 3),
-      ],
-    ),
-    RankingCategory(
-      title: '新书榜',
-      icon: Icons.new_releases_outlined,
-      accentColor: const Color(0xFFF44336),
-      books: [
-        BookItem(title: '道君', author: '跃千愁', rank: 1),
-        BookItem(title: '万古神帝', author: '飞天鱼', rank: 2),
-        BookItem(title: '帝霸', author: '厌笔萧生', rank: 3),
-      ],
-    ),
-    RankingCategory(
-      title: '收藏榜',
-      icon: Icons.bookmark_border,
-      accentColor: const Color(0xFF607D8B),
-      books: [
-        BookItem(title: '雪中悍刀行', author: '烽火戏诸侯', rank: 1),
-        BookItem(title: '剑来', author: '烽火戏诸侯', rank: 2),
-        BookItem(title: '将夜', author: '猫腻', rank: 3),
-      ],
-    ),
-  ];
-
+class _State extends ConsumerState<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     final discovers = ref.watch(discoverAllProvider);
+    // final flags = useState<(String,String)>(("visit","allvisit"));
+    final rankType = useState<String>("visit");
+    final rankFlag = useState<String>("allvisit");
+    useEffect(() {
+      final rank = novelSort[rankType.value];
+      if (rank?["subs"] != null) {
+        rankFlag.value =
+            (rank?["subs"] as List<Map<String, dynamic>>).first["flag"];
+      } else {
+        rankFlag.value = rank?["flag"] as String;
+      }
+      return null;
+    }, [rankType]);
+
     return Scaffold(
-      body:
-          // 使用 tabview 来切换榜单
-          Padding(
-            padding: EdgeInsets.only(
-              top: MediaQuery.of(context).padding.top,
-              left: 8,
-              right: 8,
-            ),
-            child: DefaultTabController(
-              length: novelSort.entries.length,
-              child: Column(
-                children: [
-                  // TabBar
-                  TabBar(
-                    isScrollable: true,
-                    tabAlignment: TabAlignment.start,
-                    padding: const EdgeInsets.symmetric(horizontal: 0),
-                    dividerColor: Colors.transparent,
-                    indicatorPadding: EdgeInsets.only(bottom: 16),
-                    indicatorColor: Colors.transparent,
-                    labelPadding: const EdgeInsets.symmetric(horizontal: 8),
-                    labelStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    unselectedLabelStyle: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                    ),
-                    tabs: novelSort.entries.map((sort) {
-                      return Tab(text: sort.value['title'] as String);
-                    }).toList(),
-                  ),
-                  // TabBarView
-                  Expanded(
-                    child: TabBarView(
-                      children: _rankings.map((category) {
-                        return ListView.builder(
-                          padding: const EdgeInsets.all(16.0),
-                          itemCount: category.books.length,
-                          itemBuilder: (context, index) {
-                            final book = category.books[index];
-                            return Container(
-                              color: generateColorFromString(book.title),
-                            );
-                          },
+      appBar: AppTopBar(title: "发现"),
+      body: Container(
+        padding: EdgeInsets.only(left: 16, right: 16),
+        constraints: const BoxConstraints.expand(),
+        child: Column(
+          children: [
+            Row(
+              spacing: 14,
+              children: [
+                PopupMenuButton<String>(
+                  initialValue: rankType.value,
+                  onSelected: (String item) {
+                    setState(() {
+                      rankType.value = item;
+                      final subs =
+                          novelSort[item]?["subs"]
+                              as List<Map<String, dynamic>>?;
+                      if (subs != null) {
+                        rankFlag.value = subs.first["flag"] as String;
+                      }
+                    });
+                  },
+                  itemBuilder: (BuildContext context) =>
+                      novelSort.entries.map((entry) {
+                        return PopupMenuItem<String>(
+                          value: entry.key,
+                          child: Text(entry.value["title"] as String),
                         );
                       }).toList(),
+                  // <PopupMenuEntry<Map<String, dynamic>>>
+                  child: FilledButton(
+                    style: FilledButton.styleFrom(
+                      minimumSize: Size(0, 32),
+                      padding: EdgeInsets.only(left: 15, right: 15),
+                      textStyle: TextStyle(fontSize: 13),
+                    ),
+                    onPressed: null,
+                    child: Text(novelSort[rankType.value]?["title"] as String),
+                  ),
+                ),
+
+                if (novelSort[rankType.value]?["subs"] != null)
+                  // OutlinedButton(
+                  //   style: OutlinedButton.styleFrom(
+                  //     minimumSize: Size(0, 32),
+                  //     padding: EdgeInsets.only(left: 15, right: 15),
+                  //     textStyle: TextStyle(fontSize: 13),
+                  //   ),
+                  //   onPressed: () {},
+                  //   child: Text(
+                  //     (novelSort[rankType.value]?["subs"]
+                  //                 as List<Map<String, dynamic>>)
+                  //             .firstWhereOrNull(
+                  //               (e) => e["flag"] == rankFlag.value,
+                  //             )?["title"]
+                  //         as String,
+                  //   ),
+                  // ),
+                  PopupMenuButton<String>(
+                    initialValue: rankType.value,
+                    onSelected: (String item) {
+                      setState(() {
+                        rankFlag.value = item;
+                      });
+                    },
+                    itemBuilder: (BuildContext context) =>
+                        (novelSort[rankType.value]?["subs"]
+                                as List<Map<String, dynamic>>)
+                            .map((entry) {
+                              return PopupMenuItem<String>(
+                                value: entry["flag"] as String,
+                                child: Text(entry["title"] as String),
+                              );
+                            })
+                            .toList(),
+                    // <PopupMenuEntry<Map<String, dynamic>>>
+                    child: FilledButton(
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(0, 32),
+                        padding: EdgeInsets.only(left: 15, right: 15),
+                        textStyle: TextStyle(fontSize: 13),
+                      ),
+                      onPressed: null,
+                      child: Text(
+                        (novelSort[rankType.value]?["subs"]
+                                    as List<Map<String, dynamic>>)
+                                .firstWhereOrNull(
+                                  (e) => e["flag"] == rankFlag.value,
+                                )?["title"]
+                            as String,
+                      ),
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
-          ),
+            RefreshIndicator.adaptive(
+              child: Container(),
+              onRefresh: () async {},
+            ),
+          ],
+        ),
+      ),
+      // 使用 tabview 来切换榜单
+      // Padding(
+      //   padding: EdgeInsets.only(
+      //     top: MediaQuery.of(context).padding.top,
+      //     left: 8,
+      //     right: 8,
+      //   ),
+      //   child: DefaultTabController(
+      //     length: novelSort.entries.length,
+      //     child: Column(
+      //       children: [
+      //         // TabBar
+      //         TabBar(
+      //           isScrollable: true,
+      //           tabAlignment: TabAlignment.start,
+      //           padding: const EdgeInsets.symmetric(horizontal: 0),
+      //           dividerColor: Colors.transparent,
+      //           indicatorPadding: EdgeInsets.only(bottom: 16),
+      //           indicatorColor: Colors.transparent,
+      //           labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+      //           labelStyle: const TextStyle(
+      //             fontSize: 16,
+      //             fontWeight: FontWeight.w600,
+      //           ),
+      //           unselectedLabelStyle: const TextStyle(
+      //             fontSize: 14,
+      //             fontWeight: FontWeight.w400,
+      //           ),
+      //           tabs: novelSort.entries.map((sort) {
+      //             return Tab(text: sort.value['title'] as String);
+      //           }).toList(),
+      //         ),
+      //         // TabBarView
+      //         Expanded(
+      //           child: TabBarView(
+      //             children: _rankings.map((category) {
+      //               return ListView.builder(
+      //                 padding: const EdgeInsets.all(16.0),
+      //                 itemCount: category.books.length,
+      //                 itemBuilder: (context, index) {
+      //                   final book = category.books[index];
+      //                   return Container(
+      //                     color: generateColorFromString(book.title),
+      //                   );
+      //                 },
+      //               );
+      //             }).toList(),
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //   ),
+      // ),
+
       // RefreshIndicator.adaptive(
       //   onRefresh: ref.read(discoverAllProvider.notifier).refresh,
       //   child: switch (discovers) {
@@ -166,166 +220,4 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
       // ),
     );
   }
-
-  Widget _buildRankingSection(Map<String, dynamic> ranking) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[200]!, width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // 榜单标题区域
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Container(
-                  margin: EdgeInsets.only(top: 3),
-                  width: 6,
-                  height: 20,
-                  decoration: BoxDecoration(
-                    color: ranking['color'],
-                    borderRadius: BorderRadius.circular(2),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  ranking['title'],
-                  style: const TextStyle(
-                    fontSize: 15,
-                    height: 1,
-                    fontWeight: FontWeight.w600,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                ),
-                const Spacer(),
-                Icon(
-                  Icons.arrow_forward_ios,
-                  size: 16,
-                  color: Colors.grey[400],
-                ),
-              ],
-            ),
-          ),
-          // 分割线
-          Container(
-            height: 1,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            color: Colors.grey[100],
-          ),
-          // 书籍列表
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: (ranking['data'] as List<BookModel>)
-                  .mapIndexed(
-                    (index, book) =>
-                        _buildBookRow(book, ranking['color'], index),
-                  )
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBookRow(BookModel book, Color accentColor, int index) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: index == 5 ? 0 : 24),
-      child: Row(
-        children: [
-          // 排名
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: index <= 2 ? accentColor : Colors.grey[300],
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Center(
-              child: Text(
-                '${index + 1}',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                  color: index <= 2 ? Colors.white : Colors.grey[600],
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          // 书籍封面
-          Container(
-            width: 32,
-            height: 42,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey[300]!, width: 0.5),
-            ),
-            child: CachedNetworkImage(
-              imageUrl: book.coverUrl,
-              fit: BoxFit.cover,
-              width: 42,
-              height: 68,
-              httpHeaders: {
-                "User-Agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-              },
-            ),
-          ),
-          const SizedBox(width: 12),
-          // 书籍信息
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  book.name,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Color(0xFF1A1A1A),
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  book.author!,
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RankingCategory {
-  final String title;
-  final IconData icon;
-  final Color accentColor;
-  final List<BookItem> books;
-
-  RankingCategory({
-    required this.title,
-    required this.icon,
-    required this.accentColor,
-    required this.books,
-  });
-}
-
-class BookItem {
-  final String title;
-  final String author;
-  final int rank;
-
-  BookItem({required this.title, required this.author, required this.rank});
 }
