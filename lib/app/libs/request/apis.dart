@@ -100,6 +100,7 @@ class Api {
     XmlDocument? res = await Ajax.post(
       "action=novellist&sort=$sorter&page=$page&t=0",
     );
+    logger.debug("获取小说列表", res);
     if (res != null) {
       return res.findAllElements("item").map((element) {
         var elements = element.children

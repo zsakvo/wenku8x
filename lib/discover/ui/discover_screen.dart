@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/app/utils/color.dart';
 import 'package:wenku8x/discover/providers/discover.dart';
 
 class DiscoverScreen extends ConsumerStatefulWidget {
@@ -81,24 +82,77 @@ class _DiscoverScreenState extends ConsumerState<DiscoverScreen> {
   Widget build(BuildContext context) {
     final discovers = ref.watch(discoverAllProvider);
     return Scaffold(
-      appBar: AppTopBar(title: "发现"),
-      body: RefreshIndicator.adaptive(
-        onRefresh: ref.read(discoverAllProvider.notifier).refresh,
-        child: switch (discovers) {
-          AsyncData(:final value) => ListView.builder(
-            padding: const EdgeInsets.only(left: 16, right: 16),
-            itemCount: value.length,
-            itemBuilder: (context, index) {
-              final ranking = value[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: _buildRankingSection(ranking),
-              );
-            },
+      body:
+          // 使用 tabview 来切换榜单
+          Padding(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top,
+              left: 8,
+              right: 8,
+            ),
+            child: DefaultTabController(
+              length: novelSort.entries.length,
+              child: Column(
+                children: [
+                  // TabBar
+                  TabBar(
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.start,
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    dividerColor: Colors.transparent,
+                    indicatorPadding: EdgeInsets.only(bottom: 16),
+                    indicatorColor: Colors.transparent,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 8),
+                    labelStyle: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    unselectedLabelStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                    tabs: novelSort.entries.map((sort) {
+                      return Tab(text: sort.value['title'] as String);
+                    }).toList(),
+                  ),
+                  // TabBarView
+                  Expanded(
+                    child: TabBarView(
+                      children: _rankings.map((category) {
+                        return ListView.builder(
+                          padding: const EdgeInsets.all(16.0),
+                          itemCount: category.books.length,
+                          itemBuilder: (context, index) {
+                            final book = category.books[index];
+                            return Container(
+                              color: generateColorFromString(book.title),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          _ => const Center(child: Text("暂无数据")),
-        },
-      ),
+      // RefreshIndicator.adaptive(
+      //   onRefresh: ref.read(discoverAllProvider.notifier).refresh,
+      //   child: switch (discovers) {
+      //     AsyncData(:final value) => ListView.builder(
+      //       padding: const EdgeInsets.only(left: 16, right: 16),
+      //       itemCount: value.length,
+      //       itemBuilder: (context, index) {
+      //         final ranking = value[index];
+      //         return Padding(
+      //           padding: const EdgeInsets.only(bottom: 16.0),
+      //           child: _buildRankingSection(ranking),
+      //         );
+      //       },
+      //     ),
+      //     _ => const Center(child: Text("暂无数据")),
+      //   },
+      // ),
       // ListView.builder(
       //   padding: const EdgeInsets.all(16.0),
       //   itemCount: _rankings.length,

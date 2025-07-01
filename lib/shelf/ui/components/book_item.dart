@@ -21,43 +21,42 @@ class _BookItemState extends ConsumerState<BookItem> {
         onTap: () {
           // Handle book item tap
         },
-        child: Container(
-          height: 118,
+        child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Row(
             spacing: 12,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // Book cover image
               CachedNetworkImage(
                 imageUrl: widget.book.coverUrl,
-                width: 72,
-                height: 108,
+                width: 64,
+                height: 92,
                 fit: BoxFit.cover,
                 httpHeaders: {"User-Agent": Ajax.UA},
               ),
               Expanded(
                 child: Column(
-                  spacing: 4,
+                  spacing: 6,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       widget.book.name,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 15,
+                        fontSize: 14,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
-                    SizedBox(height: 4),
                     Text(
                       "上次更新：${widget.book.lastUpdate!}",
                       style: TextStyle(
                         color: Theme.of(
                           context,
                         ).colorScheme.onSurface.withAlpha(150),
-                        fontSize: 13,
+                        fontSize: 12,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
@@ -68,7 +67,7 @@ class _BookItemState extends ConsumerState<BookItem> {
                         color: Theme.of(
                           context,
                         ).colorScheme.onSurface.withAlpha(150),
-                        fontSize: 13,
+                        fontSize: 12,
                       ),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
