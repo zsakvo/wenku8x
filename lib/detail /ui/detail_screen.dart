@@ -8,6 +8,7 @@ import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/services/variable.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/app/utils/string.dart';
 import 'package:wenku8x/detail%20/providers/detail.dart';
 
 class DetailScreen extends StatefulHookConsumerWidget {
@@ -245,7 +246,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                       vertical: 4,
                                     ),
                                     child: Text(
-                                      "共${bookDetail?.length}字",
+                                      "共${formatNumberToUnitString(bookDetail?.length ?? 0)}字",
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.normal,
