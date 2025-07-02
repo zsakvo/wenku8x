@@ -118,4 +118,18 @@ class Api {
     }
     return [];
   }
+
+  static Future<XmlDocument?> getNovelFullMeta(String aid) async {
+    XmlDocument? res = await Ajax.post("action=book&do=meta&aid=$aid&t=0");
+    logger.debug("获取小说完整信息", res);
+    return res;
+  }
+
+  static Future<String> getNovelFullIntro(String aid) async {
+    var res = await Ajax.post(
+      "action=book&do=intro&aid=$aid&t=0",
+      isXml: false,
+    );
+    return res.toString();
+  }
 }

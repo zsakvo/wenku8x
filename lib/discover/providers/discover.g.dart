@@ -38,7 +38,7 @@ final class DiscoverFilterProvider
   }
 }
 
-String _$discoverFilterHash() => r'b054568f242fa2e1fe1d41c54e9d3c661eb2dd28';
+String _$discoverFilterHash() => r'33cdef648797b4f0e3398f8b0549d1e02aed79c3';
 
 abstract class _$DiscoverFilter extends $Notifier<DiscoverModel> {
   DiscoverModel build();

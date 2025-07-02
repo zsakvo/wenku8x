@@ -1,0 +1,17 @@
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:wenku8x/app/libs/request/apis.dart';
+import 'package:wenku8x/app/models/book.dart';
+
+part 'detail.g.dart';
+
+@riverpod
+class Detail extends _$Detail {
+  @override
+  FutureOr<BookModel> build(BookModel book) async {
+    final res = await Api.getNovelFullMeta(book.aid);
+    if (res == null) {
+      throw Exception("书籍详情获取失败");
+    }
+    return book;
+  }
+}

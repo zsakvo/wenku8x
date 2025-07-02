@@ -6,7 +6,8 @@ import 'package:wenku8x/app/services/variable.dart';
 
 class BookItem extends StatefulHookConsumerWidget {
   final BookModel book;
-  const BookItem({super.key, required this.book});
+  final Function(BookModel book)? onTap;
+  const BookItem({super.key, required this.book, this.onTap});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BookItemState();
@@ -19,7 +20,7 @@ class _BookItemState extends ConsumerState<BookItem> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          // Handle book item tap
+          widget.onTap?.call(widget.book);
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

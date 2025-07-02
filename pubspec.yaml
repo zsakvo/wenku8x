@@ -57,6 +57,7 @@ dependencies:
   freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
   device_info_plus: ^11.5.0
+  dotted_border: ^3.1.0
 
 dev_dependencies:
   flutter_test:
