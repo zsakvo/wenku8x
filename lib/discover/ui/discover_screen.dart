@@ -45,7 +45,7 @@ class _State extends ConsumerState<DiscoverScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              padding: EdgeInsetsGeometry.only(left: 16, right: 16, bottom: 8),
               child: Row(
                 spacing: 6,
                 children: [
@@ -73,6 +73,7 @@ class _State extends ConsumerState<DiscoverScreen> {
                     // <PopupMenuEntry<Map<String, dynamic>>>
                     child: Chip(
                       padding: EdgeInsets.symmetric(horizontal: 10),
+                      visualDensity: VisualDensity.compact,
                       backgroundColor: Theme.of(context).colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
@@ -124,6 +125,7 @@ class _State extends ConsumerState<DiscoverScreen> {
                       // <PopupMenuEntry<Map<String, dynamic>>>
                       child: Chip(
                         padding: EdgeInsets.symmetric(horizontal: 10),
+                        visualDensity: VisualDensity.compact,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30),
                         ),
@@ -158,7 +160,7 @@ class _State extends ConsumerState<DiscoverScreen> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return const Divider(height: 16, thickness: 1);
+                    return const SizedBox(height: 4);
                   },
                   itemCount: value.length,
                 ),

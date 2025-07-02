@@ -4,5 +4,5 @@ import 'package:wenku8x/app/services/path.dart';
 
 PersistCookieJar prepareJar() {
   final path = join(PathService().applicationSupportDirectory, '.cookies');
-  return PersistCookieJar(ignoreExpires: true, storage: FileStorage(path));
+  return PersistCookieJar(storage: FileStorage(path));
 }

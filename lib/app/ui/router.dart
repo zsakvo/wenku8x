@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
+import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/libs/request/cookie.dart';
 import 'package:wenku8x/app/libs/request/dio.dart';
 import 'package:wenku8x/app/models/book.dart';
@@ -77,6 +78,8 @@ final router = GoRouter(
       redirect: (context, state) async {
         var cookieJar = prepareJar();
         var cookies = await cookieJar.loadForRequest(Uri.parse(Ajax.BASEURL));
+        // 检查是否有登录的cookie
+        logger.debug("当前cookies: $cookies");
         if (cookies.isEmpty) {
           return "/login";
         }

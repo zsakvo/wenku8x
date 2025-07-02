@@ -31,8 +31,8 @@ class _BookItemState extends ConsumerState<BookItem> {
               // Book cover image
               CachedNetworkImage(
                 imageUrl: widget.book.coverUrl,
-                width: 64,
-                height: 92,
+                width: 60,
+                height: 84,
                 fit: BoxFit.cover,
                 httpHeaders: {"User-Agent": VariableService().UserAgent},
               ),
