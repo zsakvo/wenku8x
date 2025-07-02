@@ -330,7 +330,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                 children: [
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      minimumSize: Size(0, 36),
+                      minimumSize: Size(0, 42),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(30),
@@ -349,14 +349,14 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                         Theme.of(context).colorScheme.onPrimary,
                         BlendMode.srcIn,
                       ),
-                      width: 16,
+                      width: 20,
                     ),
                     label: Text("开始阅读"),
                   ),
                   IconButton.filled(
                     style: FilledButton.styleFrom(
-                      minimumSize: Size(0, 36),
-                      maximumSize: Size(42, 36),
+                      minimumSize: Size(0, 42),
+                      maximumSize: Size(42, 42),
                       padding: EdgeInsets.only(right: 12, left: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.only(
