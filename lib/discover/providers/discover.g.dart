@@ -6,53 +6,97 @@ part of 'discover.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-@ProviderFor(DiscoverAll)
-const discoverAllProvider = DiscoverAllProvider._();
+@ProviderFor(DiscoverFilter)
+const discoverFilterProvider = DiscoverFilterProvider._();
 
-final class DiscoverAllProvider
-    extends $AsyncNotifierProvider<DiscoverAll, List<Map<String, dynamic>>> {
-  const DiscoverAllProvider._()
+final class DiscoverFilterProvider
+    extends $NotifierProvider<DiscoverFilter, DiscoverModel> {
+  const DiscoverFilterProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'discoverAllProvider',
+        name: r'discoverFilterProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$discoverAllHash();
+  String debugGetCreateSourceHash() => _$discoverFilterHash();
 
   @$internal
   @override
-  DiscoverAll create() => DiscoverAll();
+  DiscoverFilter create() => DiscoverFilter();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(DiscoverModel value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<DiscoverModel>(value),
+    );
+  }
 }
 
-String _$discoverAllHash() => r'14a66dcaafadf446ba7ee1e89699fb9421f489c0';
+String _$discoverFilterHash() => r'b054568f242fa2e1fe1d41c54e9d3c661eb2dd28';
 
-abstract class _$DiscoverAll
-    extends $AsyncNotifier<List<Map<String, dynamic>>> {
-  FutureOr<List<Map<String, dynamic>>> build();
+abstract class _$DiscoverFilter extends $Notifier<DiscoverModel> {
+  DiscoverModel build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<List<Map<String, dynamic>>>,
-              List<Map<String, dynamic>>
-            >;
+    final ref = this.ref as $Ref<DiscoverModel, DiscoverModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<List<Map<String, dynamic>>>,
-                List<Map<String, dynamic>>
-              >,
-              AsyncValue<List<Map<String, dynamic>>>,
+              AnyNotifier<DiscoverModel, DiscoverModel>,
+              DiscoverModel,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(DiscoverData)
+const discoverDataProvider = DiscoverDataProvider._();
+
+final class DiscoverDataProvider
+    extends $AsyncNotifierProvider<DiscoverData, List<BookModel>> {
+  const DiscoverDataProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'discoverDataProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$discoverDataHash();
+
+  @$internal
+  @override
+  DiscoverData create() => DiscoverData();
+}
+
+String _$discoverDataHash() => r'78e9602235494ac47c9c5c9a17cb4ffb5fdd2c85';
+
+abstract class _$DiscoverData extends $AsyncNotifier<List<BookModel>> {
+  FutureOr<List<BookModel>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<AsyncValue<List<BookModel>>, List<BookModel>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<List<BookModel>>, List<BookModel>>,
+              AsyncValue<List<BookModel>>,
               Object?,
               Object?
             >;

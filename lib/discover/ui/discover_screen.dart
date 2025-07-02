@@ -6,7 +6,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/color.dart';
+import 'package:wenku8x/discover/models/discover.dart';
 import 'package:wenku8x/discover/providers/discover.dart';
+
+import 'components/book_item.dart';
 
 class DiscoverScreen extends StatefulHookConsumerWidget {
   const DiscoverScreen({super.key});
@@ -18,120 +21,147 @@ class DiscoverScreen extends StatefulHookConsumerWidget {
 class _State extends ConsumerState<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
-    final discovers = ref.watch(discoverAllProvider);
+    final filter = ref.watch(discoverFilterProvider);
+    final books = ref.watch(discoverDataProvider);
     // final flags = useState<(String,String)>(("visit","allvisit"));
-    final rankType = useState<String>("visit");
-    final rankFlag = useState<String>("allvisit");
-    useEffect(() {
-      final rank = novelSort[rankType.value];
-      if (rank?["subs"] != null) {
-        rankFlag.value =
-            (rank?["subs"] as List<Map<String, dynamic>>).first["flag"];
-      } else {
-        rankFlag.value = rank?["flag"] as String;
-      }
-      return null;
-    }, [rankType]);
+    // final rankType = useState<String>("visit");
+    // final rankFlag = useState<String>("allvisit");
+    // useEffect(() {
+    //   final rank = novelSort[rankType.value];
+    //   if (rank?["subs"] != null) {
+    //     rankFlag.value =
+    //         (rank?["subs"] as List<Map<String, dynamic>>).first["flag"];
+    //   } else {
+    //     rankFlag.value = rank?["flag"] as String;
+    //   }
+    //   return null;
+    // }, [rankType]);
 
     return Scaffold(
       appBar: AppTopBar(title: "发现"),
-      body: Container(
-        padding: EdgeInsets.only(left: 16, right: 16),
+      body: ConstrainedBox(
         constraints: const BoxConstraints.expand(),
         child: Column(
           children: [
-            Row(
-              spacing: 14,
-              children: [
-                PopupMenuButton<String>(
-                  initialValue: rankType.value,
-                  onSelected: (String item) {
-                    setState(() {
-                      rankType.value = item;
-                      final subs =
-                          novelSort[item]?["subs"]
-                              as List<Map<String, dynamic>>?;
-                      if (subs != null) {
-                        rankFlag.value = subs.first["flag"] as String;
-                      }
-                    });
-                  },
-                  itemBuilder: (BuildContext context) =>
-                      novelSort.entries.map((entry) {
-                        return PopupMenuItem<String>(
-                          value: entry.key,
-                          child: Text(entry.value["title"] as String),
-                        );
-                      }).toList(),
-                  // <PopupMenuEntry<Map<String, dynamic>>>
-                  child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      minimumSize: Size(0, 32),
-                      padding: EdgeInsets.only(left: 15, right: 15),
-                      textStyle: TextStyle(fontSize: 13),
-                    ),
-                    onPressed: null,
-                    child: Text(novelSort[rankType.value]?["title"] as String),
-                  ),
-                ),
-
-                if (novelSort[rankType.value]?["subs"] != null)
-                  // OutlinedButton(
-                  //   style: OutlinedButton.styleFrom(
-                  //     minimumSize: Size(0, 32),
-                  //     padding: EdgeInsets.only(left: 15, right: 15),
-                  //     textStyle: TextStyle(fontSize: 13),
-                  //   ),
-                  //   onPressed: () {},
-                  //   child: Text(
-                  //     (novelSort[rankType.value]?["subs"]
-                  //                 as List<Map<String, dynamic>>)
-                  //             .firstWhereOrNull(
-                  //               (e) => e["flag"] == rankFlag.value,
-                  //             )?["title"]
-                  //         as String,
-                  //   ),
-                  // ),
+            Padding(
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 16),
+              child: Row(
+                spacing: 6,
+                children: [
                   PopupMenuButton<String>(
-                    initialValue: rankType.value,
+                    initialValue: filter.type,
                     onSelected: (String item) {
-                      setState(() {
-                        rankFlag.value = item;
-                      });
+                      ref.read(discoverFilterProvider.notifier).setType(item);
+                      // setState(() {
+                      //   filter.setType(item);
+                      //   final subs =
+                      //       novelSort[item]?["subs"]
+                      //           as List<Map<String, dynamic>>?;
+                      //   if (subs != null) {
+                      //     rankFlag.value = subs.first["flag"] as String;
+                      //   }
+                      // });
                     },
                     itemBuilder: (BuildContext context) =>
-                        (novelSort[rankType.value]?["subs"]
-                                as List<Map<String, dynamic>>)
-                            .map((entry) {
-                              return PopupMenuItem<String>(
-                                value: entry["flag"] as String,
-                                child: Text(entry["title"] as String),
-                              );
-                            })
-                            .toList(),
+                        novelSort.entries.map((entry) {
+                          return PopupMenuItem<String>(
+                            value: entry.key,
+                            child: Text(entry.value["title"] as String),
+                          );
+                        }).toList(),
                     // <PopupMenuEntry<Map<String, dynamic>>>
-                    child: FilledButton(
-                      style: FilledButton.styleFrom(
-                        minimumSize: Size(0, 32),
-                        padding: EdgeInsets.only(left: 15, right: 15),
-                        textStyle: TextStyle(fontSize: 13),
+                    child: Chip(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      onPressed: null,
-                      child: Text(
-                        (novelSort[rankType.value]?["subs"]
-                                    as List<Map<String, dynamic>>)
-                                .firstWhereOrNull(
-                                  (e) => e["flag"] == rankFlag.value,
-                                )?["title"]
-                            as String,
+                      labelStyle: TextStyle(
+                        fontSize: 13,
+                        color: Theme.of(context).colorScheme.onPrimary,
                       ),
+                      label: Text(novelSort[filter.type]?["title"] as String),
                     ),
                   ),
-              ],
+
+                  if (filter.flagName != null)
+                    // OutlinedButton(
+                    //   style: OutlinedButton.styleFrom(
+                    //     minimumSize: Size(0, 32),
+                    //     padding: EdgeInsets.only(left: 15, right: 15),
+                    //     textStyle: TextStyle(fontSize: 13),
+                    //   ),
+                    //   onPressed: () {},
+                    //   child: Text(
+                    //     (novelSort[rankType.value]?["subs"]
+                    //                 as List<Map<String, dynamic>>)
+                    //             .firstWhereOrNull(
+                    //               (e) => e["flag"] == rankFlag.value,
+                    //             )?["title"]
+                    //         as String,
+                    //   ),
+                    // ),
+                    PopupMenuButton<String>(
+                      borderRadius: BorderRadius.circular(30),
+                      initialValue: filter.flag,
+                      onSelected: (String item) {
+                        // setState(() {
+                        //   filter.setFlag(item);
+                        // });
+                        ref.read(discoverFilterProvider.notifier).setFlag(item);
+                      },
+                      itemBuilder: (BuildContext context) =>
+                          (novelSort[filter.type]?["subs"]
+                                  as List<Map<String, dynamic>>)
+                              .map((entry) {
+                                return PopupMenuItem<String>(
+                                  value: entry["flag"] as String,
+                                  child: Text(entry["title"] as String),
+                                );
+                              })
+                              .toList(),
+                      // <PopupMenuEntry<Map<String, dynamic>>>
+                      child: Chip(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        labelStyle: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context).colorScheme.onSurface,
+                        ),
+                        label: Text(
+                          (novelSort[filter.type]?["subs"]
+                                      as List<Map<String, dynamic>>)
+                                  .firstWhereOrNull(
+                                    (e) => e["flag"] == filter.flag,
+                                  )?["title"]
+                              as String,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
-            RefreshIndicator.adaptive(
-              child: Container(),
-              onRefresh: () async {},
+            Expanded(
+              child: switch (books) {
+                AsyncData(:final value) => ListView.separated(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final book = value[index];
+                    return BookItem(book: book);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const Divider(height: 16, thickness: 1);
+                  },
+                  itemCount: value.length,
+                ),
+
+                AsyncLoading() => const Center(
+                  child: CircularProgressIndicator(),
+                ),
+                _ => const Center(child: Text("暂无数据")),
+              },
             ),
           ],
         ),

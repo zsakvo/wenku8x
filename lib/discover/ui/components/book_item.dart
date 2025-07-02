@@ -51,7 +51,7 @@ class _BookItemState extends ConsumerState<BookItem> {
                       maxLines: 2,
                     ),
                     Text(
-                      "上次更新：${widget.book.lastUpdate!}",
+                      widget.book.author!,
                       style: TextStyle(
                         color: Theme.of(
                           context,
@@ -62,7 +62,7 @@ class _BookItemState extends ConsumerState<BookItem> {
                       maxLines: 1,
                     ),
                     Text(
-                      "最新章节：${widget.book.lastChapter ?? "未知章节"}",
+                      "上次更新：${widget.book.lastUpdate!}",
                       style: TextStyle(
                         color: Theme.of(
                           context,

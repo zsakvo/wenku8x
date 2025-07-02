@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:wenku8x/app/libs/request/dio.dart';
 import 'package:wenku8x/app/services/log.dart';
 import 'package:wenku8x/app/services/path.dart';
+import 'package:wenku8x/app/services/variable.dart';
 
 class AppService {
   static final AppService _instance = AppService._internal();
@@ -21,6 +22,7 @@ class AppService {
 
     try {
       await PathService().init();
+      await VariableService().init();
       await await Ajax.init();
       initLogService();
 

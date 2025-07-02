@@ -3,8 +3,8 @@ import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
-import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/libs/request/cookie.dart';
+import 'package:wenku8x/app/services/variable.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/app/utils/flash.dart';
 import 'dart:convert' as convert;
@@ -14,8 +14,8 @@ import 'package:xml/xml.dart';
 class Ajax {
   static final logger = Logger("Request");
   static String BASEURL = "http://app.wenku8.com/android.php";
-  static String UA =
-      "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
+  // static String UA =
+  //     "Dalvik/2.1.0 (Linux; U; Android 11; IN2010 Build/RP1A.201005.001)";
   static const String _APPVER = "1.13";
 
   ///超时时间
@@ -35,7 +35,7 @@ class Ajax {
         connectTimeout: const Duration(milliseconds: CONNECT_TIMEOUT),
         receiveTimeout: const Duration(milliseconds: RECEIVE_TIMEOUT),
         contentType: Headers.formUrlEncodedContentType,
-        headers: {"User-Agent": UA},
+        headers: {"User-Agent": VariableService().UserAgent},
       ),
     )..interceptors.add(CookieManager(cookieJar));
   }
