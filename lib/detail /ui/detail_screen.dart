@@ -135,10 +135,46 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.only(left: 12, right: 12, top: 14),
+                child: Row(
+                  spacing: 14,
+                  children: [
+                    FilledButton.icon(
+                      style: FilledButton.styleFrom(
+                        minimumSize: Size(0, 32),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      onPressed: () {},
+                      label: Text("开始阅读"),
+                    ),
+                    TextButton.icon(
+                      icon: Icon(
+                        Icons.add,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                      style: TextButton.styleFrom(
+                        minimumSize: Size(0, 32),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        textStyle: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                      onPressed: () {},
+                      label: Text("加入书架"),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.only(
                   left: 12,
                   right: 12,
-                  top: 24,
+                  top: 14,
                   bottom: 8,
                 ),
                 child: Text(
