@@ -58,6 +58,7 @@ dependencies:
   json_annotation: ^4.9.0
   device_info_plus: ^11.5.0
   dotted_border: ^3.1.0
+  skeletonizer: ^2.0.1
 
 dev_dependencies:
   flutter_test:
