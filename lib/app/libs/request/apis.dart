@@ -119,10 +119,29 @@ class Api {
     return [];
   }
 
-  static Future<XmlDocument?> getNovelFullMeta(String aid) async {
-    XmlDocument? res = await Ajax.post("action=book&do=meta&aid=$aid&t=0");
+  static Future<BookModel> getNovelFullMeta(String aid) async {
+    XmlDocument res = await Ajax.post("action=book&do=meta&aid=$aid&t=0");
+    String intro = await getNovelFullIntro(aid);
     logger.debug("获取小说完整信息", res);
-    return res;
+    var eles = res.findAllElements("data").toList();
+    return BookModel(
+      aid: aid,
+      name: eles[0].innerText,
+      author: eles[1].getAttribute("value"),
+      status: eles[7].getAttribute("value"),
+      lastUpdate: eles[9].getAttribute("value"),
+      lastChapterId: eles[11].getAttribute("cid"),
+      lastChapter: eles[11].innerText,
+      dayHitsCount: int.tryParse(eles[2].getAttribute("value") ?? "0"),
+      totalHitsCount: int.tryParse(eles[3].getAttribute("value") ?? "0"),
+      pushCount: int.tryParse(eles[4].getAttribute("value") ?? "0"),
+      favCount: int.tryParse(eles[5].getAttribute("value") ?? "0"),
+      pressId: eles[6].getAttribute("sid"),
+      pressName: eles[6].getAttribute("value"),
+      length: int.tryParse(eles[8].getAttribute("value") ?? "0"),
+      tags: eles[10].getAttribute("value")?.split(" ") ?? [],
+      intro: intro,
+    );
   }
 
   static Future<String> getNovelFullIntro(String aid) async {

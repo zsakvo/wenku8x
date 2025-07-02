@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BookModel {
 
- String get aid; String get name; String? get author; String? get lastChapter; String? get lastChapterId; String? get lastUpdate; String? get status; String? get intro;
+ String get aid; String get name; String? get author; String? get lastChapter; String? get lastChapterId; String? get lastUpdate; String? get status; String? get intro; int? get dayHitsCount; int? get totalHitsCount; int? get pushCount; int? get favCount; String? get pressId; String? get pressName; int? get length; List<String>? get tags;
 /// Create a copy of BookModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $BookModelCopyWith<BookModel> get copyWith => _$BookModelCopyWithImpl<BookModel>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookModel&&(identical(other.aid, aid) || other.aid == aid)&&(identical(other.name, name) || other.name == name)&&(identical(other.author, author) || other.author == author)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.lastChapterId, lastChapterId) || other.lastChapterId == lastChapterId)&&(identical(other.lastUpdate, lastUpdate) || other.lastUpdate == lastUpdate)&&(identical(other.status, status) || other.status == status)&&(identical(other.intro, intro) || other.intro == intro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BookModel&&(identical(other.aid, aid) || other.aid == aid)&&(identical(other.name, name) || other.name == name)&&(identical(other.author, author) || other.author == author)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.lastChapterId, lastChapterId) || other.lastChapterId == lastChapterId)&&(identical(other.lastUpdate, lastUpdate) || other.lastUpdate == lastUpdate)&&(identical(other.status, status) || other.status == status)&&(identical(other.intro, intro) || other.intro == intro)&&(identical(other.dayHitsCount, dayHitsCount) || other.dayHitsCount == dayHitsCount)&&(identical(other.totalHitsCount, totalHitsCount) || other.totalHitsCount == totalHitsCount)&&(identical(other.pushCount, pushCount) || other.pushCount == pushCount)&&(identical(other.favCount, favCount) || other.favCount == favCount)&&(identical(other.pressId, pressId) || other.pressId == pressId)&&(identical(other.pressName, pressName) || other.pressName == pressName)&&(identical(other.length, length) || other.length == length)&&const DeepCollectionEquality().equals(other.tags, tags));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,aid,name,author,lastChapter,lastChapterId,lastUpdate,status,intro);
+int get hashCode => Object.hash(runtimeType,aid,name,author,lastChapter,lastChapterId,lastUpdate,status,intro,dayHitsCount,totalHitsCount,pushCount,favCount,pressId,pressName,length,const DeepCollectionEquality().hash(tags));
 
 @override
 String toString() {
-  return 'BookModel(aid: $aid, name: $name, author: $author, lastChapter: $lastChapter, lastChapterId: $lastChapterId, lastUpdate: $lastUpdate, status: $status, intro: $intro)';
+  return 'BookModel(aid: $aid, name: $name, author: $author, lastChapter: $lastChapter, lastChapterId: $lastChapterId, lastUpdate: $lastUpdate, status: $status, intro: $intro, dayHitsCount: $dayHitsCount, totalHitsCount: $totalHitsCount, pushCount: $pushCount, favCount: $favCount, pressId: $pressId, pressName: $pressName, length: $length, tags: $tags)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $BookModelCopyWith<$Res>  {
   factory $BookModelCopyWith(BookModel value, $Res Function(BookModel) _then) = _$BookModelCopyWithImpl;
 @useResult
 $Res call({
- String aid, String name, String? author, String? lastChapter, String? lastChapterId, String? lastUpdate, String? status, String? intro
+ String aid, String name, String? author, String? lastChapter, String? lastChapterId, String? lastUpdate, String? status, String? intro, int? dayHitsCount, int? totalHitsCount, int? pushCount, int? favCount, String? pressId, String? pressName, int? length, List<String>? tags
 });
 
 
@@ -66,7 +66,7 @@ class _$BookModelCopyWithImpl<$Res>
 
 /// Create a copy of BookModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? aid = null,Object? name = null,Object? author = freezed,Object? lastChapter = freezed,Object? lastChapterId = freezed,Object? lastUpdate = freezed,Object? status = freezed,Object? intro = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? aid = null,Object? name = null,Object? author = freezed,Object? lastChapter = freezed,Object? lastChapterId = freezed,Object? lastUpdate = freezed,Object? status = freezed,Object? intro = freezed,Object? dayHitsCount = freezed,Object? totalHitsCount = freezed,Object? pushCount = freezed,Object? favCount = freezed,Object? pressId = freezed,Object? pressName = freezed,Object? length = freezed,Object? tags = freezed,}) {
   return _then(_self.copyWith(
 aid: null == aid ? _self.aid : aid // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -76,7 +76,15 @@ as String?,lastChapterId: freezed == lastChapterId ? _self.lastChapterId : lastC
 as String?,lastUpdate: freezed == lastUpdate ? _self.lastUpdate : lastUpdate // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,intro: freezed == intro ? _self.intro : intro // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,dayHitsCount: freezed == dayHitsCount ? _self.dayHitsCount : dayHitsCount // ignore: cast_nullable_to_non_nullable
+as int?,totalHitsCount: freezed == totalHitsCount ? _self.totalHitsCount : totalHitsCount // ignore: cast_nullable_to_non_nullable
+as int?,pushCount: freezed == pushCount ? _self.pushCount : pushCount // ignore: cast_nullable_to_non_nullable
+as int?,favCount: freezed == favCount ? _self.favCount : favCount // ignore: cast_nullable_to_non_nullable
+as int?,pressId: freezed == pressId ? _self.pressId : pressId // ignore: cast_nullable_to_non_nullable
+as String?,pressName: freezed == pressName ? _self.pressName : pressName // ignore: cast_nullable_to_non_nullable
+as String?,length: freezed == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
+as int?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,
   ));
 }
 
@@ -87,7 +95,7 @@ as String?,
 @JsonSerializable()
 
 class _BookModel extends BookModel {
-  const _BookModel({required this.aid, required this.name, this.author, this.lastChapter, this.lastChapterId, this.lastUpdate, this.status, this.intro}): super._();
+  const _BookModel({required this.aid, required this.name, this.author, this.lastChapter, this.lastChapterId, this.lastUpdate, this.status, this.intro, this.dayHitsCount, this.totalHitsCount, this.pushCount, this.favCount, this.pressId, this.pressName, this.length, final  List<String>? tags}): _tags = tags,super._();
   factory _BookModel.fromJson(Map<String, dynamic> json) => _$BookModelFromJson(json);
 
 @override final  String aid;
@@ -98,6 +106,22 @@ class _BookModel extends BookModel {
 @override final  String? lastUpdate;
 @override final  String? status;
 @override final  String? intro;
+@override final  int? dayHitsCount;
+@override final  int? totalHitsCount;
+@override final  int? pushCount;
+@override final  int? favCount;
+@override final  String? pressId;
+@override final  String? pressName;
+@override final  int? length;
+ final  List<String>? _tags;
+@override List<String>? get tags {
+  final value = _tags;
+  if (value == null) return null;
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of BookModel
 /// with the given fields replaced by the non-null parameter values.
@@ -112,16 +136,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookModel&&(identical(other.aid, aid) || other.aid == aid)&&(identical(other.name, name) || other.name == name)&&(identical(other.author, author) || other.author == author)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.lastChapterId, lastChapterId) || other.lastChapterId == lastChapterId)&&(identical(other.lastUpdate, lastUpdate) || other.lastUpdate == lastUpdate)&&(identical(other.status, status) || other.status == status)&&(identical(other.intro, intro) || other.intro == intro));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BookModel&&(identical(other.aid, aid) || other.aid == aid)&&(identical(other.name, name) || other.name == name)&&(identical(other.author, author) || other.author == author)&&(identical(other.lastChapter, lastChapter) || other.lastChapter == lastChapter)&&(identical(other.lastChapterId, lastChapterId) || other.lastChapterId == lastChapterId)&&(identical(other.lastUpdate, lastUpdate) || other.lastUpdate == lastUpdate)&&(identical(other.status, status) || other.status == status)&&(identical(other.intro, intro) || other.intro == intro)&&(identical(other.dayHitsCount, dayHitsCount) || other.dayHitsCount == dayHitsCount)&&(identical(other.totalHitsCount, totalHitsCount) || other.totalHitsCount == totalHitsCount)&&(identical(other.pushCount, pushCount) || other.pushCount == pushCount)&&(identical(other.favCount, favCount) || other.favCount == favCount)&&(identical(other.pressId, pressId) || other.pressId == pressId)&&(identical(other.pressName, pressName) || other.pressName == pressName)&&(identical(other.length, length) || other.length == length)&&const DeepCollectionEquality().equals(other._tags, _tags));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,aid,name,author,lastChapter,lastChapterId,lastUpdate,status,intro);
+int get hashCode => Object.hash(runtimeType,aid,name,author,lastChapter,lastChapterId,lastUpdate,status,intro,dayHitsCount,totalHitsCount,pushCount,favCount,pressId,pressName,length,const DeepCollectionEquality().hash(_tags));
 
 @override
 String toString() {
-  return 'BookModel(aid: $aid, name: $name, author: $author, lastChapter: $lastChapter, lastChapterId: $lastChapterId, lastUpdate: $lastUpdate, status: $status, intro: $intro)';
+  return 'BookModel(aid: $aid, name: $name, author: $author, lastChapter: $lastChapter, lastChapterId: $lastChapterId, lastUpdate: $lastUpdate, status: $status, intro: $intro, dayHitsCount: $dayHitsCount, totalHitsCount: $totalHitsCount, pushCount: $pushCount, favCount: $favCount, pressId: $pressId, pressName: $pressName, length: $length, tags: $tags)';
 }
 
 
@@ -132,7 +156,7 @@ abstract mixin class _$BookModelCopyWith<$Res> implements $BookModelCopyWith<$Re
   factory _$BookModelCopyWith(_BookModel value, $Res Function(_BookModel) _then) = __$BookModelCopyWithImpl;
 @override @useResult
 $Res call({
- String aid, String name, String? author, String? lastChapter, String? lastChapterId, String? lastUpdate, String? status, String? intro
+ String aid, String name, String? author, String? lastChapter, String? lastChapterId, String? lastUpdate, String? status, String? intro, int? dayHitsCount, int? totalHitsCount, int? pushCount, int? favCount, String? pressId, String? pressName, int? length, List<String>? tags
 });
 
 
@@ -149,7 +173,7 @@ class __$BookModelCopyWithImpl<$Res>
 
 /// Create a copy of BookModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? aid = null,Object? name = null,Object? author = freezed,Object? lastChapter = freezed,Object? lastChapterId = freezed,Object? lastUpdate = freezed,Object? status = freezed,Object? intro = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? aid = null,Object? name = null,Object? author = freezed,Object? lastChapter = freezed,Object? lastChapterId = freezed,Object? lastUpdate = freezed,Object? status = freezed,Object? intro = freezed,Object? dayHitsCount = freezed,Object? totalHitsCount = freezed,Object? pushCount = freezed,Object? favCount = freezed,Object? pressId = freezed,Object? pressName = freezed,Object? length = freezed,Object? tags = freezed,}) {
   return _then(_BookModel(
 aid: null == aid ? _self.aid : aid // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -159,7 +183,15 @@ as String?,lastChapterId: freezed == lastChapterId ? _self.lastChapterId : lastC
 as String?,lastUpdate: freezed == lastUpdate ? _self.lastUpdate : lastUpdate // ignore: cast_nullable_to_non_nullable
 as String?,status: freezed == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String?,intro: freezed == intro ? _self.intro : intro // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,dayHitsCount: freezed == dayHitsCount ? _self.dayHitsCount : dayHitsCount // ignore: cast_nullable_to_non_nullable
+as int?,totalHitsCount: freezed == totalHitsCount ? _self.totalHitsCount : totalHitsCount // ignore: cast_nullable_to_non_nullable
+as int?,pushCount: freezed == pushCount ? _self.pushCount : pushCount // ignore: cast_nullable_to_non_nullable
+as int?,favCount: freezed == favCount ? _self.favCount : favCount // ignore: cast_nullable_to_non_nullable
+as int?,pressId: freezed == pressId ? _self.pressId : pressId // ignore: cast_nullable_to_non_nullable
+as String?,pressName: freezed == pressName ? _self.pressName : pressName // ignore: cast_nullable_to_non_nullable
+as String?,length: freezed == length ? _self.length : length // ignore: cast_nullable_to_non_nullable
+as int?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,
   ));
 }
 

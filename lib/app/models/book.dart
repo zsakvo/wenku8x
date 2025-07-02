@@ -14,6 +14,14 @@ abstract class BookModel with _$BookModel {
     String? lastUpdate,
     String? status,
     String? intro,
+    int? dayHitsCount,
+    int? totalHitsCount,
+    int? pushCount,
+    int? favCount,
+    String? pressId,
+    String? pressName,
+    int? length,
+    List<String>? tags,
   }) = _BookModel;
 
   const BookModel._();
