@@ -1,6 +1,7 @@
 import 'package:custom_sliding_segmented_control/custom_sliding_segmented_control.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/search/providers/search.dart';
@@ -44,7 +45,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 borderRadius: BorderRadius.circular(30),
               ),
               onValueChanged: (v) {
-                print(v);
+                ref
+                    .read(searchFilterProvider(widget.searchKey).notifier)
+                    .setType(v);
               },
             ),
           ),
@@ -52,12 +55,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             child: switch (searchData) {
               AsyncValue(:final value?) => ListView.separated(
                 itemCount: value.length,
+                cacheExtent: 118,
                 itemBuilder: (context, index) {
                   final book = value[index];
-                  return BookItem(book: book);
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(32),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: BookItem(
+                        book: book,
+                        onTap: (book) => context.push("/detail", extra: book),
+                      ),
+                    ),
+                  );
                 },
                 separatorBuilder: (context, index) {
-                  return const SizedBox(height: 4);
+                  return const SizedBox(height: 14);
                 },
               ),
               AsyncLoading() => const Center(
