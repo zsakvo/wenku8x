@@ -10,6 +10,7 @@ import 'package:wenku8x/detail%20/ui/detail_screen.dart';
 import 'package:wenku8x/discover/ui/discover_screen.dart';
 import 'package:wenku8x/login/ui/login_screen.dart';
 import 'package:wenku8x/preference/ui/preference_screen.dart';
+import 'package:wenku8x/search/ui/search_screen.dart';
 import 'package:wenku8x/shelf/ui/shelf_screen.dart';
 
 class CustomNavigationHelper {
@@ -104,6 +105,13 @@ final router = GoRouter(
       builder: (context, state) {
         final book = state.extra as BookModel;
         return DetailScreen(book: book);
+      },
+    ),
+    GoRoute(
+      path: "/search",
+      builder: (context, state) {
+        final searchKey = state.extra as String;
+        return SearchScreen(searchKey: searchKey);
       },
     ),
   ],

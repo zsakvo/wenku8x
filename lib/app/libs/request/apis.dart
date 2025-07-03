@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
@@ -150,5 +151,98 @@ class Api {
       isXml: false,
     );
     return res.toString();
+  }
+
+  static Future<List<BookModel>> searchNovelByNovelName(String bookName) async {
+    XmlDocument res = await Ajax.post(
+      "action=search&searchtype=articlename&searchkey=$bookName&t=0",
+    );
+    return res.findAllElements("item").map((element) {
+      return _parseBookFromXml(element);
+    }).toList();
+  }
+
+  static Future<List<BookModel>> searchNovelByAuthorName(String author) async {
+    XmlDocument res = await Ajax.post(
+      "action=search&searchtype=author&searchkey=$author&t=0",
+    );
+    return res.findAllElements("item").map((element) {
+      return _parseBookFromXml(element);
+    }).toList();
+  }
+
+  static BookModel _parseBookFromXml(XmlElement element, {String? aid}) {
+    var eles = element.children
+        .where((p0) => p0.toString().length > 2)
+        .toList();
+    return BookModel(
+      aid: aid ?? element.getAttribute("aid")!,
+      name: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "Title")!
+          .innerText,
+      author: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "Author")
+          ?.getAttribute("value"),
+      lastChapter: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "LastChapter")
+          ?.innerText,
+      lastChapterId: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "LastChapter")
+          ?.getAttribute("cid"),
+      lastUpdate: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "LastUpdate")
+          ?.getAttribute("value"),
+      status: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "BookStatus")
+          ?.getAttribute("value"),
+      dayHitsCount: int.tryParse(
+        eles
+                .firstWhereOrNull(
+                  (p0) => p0.getAttribute("name") == "DayHitsCount",
+                )
+                ?.getAttribute("value") ??
+            "0",
+      ),
+      totalHitsCount: int.tryParse(
+        eles
+                .firstWhereOrNull(
+                  (p0) => p0.getAttribute("name") == "TotalHitsCount",
+                )
+                ?.getAttribute("value") ??
+            "0",
+      ),
+      pushCount: int.tryParse(
+        eles
+                .firstWhereOrNull(
+                  (p0) => p0.getAttribute("name") == "PushCount",
+                )
+                ?.getAttribute("value") ??
+            "0",
+      ),
+      favCount: int.tryParse(
+        eles
+                .firstWhereOrNull((p0) => p0.getAttribute("name") == "FavCount")
+                ?.getAttribute("value") ??
+            "0",
+      ),
+      pressId: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "Press")
+          ?.getAttribute("sid"),
+      pressName: eles
+          .firstWhereOrNull((p0) => p0.getAttribute("name") == "Press")
+          ?.getAttribute("value"),
+      length: int.tryParse(
+        eles
+                .firstWhereOrNull((p0) => p0.getAttribute("name") == "Length")
+                ?.getAttribute("value") ??
+            "0",
+      ),
+      tags:
+          eles
+              .firstWhereOrNull((p0) => p0.getAttribute("name") == "Tags")
+              ?.getAttribute("value")
+              ?.split(" ") ??
+          [],
+    );
   }
 }

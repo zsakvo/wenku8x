@@ -61,7 +61,7 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              context.push("/search");
+              context.push("/search", extra: "我的");
             },
             icon: SvgPicture.asset(
               "assets/svg/ic_topbar_search.svg",

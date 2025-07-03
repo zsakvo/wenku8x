@@ -46,7 +46,7 @@ final class DetailProvider extends $AsyncNotifierProvider<Detail, BookModel> {
   }
 }
 
-String _$detailHash() => r'f313159b34415d3476cc4ee42eb8f5958445d352';
+String _$detailHash() => r'7e89f1302e6f447aa65b8d75760967bedd4c1406';
 
 final class DetailFamily extends $Family
     with

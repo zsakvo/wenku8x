@@ -59,6 +59,7 @@ dependencies:
   device_info_plus: ^11.5.0
   dotted_border: ^3.1.0
   skeletonizer: ^2.0.1
+  custom_sliding_segmented_control: ^1.8.5
 
 dev_dependencies:
   flutter_test:
