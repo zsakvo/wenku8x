@@ -19,11 +19,32 @@ class _BookItemState extends ConsumerState<BookItem> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         child: Row(
+          spacing: 16,
           children: [
             CachedNetworkImage(
               imageUrl: widget.book.coverUrl,
               httpHeaders: {"User-Agent": VariableService().UserAgent},
               width: 64,
+            ),
+            Expanded(
+              child: Column(
+                spacing: 6,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.book.name,
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    widget.book.author!,
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
             ),
           ],
         ),
