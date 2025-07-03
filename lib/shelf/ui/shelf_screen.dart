@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -22,6 +24,7 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final controller = useSearchController();
     // final books = ref.watch(bookProviderProvider);
     // final userId = ref.watch(userProvider.select((value) => value.asData?.value.));
     final avatarPath = ref.watch(userAvatarProvider);
@@ -59,19 +62,64 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
         canPop: false,
         titleLeftPadding: 20,
         actions: [
-          IconButton(
-            onPressed: () {
-              context.push("/search", extra: "我的");
+          SearchAnchor(
+            builder: (context, controller) {
+              return IconButton(
+                onPressed: () {
+                  // context.push("/search", extra: "我的");
+                  controller.openView();
+                },
+                icon: SvgPicture.asset(
+                  "assets/svg/ic_topbar_search.svg",
+                  colorFilter: ColorFilter.mode(
+                    colorScheme.onSurface,
+                    BlendMode.srcIn,
+                  ),
+                  width: 22,
+                ),
+              );
             },
-            icon: SvgPicture.asset(
-              "assets/svg/ic_topbar_search.svg",
-              colorFilter: ColorFilter.mode(
-                colorScheme.onSurface,
-                BlendMode.srcIn,
+            headerHeight: 56,
+            viewLeading: IconButton(
+              style: ButtonStyle(
+                padding: WidgetStateProperty.all(EdgeInsets.zero),
+                backgroundColor: WidgetStateProperty.all(
+                  colorScheme.inverseSurface.withAlpha(20),
+                ),
+                minimumSize: WidgetStateProperty.all(const Size(32, 32)),
+                maximumSize: WidgetStateProperty.all(const Size(32, 32)),
               ),
-              width: 22,
+              icon: const Icon(CupertinoIcons.back, size: 20),
+              onPressed: () {
+                context.pop();
+              },
             ),
+            viewHintText: "搜索书名或作者",
+            suggestionsBuilder: (context, controller) {
+              return [];
+            },
+            viewOnSubmitted: (value) {
+              if (value.isNotEmpty) {
+                controller.closeView(value);
+                controller.clear();
+                context.push("/search", extra: value);
+              }
+            },
+            searchController: controller,
           ),
+          // IconButton(
+          //   onPressed: () {
+          //     context.push("/search", extra: "我的");
+          //   },
+          //   icon: SvgPicture.asset(
+          //     "assets/svg/ic_topbar_search.svg",
+          //     colorFilter: ColorFilter.mode(
+          //       colorScheme.onSurface,
+          //       BlendMode.srcIn,
+          //     ),
+          //     width: 22,
+          //   ),
+          // ),
           IconButton(
             onPressed: () {
               // context.push("/preference");
