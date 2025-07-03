@@ -45,7 +45,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                         vertical: 8,
                       ),
                       child: Text(
-                        "书籍ID:${widget.book.aid}\t\t|\t\t当前状态:${bookDetail?.status}",
+                        // "书籍ID:${widget.book.aid}\t\t|\t\t当前状态:${bookDetail?.status}",
+                        "书籍ID:${widget.book.aid}\t\t|\t\t共${formatNumberToUnitString(bookDetail?.length ?? 0)}字",
                         style: TextStyle(
                           fontSize: 12,
                           color: Theme.of(
@@ -224,13 +225,13 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                 spacing: 8,
                                 children: [
                                   Text(
-                                    "章节信息",
+                                    "最新章节",
                                     style: TextStyle(
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold,
                                       color: Theme.of(
                                         context,
-                                      ).colorScheme.onSurface.withAlpha(200),
+                                      ).colorScheme.onSurface,
                                     ),
                                   ),
                                   Container(
@@ -246,7 +247,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                       vertical: 4,
                                     ),
                                     child: Text(
-                                      "共${formatNumberToUnitString(bookDetail?.length ?? 0)}字",
+                                      "${bookDetail?.status}",
                                       style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.normal,
@@ -256,6 +257,32 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                         height: 1,
                                       ),
                                     ),
+                                  ),
+                                  Spacer(),
+                                  GestureDetector(
+                                    child: RichText(
+                                      text: TextSpan(
+                                        children: [
+                                          WidgetSpan(
+                                            child: Icon(
+                                              Icons.list_alt,
+                                              size: 16,
+                                            ),
+                                          ),
+                                          TextSpan(
+                                            text: "\t查看目录",
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              height: 1,
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.primary,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    onTap: () {},
                                   ),
                                 ],
                               ),
