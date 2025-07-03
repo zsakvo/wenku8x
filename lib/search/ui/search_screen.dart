@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/search/providers/search.dart';
+import 'package:wenku8x/search/ui/components/book_item.dart';
 
 class SearchScreen extends StatefulHookConsumerWidget {
   const SearchScreen({super.key, required this.searchKey});
@@ -23,6 +24,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       body: Column(
         children: [
           Container(
+            margin: EdgeInsets.only(bottom: 12),
             padding: EdgeInsets.symmetric(horizontal: 16),
             constraints: BoxConstraints.expand(height: 36),
             child: CustomSlidingSegmentedControl<SearchType>(
@@ -45,6 +47,26 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 print(v);
               },
             ),
+          ),
+          Expanded(
+            child: switch (searchData) {
+              AsyncValue(:final value?) => ListView.separated(
+                itemCount: value.length,
+                itemBuilder: (context, index) {
+                  final book = value[index];
+                  return BookItem(book: book);
+                },
+                separatorBuilder: (context, index) {
+                  return const SizedBox(height: 4);
+                },
+              ),
+              AsyncLoading() => const Center(
+                child: CircularProgressIndicator(),
+              ),
+              AsyncError(:final error, :final stackTrace) => Center(
+                child: Text("搜索失败: $error"),
+              ),
+            },
           ),
         ],
       ),
