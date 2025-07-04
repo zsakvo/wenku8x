@@ -140,6 +140,7 @@ class ChineseLayoutHelper {
             currentPageParagraphs,
             drawingArea,
             isFirstPage,
+            isLastContent: false, // 这不是最后一页，因为有内容无法放下
           );
 
           // 添加当前页面到结果中
@@ -190,6 +191,7 @@ class ChineseLayoutHelper {
               currentPageParagraphs,
               drawingArea,
               isFirstPage,
+              isLastContent: false, // 这不是最后一页，因为有内容无法放下
             );
 
             // 添加当前页面到结果中
@@ -264,10 +266,12 @@ class ChineseLayoutHelper {
 
     // 添加最后一页（如果有内容）
     if (currentPageParagraphs.isNotEmpty) {
+      // 这是最后一页
       _adjustLineSpacingForPage(
         currentPageParagraphs,
         drawingArea,
         isFirstPage,
+        isLastContent: true, // 这是最后一页
       );
 
       pages.add(
@@ -292,7 +296,6 @@ class ChineseLayoutHelper {
   ) {
     // 计算当前行的垂直范围
     final double lineTop = metrics.baseline - metrics.ascent;
-    final double lineBottom = metrics.baseline + metrics.descent;
 
     // 查找行的开始和结束位置
     final TextPosition startPosition = textPainter.getPositionForOffset(
@@ -323,9 +326,13 @@ class ChineseLayoutHelper {
   void _adjustLineSpacingForPage(
     List<ParagraphLayout> paragraphs,
     Rect drawingArea,
-    bool isFirstPage,
-  ) {
+    bool isFirstPage, {
+    bool isLastContent = false,
+  }) {
     if (paragraphs.isEmpty) return;
+
+    // 如果是最后一页内容，不进行上下贴边对齐调整
+    if (isLastContent) return;
 
     // 计算总行数
     int totalLines = 0;

@@ -1,7 +1,4 @@
-import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
 class VariableService {
   static final VariableService _instance = VariableService._internal();
