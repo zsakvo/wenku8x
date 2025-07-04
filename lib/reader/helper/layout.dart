@@ -579,10 +579,10 @@ class ChineseLayoutView extends StatelessWidget {
   final int pageIndex;
 
   const ChineseLayoutView({
-    Key? key,
+    super.key,
     required this.layoutResult,
     required this.pageIndex,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -594,7 +594,7 @@ class ChineseLayoutView extends StatelessWidget {
     final PageLayout page = layoutResult.pages[pageIndex];
 
     return CustomPaint(
-      painter: ChineseLayoutPainter(
+      foregroundPainter: ChineseLayoutPainter(
         layoutResult: layoutResult,
         pageIndex: pageIndex,
       ),

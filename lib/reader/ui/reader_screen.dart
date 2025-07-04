@@ -25,7 +25,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       child: switch (pages) {
         AsyncData(:final value) => Container(
           child: ChineseLayoutPageView(
-            layoutResult: _layoutResult,
+            layoutResult: value,
             pageController: _pageController,
           ),
         ),

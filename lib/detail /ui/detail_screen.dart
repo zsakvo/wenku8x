@@ -293,12 +293,8 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                             size: Size(
                                               MediaQuery.of(context).size.width,
                                               MediaQuery.of(
-                                                    context,
-                                                  ).size.height -
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).padding.top -
-                                                  60,
+                                                context,
+                                              ).size.height,
                                             ),
                                             child: BookDetailCatalog(
                                               book: widget.book,

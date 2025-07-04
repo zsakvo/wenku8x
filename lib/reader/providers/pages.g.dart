@@ -9,7 +9,7 @@ part of 'pages.dart';
 @ProviderFor(Pages)
 const pagesProvider = PagesFamily._();
 
-final class PagesProvider extends $AsyncNotifierProvider<Pages, String> {
+final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
   const PagesProvider._({
     required PagesFamily super.from,
     required String super.argument,
@@ -46,15 +46,15 @@ final class PagesProvider extends $AsyncNotifierProvider<Pages, String> {
   }
 }
 
-String _$pagesHash() => r'be3a158d394e13bee9e44763eba30b8b95e7f8b9';
+String _$pagesHash() => r'51bf16a7f259a9adfc5d0b759a1936ca76f67345';
 
 final class PagesFamily extends $Family
     with
         $ClassFamilyOverride<
           Pages,
-          AsyncValue<String>,
-          String,
-          FutureOr<String>,
+          AsyncValue<LayoutResult>,
+          LayoutResult,
+          FutureOr<LayoutResult>,
           String
         > {
   const PagesFamily._()
@@ -72,21 +72,21 @@ final class PagesFamily extends $Family
   String toString() => r'pagesProvider';
 }
 
-abstract class _$Pages extends $AsyncNotifier<String> {
+abstract class _$Pages extends $AsyncNotifier<LayoutResult> {
   late final _$args = ref.$arg as String;
   String get aid => _$args;
 
-  FutureOr<String> build(String aid);
+  FutureOr<LayoutResult> build(String aid);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<String>, String>;
+    final ref = this.ref as $Ref<AsyncValue<LayoutResult>, LayoutResult>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<String>, String>,
-              AsyncValue<String>,
+              AnyNotifier<AsyncValue<LayoutResult>, LayoutResult>,
+              AsyncValue<LayoutResult>,
               Object?,
               Object?
             >;
