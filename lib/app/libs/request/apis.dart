@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/models/user.dart';
 import 'package:wenku8x/app/services/path.dart';
 import 'package:xml/xml.dart';
@@ -169,6 +170,42 @@ class Api {
     return res.findAllElements("item").map((element) {
       return _parseBookFromXml(element);
     }).toList();
+  }
+
+  /// 获取小说目录
+  /// @param aid 小说的aid
+  /// @return [CatalogModel] 包含小说的目录信息
+  static Future<CatalogModel> getNovelIndex(String aid) async {
+    XmlDocument res = await Ajax.post("action=book&do=list&aid=$aid&t=0");
+    logger.debug("获取小说目录", res);
+    List<VolumeModel> volumes = [];
+    for (var element in res.children[2].children) {
+      if (element.toString().length > 2) {
+        List<ChapterModel> chapters = [];
+        int i = 0;
+        for (var node in element.children) {
+          if (node.toString().length > 2) {
+            if (i != 0) {
+              chapters.add(
+                ChapterModel(
+                  cid: node.getAttribute("cid").toString(),
+                  title: node.innerText,
+                ),
+              );
+            }
+          }
+          i++;
+        }
+        volumes.add(
+          VolumeModel(
+            title: element.firstChild?.value ?? "未知卷",
+            vid: element.getAttribute("vid").toString(),
+            chapters: chapters,
+          ),
+        );
+      }
+    }
+    return CatalogModel(aid: aid, volumes: volumes);
   }
 
   static BookModel _parseBookFromXml(XmlElement element, {String? aid}) {

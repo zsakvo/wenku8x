@@ -1,44 +1,44 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'search.dart';
+part of 'catalog.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-@ProviderFor(SearchFilter)
-const searchFilterProvider = SearchFilterFamily._();
+@ProviderFor(Catalog)
+const catalogProvider = CatalogFamily._();
 
-final class SearchFilterProvider
-    extends $AsyncNotifierProvider<SearchFilter, List<BookModel>> {
-  const SearchFilterProvider._({
-    required SearchFilterFamily super.from,
+final class CatalogProvider
+    extends $AsyncNotifierProvider<Catalog, CatalogModel> {
+  const CatalogProvider._({
+    required CatalogFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'searchFilterProvider',
+         name: r'catalogProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$searchFilterHash();
+  String debugGetCreateSourceHash() => _$catalogHash();
 
   @override
   String toString() {
-    return r'searchFilterProvider'
+    return r'catalogProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  SearchFilter create() => SearchFilter();
+  Catalog create() => Catalog();
 
   @override
   bool operator ==(Object other) {
-    return other is SearchFilterProvider && other.argument == argument;
+    return other is CatalogProvider && other.argument == argument;
   }
 
   @override
@@ -47,48 +47,48 @@ final class SearchFilterProvider
   }
 }
 
-String _$searchFilterHash() => r'7941e6425276e3d7a6fd9e9caf665723610ab035';
+String _$catalogHash() => r'f613be6afe7d7a58f096634b05f8963731bf3657';
 
-final class SearchFilterFamily extends $Family
+final class CatalogFamily extends $Family
     with
         $ClassFamilyOverride<
-          SearchFilter,
-          AsyncValue<List<BookModel>>,
-          List<BookModel>,
-          FutureOr<List<BookModel>>,
+          Catalog,
+          AsyncValue<CatalogModel>,
+          CatalogModel,
+          FutureOr<CatalogModel>,
           String
         > {
-  const SearchFilterFamily._()
+  const CatalogFamily._()
     : super(
         retry: null,
-        name: r'searchFilterProvider',
+        name: r'catalogProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  SearchFilterProvider call(String searchKey) =>
-      SearchFilterProvider._(argument: searchKey, from: this);
+  CatalogProvider call(String aid) =>
+      CatalogProvider._(argument: aid, from: this);
 
   @override
-  String toString() => r'searchFilterProvider';
+  String toString() => r'catalogProvider';
 }
 
-abstract class _$SearchFilter extends $AsyncNotifier<List<BookModel>> {
+abstract class _$Catalog extends $AsyncNotifier<CatalogModel> {
   late final _$args = ref.$arg as String;
-  String get searchKey => _$args;
+  String get aid => _$args;
 
-  FutureOr<List<BookModel>> build(String searchKey);
+  FutureOr<CatalogModel> build(String aid);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<List<BookModel>>, List<BookModel>>;
+    final ref = this.ref as $Ref<AsyncValue<CatalogModel>, CatalogModel>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<BookModel>>, List<BookModel>>,
-              AsyncValue<List<BookModel>>,
+              AnyNotifier<AsyncValue<CatalogModel>, CatalogModel>,
+              AsyncValue<CatalogModel>,
               Object?,
               Object?
             >;

@@ -3,6 +3,8 @@ import 'package:flash/flash_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:wenku8x/app/ui/router.dart';
 
+enum DrawerPlacement { left, right, bottom }
+
 class FlashHelper {
   static _showSnackbar(
     String content, {
@@ -60,6 +62,89 @@ class FlashHelper {
       err,
       backgroundColor: colorScheme.errorContainer,
       textColor: colorScheme.onErrorContainer,
+    );
+  }
+
+  static showDrawer<T>({
+    BuildContext? context,
+    DrawerPlacement placement = DrawerPlacement.left,
+    required Widget Function(
+      BuildContext context,
+      FlashController<T?> controller,
+    )
+    childBuilder,
+  }) {
+    final ctx = context ?? rootNavigatorKey.currentContext;
+    if (ctx == null) {
+      throw Exception("Context is null, cannot show drawer.");
+    }
+    final _tween = switch (placement) {
+      DrawerPlacement.left => Tween<Offset>(
+        begin: Offset(-1.0, 0.0),
+        end: Offset.zero,
+      ),
+      DrawerPlacement.right => Tween<Offset>(
+        begin: Offset(1.0, 0.0),
+        end: Offset.zero,
+      ),
+      DrawerPlacement.bottom => Tween<Offset>(
+        begin: Offset(0.0, 1.0),
+        end: Offset.zero,
+      ),
+    };
+    final alignment = switch (placement) {
+      DrawerPlacement.left => AlignmentDirectional.centerStart,
+      DrawerPlacement.right => AlignmentDirectional.centerEnd,
+      DrawerPlacement.bottom => AlignmentDirectional.bottomCenter,
+    };
+    final _dismissDirections = switch (placement) {
+      DrawerPlacement.left => [FlashDismissDirection.startToEnd],
+      DrawerPlacement.right => [FlashDismissDirection.endToStart],
+      DrawerPlacement.bottom => [FlashDismissDirection.vertical],
+    };
+    ctx.showModalFlash<T>(
+      builder: (context, controller) {
+        return Align(
+          alignment: alignment,
+          child: FadeTransition(
+            opacity: controller.controller.drive(Tween(begin: 0.5, end: 1.0)),
+            child: Flash(
+              controller: controller,
+              position: FlashPosition.bottom,
+              slideAnimationCreator:
+                  (context, position, parent, curve, reverseCurve) {
+                    return CurvedAnimation(
+                      parent: parent,
+                      curve: curve,
+                      reverseCurve: reverseCurve,
+                    ).drive(_tween);
+                  },
+              dismissDirections: _dismissDirections,
+              child: childBuilder(context, controller),
+              //  FractionallySizedBox(
+              //   widthFactor: 0.8,
+              //   child: Material(
+              //     elevation: 24,
+              //     clipBehavior: Clip.antiAlias,
+              //     shape: const RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.all(Radius.circular(8)),
+              //     ),
+              //     child: SafeArea(
+              //       child: Column(
+              //         children: [
+              //           Padding(
+              //             padding: EdgeInsets.all(16),
+              //             child: Text('A custom with Flash'),
+              //           ),
+              //         ],
+              //       ),
+              //     ),
+              //   ),
+              // ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

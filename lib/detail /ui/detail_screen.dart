@@ -8,8 +8,10 @@ import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/services/variable.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/app/utils/flash.dart';
 import 'package:wenku8x/app/utils/string.dart';
 import 'package:wenku8x/detail%20/providers/detail.dart';
+import 'package:wenku8x/detail%20/ui/components/catalog.dart';
 
 class DetailScreen extends StatefulHookConsumerWidget {
   const DetailScreen({super.key, required this.book});
@@ -282,7 +284,29 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                                         ],
                                       ),
                                     ),
-                                    onTap: () {},
+                                    onTap: () {
+                                      FlashHelper.showDrawer(
+                                        context: context,
+                                        placement: DrawerPlacement.bottom,
+                                        childBuilder: (context, controller) {
+                                          return SizedBox.fromSize(
+                                            size: Size(
+                                              MediaQuery.of(context).size.width,
+                                              MediaQuery.of(
+                                                    context,
+                                                  ).size.height -
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).padding.top -
+                                                  60,
+                                            ),
+                                            child: BookDetailCatalog(
+                                              book: widget.book,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                   ),
                                 ],
                               ),
