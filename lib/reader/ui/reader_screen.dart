@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
 import 'package:wenku8x/reader/service.dart';
 
@@ -18,11 +19,15 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     ReaderService().init(widget.book);
     final pages = ref.watch(pagesProvider(widget.book.aid));
     final colorScheme = Theme.of(context).colorScheme;
+    final _pageController = PageController();
     return Material(
       color: colorScheme.surfaceContainer,
       child: switch (pages) {
         AsyncData(:final value) => Container(
-          child: SingleChildScrollView(child: Text(value)),
+          child: ChineseLayoutPageView(
+            layoutResult: _layoutResult,
+            pageController: _pageController,
+          ),
         ),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
         _ => Container(
