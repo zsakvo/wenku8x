@@ -69,10 +69,10 @@ class ChineseLayoutHelper {
       throw ArgumentError('布局尺寸必须为正值');
     }
 
-    // 计算可绘制区域 - 修正：Size类没有top属性，直接使用0作为起点
+    // 计算可绘制区域
     final Rect drawingArea = Rect.fromLTWH(
       padding.left,
-      padding.top, // 修正：使用padding.top而不是layoutSize.top
+      padding.top,
       layoutSize.width - padding.left - padding.right,
       layoutSize.height - padding.top - padding.bottom,
     );
@@ -113,9 +113,6 @@ class ChineseLayoutHelper {
         continue;
       }
 
-      // 存储当前段落的所有行
-      List<LineLayout> paragraphLines = [];
-
       // 创建TextPainter处理当前段落
       final TextPainter textPainter = TextPainter(
         text: TextSpan(text: paragraph, style: bodyTextStyle),
@@ -127,6 +124,44 @@ class ChineseLayoutHelper {
       // 获取该段落的所有行指标
       final List<LineMetrics> lineMetrics = textPainter.computeLineMetrics();
 
+      if (lineMetrics.isEmpty) {
+        currentParagraphIndex++;
+        continue;
+      }
+
+      // 检查剩余空间是否至少能放下段落的第一行
+      final double firstLineHeight = lineMetrics.first.height;
+      final double remainingHeight = drawingArea.bottom - currentY;
+
+      // 如果剩余空间不足以放下一行，开启新页面
+      if (firstLineHeight > remainingHeight) {
+        if (currentPageParagraphs.isNotEmpty) {
+          _adjustLineSpacingForPage(
+            currentPageParagraphs,
+            drawingArea,
+            isFirstPage,
+          );
+
+          // 添加当前页面到结果中
+          pages.add(
+            PageLayout(
+              paragraphs: List.from(currentPageParagraphs),
+              drawingArea: drawingArea,
+              title: isFirstPage ? title : null,
+              titlePainter: isFirstPage ? titlePainter : null,
+            ),
+          );
+
+          // 重置为新页面
+          currentPageParagraphs = [];
+          currentY = drawingArea.top;
+          isFirstPage = false;
+        }
+      }
+
+      // 存储当前段落的所有行
+      List<LineLayout> paragraphLines = [];
+
       // 处理每一行
       for (int i = 0; i < lineMetrics.length; i++) {
         final bool isLastLine = i == lineMetrics.length - 1;
@@ -137,7 +172,19 @@ class ChineseLayoutHelper {
 
         // 检查是否需要新建页面
         if (currentY + lineHeight > drawingArea.bottom) {
-          // 调整当前页面的行间距，使最后一行紧贴底部
+          // 如果当前段落已经有处理的行，则保存这些行到当前页面
+          if (paragraphLines.isNotEmpty) {
+            currentPageParagraphs.add(
+              ParagraphLayout(
+                paragraphIndex: currentParagraphIndex,
+                lines: List.from(paragraphLines),
+              ),
+            );
+
+            paragraphLines = [];
+          }
+
+          // 调整当前页面的行间距
           if (currentPageParagraphs.isNotEmpty) {
             _adjustLineSpacingForPage(
               currentPageParagraphs,
@@ -191,15 +238,11 @@ class ChineseLayoutHelper {
         paragraphLines.add(lineLayout);
         currentY += lineHeight;
 
-        // 如果是段落的最后一行且不是最后一个段落，添加段落间距
+        // 如果是段落的最后一行且不是最后一个段落，检查添加段落间距
         if (isLastLine && currentParagraphIndex < paragraphs.length - 1) {
-          // 如果添加段落间距会导致超出页面，则移至下一页
+          // 如果添加段落间距会导致超出页面，则不添加段落间距，新段落会在下一页开始
           if (currentY + paragraphSpacing > drawingArea.bottom) {
-            // 如果只处理了一行，并且这行是段落的最后一行，则不添加到当前页面
-            if (paragraphLines.length == 1) {
-              paragraphLines = [];
-              break;
-            }
+            // 不添加段落间距
           } else {
             currentY += paragraphSpacing;
           }
