@@ -208,6 +208,13 @@ class Api {
     return CatalogModel(aid: aid, volumes: volumes);
   }
 
+  static getNovelContent(String aid, String cid) async {
+    return await Ajax.post(
+      "action=book&do=text&aid=$aid&cid=$cid&t=0",
+      isXml: false,
+    );
+  }
+
   static BookModel _parseBookFromXml(XmlElement element, {String? aid}) {
     var eles = element.children
         .where((p0) => p0.toString().length > 2)

@@ -1,0 +1,14 @@
+import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/detail%20/providers/catalog.dart';
+
+class ReaderService {
+  static final ReaderService _instance = ReaderService._internal();
+  factory ReaderService() => _instance;
+  ReaderService._internal();
+
+  late CatalogProvider catalogProvider_;
+
+  init(BookModel book) {
+    catalogProvider_ = catalogProvider(book.aid);
+  }
+}
