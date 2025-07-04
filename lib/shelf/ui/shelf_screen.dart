@@ -165,7 +165,12 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
             cacheExtent: 128,
             itemBuilder: (context, index) {
               final book = value[index];
-              return BookItem(book: book);
+              return BookItem(
+                book: book,
+                onTap: (book) {
+                  context.push("/reader", extra: book);
+                },
+              );
             },
             separatorBuilder: (context, index) {
               return const SizedBox(height: 0);
