@@ -32,6 +32,9 @@ class ChineseLayoutHelper {
   /// 正文文本样式
   final TextStyle bodyTextStyle;
 
+  /// 段落缩进尺寸，为null时使用两个正文文字尺寸的缩进，为int时使用指定尺寸
+  final int? indent;
+
   /// 构造函数
   ChineseLayoutHelper({
     this.title,
@@ -46,7 +49,22 @@ class ChineseLayoutHelper {
     this.paragraphSpacing = 10.0,
     this.padding = const EdgeInsets.all(20.0),
     required this.bodyTextStyle,
-  });
+    this.indent,
+  }) : assert(indent == null || indent >= 0, 'indent 不可为负数');
+
+  /// 获取实际的缩进值
+  double get _actualIndent {
+    if (indent == null) {
+      // 使用两个正文文字尺寸的缩进
+      final TextPainter textPainter = TextPainter(
+        text: TextSpan(text: '字', style: bodyTextStyle),
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      return textPainter.width * 2;
+    }
+    return indent!.toDouble();
+  }
 
   /// 计算文本布局，返回分页结果
   LayoutResult calculateLayout(String text, {BuildContext? context}) {
@@ -105,7 +123,7 @@ class ChineseLayoutHelper {
 
     // 处理每个段落
     while (currentParagraphIndex < paragraphs.length) {
-      final String paragraph = paragraphs[currentParagraphIndex];
+      String paragraph = paragraphs[currentParagraphIndex];
 
       // 跳过空段落
       if (paragraph.trim().isEmpty) {
@@ -113,13 +131,19 @@ class ChineseLayoutHelper {
         continue;
       }
 
+      // 移除段落开头的空白字符
+      paragraph = paragraph.trimLeft();
+
+      // 计算可用宽度（扣除缩进）
+      final double availableWidth = drawingArea.width - _actualIndent;
+
       // 创建TextPainter处理当前段落
       final TextPainter textPainter = TextPainter(
         text: TextSpan(text: paragraph, style: bodyTextStyle),
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.justify,
       );
-      textPainter.layout(maxWidth: drawingArea.width);
+      textPainter.layout(maxWidth: availableWidth);
 
       // 获取该段落的所有行指标
       final List<LineMetrics> lineMetrics = textPainter.computeLineMetrics();
@@ -166,6 +190,7 @@ class ChineseLayoutHelper {
       // 处理每一行
       for (int i = 0; i < lineMetrics.length; i++) {
         final bool isLastLine = i == lineMetrics.length - 1;
+        final bool isFirstLine = i == 0; // 判断是否是段落的第一行
         final LineMetrics metrics = lineMetrics[i];
 
         // 计算行高
@@ -220,21 +245,27 @@ class ChineseLayoutHelper {
           textDirection: TextDirection.ltr,
           textAlign: isLastLine ? TextAlign.left : TextAlign.justify,
         );
-        linePainter.layout(maxWidth: drawingArea.width);
 
-        // 创建行布局数据
+        // 非首行应该使用完整宽度而不是缩进后的宽度
+        final double lineWidth = isFirstLine
+            ? availableWidth
+            : drawingArea.width;
+        linePainter.layout(maxWidth: lineWidth);
+
+        // 创建行布局数据，只有第一行应用缩进
         final LineLayout lineLayout = LineLayout(
           paragraphIndex: currentParagraphIndex,
           lineIndex: i,
           text: lineText,
           painter: linePainter,
           bounds: Rect.fromLTWH(
-            drawingArea.left,
+            drawingArea.left + (isFirstLine ? _actualIndent : 0), // 只对第一行应用缩进
             currentY,
-            drawingArea.width,
+            lineWidth, // 使用对应行的宽度
             lineHeight,
           ),
           isLastLineInParagraph: isLastLine,
+          isFirstLineInParagraph: isFirstLine,
         );
 
         paragraphLines.add(lineLayout);
@@ -500,6 +531,9 @@ class LineLayout {
   /// 是否是段落的最后一行
   final bool isLastLineInParagraph;
 
+  /// 是否是段落的第一行
+  final bool isFirstLineInParagraph;
+
   LineLayout({
     required this.paragraphIndex,
     required this.lineIndex,
@@ -507,6 +541,7 @@ class LineLayout {
     required this.painter,
     required this.bounds,
     this.isLastLineInParagraph = false,
+    this.isFirstLineInParagraph = false,
   });
 }
 
@@ -518,7 +553,14 @@ class ChineseLayoutPainter extends CustomPainter {
   /// 要绘制的页面索引
   final int pageIndex;
 
-  ChineseLayoutPainter({required this.layoutResult, required this.pageIndex});
+  /// 缩进值
+  final double indent;
+
+  ChineseLayoutPainter({
+    required this.layoutResult,
+    required this.pageIndex,
+    this.indent = 0,
+  });
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -578,7 +620,7 @@ class ChineseLayoutPainter extends CustomPainter {
       return;
     }
 
-    // 计算需要分配的额外空间
+    // 计算需要分配的额外空间 - 使用传入的maxWidth而不是painter的width
     final double extraSpace = maxWidth - painter.width;
 
     // 计算字符间需要插入的间距
@@ -616,7 +658,8 @@ class ChineseLayoutPainter extends CustomPainter {
   @override
   bool shouldRepaint(ChineseLayoutPainter oldDelegate) {
     return oldDelegate.layoutResult != layoutResult ||
-        oldDelegate.pageIndex != pageIndex;
+        oldDelegate.pageIndex != pageIndex ||
+        oldDelegate.indent != indent;
   }
 }
 
