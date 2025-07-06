@@ -23,6 +23,16 @@ class Pages extends _$Pages {
     final txt = await _fetchChapterContent(lastRead.cid);
     return ChineseLayoutHelper(
       title: lastRead.title,
+      topBarPadding: EdgeInsets.only(
+        top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top,
+        left: 20,
+        right: 20,
+      ),
+      bottomBarPadding: EdgeInsets.only(
+        bottom: MediaQuery.of(rootNavigatorKey.currentContext!).padding.bottom,
+        left: 20,
+        right: 20,
+      ),
       titleTopSpacing: 120, // 将此参数调整为合理的值，控制标题与顶部的距离
       titleBottomBodySpacing: 120, // 这个参数正确地控制标题与正文的距离
       titleStyle: TextStyle(
