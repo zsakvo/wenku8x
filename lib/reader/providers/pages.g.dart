@@ -12,7 +12,7 @@ const pagesProvider = PagesFamily._();
 final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
   const PagesProvider._({
     required PagesFamily super.from,
-    required String super.argument,
+    required BookModel super.argument,
   }) : super(
          retry: null,
          name: r'pagesProvider',
@@ -46,7 +46,7 @@ final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
   }
 }
 
-String _$pagesHash() => r'51bf16a7f259a9adfc5d0b759a1936ca76f67345';
+String _$pagesHash() => r'27de0236c55276a8008be4e822cf869c349c941b';
 
 final class PagesFamily extends $Family
     with
@@ -55,7 +55,7 @@ final class PagesFamily extends $Family
           AsyncValue<LayoutResult>,
           LayoutResult,
           FutureOr<LayoutResult>,
-          String
+          BookModel
         > {
   const PagesFamily._()
     : super(
@@ -66,17 +66,18 @@ final class PagesFamily extends $Family
         isAutoDispose: true,
       );
 
-  PagesProvider call(String aid) => PagesProvider._(argument: aid, from: this);
+  PagesProvider call(BookModel book) =>
+      PagesProvider._(argument: book, from: this);
 
   @override
   String toString() => r'pagesProvider';
 }
 
 abstract class _$Pages extends $AsyncNotifier<LayoutResult> {
-  late final _$args = ref.$arg as String;
-  String get aid => _$args;
+  late final _$args = ref.$arg as BookModel;
+  BookModel get book => _$args;
 
-  FutureOr<LayoutResult> build(String aid);
+  FutureOr<LayoutResult> build(BookModel book);
   @$mustCallSuper
   @override
   void runBuild() {

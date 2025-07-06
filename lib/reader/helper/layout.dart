@@ -41,8 +41,14 @@ class ChineseLayoutHelper {
   /// 章节名，用于顶部信息栏非第一页显示
   final String? chapterName;
 
-  /// 信息栏文本样式
+  /// 信息栏文本样式（通用）
   final TextStyle infoBarTextStyle;
+  
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
+  
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
   /// 是否显示信息栏
   final bool showInfoBar;
@@ -77,6 +83,8 @@ class ChineseLayoutHelper {
       fontSize: 12,
       color: Colors.black54,
     ),
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
     this.showInfoBar = true,
     this.infoBarHeight = 20.0,
     this.topBarPadding = const EdgeInsets.only(left: 10, top: 10),
@@ -361,6 +369,9 @@ class ChineseLayoutHelper {
       chapterName: chapterName ?? title,
       topBarPadding: topBarPadding,
       bottomBarPadding: bottomBarPadding,
+      topBarTextStyle: topBarTextStyle,
+      bottomBarTextStyle: bottomBarTextStyle,
+      infoBarTextStyle: infoBarTextStyle,
     );
   }
 
@@ -513,12 +524,24 @@ class LayoutResult {
   /// 底部信息栏内边距
   final EdgeInsets bottomBarPadding;
 
+  /// 信息栏文本样式（通用）
+  final TextStyle infoBarTextStyle;
+  
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
+  
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
+
   LayoutResult({
     required this.pages,
     this.bookName,
     this.chapterName,
     this.topBarPadding = const EdgeInsets.only(left: 10, top: 10),
     this.bottomBarPadding = const EdgeInsets.only(right: 10, bottom: 10),
+    this.infoBarTextStyle = const TextStyle(fontSize: 12, color: Colors.black54),
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
   });
 
   /// 获取总页数
@@ -620,8 +643,14 @@ class ChineseLayoutPainter extends CustomPainter {
   /// 缩进值
   final double indent;
 
-  /// 信息栏文本样式
+  /// 信息栏文本样式（通用）
   final TextStyle infoBarTextStyle;
+  
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
+  
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
   /// 是否显示信息栏
   final bool showInfoBar;
@@ -643,6 +672,8 @@ class ChineseLayoutPainter extends CustomPainter {
       fontSize: 12,
       color: Colors.black54,
     ),
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
     this.showInfoBar = true,
     this.infoBarHeight = 20.0,
     this.topBarPadding,
@@ -698,19 +729,22 @@ class ChineseLayoutPainter extends CustomPainter {
 
   /// 绘制顶部和底部信息栏
   void _drawInfoBars(Canvas canvas, Size size, int pageIndex) {
-    final EdgeInsets effectiveTopPadding =
-        topBarPadding ?? layoutResult.topBarPadding;
-    final EdgeInsets effectiveBottomPadding =
-        bottomBarPadding ?? layoutResult.bottomBarPadding;
-
+    final EdgeInsets effectiveTopPadding = topBarPadding ?? layoutResult.topBarPadding;
+    final EdgeInsets effectiveBottomPadding = bottomBarPadding ?? layoutResult.bottomBarPadding;
+    
+    // 确定要使用的顶栏文字样式
+    final TextStyle effectiveTopStyle = topBarTextStyle ?? 
+        layoutResult.topBarTextStyle ?? 
+        infoBarTextStyle;
+    
     // 顶部信息栏 - 左侧显示书名（第一页）或章节名（其他页）
-    final String topText = pageIndex == 0
+    final String topText = pageIndex == 0 
         ? (layoutResult.bookName ?? '')
         : (layoutResult.chapterName ?? '');
-
+    
     if (topText.isNotEmpty) {
       final TextPainter topTextPainter = TextPainter(
-        text: TextSpan(text: topText, style: infoBarTextStyle),
+        text: TextSpan(text: topText, style: effectiveTopStyle),
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.left,
         maxLines: 1,
@@ -724,11 +758,16 @@ class ChineseLayoutPainter extends CustomPainter {
         Offset(effectiveTopPadding.left, effectiveTopPadding.top),
       );
     }
-
+    
+    // 确定要使用的底栏文字样式
+    final TextStyle effectiveBottomStyle = bottomBarTextStyle ?? 
+        layoutResult.bottomBarTextStyle ?? 
+        infoBarTextStyle;
+    
     // 底部信息栏 - 右侧显示页码
     final String bottomText = '${pageIndex + 1}/${layoutResult.pageCount}';
     final TextPainter bottomTextPainter = TextPainter(
-      text: TextSpan(text: bottomText, style: infoBarTextStyle),
+      text: TextSpan(text: bottomText, style: effectiveBottomStyle),
       textDirection: TextDirection.ltr,
       textAlign: TextAlign.right,
     );
@@ -813,8 +852,14 @@ class ChineseLayoutView extends StatelessWidget {
   /// 要显示的页面索引
   final int pageIndex;
 
-  /// 信息栏文本样式
+  /// 信息栏文本样式（通用）
   final TextStyle? infoBarTextStyle;
+  
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
+  
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
   /// 是否显示信息栏
   final bool showInfoBar;
@@ -830,6 +875,8 @@ class ChineseLayoutView extends StatelessWidget {
     required this.layoutResult,
     required this.pageIndex,
     this.infoBarTextStyle,
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
     this.showInfoBar = true,
     this.topBarPadding,
     this.bottomBarPadding,
@@ -848,8 +895,12 @@ class ChineseLayoutView extends StatelessWidget {
       foregroundPainter: ChineseLayoutPainter(
         layoutResult: layoutResult,
         pageIndex: pageIndex,
-        infoBarTextStyle:
-            infoBarTextStyle ?? TextStyle(fontSize: 12, color: Colors.black54),
+        infoBarTextStyle: infoBarTextStyle ?? TextStyle(
+          fontSize: 12,
+          color: Colors.black54,
+        ),
+        topBarTextStyle: topBarTextStyle,
+        bottomBarTextStyle: bottomBarTextStyle,
         showInfoBar: showInfoBar,
         topBarPadding: topBarPadding,
         bottomBarPadding: bottomBarPadding,
@@ -870,8 +921,14 @@ class ChineseLayoutPageView extends StatelessWidget {
   /// 页面控制器
   final PageController pageController;
 
-  /// 信息栏文本样式
+  /// 信息栏文本样式（通用）
   final TextStyle? infoBarTextStyle;
+  
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
+  
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
   /// 是否显示信息栏
   final bool showInfoBar;
@@ -887,6 +944,8 @@ class ChineseLayoutPageView extends StatelessWidget {
     required this.layoutResult,
     required this.pageController,
     this.infoBarTextStyle,
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
     this.showInfoBar = true,
     this.topBarPadding,
     this.bottomBarPadding,
@@ -902,6 +961,8 @@ class ChineseLayoutPageView extends StatelessWidget {
           layoutResult: layoutResult,
           pageIndex: index,
           infoBarTextStyle: infoBarTextStyle,
+          topBarTextStyle: topBarTextStyle,
+          bottomBarTextStyle: bottomBarTextStyle,
           showInfoBar: showInfoBar,
           topBarPadding: topBarPadding,
           bottomBarPadding: bottomBarPadding,
