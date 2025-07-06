@@ -12,7 +12,7 @@ class ChineseLayoutHelper {
   final TextStyle titleStyle;
 
   /// 标题与顶部正文的距离
-  final double titleTopBodySpacing;
+  final double titleTopSpacing;
 
   /// 标题与底部正文的距离
   final double titleBottomBodySpacing;
@@ -42,7 +42,7 @@ class ChineseLayoutHelper {
       fontSize: 20,
       fontWeight: FontWeight.bold,
     ),
-    this.titleTopBodySpacing = 20.0,
+    this.titleTopSpacing = 20.0,
     this.titleBottomBodySpacing = 20.0,
     this.width,
     this.height,
@@ -108,8 +108,7 @@ class ChineseLayoutHelper {
         textAlign: TextAlign.center,
       );
       titlePainter.layout(maxWidth: drawingArea.width);
-      titleHeight =
-          titlePainter.height + titleTopBodySpacing + titleBottomBodySpacing;
+      titleHeight = titlePainter.height + titleBottomBodySpacing;
     }
 
     // 将文本拆分为段落
@@ -117,7 +116,10 @@ class ChineseLayoutHelper {
 
     // 追踪当前处理状态
     int currentParagraphIndex = 0;
-    double currentY = drawingArea.top + (title != null ? titleHeight : 0);
+    double currentY =
+        drawingArea.top +
+        titleTopSpacing +
+        (title != null ? titleHeight : 0); // 修改此行，加入titleTopBodySpacing
     List<ParagraphLayout> currentPageParagraphs = [];
     bool isFirstPage = true;
 
@@ -397,7 +399,7 @@ class ChineseLayoutHelper {
       );
       titlePainter.layout(maxWidth: drawingArea.width);
       availableHeight -=
-          (titlePainter.height + titleTopBodySpacing + titleBottomBodySpacing);
+          (titlePainter.height + titleTopSpacing + titleBottomBodySpacing);
     }
 
     // 计算额外空间
@@ -417,7 +419,7 @@ class ChineseLayoutHelper {
       );
       titlePainter.layout(maxWidth: drawingArea.width);
       currentY +=
-          titlePainter.height + titleTopBodySpacing + titleBottomBodySpacing;
+          titleTopSpacing + titlePainter.height + titleBottomBodySpacing;
     }
 
     for (int p = 0; p < paragraphs.length; p++) {
@@ -579,7 +581,8 @@ class ChineseLayoutPainter extends CustomPainter {
       page.titlePainter!.paint(
         canvas,
         Offset(
-          (size.width - page.titlePainter!.width) / 2, // 居中
+          // (size.width - page.titlePainter!.width) / 2, // 居中
+          page.drawingArea.left,
           page.drawingArea.top,
         ),
       );

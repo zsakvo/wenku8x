@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/services/path.dart';
+import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/service.dart';
 
@@ -21,9 +22,23 @@ class Pages extends _$Pages {
         .first;
     final txt = await _fetchChapterContent(lastRead.cid);
     return ChineseLayoutHelper(
-      padding: EdgeInsets.zero,
+      title: lastRead.title,
+      titleTopSpacing: 120, // 将此参数调整为合理的值，控制标题与顶部的距离
+      titleBottomBodySpacing: 120, // 这个参数正确地控制标题与正文的距离
+      titleStyle: TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        color: Colors.black87,
+      ),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(rootNavigatorKey.currentContext!).padding.top + 20,
+        bottom:
+            MediaQuery.of(rootNavigatorKey.currentContext!).padding.bottom + 32,
+        left: 24,
+        right: 24,
+      ),
       bodyTextStyle: TextStyle(
-        fontSize: 16,
+        fontSize: 20,
         height: 1.5,
         color: Colors.black87,
       ),
