@@ -35,6 +35,21 @@ class ChineseLayoutHelper {
   /// 段落缩进尺寸，为null时使用两个正文文字尺寸的缩进，为int时使用指定尺寸
   final int? indent;
 
+  /// 书名，用于顶部信息栏在第一页显示
+  final String? bookName;
+
+  /// 章节名，用于顶部信息栏非第一页显示
+  final String? chapterName;
+
+  /// 信息栏文本样式
+  final TextStyle infoBarTextStyle;
+
+  /// 是否显示信息栏
+  final bool showInfoBar;
+
+  /// 信息栏高度
+  final double infoBarHeight;
+
   /// 构造函数
   ChineseLayoutHelper({
     this.title,
@@ -50,6 +65,14 @@ class ChineseLayoutHelper {
     this.padding = const EdgeInsets.all(20.0),
     required this.bodyTextStyle,
     this.indent,
+    this.bookName,
+    this.chapterName,
+    this.infoBarTextStyle = const TextStyle(
+      fontSize: 12,
+      color: Colors.black54,
+    ),
+    this.showInfoBar = true,
+    this.infoBarHeight = 20.0,
   }) : assert(indent == null || indent >= 0, 'indent 不可为负数');
 
   /// 获取实际的缩进值
@@ -87,12 +110,13 @@ class ChineseLayoutHelper {
       throw ArgumentError('布局尺寸必须为正值');
     }
 
-    // 计算可绘制区域
+    // 计算可绘制区域（考虑信息栏空间）
     final Rect drawingArea = Rect.fromLTWH(
       padding.left,
-      padding.top,
+      padding.top + (showInfoBar ? infoBarHeight : 0),
       layoutSize.width - padding.left - padding.right,
-      layoutSize.height - padding.top - padding.bottom,
+      layoutSize.height - padding.top - padding.bottom - 
+        (showInfoBar ? infoBarHeight * 2 : 0), // 上下两个信息栏
     );
 
     // 创建结果容器
@@ -317,7 +341,11 @@ class ChineseLayoutHelper {
       );
     }
 
-    return LayoutResult(pages: pages);
+    return LayoutResult(
+      pages: pages,
+      bookName: bookName,
+      chapterName: chapterName ?? title,
+    );
   }
 
   /// 从TextPainter中提取特定行的文本
@@ -456,8 +484,18 @@ class ChineseLayoutHelper {
 class LayoutResult {
   /// 所有页面的布局
   final List<PageLayout> pages;
+  
+  /// 书名
+  final String? bookName;
+  
+  /// 章节名
+  final String? chapterName;
 
-  LayoutResult({required this.pages});
+  LayoutResult({
+    required this.pages,
+    this.bookName,
+    this.chapterName,
+  });
 
   /// 获取总页数
   int get pageCount => pages.length;
@@ -557,11 +595,26 @@ class ChineseLayoutPainter extends CustomPainter {
 
   /// 缩进值
   final double indent;
+  
+  /// 信息栏文本样式
+  final TextStyle infoBarTextStyle;
+  
+  /// 是否显示信息栏
+  final bool showInfoBar;
+  
+  /// 信息栏高度
+  final double infoBarHeight;
 
   ChineseLayoutPainter({
     required this.layoutResult,
     required this.pageIndex,
     this.indent = 0,
+    this.infoBarTextStyle = const TextStyle(
+      fontSize: 12,
+      color: Colors.black54,
+    ),
+    this.showInfoBar = true,
+    this.infoBarHeight = 20.0,
   });
 
   @override
@@ -573,8 +626,10 @@ class ChineseLayoutPainter extends CustomPainter {
 
     final PageLayout page = layoutResult.pages[pageIndex];
 
-    // 绘制背景（可选）
-    // canvas.drawRect(Offset.zero & size, Paint()..color = Colors.white);
+    // 绘制信息栏
+    if (showInfoBar) {
+      _drawInfoBars(canvas, size, pageIndex);
+    }
 
     // 绘制标题（如果有）
     if (page.title != null && page.titlePainter != null) {
@@ -607,6 +662,42 @@ class ChineseLayoutPainter extends CustomPainter {
         }
       }
     }
+  }
+  
+  /// 绘制顶部和底部信息栏
+  void _drawInfoBars(Canvas canvas, Size size, int pageIndex) {
+    // 顶部信息栏 - 左侧显示书名（第一页）或章节名（其他页）
+    final String topText = pageIndex == 0 
+        ? (layoutResult.bookName ?? '')
+        : (layoutResult.chapterName ?? '');
+    
+    if (topText.isNotEmpty) {
+      final TextPainter topTextPainter = TextPainter(
+        text: TextSpan(text: topText, style: infoBarTextStyle),
+        textDirection: TextDirection.ltr,
+        textAlign: TextAlign.left,
+        maxLines: 1,
+        ellipsis: '...',
+      );
+      topTextPainter.layout(maxWidth: size.width - 20);
+      topTextPainter.paint(
+        canvas, 
+        Offset(10, 10)
+      );
+    }
+    
+    // 底部信息栏 - 右侧显示页码
+    final String bottomText = '${pageIndex + 1}/${layoutResult.pageCount}';
+    final TextPainter bottomTextPainter = TextPainter(
+      text: TextSpan(text: bottomText, style: infoBarTextStyle),
+      textDirection: TextDirection.ltr,
+      textAlign: TextAlign.right,
+    );
+    bottomTextPainter.layout(maxWidth: size.width);
+    bottomTextPainter.paint(
+      canvas, 
+      Offset(size.width - bottomTextPainter.width - 10, size.height - infoBarHeight)
+    );
   }
 
   /// 绘制两端对齐的中文文本
@@ -662,7 +753,9 @@ class ChineseLayoutPainter extends CustomPainter {
   bool shouldRepaint(ChineseLayoutPainter oldDelegate) {
     return oldDelegate.layoutResult != layoutResult ||
         oldDelegate.pageIndex != pageIndex ||
-        oldDelegate.indent != indent;
+        oldDelegate.indent != indent ||
+        oldDelegate.showInfoBar != showInfoBar ||
+        oldDelegate.infoBarTextStyle != infoBarTextStyle;
   }
 }
 
@@ -673,11 +766,19 @@ class ChineseLayoutView extends StatelessWidget {
 
   /// 要显示的页面索引
   final int pageIndex;
+  
+  /// 信息栏文本样式
+  final TextStyle? infoBarTextStyle;
+  
+  /// 是否显示信息栏
+  final bool showInfoBar;
 
   const ChineseLayoutView({
     super.key,
     required this.layoutResult,
     required this.pageIndex,
+    this.infoBarTextStyle,
+    this.showInfoBar = true,
   });
 
   @override
@@ -693,6 +794,11 @@ class ChineseLayoutView extends StatelessWidget {
       foregroundPainter: ChineseLayoutPainter(
         layoutResult: layoutResult,
         pageIndex: pageIndex,
+        infoBarTextStyle: infoBarTextStyle ?? TextStyle(
+          fontSize: 12,
+          color: Colors.black54,
+        ),
+        showInfoBar: showInfoBar,
       ),
       size: Size(
         page.drawingArea.width + page.drawingArea.left * 2,
@@ -709,11 +815,19 @@ class ChineseLayoutPageView extends StatelessWidget {
 
   /// 页面控制器
   final PageController pageController;
+  
+  /// 信息栏文本样式
+  final TextStyle? infoBarTextStyle;
+  
+  /// 是否显示信息栏
+  final bool showInfoBar;
 
   const ChineseLayoutPageView({
     Key? key,
     required this.layoutResult,
     required this.pageController,
+    this.infoBarTextStyle,
+    this.showInfoBar = true,
   }) : super(key: key);
 
   @override
@@ -722,7 +836,12 @@ class ChineseLayoutPageView extends StatelessWidget {
       controller: pageController,
       itemCount: layoutResult.pages.length,
       itemBuilder: (context, index) {
-        return ChineseLayoutView(layoutResult: layoutResult, pageIndex: index);
+        return ChineseLayoutView(
+          layoutResult: layoutResult,
+          pageIndex: index,
+          infoBarTextStyle: infoBarTextStyle,
+          showInfoBar: showInfoBar,
+        );
       },
     );
   }
