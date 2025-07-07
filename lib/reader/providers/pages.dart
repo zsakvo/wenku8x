@@ -49,14 +49,15 @@ class Pages extends _$Pages {
         ).colorScheme.onSurface.withAlpha(100),
         fontWeight: FontWeight.w500,
       ),
-      titleTopSpacing: 20, // 将此参数调整为合理的值，控制标题与顶部的距离
-      titleBottomBodySpacing: 120, // 这个参数正确地控制标题与正文的距离
+      titleTopSpacing: 140, // 将此参数调整为合理的值，控制标题与顶部的距离
+      titleBottomBodySpacing: 40, // 这个参数正确地控制标题与正文的距离
+      paragraphSpacing: 24,
       titleStyle: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
         color: Colors.black87,
       ),
-      padding: EdgeInsets.only(top: 20, bottom: 32, left: 24, right: 24),
+      bodySpacing: EdgeInsets.only(top: 8, bottom: 8, left: 24, right: 24),
       bodyTextStyle: TextStyle(
         fontSize: 20,
         height: 1.5,

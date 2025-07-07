@@ -11,10 +11,10 @@ class ChineseLayoutHelper {
   /// 标题样式
   final TextStyle titleStyle;
 
-  /// 标题与顶部正文的距离
+  /// 标题与顶部信息栏距离
   final double titleTopSpacing;
 
-  /// 标题与底部正文的距离
+  /// 标题与顶部正文的距离
   final double titleBottomBodySpacing;
 
   /// 排版宽度，不传则使用屏幕宽度
@@ -26,8 +26,8 @@ class ChineseLayoutHelper {
   /// 段落间距
   final double paragraphSpacing;
 
-  /// 绘制区域的内边距
-  final EdgeInsets padding;
+  /// 正文绘制区域的边距
+  final EdgeInsets bodySpacing;
 
   /// 正文文本样式
   final TextStyle bodyTextStyle;
@@ -43,10 +43,10 @@ class ChineseLayoutHelper {
 
   /// 信息栏文本样式（通用）
   final TextStyle infoBarTextStyle;
-  
+
   /// 顶部信息栏文本样式
   final TextStyle? topBarTextStyle;
-  
+
   /// 底部信息栏文本样式
   final TextStyle? bottomBarTextStyle;
 
@@ -74,7 +74,7 @@ class ChineseLayoutHelper {
     this.width,
     this.height,
     this.paragraphSpacing = 10.0,
-    this.padding = const EdgeInsets.all(20.0),
+    this.bodySpacing = const EdgeInsets.all(20.0),
     required this.bodyTextStyle,
     this.indent,
     this.bookName,
@@ -128,12 +128,13 @@ class ChineseLayoutHelper {
 
     // 计算可绘制区域（考虑信息栏空间）
     final Rect drawingArea = Rect.fromLTWH(
-      padding.left,
-      padding.top + (showInfoBar ? infoBarHeight + topBarPadding.vertical : 0),
-      layoutSize.width - padding.left - padding.right,
+      bodySpacing.left,
+      bodySpacing.top +
+          (showInfoBar ? infoBarHeight + topBarPadding.vertical : 0),
+      layoutSize.width - bodySpacing.left - bodySpacing.right,
       layoutSize.height -
-          padding.top -
-          padding.bottom -
+          bodySpacing.top -
+          bodySpacing.bottom -
           (showInfoBar
               ? infoBarHeight * 2 +
                     topBarPadding.vertical +
@@ -222,6 +223,7 @@ class ChineseLayoutHelper {
               drawingArea: drawingArea,
               title: isFirstPage ? title : null,
               titlePainter: isFirstPage ? titlePainter : null,
+              titleTopSpacing: titleTopSpacing,
             ),
           );
 
@@ -272,6 +274,7 @@ class ChineseLayoutHelper {
               PageLayout(
                 paragraphs: List.from(currentPageParagraphs),
                 drawingArea: drawingArea,
+                titleTopSpacing: titleTopSpacing,
                 title: isFirstPage ? title : null,
                 titlePainter: isFirstPage ? titlePainter : null,
               ),
@@ -357,6 +360,7 @@ class ChineseLayoutHelper {
         PageLayout(
           paragraphs: currentPageParagraphs,
           drawingArea: drawingArea,
+          titleTopSpacing: titleTopSpacing,
           title: isFirstPage ? title : null,
           titlePainter: isFirstPage ? titlePainter : null,
         ),
@@ -526,10 +530,10 @@ class LayoutResult {
 
   /// 信息栏文本样式（通用）
   final TextStyle infoBarTextStyle;
-  
+
   /// 顶部信息栏文本样式
   final TextStyle? topBarTextStyle;
-  
+
   /// 底部信息栏文本样式
   final TextStyle? bottomBarTextStyle;
 
@@ -539,7 +543,10 @@ class LayoutResult {
     this.chapterName,
     this.topBarPadding = const EdgeInsets.only(left: 10, top: 10),
     this.bottomBarPadding = const EdgeInsets.only(right: 10, bottom: 10),
-    this.infoBarTextStyle = const TextStyle(fontSize: 12, color: Colors.black54),
+    this.infoBarTextStyle = const TextStyle(
+      fontSize: 12,
+      color: Colors.black54,
+    ),
     this.topBarTextStyle,
     this.bottomBarTextStyle,
   });
@@ -579,9 +586,13 @@ class PageLayout {
   /// 标题的TextPainter（用于绘制）
   final TextPainter? titlePainter;
 
+  /// 标题与顶部信息栏距离
+  final double titleTopSpacing;
+
   PageLayout({
     required this.paragraphs,
     required this.drawingArea,
+    required this.titleTopSpacing,
     this.title,
     this.titlePainter,
   });
@@ -645,10 +656,10 @@ class ChineseLayoutPainter extends CustomPainter {
 
   /// 信息栏文本样式（通用）
   final TextStyle infoBarTextStyle;
-  
+
   /// 顶部信息栏文本样式
   final TextStyle? topBarTextStyle;
-  
+
   /// 底部信息栏文本样式
   final TextStyle? bottomBarTextStyle;
 
@@ -701,7 +712,7 @@ class ChineseLayoutPainter extends CustomPainter {
         Offset(
           // (size.width - page.titlePainter!.width) / 2, // 居中
           page.drawingArea.left,
-          page.drawingArea.top,
+          page.drawingArea.top + (page.titleTopSpacing),
         ),
       );
     }
@@ -729,19 +740,20 @@ class ChineseLayoutPainter extends CustomPainter {
 
   /// 绘制顶部和底部信息栏
   void _drawInfoBars(Canvas canvas, Size size, int pageIndex) {
-    final EdgeInsets effectiveTopPadding = topBarPadding ?? layoutResult.topBarPadding;
-    final EdgeInsets effectiveBottomPadding = bottomBarPadding ?? layoutResult.bottomBarPadding;
-    
+    final EdgeInsets effectiveTopPadding =
+        topBarPadding ?? layoutResult.topBarPadding;
+    final EdgeInsets effectiveBottomPadding =
+        bottomBarPadding ?? layoutResult.bottomBarPadding;
+
     // 确定要使用的顶栏文字样式
-    final TextStyle effectiveTopStyle = topBarTextStyle ?? 
-        layoutResult.topBarTextStyle ?? 
-        infoBarTextStyle;
-    
+    final TextStyle effectiveTopStyle =
+        topBarTextStyle ?? layoutResult.topBarTextStyle ?? infoBarTextStyle;
+
     // 顶部信息栏 - 左侧显示书名（第一页）或章节名（其他页）
-    final String topText = pageIndex == 0 
+    final String topText = pageIndex == 0
         ? (layoutResult.bookName ?? '')
         : (layoutResult.chapterName ?? '');
-    
+
     if (topText.isNotEmpty) {
       final TextPainter topTextPainter = TextPainter(
         text: TextSpan(text: topText, style: effectiveTopStyle),
@@ -758,12 +770,13 @@ class ChineseLayoutPainter extends CustomPainter {
         Offset(effectiveTopPadding.left, effectiveTopPadding.top),
       );
     }
-    
+
     // 确定要使用的底栏文字样式
-    final TextStyle effectiveBottomStyle = bottomBarTextStyle ?? 
-        layoutResult.bottomBarTextStyle ?? 
+    final TextStyle effectiveBottomStyle =
+        bottomBarTextStyle ??
+        layoutResult.bottomBarTextStyle ??
         infoBarTextStyle;
-    
+
     // 底部信息栏 - 右侧显示页码
     final String bottomText = '${pageIndex + 1}/${layoutResult.pageCount}';
     final TextPainter bottomTextPainter = TextPainter(
@@ -854,10 +867,10 @@ class ChineseLayoutView extends StatelessWidget {
 
   /// 信息栏文本样式（通用）
   final TextStyle? infoBarTextStyle;
-  
+
   /// 顶部信息栏文本样式
   final TextStyle? topBarTextStyle;
-  
+
   /// 底部信息栏文本样式
   final TextStyle? bottomBarTextStyle;
 
@@ -895,10 +908,8 @@ class ChineseLayoutView extends StatelessWidget {
       foregroundPainter: ChineseLayoutPainter(
         layoutResult: layoutResult,
         pageIndex: pageIndex,
-        infoBarTextStyle: infoBarTextStyle ?? TextStyle(
-          fontSize: 12,
-          color: Colors.black54,
-        ),
+        infoBarTextStyle:
+            infoBarTextStyle ?? TextStyle(fontSize: 12, color: Colors.black54),
         topBarTextStyle: topBarTextStyle,
         bottomBarTextStyle: bottomBarTextStyle,
         showInfoBar: showInfoBar,
@@ -923,10 +934,10 @@ class ChineseLayoutPageView extends StatelessWidget {
 
   /// 信息栏文本样式（通用）
   final TextStyle? infoBarTextStyle;
-  
+
   /// 顶部信息栏文本样式
   final TextStyle? topBarTextStyle;
-  
+
   /// 底部信息栏文本样式
   final TextStyle? bottomBarTextStyle;
 
