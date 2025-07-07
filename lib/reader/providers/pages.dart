@@ -49,7 +49,7 @@ class Pages extends _$Pages {
         ).colorScheme.onSurface.withAlpha(100),
         fontWeight: FontWeight.w500,
       ),
-      titleTopSpacing: 140, // 将此参数调整为合理的值，控制标题与顶部的距离
+      titleTopSpacing: 40, // 将此参数调整为合理的值，控制标题与顶部的距离
       titleBottomBodySpacing: 40, // 这个参数正确地控制标题与正文的距离
       paragraphSpacing: 24,
       titleStyle: TextStyle(
