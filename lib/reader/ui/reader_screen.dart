@@ -4,6 +4,7 @@ import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
 import 'package:wenku8x/reader/service.dart';
+import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
   const ReaderScreen({super.key, required this.book});
@@ -23,11 +24,19 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     return Material(
       color: colorScheme.surfaceContainer,
       child: switch (pages) {
-        AsyncData(:final value) => Container(
-          child: ChineseLayoutPageView(
-            layoutResult: value,
-            pageController: _pageController,
-          ),
+        AsyncData(:final value) => Stack(
+          children: [
+            Listener(
+              // onPointerMove: ref.read(provider.notifier).onPointerMove,
+              // onPointerUp: ref.read(provider.notifier).onPointerUp,
+              // onPointerDown: ref.read(provider.notifier).onPointerDown,
+              child: ChineseLayoutPageView(
+                layoutResult: value,
+                pageController: _pageController,
+              ),
+            ),
+            MenuBottom(isVisible: false),
+          ],
         ),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
         _ => Container(
