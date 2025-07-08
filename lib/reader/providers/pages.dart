@@ -9,7 +9,7 @@ import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/services/path.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
-import 'package:wenku8x/reader/service.dart';
+import 'package:wenku8x/reader/services/provider.dart';
 
 part 'pages.g.dart';
 
@@ -17,7 +17,9 @@ part 'pages.g.dart';
 class Pages extends _$Pages {
   @override
   FutureOr<LayoutResult> build(BookModel book) async {
-    final catalog = await ref.read(ReaderService().catalogProvider_.future);
+    final catalog = await ref.read(
+      ReaderProviderService().catalogProvider_.future,
+    );
     final ChapterModel lastRead = catalog.volumes
         .expand((volume) => volume.chapters)
         .first;

@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
-import 'package:wenku8x/reader/service.dart';
+import 'package:wenku8x/reader/services/provider.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
@@ -17,7 +17,7 @@ class ReaderScreen extends StatefulHookConsumerWidget {
 class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
-    ReaderService().init(widget.book);
+    ReaderProviderService().init(widget.book);
     final pages = ref.watch(pagesProvider(widget.book));
     final colorScheme = Theme.of(context).colorScheme;
     final _pageController = PageController();
