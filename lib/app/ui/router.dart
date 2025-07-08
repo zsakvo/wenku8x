@@ -6,7 +6,7 @@ import 'package:wenku8x/app/libs/request/dio.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/bottom_nav.dart';
 import 'package:wenku8x/app/ui/components/keep_alive.dart';
-import 'package:wenku8x/detail%20/ui/detail_screen.dart';
+import 'package:wenku8x/detail/ui/detail_screen.dart';
 import 'package:wenku8x/discover/ui/discover_screen.dart';
 import 'package:wenku8x/login/ui/login_screen.dart';
 import 'package:wenku8x/preference/ui/preference_screen.dart';

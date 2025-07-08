@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/services/variable.dart';
-import 'package:wenku8x/detail%20/providers/catalog.dart';
+import 'package:wenku8x/detail/providers/catalog.dart';
 
 class BookDetailCatalog extends StatefulHookConsumerWidget {
   const BookDetailCatalog({super.key, required this.book});

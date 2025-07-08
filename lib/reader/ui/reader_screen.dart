@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
+import 'package:wenku8x/reader/services/pointer.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 
@@ -18,6 +19,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
     ReaderProviderService().init(widget.book);
+    PointerService().init(ref);
     final pages = ref.watch(pagesProvider(widget.book));
     final colorScheme = Theme.of(context).colorScheme;
     final _pageController = PageController();
@@ -27,9 +29,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
         AsyncData(:final value) => Stack(
           children: [
             Listener(
-              // onPointerMove: ref.read(provider.notifier).onPointerMove,
-              // onPointerUp: ref.read(provider.notifier).onPointerUp,
-              // onPointerDown: ref.read(provider.notifier).onPointerDown,
+              onPointerMove: PointerService().onPointerMove,
+              onPointerUp: PointerService().onPointerUp,
+              onPointerDown: PointerService().onPointerDown,
               child: ChineseLayoutPageView(
                 layoutResult: value,
                 pageController: _pageController,

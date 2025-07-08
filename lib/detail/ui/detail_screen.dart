@@ -10,8 +10,8 @@ import 'package:wenku8x/app/services/variable.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/flash.dart';
 import 'package:wenku8x/app/utils/string.dart';
-import 'package:wenku8x/detail%20/providers/detail.dart';
-import 'package:wenku8x/detail%20/ui/components/catalog.dart';
+import 'package:wenku8x/detail/providers/detail.dart';
+import 'package:wenku8x/detail/ui/components/catalog.dart';
 
 class DetailScreen extends StatefulHookConsumerWidget {
   const DetailScreen({super.key, required this.book});

@@ -46,7 +46,7 @@ final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
   }
 }
 
-String _$pagesHash() => r'27de0236c55276a8008be4e822cf869c349c941b';
+String _$pagesHash() => r'c81242e9a5cb62e4b45505f9108998c6ea636ccf';
 
 final class PagesFamily extends $Family
     with

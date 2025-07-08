@@ -1,5 +1,5 @@
 import 'package:wenku8x/app/models/book.dart';
-import 'package:wenku8x/detail%20/providers/catalog.dart';
+import 'package:wenku8x/detail/providers/catalog.dart';
 
 class ReaderProviderService {
   static final ReaderProviderService _instance =
