@@ -21,5 +21,7 @@ abstract class MenuVisible with _$MenuVisible {
 
   bool get all => bottom || top || catalog || typography || theme || config;
 
+  bool get sub => catalog || typography || theme || config;
+
   bool get parent => bottom || top;
 }

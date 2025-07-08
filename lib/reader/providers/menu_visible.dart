@@ -33,4 +33,30 @@ class Menu extends _$Menu {
   void toggleConfig() {
     state = state.copyWith(config: !state.config);
   }
+
+  void reset() {
+    state = MenuVisible();
+  }
+
+  void toggleParent() {
+    state = state.copyWith(bottom: !state.bottom, top: !state.top);
+  }
+
+  void dispatch({
+    bool? menuCatalogVisible,
+    bool? menuThemeVisible,
+    bool? menuTextVisible,
+    bool? menuConfigVisible,
+    bool? menuTopVisible,
+    bool? menuBottomVisible,
+  }) {
+    state = state.copyWith(
+      catalog: menuCatalogVisible ?? state.catalog,
+      theme: menuThemeVisible ?? state.theme,
+      typography: menuTextVisible ?? state.typography,
+      config: menuConfigVisible ?? state.config,
+      top: menuTopVisible ?? state.top,
+      bottom: menuBottomVisible ?? state.bottom,
+    );
+  }
 }
