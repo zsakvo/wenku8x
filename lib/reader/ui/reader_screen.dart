@@ -19,7 +19,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
     ReaderProviderService().init(widget.book);
-    PointerService().init(ref);
+    PointerService().init(ref, context);
     final pages = ref.watch(pagesProvider(widget.book));
     final colorScheme = Theme.of(context).colorScheme;
     final _pageController = PageController();

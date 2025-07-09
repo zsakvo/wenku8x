@@ -951,7 +951,7 @@ class ChineseLayoutPageView extends StatelessWidget {
   final EdgeInsets? bottomBarPadding;
 
   const ChineseLayoutPageView({
-    Key? key,
+    super.key,
     required this.layoutResult,
     required this.pageController,
     this.infoBarTextStyle,
@@ -960,7 +960,7 @@ class ChineseLayoutPageView extends StatelessWidget {
     this.showInfoBar = true,
     this.topBarPadding,
     this.bottomBarPadding,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -12,14 +12,16 @@ class PointerService {
 
   PointerService._internal();
 
-  final screenHeight = rootNavigatorKey.currentContext!.size!.height;
-  final screenWidth = rootNavigatorKey.currentContext!.size!.width;
+  // final screenHeight = rootNavigatorKey.currentContext!.size!.height;
+  // final screenWidth = rootNavigatorKey.currentContext!.size!.width;
 
   late WidgetRef ref;
+  late BuildContext context;
   double pointerDownPosX = 0.0;
 
-  init(WidgetRef widgetRef) {
+  init(WidgetRef widgetRef, BuildContext context) {
     ref = widgetRef;
+    this.context = context;
   }
 
   void onPointerDown(PointerDownEvent event) {
@@ -54,6 +56,8 @@ class PointerService {
 
   void onPointerUp(PointerUpEvent event) {
     final menuVisible = ref.read(menuProvider);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
     // 如果子菜单开启，则不响应翻页 只关闭子菜单
     if (menuVisible.sub) {
       ref
