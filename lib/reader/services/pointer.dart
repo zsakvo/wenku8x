@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/providers/menu_visible.dart';
+import 'package:wenku8x/reader/services/provider.dart';
+import 'package:wenku8x/reader/services/screen.dart';
 
 class PointerService {
+  static final logger = Logger("PointerService");
   static final PointerService _instance = PointerService._internal();
 
   factory PointerService() {
@@ -149,4 +154,97 @@ class PointerService {
       // }
     }
   }
+
+  // 手势检测区域配置
+  static const double _menuTapWidth = 0.4; // 中间 40%区域用于菜单
+  static const double _swipeAreaWidth = 0.3; // 左右 30%区域用于翻页
+  double _dragStartX = 0;
+  double _currentOffset = 0;
+  bool _isDragging = false;
+
+  onTapDown(TapDownDetails details) {
+    // if (ReaderService().isAnimating) return;
+    // final screenWidth = MediaQuery.of(context).size.width;
+    // final tapX = details.globalPosition.dx;
+    // final tapRatio = tapX / screenWidth;
+
+    // logger.debug("Tap position: $tapX, Ratio: $tapRatio");
+
+    // // 中央区域点击唤起菜单
+    // if (tapRatio > _swipeAreaWidth && tapRatio < (1 - _swipeAreaWidth)) {
+    //   // widget.onMenuTap?.call();
+    //   ref.read(menuProvider.notifier).toggleParent();
+    //   return;
+    // }
+
+    // // 左右区域点击翻页
+    // if (tapRatio <= _swipeAreaWidth) {
+    //   // _goToPreviousPage();
+    // } else if (tapRatio >= (1 - _swipeAreaWidth)) {
+    //   // _goToNextPage();
+    // }
+  }
+
+  onTapUp(TapUpDetails details) {
+    if (ReaderService().isAnimating) return;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final tapX = details.globalPosition.dx;
+    final tapRatio = tapX / screenWidth;
+
+    logger.debug("Tap position: $tapX, Ratio: $tapRatio");
+
+    // 中央区域点击唤起菜单
+    if (tapRatio > _swipeAreaWidth && tapRatio < (1 - _swipeAreaWidth)) {
+      // widget.onMenuTap?.call();
+      ref.read(menuProvider.notifier).toggleParent();
+      return;
+    }
+
+    // 左右区域点击翻页
+    if (tapRatio <= _swipeAreaWidth) {
+      // _goToPreviousPage();
+      ReaderService().goToPreviousPage();
+    } else if (tapRatio >= (1 - _swipeAreaWidth)) {
+      // _goToNextPage();
+      ReaderService().goToNextPage();
+    }
+  }
+
+  onPanStart(DragStartDetails details) {
+    if (ReaderService().isAnimating) return;
+
+    _dragStartX = details.globalPosition.dx;
+    _currentOffset = 0;
+    _isDragging = true;
+
+    // 触觉反馈
+    HapticFeedback.selectionClick();
+  }
+
+  onPanUpdate(DragUpdateDetails details) {
+    if (!_isDragging || ReaderService().isAnimating) return;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final deltaX = details.globalPosition.dx - _dragStartX;
+
+    // 限制拖拽范围，避免过度滚动
+    final maxOffset = screenWidth * 0.5;
+    _currentOffset = deltaX.clamp(-maxOffset, maxOffset);
+
+    // 实时更新页面位置
+    final targetPage =
+        ReaderService().currentPage - (_currentOffset / screenWidth);
+    final pages = ref
+        .read(ReaderProviderService().pagesProvider_)
+        .asData
+        ?.value;
+    if (pages == null) return;
+    ReaderService().pageController.animateToPage(
+      targetPage.clamp(0, pages.pageCount - 1).toInt(),
+      duration: Duration.zero,
+      curve: Curves.linear,
+    );
+  }
+
+  onPanEnd(DragEndDetails details) {}
 }

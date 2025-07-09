@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
 import 'package:wenku8x/reader/services/pointer.dart';
 import 'package:wenku8x/reader/services/provider.dart';
+import 'package:wenku8x/reader/services/screen.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
@@ -19,25 +21,39 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
   @override
   Widget build(BuildContext context) {
     ReaderProviderService().init(widget.book);
+    ReaderService().init(ref, context);
     PointerService().init(ref, context);
-    final pages = ref.watch(pagesProvider(widget.book));
+    final pages = ref.watch(ReaderProviderService().pagesProvider_);
+    final menuVisible = ref.watch(menuProvider);
     final colorScheme = Theme.of(context).colorScheme;
-    final _pageController = PageController();
+    // final _pageController = PageController();
     return Material(
       color: colorScheme.surfaceContainer,
       child: switch (pages) {
         AsyncData(:final value) => Stack(
           children: [
-            Listener(
-              onPointerMove: PointerService().onPointerMove,
-              onPointerUp: PointerService().onPointerUp,
-              onPointerDown: PointerService().onPointerDown,
-              child: ChineseLayoutPageView(
-                layoutResult: value,
-                pageController: _pageController,
+            GestureDetector(
+              // onPointerMove: PointerService().onPointerMove,
+              // onPointerUp: PointerService().onPointerUp,
+              // onPointerDown: PointerService().onPointerDown,
+              onTapDown: PointerService().onTapDown,
+              onTapUp: PointerService().onTapUp,
+              onPanStart: PointerService().onPanStart,
+              onPanUpdate: PointerService().onPanUpdate,
+              onPanEnd: PointerService().onPanEnd,
+              child: PageView.builder(
+                controller: ReaderService().pageController,
+                itemCount: value.pageCount,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) {
+                  return ChineseLayoutView(
+                    layoutResult: value,
+                    pageIndex: index,
+                  );
+                },
               ),
             ),
-            MenuBottom(isVisible: false),
+            MenuBottom(isVisible: menuVisible.bottom),
           ],
         ),
         AsyncLoading() => const Center(child: CircularProgressIndicator()),
