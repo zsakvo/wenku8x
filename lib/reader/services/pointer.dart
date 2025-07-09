@@ -223,27 +223,38 @@ class PointerService {
 
   onPanUpdate(DragUpdateDetails details) {
     if (!_isDragging || ReaderService().isAnimating) return;
+    final pageController = ReaderService().pageController;
 
-    final screenWidth = MediaQuery.of(context).size.width;
     final deltaX = details.globalPosition.dx - _dragStartX;
+    if (deltaX.abs() > 5) {
+      double offset = pageController.offset - details.delta.dx;
+      if (offset <= 0) {
+        offset = 0;
+      } else {
+        offset = offset > pageController.position.maxScrollExtent
+            ? pageController.position.maxScrollExtent
+            : offset;
+      }
+      pageController.jumpTo(offset);
+    }
 
-    // 限制拖拽范围，避免过度滚动
-    final maxOffset = screenWidth * 0.5;
-    _currentOffset = deltaX.clamp(-maxOffset, maxOffset);
+    // // 限制拖拽范围，避免过度滚动
+    // final maxOffset = screenWidth * 0.5;
+    // _currentOffset = deltaX.clamp(-maxOffset, maxOffset);
 
-    // 实时更新页面位置
-    final targetPage =
-        ReaderService().currentPage - (_currentOffset / screenWidth);
-    final pages = ref
-        .read(ReaderProviderService().pagesProvider_)
-        .asData
-        ?.value;
-    if (pages == null) return;
-    ReaderService().pageController.animateToPage(
-      targetPage.clamp(0, pages.pageCount - 1).toInt(),
-      duration: Duration.zero,
-      curve: Curves.linear,
-    );
+    // // 实时更新页面位置
+    // final targetPage =
+    //     ReaderService().currentPage - (_currentOffset / screenWidth);
+    // final pages = ref
+    //     .read(ReaderProviderService().pagesProvider_)
+    //     .asData
+    //     ?.value;
+    // if (pages == null) return;
+    // ReaderService().pageController.animateToPage(
+    //   targetPage.clamp(0, pages.pageCount - 1).toInt(),
+    //   duration: Duration.zero,
+    //   curve: Curves.linear,
+    // );
   }
 
   onPanEnd(DragEndDetails details) {}
