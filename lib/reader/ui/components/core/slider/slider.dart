@@ -26,6 +26,8 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
   final Duration animationDuration = const Duration(milliseconds: 280);
   // 滑动方向是否单一
   bool singleDirection = true;
+  // 滑动方向变更时的坐标（如果未变更过则为滑动结束位置）
+  double turningPointX = 0;
 
   @override
   void initState() {
@@ -80,8 +82,9 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
       final currentDirection = details.delta.dx > 0;
       if (currentOffset != 0) {
         final previousDirection = currentOffset > 0;
-        if (currentDirection != previousDirection) {
+        if (currentDirection != previousDirection && singleDirection) {
           singleDirection = false;
+          turningPointX = details.globalPosition.dx; // 更新转折点坐标
         }
       }
 
@@ -127,6 +130,8 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
     }
 
     logger.debug("当前是否单一滑动方向: $singleDirection");
+    logger.debug("开始滑动时的坐标: $dragStartX");
+    logger.debug("滑动方向变更时的坐标: $turningPointX");
 
     // 根据速度快速判断
     // if (velocity.abs() > velocityThreshold) {
