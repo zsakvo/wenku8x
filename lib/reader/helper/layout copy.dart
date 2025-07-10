@@ -1,5 +1,3 @@
-import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:flutter/material.dart';
 
@@ -38,7 +36,7 @@ class ChineseLayoutHelper {
   final int? indent;
 
   /// 书名，用于顶部信息栏在第一页显示
-  final String bookName;
+  final String? bookName;
 
   /// 章节名，用于顶部信息栏非第一页显示
   final String? chapterName;
@@ -79,7 +77,7 @@ class ChineseLayoutHelper {
     this.bodySpacing = const EdgeInsets.all(20.0),
     required this.bodyTextStyle,
     this.indent,
-    required this.bookName,
+    this.bookName,
     this.chapterName,
     this.infoBarTextStyle = const TextStyle(
       fontSize: 12,
@@ -98,7 +96,7 @@ class ChineseLayoutHelper {
     if (indent == null) {
       // 使用两个正文文字尺寸的缩进
       final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: '国', style: bodyTextStyle),
+        text: TextSpan(text: '字', style: bodyTextStyle),
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
@@ -114,35 +112,13 @@ class ChineseLayoutHelper {
       width ??
           (context != null
               ? MediaQuery.of(context).size.width
-              : WidgetsBinding
-                        .instance
-                        .platformDispatcher
-                        .views
-                        .first
-                        .physicalSize
-                        .width /
-                    WidgetsBinding
-                        .instance
-                        .platformDispatcher
-                        .views
-                        .first
-                        .devicePixelRatio),
+              : WidgetsBinding.instance.window.physicalSize.width /
+                    WidgetsBinding.instance.window.devicePixelRatio),
       height ??
           (context != null
               ? MediaQuery.of(context).size.height
-              : WidgetsBinding
-                        .instance
-                        .platformDispatcher
-                        .views
-                        .first
-                        .physicalSize
-                        .height /
-                    WidgetsBinding
-                        .instance
-                        .platformDispatcher
-                        .views
-                        .first
-                        .devicePixelRatio),
+              : WidgetsBinding.instance.window.physicalSize.height /
+                    WidgetsBinding.instance.window.devicePixelRatio),
     );
 
     // 检查布局尺寸是否有效
@@ -188,7 +164,9 @@ class ChineseLayoutHelper {
     // 追踪当前处理状态
     int currentParagraphIndex = 0;
     double currentY =
-        drawingArea.top + titleTopSpacing + (title != null ? titleHeight : 0);
+        drawingArea.top +
+        titleTopSpacing +
+        (title != null ? titleHeight : 0); // 修改此行，加入titleTopBodySpacing
     List<ParagraphLayout> currentPageParagraphs = [];
     bool isFirstPage = true;
 
@@ -243,17 +221,9 @@ class ChineseLayoutHelper {
             PageLayout(
               paragraphs: List.from(currentPageParagraphs),
               drawingArea: drawingArea,
-              title: title,
+              title: isFirstPage ? title : null,
               titlePainter: isFirstPage ? titlePainter : null,
               titleTopSpacing: titleTopSpacing,
-              topBarPadding: topBarPadding,
-              bottomBarPadding: bottomBarPadding,
-              infoBarTextStyle: infoBarTextStyle,
-              bookName: bookName,
-              bottomBarTextStyle: bottomBarTextStyle,
-              showInfoBar: showInfoBar,
-              infoBarHeight: infoBarHeight,
-              topBarTextStyle: topBarTextStyle,
             ),
           );
 
@@ -305,16 +275,8 @@ class ChineseLayoutHelper {
                 paragraphs: List.from(currentPageParagraphs),
                 drawingArea: drawingArea,
                 titleTopSpacing: titleTopSpacing,
-                title: title,
+                title: isFirstPage ? title : null,
                 titlePainter: isFirstPage ? titlePainter : null,
-                topBarPadding: topBarPadding,
-                bottomBarPadding: bottomBarPadding,
-                infoBarTextStyle: infoBarTextStyle,
-                bookName: bookName,
-                bottomBarTextStyle: bottomBarTextStyle,
-                showInfoBar: showInfoBar,
-                infoBarHeight: infoBarHeight,
-                topBarTextStyle: topBarTextStyle,
               ),
             );
 
@@ -399,26 +361,11 @@ class ChineseLayoutHelper {
           paragraphs: currentPageParagraphs,
           drawingArea: drawingArea,
           titleTopSpacing: titleTopSpacing,
-          title: title,
+          title: isFirstPage ? title : null,
           titlePainter: isFirstPage ? titlePainter : null,
-          topBarPadding: topBarPadding,
-          bottomBarPadding: bottomBarPadding,
-          infoBarTextStyle: infoBarTextStyle,
-          bookName: bookName,
-          bottomBarTextStyle: bottomBarTextStyle,
-          showInfoBar: showInfoBar,
-          infoBarHeight: infoBarHeight,
-          topBarTextStyle: topBarTextStyle,
         ),
       );
     }
-
-    final int pageCount = pages.length;
-    pages.forEachIndexed((index, page) {
-      page
-        ..pageCount = pageCount
-        ..index = index;
-    });
 
     return LayoutResult(
       pages: pages,
@@ -633,9 +580,6 @@ class PageLayout {
   /// 绘制区域
   final Rect drawingArea;
 
-  /// 书籍名称
-  final String bookName;
-
   /// 标题（仅第一页可能有）
   final String? title;
 
@@ -645,49 +589,12 @@ class PageLayout {
   /// 标题与顶部信息栏距离
   final double titleTopSpacing;
 
-  /// 是否显示信息栏
-  final bool showInfoBar;
-
-  /// 信息栏高度
-  final double infoBarHeight;
-
-  /// 顶部信息栏内边距
-  final EdgeInsets topBarPadding;
-
-  /// 底部信息栏内边距
-  final EdgeInsets bottomBarPadding;
-
-  /// 顶部信息栏文本样式
-  final TextStyle? topBarTextStyle;
-
-  /// 底部信息栏文本样式
-  final TextStyle? bottomBarTextStyle;
-
-  /// 信息栏文本样式（通用）
-  final TextStyle infoBarTextStyle;
-
-  /// 这是第几页
-  int index;
-
-  /// 当前章总页数
-  int pageCount;
-
   PageLayout({
     required this.paragraphs,
     required this.drawingArea,
     required this.titleTopSpacing,
-    required this.topBarPadding,
-    required this.bottomBarPadding,
-    required this.infoBarTextStyle,
-    required this.bookName,
     this.title,
     this.titlePainter,
-    this.showInfoBar = true,
-    this.infoBarHeight = 20.0,
-    this.index = 0,
-    this.pageCount = 0,
-    this.topBarTextStyle,
-    this.bottomBarTextStyle,
   });
 }
 
@@ -739,63 +646,63 @@ class LineLayout {
 /// 用于绘制布局结果的自定义画布
 class ChineseLayoutPainter extends CustomPainter {
   /// 布局结果
-  // final LayoutResult layoutResult;
+  final LayoutResult layoutResult;
 
-  /// 要绘制的页面
-  final PageLayout page;
+  /// 要绘制的页面索引
+  final int pageIndex;
 
   /// 缩进值
-  // final double indent;
+  final double indent;
 
   /// 信息栏文本样式（通用）
-  // final TextStyle infoBarTextStyle;
+  final TextStyle infoBarTextStyle;
 
   /// 顶部信息栏文本样式
-  // final TextStyle? topBarTextStyle;
+  final TextStyle? topBarTextStyle;
 
   /// 底部信息栏文本样式
-  // final TextStyle? bottomBarTextStyle;
+  final TextStyle? bottomBarTextStyle;
 
   /// 是否显示信息栏
-  // final bool showInfoBar;
+  final bool showInfoBar;
 
   /// 信息栏高度
-  // final double infoBarHeight;
+  final double infoBarHeight;
 
   /// 顶部信息栏内边距
-  // final EdgeInsets? topBarPadding;
+  final EdgeInsets? topBarPadding;
 
   /// 底部信息栏内边距
-  // final EdgeInsets? bottomBarPadding;
+  final EdgeInsets? bottomBarPadding;
 
   ChineseLayoutPainter({
-    // required this.layoutResult,
-    required this.page,
-    // this.indent = 0,
-    // this.infoBarTextStyle = const TextStyle(
-    //   fontSize: 12,
-    //   color: Colors.black54,
-    // ),
-    // this.topBarTextStyle,
-    // this.bottomBarTextStyle,
-    // this.showInfoBar = true,
-    // this.infoBarHeight = 20.0,
-    // this.topBarPadding,
-    // this.bottomBarPadding,
+    required this.layoutResult,
+    required this.pageIndex,
+    this.indent = 0,
+    this.infoBarTextStyle = const TextStyle(
+      fontSize: 12,
+      color: Colors.black54,
+    ),
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
+    this.showInfoBar = true,
+    this.infoBarHeight = 20.0,
+    this.topBarPadding,
+    this.bottomBarPadding,
   });
 
   @override
   void paint(Canvas canvas, Size size) {
     // 检查页面索引是否有效
-    // if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
-    //   return;
-    // }
+    if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
+      return;
+    }
 
-    // final PageLayout page = layoutResult.pages[pageIndex];
+    final PageLayout page = layoutResult.pages[pageIndex];
 
     // 绘制信息栏
-    if (page.showInfoBar) {
-      _drawInfoBars(canvas, size, page.index);
+    if (showInfoBar) {
+      _drawInfoBars(canvas, size, pageIndex);
     }
 
     // 绘制标题（如果有）
@@ -833,18 +740,19 @@ class ChineseLayoutPainter extends CustomPainter {
 
   /// 绘制顶部和底部信息栏
   void _drawInfoBars(Canvas canvas, Size size, int pageIndex) {
-    final EdgeInsets effectiveTopPadding = page.topBarPadding;
-
-    final EdgeInsets effectiveBottomPadding = page.bottomBarPadding;
+    final EdgeInsets effectiveTopPadding =
+        topBarPadding ?? layoutResult.topBarPadding;
+    final EdgeInsets effectiveBottomPadding =
+        bottomBarPadding ?? layoutResult.bottomBarPadding;
 
     // 确定要使用的顶栏文字样式
     final TextStyle effectiveTopStyle =
-        page.topBarTextStyle ?? page.infoBarTextStyle;
+        topBarTextStyle ?? layoutResult.topBarTextStyle ?? infoBarTextStyle;
 
     // 顶部信息栏 - 左侧显示书名（第一页）或章节名（其他页）
     final String topText = pageIndex == 0
-        ? (page.bookName)
-        : (page.title ?? '');
+        ? (layoutResult.bookName ?? '')
+        : (layoutResult.chapterName ?? '');
 
     if (topText.isNotEmpty) {
       final TextPainter topTextPainter = TextPainter(
@@ -865,10 +773,12 @@ class ChineseLayoutPainter extends CustomPainter {
 
     // 确定要使用的底栏文字样式
     final TextStyle effectiveBottomStyle =
-        page.bottomBarTextStyle ?? page.infoBarTextStyle;
+        bottomBarTextStyle ??
+        layoutResult.bottomBarTextStyle ??
+        infoBarTextStyle;
 
     // 底部信息栏 - 右侧显示页码
-    final String bottomText = '${page.index + 1}/${page.pageCount}';
+    final String bottomText = '${pageIndex + 1}/${layoutResult.pageCount}';
     final TextPainter bottomTextPainter = TextPainter(
       text: TextSpan(text: bottomText, style: effectiveBottomStyle),
       textDirection: TextDirection.ltr,
@@ -881,7 +791,7 @@ class ChineseLayoutPainter extends CustomPainter {
       canvas,
       Offset(
         size.width - bottomTextPainter.width - effectiveBottomPadding.right,
-        size.height - page.infoBarHeight - effectiveBottomPadding.bottom,
+        size.height - infoBarHeight - effectiveBottomPadding.bottom,
       ),
     );
   }
@@ -937,139 +847,141 @@ class ChineseLayoutPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(ChineseLayoutPainter oldDelegate) {
-    return oldDelegate.page != page;
+    return oldDelegate.layoutResult != layoutResult ||
+        oldDelegate.pageIndex != pageIndex ||
+        oldDelegate.indent != indent ||
+        oldDelegate.showInfoBar != showInfoBar ||
+        oldDelegate.infoBarTextStyle != infoBarTextStyle ||
+        oldDelegate.topBarPadding != topBarPadding ||
+        oldDelegate.bottomBarPadding != bottomBarPadding;
   }
 }
 
 /// 用于显示布局结果的Widget
-// class ChineseLayoutView extends StatelessWidget {
-//   /// 布局结果
-//   // final LayoutResult layoutResult;
+class ChineseLayoutView extends StatelessWidget {
+  /// 布局结果
+  final LayoutResult layoutResult;
 
-//   // /// 要显示的页面索引
-//   // final int pageIndex;
+  /// 要显示的页面索引
+  final int pageIndex;
 
-//   // /// 信息栏文本样式（通用）
-//   // final TextStyle? infoBarTextStyle;
+  /// 信息栏文本样式（通用）
+  final TextStyle? infoBarTextStyle;
 
-//   // /// 顶部信息栏文本样式
-//   // final TextStyle? topBarTextStyle;
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
 
-//   // /// 底部信息栏文本样式
-//   // final TextStyle? bottomBarTextStyle;
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
-//   // /// 是否显示信息栏
-//   // final bool showInfoBar;
+  /// 是否显示信息栏
+  final bool showInfoBar;
 
-//   // /// 顶部信息栏内边距
-//   // final EdgeInsets? topBarPadding;
+  /// 顶部信息栏内边距
+  final EdgeInsets? topBarPadding;
 
-//   // /// 底部信息栏内边距
-//   // final EdgeInsets? bottomBarPadding;
+  /// 底部信息栏内边距
+  final EdgeInsets? bottomBarPadding;
 
-//   final PageLayout page;
+  const ChineseLayoutView({
+    super.key,
+    required this.layoutResult,
+    required this.pageIndex,
+    this.infoBarTextStyle,
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
+    this.showInfoBar = true,
+    this.topBarPadding,
+    this.bottomBarPadding,
+  });
 
-//   const ChineseLayoutView({
-//     super.key,
-//     required this.page,
-//     // required this.layoutResult,
-//     // required this.pageIndex,
-//     // this.infoBarTextStyle,
-//     // this.topBarTextStyle,
-//     // this.bottomBarTextStyle,
-//     // this.showInfoBar = true,
-//     // this.topBarPadding,
-//     // this.bottomBarPadding,
-//   });
+  @override
+  Widget build(BuildContext context) {
+    // 检查页面索引是否有效
+    if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
+      return Container();
+    }
 
-//   @override
-//   Widget build(BuildContext context) {
-//     // // 检查页面索引是否有效
-//     // if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
-//     //   return Container();
-//     // }
+    final PageLayout page = layoutResult.pages[pageIndex];
 
-//     // final PageLayout page = layoutResult.pages[pageIndex];
-
-//     return CustomPaint(
-//       foregroundPainter: ChineseLayoutPainter(
-//         // layoutResult: layoutResult,
-//         // pageIndex: pageIndex,
-//         // infoBarTextStyle:
-//         //     infoBarTextStyle ?? TextStyle(fontSize: 12, color: Colors.black54),
-//         // topBarTextStyle: topBarTextStyle,
-//         // bottomBarTextStyle: bottomBarTextStyle,
-//         // showInfoBar: showInfoBar,
-//         // topBarPadding: topBarPadding,
-//         // bottomBarPadding: bottomBarPadding,
-//         page: page,
-//       ),
-//       size: Size(
-//         page.drawingArea.width + page.drawingArea.left * 2,
-//         page.drawingArea.height + page.drawingArea.top * 2,
-//       ),
-//     );
-//   }
-// }
+    return CustomPaint(
+      foregroundPainter: ChineseLayoutPainter(
+        layoutResult: layoutResult,
+        pageIndex: pageIndex,
+        infoBarTextStyle:
+            infoBarTextStyle ?? TextStyle(fontSize: 12, color: Colors.black54),
+        topBarTextStyle: topBarTextStyle,
+        bottomBarTextStyle: bottomBarTextStyle,
+        showInfoBar: showInfoBar,
+        topBarPadding: topBarPadding,
+        bottomBarPadding: bottomBarPadding,
+      ),
+      size: Size(
+        page.drawingArea.width + page.drawingArea.left * 2,
+        page.drawingArea.height + page.drawingArea.top * 2,
+      ),
+    );
+  }
+}
 
 /// 使用 PageController 实现的多页面中文排版视图
-// class ChineseLayoutPageView extends StatelessWidget {
-//   /// 布局结果
-//   final LayoutResult layoutResult;
+class ChineseLayoutPageView extends StatelessWidget {
+  /// 布局结果
+  final LayoutResult layoutResult;
 
-//   /// 页面控制器
-//   final PageController pageController;
+  /// 页面控制器
+  final PageController pageController;
 
-//   /// 信息栏文本样式（通用）
-//   final TextStyle? infoBarTextStyle;
+  /// 信息栏文本样式（通用）
+  final TextStyle? infoBarTextStyle;
 
-//   /// 顶部信息栏文本样式
-//   final TextStyle? topBarTextStyle;
+  /// 顶部信息栏文本样式
+  final TextStyle? topBarTextStyle;
 
-//   /// 底部信息栏文本样式
-//   final TextStyle? bottomBarTextStyle;
+  /// 底部信息栏文本样式
+  final TextStyle? bottomBarTextStyle;
 
-//   /// 是否显示信息栏
-//   final bool showInfoBar;
+  /// 是否显示信息栏
+  final bool showInfoBar;
 
-//   /// 顶部信息栏内边距
-//   final EdgeInsets? topBarPadding;
+  /// 顶部信息栏内边距
+  final EdgeInsets? topBarPadding;
 
-//   /// 底部信息栏内边距
-//   final EdgeInsets? bottomBarPadding;
+  /// 底部信息栏内边距
+  final EdgeInsets? bottomBarPadding;
 
-//   const ChineseLayoutPageView({
-//     super.key,
-//     required this.layoutResult,
-//     required this.pageController,
-//     this.infoBarTextStyle,
-//     this.topBarTextStyle,
-//     this.bottomBarTextStyle,
-//     this.showInfoBar = true,
-//     this.topBarPadding,
-//     this.bottomBarPadding,
-//   });
+  const ChineseLayoutPageView({
+    super.key,
+    required this.layoutResult,
+    required this.pageController,
+    this.infoBarTextStyle,
+    this.topBarTextStyle,
+    this.bottomBarTextStyle,
+    this.showInfoBar = true,
+    this.topBarPadding,
+    this.bottomBarPadding,
+  });
 
-//   @override
-//   Widget build(BuildContext context) {
-//     return PageView.builder(
-//       controller: pageController,
-//       itemCount: layoutResult.pages.length,
-//       itemBuilder: (context, index) {
-//         return ChineseLayoutView(
-//           layoutResult: layoutResult,
-//           pageIndex: index,
-//           infoBarTextStyle: infoBarTextStyle,
-//           topBarTextStyle: topBarTextStyle,
-//           bottomBarTextStyle: bottomBarTextStyle,
-//           showInfoBar: showInfoBar,
-//           topBarPadding: topBarPadding,
-//           bottomBarPadding: bottomBarPadding,
-//         );
-//       },
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    return PageView.builder(
+      controller: pageController,
+      itemCount: layoutResult.pages.length,
+      itemBuilder: (context, index) {
+        return ChineseLayoutView(
+          layoutResult: layoutResult,
+          pageIndex: index,
+          infoBarTextStyle: infoBarTextStyle,
+          topBarTextStyle: topBarTextStyle,
+          bottomBarTextStyle: bottomBarTextStyle,
+          showInfoBar: showInfoBar,
+          topBarPadding: topBarPadding,
+          bottomBarPadding: bottomBarPadding,
+        );
+      },
+    );
+  }
+}
 
 /// 用于保存和恢复阅读进度的辅助类
 class ReadingProgress {

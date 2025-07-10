@@ -19,7 +19,7 @@ class Api {
     final usernameEncoded = Uri.encodeComponent(username);
     final passwordEncoded = Uri.encodeComponent(password);
     return await Ajax.post(
-      "action=login&username=$usernameEncoded&password=$passwordEncoded",
+      "action=login&username=$usernameEncoded&password=$passwordEncoded&usecookie=315360000",
       isXml: false,
     ).then((value) {
       final sp = SharedPreferencesAsync();

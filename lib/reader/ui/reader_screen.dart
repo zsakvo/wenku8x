@@ -7,6 +7,8 @@ import 'package:wenku8x/reader/providers/pages.dart';
 import 'package:wenku8x/reader/services/pointer.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 import 'package:wenku8x/reader/services/screen.dart';
+import 'package:wenku8x/reader/ui/components/core/slider/slider.dart';
+import 'package:wenku8x/reader/ui/components/core/transformer/transformer.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
@@ -32,27 +34,26 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       child: switch (pages) {
         AsyncData(:final value) => Stack(
           children: [
-            GestureDetector(
-              // onPointerMove: PointerService().onPointerMove,
-              // onPointerUp: PointerService().onPointerUp,
-              // onPointerDown: PointerService().onPointerDown,
-              onTapDown: PointerService().onTapDown,
-              onTapUp: PointerService().onTapUp,
-              onPanStart: PointerService().onPanStart,
-              onPanUpdate: PointerService().onPanUpdate,
-              onPanEnd: PointerService().onPanEnd,
-              child: PageView.builder(
-                controller: ReaderService().pageController,
-                itemCount: value.pageCount,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return ChineseLayoutView(
-                    layoutResult: value,
-                    pageIndex: index,
-                  );
-                },
-              ),
-            ),
+            SliderCore(pages: value.pages),
+            // GestureDetector(
+            //   // onPointerMove: PointerService().onPointerMove,
+            //   // onPointerUp: PointerService().onPointerUp,
+            //   // onPointerDown: PointerService().onPointerDown,
+            //   onTapDown: PointerService().onTapDown,
+            //   onTapUp: PointerService().onTapUp,
+            //   onPanStart: PointerService().onPanStart,
+            //   onPanUpdate: PointerService().onPanUpdate,
+            //   onPanEnd: PointerService().onPanEnd,
+            //   child: PageView.builder(
+            //     controller: ReaderService().pageController,
+            //     itemCount: value.pageCount,
+            //     physics: const NeverScrollableScrollPhysics(),
+            //     pageSnapping: false,
+            //     itemBuilder: (context, index) {
+            //       return ChineseLayoutView(page: value.pages[index]);
+            //     },
+            //   ),
+            // ),
             MenuBottom(isVisible: menuVisible.bottom),
           ],
         ),
