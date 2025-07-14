@@ -132,6 +132,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
     logger.debug("当前是否单一滑动方向: $singleDirection");
     logger.debug("开始滑动时的坐标: $dragStartX");
     logger.debug("滑动方向变更时的坐标: $turningPointX");
+    logger.debug("抬起时的坐标: ${details.globalPosition.dx}");
 
     // 根据速度快速判断
     // if (velocity.abs() > velocityThreshold) {
@@ -216,8 +217,8 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
       child: PageView.builder(
         controller: pageController,
         itemCount: widget.pages.length,
-        physics: const NeverScrollableScrollPhysics(),
-        pageSnapping: false,
+        // physics: const NeverScrollableScrollPhysics(),
+        // pageSnapping: false,
         itemBuilder: (context, index) {
           final page = widget.pages[index];
           return CustomPaint(
