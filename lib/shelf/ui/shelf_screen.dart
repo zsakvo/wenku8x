@@ -9,7 +9,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 // import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
-import 'package:wenku8x/app/ui/components/user_avatar.dart';
+import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/shelf/providers/books.dart';
 import 'package:wenku8x/shelf/ui/components/book_item.dart';
 
@@ -30,7 +30,7 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
     final books = ref.watch(booksProvider);
     return Scaffold(
       appBar: AppTopBar(
-        title: UserAvatar(),
+        title: Avatar(),
         canPop: false,
         titleLeftPadding: 20,
         actions: [
