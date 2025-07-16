@@ -62,6 +62,9 @@ dependencies:
   custom_sliding_segmented_control: ^1.8.5
   flutter_sticky_header: ^0.8.0
 
+  material_shapes:
+    git: https://github.com/ksokolovskyi/material_shapes.git
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -672,6 +672,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.11.1"
+  material_shapes:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "12ee853fbb4b5987dbbfe9bffc19fede57cd0295"
+      url: "https://github.com/ksokolovskyi/material_shapes.git"
+    source: git
+    version: "1.0.0"
   meta:
     dependency: transitive
     description:
