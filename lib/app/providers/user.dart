@@ -1,7 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/models/user.dart';
+import 'package:wenku8x/app/services/path.dart';
 part 'user.g.dart';
 
 final logger = Logger("UserProvider");
@@ -26,10 +30,22 @@ class User extends _$User {
 
 @riverpod
 class UserAvatar extends _$UserAvatar {
+  final path = "${PathService().applicationDocumentsDirectory}/avatar.jpg";
   @override
-  Future<String> build() async {
-    logger.debug("获取用户头像");
-    final res = await Api.getUserAvatar();
-    return res;
+  FutureOr<Uint8List> build() async {
+    logger.debug("初始化用户头像");
+    if (!(await _file.exists())) {
+      await Api.getUserAvatar();
+    } else {
+      Future(refresh);
+    }
+    return await _file.readAsBytes();
   }
+
+  void refresh() async {
+    await Api.getUserAvatar();
+    state = AsyncValue.data((await _file.readAsBytes()));
+  }
+
+  File get _file => File(path);
 }

@@ -13,6 +13,12 @@ class PreferenceScreen extends StatefulHookConsumerWidget {
 class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppTopBar(title: "设置"));
+    return Scaffold(
+      appBar: AppTopBar(title: ""),
+      body: ListView(children: [
+         
+        ],
+      ),
+    );
   }
 }

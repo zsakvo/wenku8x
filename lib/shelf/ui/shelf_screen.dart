@@ -7,9 +7,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wenku8x/app/libs/request/dio.dart';
-import 'package:wenku8x/app/providers/user.dart';
+// import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/app/ui/components/user_avatar.dart';
 import 'package:wenku8x/shelf/providers/books.dart';
 import 'package:wenku8x/shelf/ui/components/book_item.dart';
 
@@ -27,38 +27,10 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
     final controller = useSearchController();
     // final books = ref.watch(bookProviderProvider);
     // final userId = ref.watch(userProvider.select((value) => value.asData?.value.));
-    final avatarPath = ref.watch(userAvatarProvider);
     final books = ref.watch(booksProvider);
     return Scaffold(
       appBar: AppTopBar(
-        title: ClipOval(
-          child: switch (avatarPath) {
-            AsyncValue(:final value?) => Image.file(
-              File(value),
-              width: 32,
-              height: 32,
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => SvgPicture.asset(
-                "assets/svg/img_empty_avatar.svg",
-                width: 26,
-                height: 26,
-                colorFilter: ColorFilter.mode(
-                  colorScheme.onSurface.withAlpha(150),
-                  BlendMode.srcIn,
-                ),
-              ),
-            ),
-            _ => SvgPicture.asset(
-              "assets/svg/img_empty_avatar.svg",
-              width: 26,
-              height: 26,
-              colorFilter: ColorFilter.mode(
-                colorScheme.onSurface.withAlpha(150),
-                BlendMode.srcIn,
-              ),
-            ),
-          },
-        ),
+        title: UserAvatar(),
         canPop: false,
         titleLeftPadding: 20,
         actions: [

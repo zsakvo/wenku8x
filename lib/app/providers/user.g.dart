@@ -54,7 +54,7 @@ abstract class _$User extends $AsyncNotifier<UserModel> {
 const userAvatarProvider = UserAvatarProvider._();
 
 final class UserAvatarProvider
-    extends $AsyncNotifierProvider<UserAvatar, String> {
+    extends $AsyncNotifierProvider<UserAvatar, Uint8List> {
   const UserAvatarProvider._()
     : super(
         from: null,
@@ -74,20 +74,20 @@ final class UserAvatarProvider
   UserAvatar create() => UserAvatar();
 }
 
-String _$userAvatarHash() => r'cab7cefc3faae791297d323ed7d88c867b6d1c13';
+String _$userAvatarHash() => r'7940c79255bb67508c241dee06b9cc9332c4a49b';
 
-abstract class _$UserAvatar extends $AsyncNotifier<String> {
-  FutureOr<String> build();
+abstract class _$UserAvatar extends $AsyncNotifier<Uint8List> {
+  FutureOr<Uint8List> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<String>, String>;
+    final ref = this.ref as $Ref<AsyncValue<Uint8List>, Uint8List>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<String>, String>,
-              AsyncValue<String>,
+              AnyNotifier<AsyncValue<Uint8List>, Uint8List>,
+              AsyncValue<Uint8List>,
               Object?,
               Object?
             >;

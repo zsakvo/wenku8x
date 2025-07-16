@@ -37,7 +37,7 @@ final class MenuProvider extends $NotifierProvider<Menu, MenuVisible> {
   }
 }
 
-String _$menuHash() => r'7cfba97d38d3060af68760b7f1a47bdd09899bb5';
+String _$menuHash() => r'f556f000b03647a934fbb2716290e7040f7b3947';
 
 abstract class _$Menu extends $Notifier<MenuVisible> {
   MenuVisible build();
