@@ -65,9 +65,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                   padding: EdgeInsets.only(right: 20),
                   child: FilledButton(
                     style: FilledButton.styleFrom(minimumSize: Size(60, 36)),
-                    onPressed: () {
-                      showSelectionDialog();
-                    },
+                    onPressed: () {},
                     child: Text("签到"),
                   ),
                 ),
@@ -80,9 +78,36 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
               title: "General",
               description: "General settings for the app",
               children: [
-                PreferenceDropDownTile(title: "夜间模式"),
-                PreferenceDropDownTile(title: "主题风格"),
-                PreferenceDropDownTile(title: "语言设置"),
+                PreferenceDropDownTile(
+                  title: "夜间模式",
+                  values: [
+                    {"title": "跟随系统", "value": "system"},
+                    {"title": "浅色模式", "value": "light"},
+                    {"title": "深色模式", "value": "dark"},
+                  ],
+                ),
+                PreferenceDropDownTile(
+                  title: "主题风格",
+                  values: [
+                    {
+                      "title": "预设主题",
+                      "value": "preset",
+                      "description": "使用预置的颜色风格",
+                    },
+                    {
+                      "title": "Material3",
+                      "value": "md3",
+                      "description": "使用 Material3 颜色风格，同时将允许你自定义主色调",
+                    },
+                  ],
+                ),
+                PreferenceDropDownTile(
+                  title: "语言设置",
+                  values: [
+                    {"title": "简体中文", "value": "sc"},
+                    {"title": "繁体中文", "value": "tc"},
+                  ],
+                ),
               ],
             ),
           ),

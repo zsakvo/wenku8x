@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/app/utils/flash.dart';
 
 class PreferenceDropDownTile extends StatefulHookConsumerWidget {
-  const PreferenceDropDownTile({super.key, required this.title});
+  const PreferenceDropDownTile({
+    super.key,
+    required this.title,
+    required this.values,
+  });
   final String title;
+  final List<Map<String, dynamic>> values;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,6 +27,9 @@ class _PreferenceDropDownTileState
         widget.title,
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
+      onTap: () {
+        showSelectionDialog(title: widget.title, values: widget.values);
+      },
       subtitle: Padding(
         padding: EdgeInsets.only(top: 0),
         child: Text(

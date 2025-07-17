@@ -149,48 +149,101 @@ class FlashHelper {
   }
 }
 
-showSelectionDialog<T>({BuildContext? context}) {
+showSelectionDialog<T>({
+  required String title,
+  BuildContext? context,
+  required List<Map<String, dynamic>> values,
+  dynamic value,
+}) {
   context ??= rootNavigatorKey.currentContext;
   if (context == null) {
     throw Exception("Context is null, cannot show selection dialog.");
   }
+  getTitleTextStyle(bool withDescription) {
+    return TextStyle(
+      fontSize: !withDescription ? 16 : 15,
+      fontWeight: !withDescription ? FontWeight.w600 : FontWeight.w500,
+    );
+  }
+
+  value ??= values.first['value'];
   context.showModalFlash(
+    barrierColor: Theme.of(context).colorScheme.outline.withAlpha(30),
     builder: (context, controller) => Align(
       alignment: Alignment.bottomCenter,
-      child: FadeTransition(
-        opacity: controller.controller.drive(
-          CurveTween(curve: Curves.fastOutSlowIn),
-        ),
-        child: Container(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Flash(
-            controller: controller,
-            position: FlashPosition.bottom,
-            dismissDirections: [FlashDismissDirection.vertical],
-            slideAnimationCreator:
-                (context, position, parent, curve, reverseCurve) {
-                  return CurvedAnimation(
-                    parent: parent,
-                    curve: curve,
-                    reverseCurve: reverseCurve,
-                  ).drive(
-                    Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
+      child: Container(
+        padding: EdgeInsets.only(bottom: 12),
+        child: Flash(
+          controller: controller,
+          position: FlashPosition.bottom,
+          dismissDirections: [FlashDismissDirection.vertical],
+          slideAnimationCreator:
+              (context, position, parent, curve, reverseCurve) {
+                return CurvedAnimation(
+                  parent: parent,
+                  curve: curve,
+                  reverseCurve: reverseCurve,
+                ).drive(
+                  Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
+                );
+              },
+          child: Dialog(
+            alignment: Alignment.bottomCenter,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(12)),
+              side: BorderSide.none,
+            ),
+            insetPadding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
+            backgroundColor: Theme.of(
+              context,
+            ).colorScheme.surfaceContainerLowest,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: double.infinity,
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 20, bottom: 24),
+                  child: Text(
+                    title,
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                ...values.map((item) {
+                  final withDescription = item['description'] != null;
+                  return ListTile(
+                    tileColor: value == item['value']
+                        ? Theme.of(context).colorScheme.surfaceContainer
+                        : null,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 28),
+                    title: Text(
+                      item['title'],
+                      style: getTitleTextStyle(withDescription),
+                    ),
+                    subtitle: withDescription
+                        ? Text(
+                            item['description'],
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(130),
+                            ),
+                          )
+                        : null,
+                    trailing: value == item['value']
+                        ? Icon(
+                            Icons.check,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
+                        : null,
+                    onTap: () {
+                      controller.dismiss(item['value']);
+                    },
                   );
-                },
-            child: Dialog(
-              alignment: Alignment.bottomCenter,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
-                side: BorderSide(),
-              ),
-              insetPadding: ,
-              
-              child: SizedBox(
-                width: double.infinity,
-                height: 400,
-                child: Text('Content'),
-              ),
-            
+                }),
+                SizedBox(height: 14),
+              ],
             ),
           ),
         ),
