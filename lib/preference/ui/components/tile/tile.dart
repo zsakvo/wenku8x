@@ -12,12 +12,16 @@ class PreferenceTile extends StatefulHookConsumerWidget {
     this.trailing,
     this.leading,
     this.onTap,
+    this.titleStyle,
+    this.descriptionStyle,
   });
   final String title;
   final String? description;
   final Widget? trailing;
   final Widget? leading;
   final Function()? onTap;
+  final TextStyle? titleStyle;
+  final TextStyle? descriptionStyle;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PreferenceTileState();
@@ -26,7 +30,6 @@ class PreferenceTile extends StatefulHookConsumerWidget {
 class _PreferenceTileState extends ConsumerState<PreferenceTile> {
   @override
   Widget build(BuildContext context) {
-    // final task = useFuture(Future.microtask(widget.onTap ?? () {}));
     final loading = useState(false);
     return ListTile(
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),

@@ -105,6 +105,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
               children: [
                 PreferenceTile(title: "清除缓存"),
                 PreferenceTile(title: "日志设置"),
+                PreferenceTile(title: "关于 WENKU8X"),
                 PreferenceTile(title: "开发者模式"),
               ],
             ),
