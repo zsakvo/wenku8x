@@ -148,3 +148,56 @@ class FlashHelper {
     );
   }
 }
+
+showSelectionDialog<T>({BuildContext? context}) {
+  context ??= rootNavigatorKey.currentContext;
+  if (context == null) {
+    throw Exception("Context is null, cannot show selection dialog.");
+  }
+  context.showModalFlash(
+    builder: (context, controller) => Align(
+      alignment: Alignment.bottomCenter,
+      child: FadeTransition(
+        opacity: controller.controller.drive(
+          CurveTween(curve: Curves.fastOutSlowIn),
+        ),
+        child: Container(
+          padding: EdgeInsets.only(bottom: 12),
+          child: Flash(
+            controller: controller,
+            position: FlashPosition.bottom,
+            dismissDirections: [FlashDismissDirection.vertical],
+            slideAnimationCreator:
+                (context, position, parent, curve, reverseCurve) {
+                  return CurvedAnimation(
+                    parent: parent,
+                    curve: curve,
+                    reverseCurve: reverseCurve,
+                  ).drive(
+                    Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
+                  );
+                },
+            child: AlertDialog(
+              alignment: Alignment.bottomCenter,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(16)),
+                side: BorderSide(),
+              ),
+              contentPadding: EdgeInsets.only(
+                left: 24.0,
+                top: 16.0,
+                right: 24.0,
+                bottom: 16.0,
+              ),
+              title: Text('Title'),
+              content: Text('Content'),
+              actions: [
+                TextButton(onPressed: controller.dismiss, child: Text('Ok')),
+              ],
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}

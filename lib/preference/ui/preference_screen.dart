@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/app/utils/flash.dart';
 import 'package:wenku8x/preference/ui/components/section/section.dart';
 import 'package:wenku8x/preference/ui/components/tile/drop_down_tile.dart';
 import 'package:wenku8x/preference/ui/components/tile/switcher_tile.dart';
@@ -64,7 +65,9 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                   padding: EdgeInsets.only(right: 20),
                   child: FilledButton(
                     style: FilledButton.styleFrom(minimumSize: Size(60, 36)),
-                    onPressed: () {},
+                    onPressed: () {
+                      showSelectionDialog();
+                    },
                     child: Text("签到"),
                   ),
                 ),
