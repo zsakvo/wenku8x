@@ -177,23 +177,20 @@ showSelectionDialog<T>({BuildContext? context}) {
                     Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
                   );
                 },
-            child: AlertDialog(
+            child: Dialog(
               alignment: Alignment.bottomCenter,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(16)),
                 side: BorderSide(),
               ),
-              contentPadding: EdgeInsets.only(
-                left: 24.0,
-                top: 16.0,
-                right: 24.0,
-                bottom: 16.0,
+              insetPadding: ,
+              
+              child: SizedBox(
+                width: double.infinity,
+                height: 400,
+                child: Text('Content'),
               ),
-              title: Text('Title'),
-              content: Text('Content'),
-              actions: [
-                TextButton(onPressed: controller.dismiss, child: Text('Ok')),
-              ],
+            
             ),
           ),
         ),
