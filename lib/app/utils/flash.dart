@@ -168,7 +168,7 @@ showSelectionDialog<T>({
 
   value ??= values.first['value'];
   context.showModalFlash(
-    barrierColor: Theme.of(context).colorScheme.outline.withAlpha(30),
+    barrierColor: Theme.of(context).colorScheme.outline.withAlpha(120),
     builder: (context, controller) => Align(
       alignment: Alignment.bottomCenter,
       child: Container(
