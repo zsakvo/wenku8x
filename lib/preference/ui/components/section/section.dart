@@ -25,7 +25,7 @@ class _PreferenceSectionState extends ConsumerState<PreferenceSection> {
       children: [
         if (widget.title != null)
           Text(
-            widget.title!.toUpperCase(),
+            "\t\t${widget.title!.toUpperCase()}",
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class _PreferenceSectionState extends ConsumerState<PreferenceSection> {
           Padding(
             padding: const EdgeInsets.only(top: 4.0),
             child: Text(
-              widget.description!,
+              "\t\t${widget.description!}",
               style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.normal,

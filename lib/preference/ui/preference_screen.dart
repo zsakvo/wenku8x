@@ -64,7 +64,13 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                 Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: FilledButton(
-                    style: FilledButton.styleFrom(minimumSize: Size(60, 36)),
+                    style: FilledButton.styleFrom(
+                      minimumSize: Size(54, 30),
+                      // maximumSize: Size(68, 30),
+                      textStyle: TextStyle(fontSize: 13),
+                      padding: EdgeInsets.symmetric(horizontal: 18),
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
                     onPressed: () {},
                     child: Text("签到"),
                   ),

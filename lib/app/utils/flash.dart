@@ -215,10 +215,22 @@ showSelectionDialog<T>({
                     tileColor: value == item['value']
                         ? Theme.of(context).colorScheme.surfaceContainer
                         : null,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 28),
-                    title: Text(
-                      item['title'],
-                      style: getTitleTextStyle(withDescription),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                    title: Row(
+                      children: [
+                        Text(
+                          item['title'],
+                          style: getTitleTextStyle(withDescription),
+                        ),
+                        Spacer(),
+                        value == item['value']
+                            ? Icon(
+                                Icons.check,
+                                color: Theme.of(context).colorScheme.primary,
+                                size: withDescription ? 18 : 20,
+                              )
+                            : SizedBox.shrink(),
+                      ],
                     ),
                     subtitle: withDescription
                         ? Text(
@@ -231,12 +243,12 @@ showSelectionDialog<T>({
                             ),
                           )
                         : null,
-                    trailing: value == item['value']
-                        ? Icon(
-                            Icons.check,
-                            color: Theme.of(context).colorScheme.primary,
-                          )
-                        : null,
+                    // trailing: value == item['value']
+                    //     ? Icon(
+                    //         Icons.check,
+                    //         color: Theme.of(context).colorScheme.primary,
+                    //       )
+                    //     : null,
                     onTap: () {
                       controller.dismiss(item['value']);
                     },
