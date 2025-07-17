@@ -23,7 +23,7 @@ class _AvatarState extends ConsumerState<Avatar> {
     return Container(
       width: widget.size,
       height: widget.size,
-      alignment: Alignment.center,
+      alignment: Alignment.centerLeft,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(widget.size / 2),
         child: switch (avatarData) {
