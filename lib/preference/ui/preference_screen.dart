@@ -3,6 +3,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
+import 'package:wenku8x/preference/ui/components/section/section.dart';
+import 'package:wenku8x/preference/ui/components/tile/tile.dart';
 
 class PreferenceScreen extends StatefulHookConsumerWidget {
   const PreferenceScreen({super.key});
@@ -59,14 +61,45 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                 Padding(
                   padding: EdgeInsets.only(right: 20),
                   child: FilledButton(
-                    style: FilledButton.styleFrom(
-                      minimumSize: Size(60, 34),
-                      textStyle: TextStyle(height: 1.2),
-                    ),
+                    style: FilledButton.styleFrom(minimumSize: Size(60, 36)),
                     onPressed: () {},
                     child: Text("签到"),
                   ),
                 ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 32, right: 20),
+            child: PreferenceSection(
+              title: "General",
+              description: "General settings for the app",
+              children: [
+                PreferenceTile(title: "夜间模式"),
+                PreferenceTile(title: "主题风格"),
+                PreferenceTile(title: "语言设置"),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 16, right: 20),
+            child: PreferenceSection(
+              title: "Account",
+              children: [
+                PreferenceTile(title: "自动签到"),
+                PreferenceTile(title: "强制同步书架"),
+                PreferenceTile(title: "退出登录"),
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 20, top: 16, right: 20),
+            child: PreferenceSection(
+              title: "Extra",
+              children: [
+                PreferenceTile(title: "清除缓存"),
+                PreferenceTile(title: "日志设置"),
+                PreferenceTile(title: "开发者模式"),
               ],
             ),
           ),
