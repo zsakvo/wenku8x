@@ -4,6 +4,8 @@ import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/preference/ui/components/section/section.dart';
+import 'package:wenku8x/preference/ui/components/tile/drop_down_tile.dart';
+import 'package:wenku8x/preference/ui/components/tile/switcher_tile.dart';
 import 'package:wenku8x/preference/ui/components/tile/tile.dart';
 
 class PreferenceScreen extends StatefulHookConsumerWidget {
@@ -75,9 +77,9 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
               title: "General",
               description: "General settings for the app",
               children: [
-                PreferenceTile(title: "夜间模式"),
-                PreferenceTile(title: "主题风格"),
-                PreferenceTile(title: "语言设置"),
+                PreferenceDropDownTile(title: "夜间模式"),
+                PreferenceDropDownTile(title: "主题风格"),
+                PreferenceDropDownTile(title: "语言设置"),
               ],
             ),
           ),
@@ -86,8 +88,12 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
             child: PreferenceSection(
               title: "Account",
               children: [
-                PreferenceTile(title: "自动签到"),
-                PreferenceTile(title: "强制同步书架"),
+                PreferenceSwitcherTile(
+                  title: "自动签到",
+                  negativeDescription: "已关闭",
+                  positiveDescription: "已开启",
+                ),
+                PreferenceTile(title: "强制同步书架", onTap: () async {}),
                 PreferenceTile(title: "退出登录"),
               ],
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wenku8x/preference/ui/components/tile/tile.dart';
 
 class PreferenceSection extends StatefulHookConsumerWidget {
   const PreferenceSection({
@@ -11,7 +10,7 @@ class PreferenceSection extends StatefulHookConsumerWidget {
   });
   final String? title;
   final String? description;
-  final List<PreferenceTile> children;
+  final List<Widget> children;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
