@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
@@ -24,7 +25,7 @@ class _State extends ConsumerState<DiscoverScreen> {
   @override
   Widget build(BuildContext context) {
     final filter = ref.watch(discoverFilterProvider);
-    final books = ref.watch(discoverDataProvider);
+    final bookState = ref.watch(discoverDataProvider);
     // final flags = useState<(String,String)>(("visit","allvisit"));
     // final rankType = useState<String>("visit");
     // final rankFlag = useState<String>("allvisit");
@@ -148,11 +149,15 @@ class _State extends ConsumerState<DiscoverScreen> {
               ),
             ),
             Expanded(
-              child: switch (books) {
-                AsyncData(:final value) => ListView.separated(
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final book = value[index];
+              child: PagedListView.separated(
+                state: bookState,
+                itemExtent: 80,
+                fetchNextPage: ref
+                    .read(discoverDataProvider.notifier)
+                    .next_page,
+                builderDelegate: PagedChildBuilderDelegate(
+                  itemBuilder: (context, item, index) {
+                    final book = item as BookModel;
                     return BookItem(
                       book: book,
                       onTap: (book) {
@@ -160,20 +165,48 @@ class _State extends ConsumerState<DiscoverScreen> {
                       },
                     );
                   },
-                  separatorBuilder: (context, index) {
-                    return const Divider(
-                      height: 16,
-                      thickness: 0.7,
-                      indent: 80,
-                      endIndent: 16,
-                    );
+                  firstPageProgressIndicatorBuilder: (context) {
+                    return Center(child: LoadingIndicator.contained());
                   },
-                  itemCount: value.length,
+                  newPageProgressIndicatorBuilder: (context) {
+                    return Center(child: LoadingIndicator());
+                  },
                 ),
+                separatorBuilder: (context, index) {
+                  return const Divider(
+                    height: 16,
+                    thickness: 0.7,
+                    indent: 80,
+                    endIndent: 16,
+                  );
+                },
+              ),
+              //  switch (books) {
+              //   AsyncData(:final value) => ListView.separated(
+              //     shrinkWrap: true,
+              //     itemBuilder: (context, index) {
+              //       final book = value[index];
+              //       return BookItem(
+              //         book: book,
+              //         onTap: (book) {
+              //           context.push("/detail", extra: book);
+              //         },
+              //       );
+              //     },
+              //     separatorBuilder: (context, index) {
+              //       return const Divider(
+              //         height: 16,
+              //         thickness: 0.7,
+              //         indent: 80,
+              //         endIndent: 16,
+              //       );
+              //     },
+              //     itemCount: value.length,
+              //   ),
 
-                AsyncLoading() => Center(child: LoadingIndicator.contained()),
-                _ => const Center(child: Text("暂无数据")),
-              },
+              //   AsyncLoading() => Center(child: LoadingIndicator.contained()),
+              //   _ => const Center(child: Text("暂无数据")),
+              // },
             ),
           ],
         ),

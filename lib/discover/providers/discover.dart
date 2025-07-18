@@ -1,3 +1,4 @@
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:wenku8x/app/libs/request/apis.dart';
 import 'package:wenku8x/app/models/book.dart';
@@ -27,19 +28,59 @@ class DiscoverFilter extends _$DiscoverFilter {
 @riverpod
 class DiscoverData extends _$DiscoverData {
   @override
-  FutureOr<List<BookModel>> build() async {
+  PagingState<int, BookModel> build() {
     ref.listen(discoverFilterProvider, (previous, next) {
       if (previous?.flag != next.flag) {
-        ref.invalidateSelf();
+        // ref.invalidateSelf();
+        refresh_books();
       }
     });
-    final discover = ref.read(discoverFilterProvider);
-    return await Api.getNovelList(discover.flag, 1) ?? [];
+    // final discover = ref.read(discoverFilterProvider);
+    // return await Api.getNovelList(discover.flag, 1) ?? [];
+    return PagingState<int, BookModel>(isLoading: true, error: null);
   }
 
   // Future<void> refresh() async {
   //   ref.invalidateSelf();
   // }
+
+  refresh_books() async {
+    final discover = ref.read(discoverFilterProvider);
+    state = state.copyWith(
+      error: null,
+      isLoading: true,
+      pages: null,
+      keys: null,
+    );
+    final books = await Future.any<List<BookModel>>([
+      Api.getNovelList(discover.flag, 1).then((value) => value ?? []),
+      Future.delayed(const Duration(milliseconds: 500), () => []),
+    ]);
+    final newKey = (state.keys?.last ?? 0) + 1;
+    state = state.copyWith(
+      pages: [...?state.pages, books],
+      keys: [...?state.keys, newKey],
+      hasNextPage: books.isNotEmpty,
+      isLoading: false,
+    );
+  }
+
+  next_page() async {
+    final discover = ref.read(discoverFilterProvider);
+    final pageKey = (state.keys?.last ?? 0) + 1;
+    final books = await Api.getNovelList(discover.flag, pageKey) ?? [];
+    if (books.isEmpty) {
+      state = state.copyWith(hasNextPage: false);
+      return;
+    }
+    final newKey = pageKey + 1;
+    state = state.copyWith(
+      pages: [...?state.pages, books],
+      keys: [...?state.keys, newKey],
+      hasNextPage: true,
+      isLoading: false,
+    );
+  }
 }
 
 // @riverpod

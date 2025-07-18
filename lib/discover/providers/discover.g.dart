@@ -63,7 +63,7 @@ abstract class _$DiscoverFilter extends $Notifier<DiscoverModel> {
 const discoverDataProvider = DiscoverDataProvider._();
 
 final class DiscoverDataProvider
-    extends $AsyncNotifierProvider<DiscoverData, List<BookModel>> {
+    extends $NotifierProvider<DiscoverData, PagingState<int, BookModel>> {
   const DiscoverDataProvider._()
     : super(
         from: null,
@@ -81,22 +81,35 @@ final class DiscoverDataProvider
   @$internal
   @override
   DiscoverData create() => DiscoverData();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(PagingState<int, BookModel> value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<PagingState<int, BookModel>>(value),
+    );
+  }
 }
 
-String _$discoverDataHash() => r'78e9602235494ac47c9c5c9a17cb4ffb5fdd2c85';
+String _$discoverDataHash() => r'7e34c8a21725a359f425fc01eb18fa7068ae0e33';
 
-abstract class _$DiscoverData extends $AsyncNotifier<List<BookModel>> {
-  FutureOr<List<BookModel>> build();
+abstract class _$DiscoverData extends $Notifier<PagingState<int, BookModel>> {
+  PagingState<int, BookModel> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<BookModel>>, List<BookModel>>;
+    final ref =
+        this.ref
+            as $Ref<PagingState<int, BookModel>, PagingState<int, BookModel>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<BookModel>>, List<BookModel>>,
-              AsyncValue<List<BookModel>>,
+              AnyNotifier<
+                PagingState<int, BookModel>,
+                PagingState<int, BookModel>
+              >,
+              PagingState<int, BookModel>,
               Object?,
               Object?
             >;
