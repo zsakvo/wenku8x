@@ -1,5 +1,6 @@
 import 'package:flash/flash.dart';
 import 'package:flash/flash_helper.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:wenku8x/app/ui/router.dart';
 
@@ -161,11 +162,12 @@ showSelectionDialog<T>({
   }
   getTitleTextStyle(bool withDescription) {
     return TextStyle(
-      fontSize: !withDescription ? 16 : 15,
-      fontWeight: !withDescription ? FontWeight.w600 : FontWeight.w500,
+      fontSize: !withDescription ? 16 : 14,
+      fontWeight: FontWeight.w600,
     );
   }
 
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
   value ??= values.first['value'];
   context.showModalFlash(
     barrierColor: Theme.of(context).colorScheme.outline.withAlpha(120),
@@ -211,47 +213,75 @@ showSelectionDialog<T>({
                 ),
                 ...values.map((item) {
                   final withDescription = item['description'] != null;
-                  return ListTile(
-                    tileColor: value == item['value']
-                        ? Theme.of(context).colorScheme.surfaceContainer
-                        : null,
-                    contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                    title: Row(
-                      children: [
-                        Text(
-                          item['title'],
-                          style: getTitleTextStyle(withDescription),
-                        ),
-                        Spacer(),
-                        value == item['value']
-                            ? Icon(
-                                Icons.check,
-                                color: Theme.of(context).colorScheme.primary,
-                                size: withDescription ? 18 : 20,
-                              )
-                            : SizedBox.shrink(),
-                      ],
+                  return Theme(
+                    data: isDarkMode
+                        ? FlexColorScheme.dark(
+                            useMaterial3: true,
+                            scheme: FlexScheme.shadBlue,
+                          ).toTheme
+                        : FlexColorScheme.light(
+                            useMaterial3: true,
+                            scheme: FlexScheme.shadBlue,
+                          ).toTheme,
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        return ListTile(
+                          tileColor: value == item['value']
+                              ? Theme.of(
+                                  context,
+                                ).colorScheme.primary.withAlpha(30)
+                              : null,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          title: Row(
+                            children: [
+                              Text(
+                                item['title'],
+                                style: getTitleTextStyle(withDescription)
+                                    .copyWith(
+                                      color: value == item['value']
+                                          ? Theme.of(
+                                              context,
+                                            ).colorScheme.primary
+                                          : Theme.of(
+                                              context,
+                                            ).colorScheme.onSurface,
+                                    ),
+                              ),
+                              Spacer(),
+                              value == item['value']
+                                  ? Icon(
+                                      Icons.check,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      size: withDescription ? 18 : 20,
+                                    )
+                                  : SizedBox.shrink(),
+                            ],
+                          ),
+                          subtitle: withDescription
+                              ? Text(
+                                  item['description'],
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface.withAlpha(130),
+                                  ),
+                                )
+                              : null,
+                          // trailing: value == item['value']
+                          //     ? Icon(
+                          //         Icons.check,
+                          //         color: Theme.of(context).colorScheme.primary,
+                          //       )
+                          //     : null,
+                          onTap: () {
+                            controller.dismiss(item['value']);
+                          },
+                        );
+                      },
                     ),
-                    subtitle: withDescription
-                        ? Text(
-                            item['description'],
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: Theme.of(
-                                context,
-                              ).colorScheme.onSurface.withAlpha(130),
-                            ),
-                          )
-                        : null,
-                    // trailing: value == item['value']
-                    //     ? Icon(
-                    //         Icons.check,
-                    //         color: Theme.of(context).colorScheme.primary,
-                    //       )
-                    //     : null,
-                    onTap: () {
-                      controller.dismiss(item['value']);
-                    },
                   );
                 }),
                 SizedBox(height: 14),
