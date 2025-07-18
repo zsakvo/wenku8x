@@ -73,6 +73,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                       textStyle: TextStyle(fontSize: 13),
                       padding: EdgeInsets.symmetric(horizontal: 18),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      backgroundColor: Theme.of(context).colorScheme.tertiary,
                     ),
                     onPressed: () {},
                     child: Text("签到"),
@@ -136,6 +137,10 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                   title: "自动签到",
                   negativeDescription: "已关闭",
                   positiveDescription: "已开启",
+                  value: preference.autoSignIn,
+                  onChanged: (value) {
+                    ref.read(preferenceProvider.notifier).setAutoSignIn(value);
+                  },
                 ),
                 PreferenceTile(title: "强制同步书架", onTap: () async {}),
                 PreferenceTile(title: "退出登录"),

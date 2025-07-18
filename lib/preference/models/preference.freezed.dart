@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PreferenceModel {
 
- ThemeMode get brightness; StyleMode get styleMode; AppLanguage get language;
+ ThemeMode get brightness; StyleMode get styleMode; AppLanguage get language; bool get autoSignIn;
 /// Create a copy of PreferenceModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -29,16 +29,16 @@ $PreferenceModelCopyWith<PreferenceModel> get copyWith => _$PreferenceModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PreferenceModel&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.styleMode, styleMode) || other.styleMode == styleMode)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PreferenceModel&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.styleMode, styleMode) || other.styleMode == styleMode)&&(identical(other.language, language) || other.language == language)&&(identical(other.autoSignIn, autoSignIn) || other.autoSignIn == autoSignIn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brightness,styleMode,language);
+int get hashCode => Object.hash(runtimeType,brightness,styleMode,language,autoSignIn);
 
 @override
 String toString() {
-  return 'PreferenceModel(brightness: $brightness, styleMode: $styleMode, language: $language)';
+  return 'PreferenceModel(brightness: $brightness, styleMode: $styleMode, language: $language, autoSignIn: $autoSignIn)';
 }
 
 
@@ -49,7 +49,7 @@ abstract mixin class $PreferenceModelCopyWith<$Res>  {
   factory $PreferenceModelCopyWith(PreferenceModel value, $Res Function(PreferenceModel) _then) = _$PreferenceModelCopyWithImpl;
 @useResult
 $Res call({
- ThemeMode brightness, StyleMode styleMode, AppLanguage language
+ ThemeMode brightness, StyleMode styleMode, AppLanguage language, bool autoSignIn
 });
 
 
@@ -66,12 +66,13 @@ class _$PreferenceModelCopyWithImpl<$Res>
 
 /// Create a copy of PreferenceModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,Object? autoSignIn = null,}) {
   return _then(_self.copyWith(
 brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
 as ThemeMode,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
 as StyleMode,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as AppLanguage,
+as AppLanguage,autoSignIn: null == autoSignIn ? _self.autoSignIn : autoSignIn // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -82,12 +83,13 @@ as AppLanguage,
 @JsonSerializable()
 
 class _PreferenceModel extends PreferenceModel {
-  const _PreferenceModel({this.brightness = ThemeMode.system, this.styleMode = StyleMode.preset, this.language = AppLanguage.sc}): super._();
+  const _PreferenceModel({this.brightness = ThemeMode.system, this.styleMode = StyleMode.preset, this.language = AppLanguage.sc, this.autoSignIn = false}): super._();
   factory _PreferenceModel.fromJson(Map<String, dynamic> json) => _$PreferenceModelFromJson(json);
 
 @override@JsonKey() final  ThemeMode brightness;
 @override@JsonKey() final  StyleMode styleMode;
 @override@JsonKey() final  AppLanguage language;
+@override@JsonKey() final  bool autoSignIn;
 
 /// Create a copy of PreferenceModel
 /// with the given fields replaced by the non-null parameter values.
@@ -102,16 +104,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PreferenceModel&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.styleMode, styleMode) || other.styleMode == styleMode)&&(identical(other.language, language) || other.language == language));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PreferenceModel&&(identical(other.brightness, brightness) || other.brightness == brightness)&&(identical(other.styleMode, styleMode) || other.styleMode == styleMode)&&(identical(other.language, language) || other.language == language)&&(identical(other.autoSignIn, autoSignIn) || other.autoSignIn == autoSignIn));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,brightness,styleMode,language);
+int get hashCode => Object.hash(runtimeType,brightness,styleMode,language,autoSignIn);
 
 @override
 String toString() {
-  return 'PreferenceModel(brightness: $brightness, styleMode: $styleMode, language: $language)';
+  return 'PreferenceModel(brightness: $brightness, styleMode: $styleMode, language: $language, autoSignIn: $autoSignIn)';
 }
 
 
@@ -122,7 +124,7 @@ abstract mixin class _$PreferenceModelCopyWith<$Res> implements $PreferenceModel
   factory _$PreferenceModelCopyWith(_PreferenceModel value, $Res Function(_PreferenceModel) _then) = __$PreferenceModelCopyWithImpl;
 @override @useResult
 $Res call({
- ThemeMode brightness, StyleMode styleMode, AppLanguage language
+ ThemeMode brightness, StyleMode styleMode, AppLanguage language, bool autoSignIn
 });
 
 
@@ -139,12 +141,13 @@ class __$PreferenceModelCopyWithImpl<$Res>
 
 /// Create a copy of PreferenceModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,Object? autoSignIn = null,}) {
   return _then(_PreferenceModel(
 brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
 as ThemeMode,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
 as StyleMode,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
-as AppLanguage,
+as AppLanguage,autoSignIn: null == autoSignIn ? _self.autoSignIn : autoSignIn // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

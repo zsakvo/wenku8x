@@ -14,6 +14,7 @@ abstract class PreferenceModel with _$PreferenceModel {
     @Default(ThemeMode.system) ThemeMode brightness,
     @Default(StyleMode.preset) StyleMode styleMode,
     @Default(AppLanguage.sc) AppLanguage language,
+    @Default(false) bool autoSignIn,
   }) = _PreferenceModel;
 
   factory PreferenceModel.fromJson(Map<String, dynamic> json) =>

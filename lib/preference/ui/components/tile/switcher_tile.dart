@@ -7,12 +7,14 @@ class PreferenceSwitcherTile extends StatefulHookConsumerWidget {
     required this.title,
     required this.negativeDescription,
     required this.positiveDescription,
+    required this.onChanged,
     this.value = false,
   });
   final bool value;
   final String title;
   final String negativeDescription;
   final String positiveDescription;
+  final Function(bool value) onChanged;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -50,11 +52,14 @@ class _PreferenceSwitcherTileState
           child: Switch(
             value: widget.value,
             onChanged: (value) {
-              // Handle switch toggle
+              widget.onChanged(value);
             },
           ),
         ),
       ),
+      onTap: () {
+        widget.onChanged(!widget.value);
+      },
     );
   }
 }

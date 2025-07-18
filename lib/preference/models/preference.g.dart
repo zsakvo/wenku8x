@@ -17,6 +17,7 @@ _PreferenceModel _$PreferenceModelFromJson(Map<String, dynamic> json) =>
       language:
           $enumDecodeNullable(_$AppLanguageEnumMap, json['language']) ??
           AppLanguage.sc,
+      autoSignIn: json['autoSignIn'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$PreferenceModelToJson(_PreferenceModel instance) =>
@@ -24,6 +25,7 @@ Map<String, dynamic> _$PreferenceModelToJson(_PreferenceModel instance) =>
       'brightness': _$ThemeModeEnumMap[instance.brightness]!,
       'styleMode': _$StyleModeEnumMap[instance.styleMode]!,
       'language': _$AppLanguageEnumMap[instance.language]!,
+      'autoSignIn': instance.autoSignIn,
     };
 
 const _$ThemeModeEnumMap = {

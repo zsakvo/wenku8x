@@ -39,6 +39,10 @@ class Preference extends _$Preference {
     state = state.copyWith(brightness: brightness);
   }
 
+  setAutoSignIn(bool autoSignIn) {
+    state = state.copyWith(autoSignIn: autoSignIn);
+  }
+
   File get _configFile {
     final path = "${PathService().applicationSupportDirectory}/preference.json";
     return File(path);
