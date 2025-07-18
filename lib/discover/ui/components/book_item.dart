@@ -31,8 +31,8 @@ class _BookItemState extends ConsumerState<BookItem> {
               // Book cover image
               CachedNetworkImage(
                 imageUrl: widget.book.coverUrl,
-                width: 60,
-                height: 84,
+                width: 54,
+                height: 72,
                 fit: BoxFit.cover,
                 httpHeaders: {"User-Agent": VariableService().UserAgent},
               ),
@@ -53,17 +53,6 @@ class _BookItemState extends ConsumerState<BookItem> {
                     ),
                     Text(
                       widget.book.author!,
-                      style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withAlpha(150),
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                    Text(
-                      "上次更新：${widget.book.lastUpdate!}",
                       style: TextStyle(
                         color: Theme.of(
                           context,

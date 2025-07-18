@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/color.dart';
 import 'package:wenku8x/discover/models/discover.dart';
@@ -45,7 +46,7 @@ class _State extends ConsumerState<DiscoverScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsetsGeometry.only(left: 16, right: 16, bottom: 8),
+              padding: EdgeInsetsGeometry.only(left: 16, right: 16, bottom: 16),
               child: Row(
                 spacing: 6,
                 children: [
@@ -160,14 +161,17 @@ class _State extends ConsumerState<DiscoverScreen> {
                     );
                   },
                   separatorBuilder: (context, index) {
-                    return const SizedBox(height: 4);
+                    return const Divider(
+                      height: 16,
+                      thickness: 0.7,
+                      indent: 80,
+                      endIndent: 16,
+                    );
                   },
                   itemCount: value.length,
                 ),
 
-                AsyncLoading() => const Center(
-                  child: CircularProgressIndicator(),
-                ),
+                AsyncLoading() => Center(child: LoadingIndicator.contained()),
                 _ => const Center(child: Text("暂无数据")),
               },
             ),
