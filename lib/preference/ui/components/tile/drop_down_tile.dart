@@ -8,9 +8,13 @@ class PreferenceDropDownTile extends StatefulHookConsumerWidget {
     super.key,
     required this.title,
     required this.values,
+    this.onSelected,
+    required this.value,
   });
   final String title;
   final List<Map<String, dynamic>> values;
+  final Function(dynamic value)? onSelected;
+  final dynamic value;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -28,12 +32,19 @@ class _PreferenceDropDownTileState
         style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
       onTap: () {
-        showSelectionDialog(title: widget.title, values: widget.values);
+        showSelectionDialog(
+          title: widget.title,
+          values: widget.values,
+          value: widget.value,
+          onSelected: (widget.onSelected ?? (value) {}),
+        );
       },
       subtitle: Padding(
         padding: EdgeInsets.only(top: 0),
         child: Text(
-          "跟随系统",
+          widget.values.firstWhere(
+            (element) => element['value'] == widget.value,
+          )['title'],
           style: TextStyle(
             fontSize: 13,
             color: Theme.of(context).colorScheme.onSurface.withAlpha(140),

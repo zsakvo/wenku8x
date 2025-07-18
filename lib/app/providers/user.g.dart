@@ -74,7 +74,7 @@ final class UserAvatarProvider
   UserAvatar create() => UserAvatar();
 }
 
-String _$userAvatarHash() => r'7940c79255bb67508c241dee06b9cc9332c4a49b';
+String _$userAvatarHash() => r'c2ab76a604bdd81e6ccf58b4c2f9cf60085e2b86';
 
 abstract class _$UserAvatar extends $AsyncNotifier<Uint8List> {
   FutureOr<Uint8List> build();

@@ -4,6 +4,8 @@ import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/flash.dart';
+import 'package:wenku8x/preference/models/preference.dart';
+import 'package:wenku8x/preference/providers/preference.dart';
 import 'package:wenku8x/preference/ui/components/section/section.dart';
 import 'package:wenku8x/preference/ui/components/tile/drop_down_tile.dart';
 import 'package:wenku8x/preference/ui/components/tile/switcher_tile.dart';
@@ -21,6 +23,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
   @override
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
+    final preference = ref.watch(preferenceProvider);
     return Scaffold(
       body: ListView(
         children: [
@@ -87,32 +90,39 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                 PreferenceDropDownTile(
                   title: "夜间模式",
                   values: [
-                    {"title": "跟随系统", "value": "system"},
-                    {"title": "浅色模式", "value": "light"},
-                    {"title": "深色模式", "value": "dark"},
+                    {"title": "跟随系统", "value": AppBrightness.system},
+                    {"title": "浅色模式", "value": AppBrightness.light},
+                    {"title": "深色模式", "value": AppBrightness.dark},
                   ],
+                  onSelected: (value) {
+                    logger.debug("Selected night mode: $value");
+                    ref.read(preferenceProvider.notifier).setBrightness(value);
+                  },
+                  value: preference.brightness,
                 ),
                 PreferenceDropDownTile(
                   title: "主题风格",
                   values: [
                     {
                       "title": "预设主题",
-                      "value": "preset",
+                      "value": StyleMode.preset,
                       "description": "使用预置的颜色风格",
                     },
                     {
                       "title": "Material3",
-                      "value": "md3",
+                      "value": StyleMode.md3,
                       "description": "使用 Material3 颜色风格，同时将允许你自定义主色调",
                     },
                   ],
+                  value: preference.styleMode,
                 ),
                 PreferenceDropDownTile(
                   title: "语言设置",
                   values: [
-                    {"title": "简体中文", "value": "sc"},
-                    {"title": "繁体中文", "value": "tc"},
+                    {"title": "简体中文", "value": AppLanguage.sc},
+                    {"title": "繁体中文", "value": AppLanguage.tc},
                   ],
+                  value: preference.language,
                 ),
               ],
             ),

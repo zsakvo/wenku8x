@@ -155,6 +155,7 @@ showSelectionDialog<T>({
   BuildContext? context,
   required List<Map<String, dynamic>> values,
   dynamic value,
+  required Function(dynamic value) onSelected,
 }) {
   context ??= rootNavigatorKey.currentContext;
   if (context == null) {
@@ -278,6 +279,7 @@ showSelectionDialog<T>({
                           //     : null,
                           onTap: () {
                             controller.dismiss(item['value']);
+                            onSelected(item['value']);
                           },
                         );
                       },
