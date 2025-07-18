@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/services/path.dart';
@@ -17,15 +18,15 @@ class Preference extends _$Preference {
     listenSelf((previous, next) {
       if (previous != next) {
         logger.debug("偏好设置已更新: $next");
-        configFile.writeAsStringSync(jsonEncode(next.toJson()));
+        _configFile.writeAsStringSync(jsonEncode(next.toJson()));
       }
     });
-    if (!configFile.existsSync()) {
+    if (!_configFile.existsSync()) {
       logger.debug("偏好设置文件不存在，使用默认设置");
       return const PreferenceModel();
     } else {
       try {
-        final json = configFile.readAsStringSync();
+        final json = _configFile.readAsStringSync();
         return PreferenceModel.fromJson(jsonDecode(json));
       } catch (e) {
         logger.error("读取偏好设置文件失败: $e");
@@ -34,11 +35,11 @@ class Preference extends _$Preference {
     }
   }
 
-  setBrightness(AppBrightness brightness) {
+  setBrightness(ThemeMode brightness) {
     state = state.copyWith(brightness: brightness);
   }
 
-  File get configFile {
+  File get _configFile {
     final path = "${PathService().applicationSupportDirectory}/preference.json";
     return File(path);
   }

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PreferenceModel {
 
- AppBrightness get brightness; StyleMode get styleMode; AppLanguage get language;
+ ThemeMode get brightness; StyleMode get styleMode; AppLanguage get language;
 /// Create a copy of PreferenceModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,7 +49,7 @@ abstract mixin class $PreferenceModelCopyWith<$Res>  {
   factory $PreferenceModelCopyWith(PreferenceModel value, $Res Function(PreferenceModel) _then) = _$PreferenceModelCopyWithImpl;
 @useResult
 $Res call({
- AppBrightness brightness, StyleMode styleMode, AppLanguage language
+ ThemeMode brightness, StyleMode styleMode, AppLanguage language
 });
 
 
@@ -69,7 +69,7 @@ class _$PreferenceModelCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,}) {
   return _then(_self.copyWith(
 brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
-as AppBrightness,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
+as ThemeMode,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
 as StyleMode,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as AppLanguage,
   ));
@@ -82,10 +82,10 @@ as AppLanguage,
 @JsonSerializable()
 
 class _PreferenceModel extends PreferenceModel {
-  const _PreferenceModel({this.brightness = AppBrightness.system, this.styleMode = StyleMode.preset, this.language = AppLanguage.sc}): super._();
+  const _PreferenceModel({this.brightness = ThemeMode.system, this.styleMode = StyleMode.preset, this.language = AppLanguage.sc}): super._();
   factory _PreferenceModel.fromJson(Map<String, dynamic> json) => _$PreferenceModelFromJson(json);
 
-@override@JsonKey() final  AppBrightness brightness;
+@override@JsonKey() final  ThemeMode brightness;
 @override@JsonKey() final  StyleMode styleMode;
 @override@JsonKey() final  AppLanguage language;
 
@@ -122,7 +122,7 @@ abstract mixin class _$PreferenceModelCopyWith<$Res> implements $PreferenceModel
   factory _$PreferenceModelCopyWith(_PreferenceModel value, $Res Function(_PreferenceModel) _then) = __$PreferenceModelCopyWithImpl;
 @override @useResult
 $Res call({
- AppBrightness brightness, StyleMode styleMode, AppLanguage language
+ ThemeMode brightness, StyleMode styleMode, AppLanguage language
 });
 
 
@@ -142,7 +142,7 @@ class __$PreferenceModelCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? brightness = null,Object? styleMode = null,Object? language = null,}) {
   return _then(_PreferenceModel(
 brightness: null == brightness ? _self.brightness : brightness // ignore: cast_nullable_to_non_nullable
-as AppBrightness,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
+as ThemeMode,styleMode: null == styleMode ? _self.styleMode : styleMode // ignore: cast_nullable_to_non_nullable
 as StyleMode,language: null == language ? _self.language : language // ignore: cast_nullable_to_non_nullable
 as AppLanguage,
   ));

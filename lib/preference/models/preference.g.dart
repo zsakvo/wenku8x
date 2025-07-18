@@ -9,8 +9,8 @@ part of 'preference.dart';
 _PreferenceModel _$PreferenceModelFromJson(Map<String, dynamic> json) =>
     _PreferenceModel(
       brightness:
-          $enumDecodeNullable(_$AppBrightnessEnumMap, json['brightness']) ??
-          AppBrightness.system,
+          $enumDecodeNullable(_$ThemeModeEnumMap, json['brightness']) ??
+          ThemeMode.system,
       styleMode:
           $enumDecodeNullable(_$StyleModeEnumMap, json['styleMode']) ??
           StyleMode.preset,
@@ -21,15 +21,15 @@ _PreferenceModel _$PreferenceModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$PreferenceModelToJson(_PreferenceModel instance) =>
     <String, dynamic>{
-      'brightness': _$AppBrightnessEnumMap[instance.brightness]!,
+      'brightness': _$ThemeModeEnumMap[instance.brightness]!,
       'styleMode': _$StyleModeEnumMap[instance.styleMode]!,
       'language': _$AppLanguageEnumMap[instance.language]!,
     };
 
-const _$AppBrightnessEnumMap = {
-  AppBrightness.system: 'system',
-  AppBrightness.light: 'light',
-  AppBrightness.dark: 'dark',
+const _$ThemeModeEnumMap = {
+  ThemeMode.system: 'system',
+  ThemeMode.light: 'light',
+  ThemeMode.dark: 'dark',
 };
 
 const _$StyleModeEnumMap = {StyleMode.preset: 'preset', StyleMode.md3: 'md3'};

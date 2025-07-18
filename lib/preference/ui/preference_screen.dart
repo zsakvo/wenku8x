@@ -90,9 +90,9 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                 PreferenceDropDownTile(
                   title: "夜间模式",
                   values: [
-                    {"title": "跟随系统", "value": AppBrightness.system},
-                    {"title": "浅色模式", "value": AppBrightness.light},
-                    {"title": "深色模式", "value": AppBrightness.dark},
+                    {"title": "跟随系统", "value": ThemeMode.system},
+                    {"title": "浅色模式", "value": ThemeMode.light},
+                    {"title": "深色模式", "value": ThemeMode.dark},
                   ],
                   onSelected: (value) {
                     logger.debug("Selected night mode: $value");

@@ -38,7 +38,7 @@ final class PreferenceProvider
   }
 }
 
-String _$preferenceHash() => r'9108b5b8ab5363c505578f1157bed287eb1c5b3d';
+String _$preferenceHash() => r'dec47cbb8c175b3344acff29fbdfa87b436dd796';
 
 abstract class _$Preference extends $Notifier<PreferenceModel> {
   PreferenceModel build();
