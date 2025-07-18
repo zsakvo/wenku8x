@@ -11,6 +11,6 @@ final logger = Logger("CatalogProvider");
 class Catalog extends _$Catalog {
   @override
   FutureOr<CatalogModel> build(String aid) async {
-    return await Api.getNovelIndex(aid);
+    return await delayedRequest(() => Api.getNovelIndex(aid), minDuration: 700);
   }
 }

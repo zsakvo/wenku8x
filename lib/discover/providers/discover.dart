@@ -52,10 +52,10 @@ class DiscoverData extends _$DiscoverData {
       pages: null,
       keys: null,
     );
-    final books = await Future.any<List<BookModel>>([
-      Api.getNovelList(discover.flag, 1).then((value) => value ?? []),
-      Future.delayed(const Duration(milliseconds: 500), () => []),
-    ]);
+    final books = await delayedRequest(
+      () => Api.getNovelList(discover.flag, 1),
+      minDuration: 700,
+    );
     final newKey = (state.keys?.last ?? 0) + 1;
     state = state.copyWith(
       pages: [...?state.pages, books],

@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/services/variable.dart';
+import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/detail/providers/catalog.dart';
 
 class BookDetailCatalog extends StatefulHookConsumerWidget {
@@ -129,6 +130,9 @@ class _BookDetailCatalogState extends ConsumerState<BookDetailCatalog> {
                       ),
                     );
                   }).toList(),
+                ),
+                AsyncLoading() => Center(
+                  child: Center(child: LoadingIndicator()),
                 ),
                 _ => Center(child: Text("加载目录失败，请稍后再试。")),
               },

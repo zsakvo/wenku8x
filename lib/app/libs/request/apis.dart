@@ -98,7 +98,7 @@ class Api {
     return null;
   }
 
-  static Future<List<BookModel>?> getNovelList(String sorter, int page) async {
+  static Future<List<BookModel>> getNovelList(String sorter, int page) async {
     XmlDocument? res = await Ajax.post(
       "action=novellist&sort=$sorter&page=$page&t=0",
     );
@@ -288,5 +288,28 @@ class Api {
               ?.split(" ") ??
           [],
     );
+  }
+}
+
+/// 延时请求，确保请求至少执行指定的时长
+/// @param requestFunction 要执行的请求函数
+/// @param minDuration 最小执行时长（毫秒）
+/// @return 返回请求函数的结果
+Future<T> delayedRequest<T>(
+  Future<T> Function() requestFunction, {
+  int minDuration = 500,
+}) async {
+  final stopwatch = Stopwatch()..start();
+
+  try {
+    final result = await requestFunction();
+    final elapsed = stopwatch.elapsedMilliseconds;
+
+    if (elapsed < minDuration) {
+      await Future.delayed(Duration(milliseconds: minDuration - elapsed));
+    }
+    return result;
+  } finally {
+    stopwatch.stop();
   }
 }
