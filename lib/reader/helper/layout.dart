@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:flutter/material.dart';
 
@@ -176,7 +175,7 @@ class ChineseLayoutHelper {
       titlePainter = TextPainter(
         text: TextSpan(text: title, style: titleStyle),
         textDirection: TextDirection.ltr,
-        textAlign: TextAlign.center,
+        textAlign: TextAlign.start,
       );
       titlePainter.layout(maxWidth: drawingArea.width);
       titleHeight = titlePainter.height + titleBottomBodySpacing;
@@ -744,55 +743,10 @@ class ChineseLayoutPainter extends CustomPainter {
   /// 要绘制的页面
   final PageLayout page;
 
-  /// 缩进值
-  // final double indent;
-
-  /// 信息栏文本样式（通用）
-  // final TextStyle infoBarTextStyle;
-
-  /// 顶部信息栏文本样式
-  // final TextStyle? topBarTextStyle;
-
-  /// 底部信息栏文本样式
-  // final TextStyle? bottomBarTextStyle;
-
-  /// 是否显示信息栏
-  // final bool showInfoBar;
-
-  /// 信息栏高度
-  // final double infoBarHeight;
-
-  /// 顶部信息栏内边距
-  // final EdgeInsets? topBarPadding;
-
-  /// 底部信息栏内边距
-  // final EdgeInsets? bottomBarPadding;
-
-  ChineseLayoutPainter({
-    // required this.layoutResult,
-    required this.page,
-    // this.indent = 0,
-    // this.infoBarTextStyle = const TextStyle(
-    //   fontSize: 12,
-    //   color: Colors.black54,
-    // ),
-    // this.topBarTextStyle,
-    // this.bottomBarTextStyle,
-    // this.showInfoBar = true,
-    // this.infoBarHeight = 20.0,
-    // this.topBarPadding,
-    // this.bottomBarPadding,
-  });
+  ChineseLayoutPainter({required this.page});
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 检查页面索引是否有效
-    // if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
-    //   return;
-    // }
-
-    // final PageLayout page = layoutResult.pages[pageIndex];
-
     // 绘制信息栏
     if (page.showInfoBar) {
       _drawInfoBars(canvas, size, page.index);
