@@ -334,11 +334,11 @@ class ChineseLayoutHelper {
           textAlign: isLastLine ? TextAlign.left : TextAlign.justify,
         );
 
-        // 非首行应该使用完整宽度而不是缩进后的宽度
-        final double lineWidth = isFirstLine
+        // 使用一致的宽度进行layout，确保对齐计算正确
+        final double lineLayoutWidth = isFirstLine
             ? availableWidth
             : drawingArea.width;
-        linePainter.layout(maxWidth: lineWidth);
+        linePainter.layout(maxWidth: lineLayoutWidth);
 
         // 创建行布局数据，只有第一行应用缩进
         final LineLayout lineLayout = LineLayout(
@@ -349,7 +349,7 @@ class ChineseLayoutHelper {
           bounds: Rect.fromLTWH(
             drawingArea.left + (isFirstLine ? _actualIndent : 0), // 只对第一行应用缩进
             currentY,
-            lineWidth, // 使用对应行的宽度
+            lineLayoutWidth, // 使用layout时的宽度确保一致性
             lineHeight,
           ),
           isLastLineInParagraph: isLastLine,
@@ -773,12 +773,19 @@ class ChineseLayoutPainter extends CustomPainter {
           line.painter.paint(canvas, Offset(line.bounds.left, line.bounds.top));
         } else {
           // 其他行两端对齐，需要特殊处理中文字符间距
+          // 确保传递正确的宽度进行对齐计算
+          final double alignWidth = line.isFirstLineInParagraph
+              ? line
+                    .bounds
+                    .width // 第一行使用缩进后的宽度
+              : page.drawingArea.width; // 非第一行使用完整宽度
+
           _drawJustifiedChineseText(
             canvas,
             line.text,
             line.painter,
             Offset(line.bounds.left, line.bounds.top),
-            line.bounds.width,
+            alignWidth,
           );
         }
       }
@@ -848,22 +855,30 @@ class ChineseLayoutPainter extends CustomPainter {
     Offset position,
     double maxWidth,
   ) {
-    // 如果文本已经占满整行或接近占满，直接使用原始painter绘制
-    if (painter.width >= maxWidth - 5) {
-      painter.paint(canvas, position);
-      return;
-    }
-
-    // 计算需要分配的额外空间 - 使用传入的maxWidth而不是painter的width
-    final double extraSpace = maxWidth - painter.width;
-
-    // 计算字符间需要插入的间距
+    // 计算字符数量
     final int charCount = text.characters.length;
     if (charCount <= 1) {
       painter.paint(canvas, position);
       return;
     }
 
+    // 更严格的判断条件：只有当文本宽度非常接近maxWidth时才跳过对齐
+    // 将容差值从5降低到1，并且要求字符数量足够多才跳过对齐
+    if (painter.width >= maxWidth - 1 && charCount >= 10) {
+      painter.paint(canvas, position);
+      return;
+    }
+
+    // 计算需要分配的额外空间
+    final double extraSpace = maxWidth - painter.width;
+
+    // 如果额外空间为负数或过小，直接绘制
+    if (extraSpace <= 0) {
+      painter.paint(canvas, position);
+      return;
+    }
+
+    // 计算字符间需要插入的间距
     final double extraSpacingPerGap = extraSpace / (charCount - 1);
 
     // 逐字符绘制，添加额外间距
@@ -894,136 +909,6 @@ class ChineseLayoutPainter extends CustomPainter {
     return oldDelegate.page != page;
   }
 }
-
-/// 用于显示布局结果的Widget
-// class ChineseLayoutView extends StatelessWidget {
-//   /// 布局结果
-//   // final LayoutResult layoutResult;
-
-//   // /// 要显示的页面索引
-//   // final int pageIndex;
-
-//   // /// 信息栏文本样式（通用）
-//   // final TextStyle? infoBarTextStyle;
-
-//   // /// 顶部信息栏文本样式
-//   // final TextStyle? topBarTextStyle;
-
-//   // /// 底部信息栏文本样式
-//   // final TextStyle? bottomBarTextStyle;
-
-//   // /// 是否显示信息栏
-//   // final bool showInfoBar;
-
-//   // /// 顶部信息栏内边距
-//   // final EdgeInsets? topBarPadding;
-
-//   // /// 底部信息栏内边距
-//   // final EdgeInsets? bottomBarPadding;
-
-//   final PageLayout page;
-
-//   const ChineseLayoutView({
-//     super.key,
-//     required this.page,
-//     // required this.layoutResult,
-//     // required this.pageIndex,
-//     // this.infoBarTextStyle,
-//     // this.topBarTextStyle,
-//     // this.bottomBarTextStyle,
-//     // this.showInfoBar = true,
-//     // this.topBarPadding,
-//     // this.bottomBarPadding,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // // 检查页面索引是否有效
-//     // if (pageIndex < 0 || pageIndex >= layoutResult.pages.length) {
-//     //   return Container();
-//     // }
-
-//     // final PageLayout page = layoutResult.pages[pageIndex];
-
-//     return CustomPaint(
-//       foregroundPainter: ChineseLayoutPainter(
-//         // layoutResult: layoutResult,
-//         // pageIndex: pageIndex,
-//         // infoBarTextStyle:
-//         //     infoBarTextStyle ?? TextStyle(fontSize: 12, color: Colors.black54),
-//         // topBarTextStyle: topBarTextStyle,
-//         // bottomBarTextStyle: bottomBarTextStyle,
-//         // showInfoBar: showInfoBar,
-//         // topBarPadding: topBarPadding,
-//         // bottomBarPadding: bottomBarPadding,
-//         page: page,
-//       ),
-//       size: Size(
-//         page.drawingArea.width + page.drawingArea.left * 2,
-//         page.drawingArea.height + page.drawingArea.top * 2,
-//       ),
-//     );
-//   }
-// }
-
-/// 使用 PageController 实现的多页面中文排版视图
-// class ChineseLayoutPageView extends StatelessWidget {
-//   /// 布局结果
-//   final LayoutResult layoutResult;
-
-//   /// 页面控制器
-//   final PageController pageController;
-
-//   /// 信息栏文本样式（通用）
-//   final TextStyle? infoBarTextStyle;
-
-//   /// 顶部信息栏文本样式
-//   final TextStyle? topBarTextStyle;
-
-//   /// 底部信息栏文本样式
-//   final TextStyle? bottomBarTextStyle;
-
-//   /// 是否显示信息栏
-//   final bool showInfoBar;
-
-//   /// 顶部信息栏内边距
-//   final EdgeInsets? topBarPadding;
-
-//   /// 底部信息栏内边距
-//   final EdgeInsets? bottomBarPadding;
-
-//   const ChineseLayoutPageView({
-//     super.key,
-//     required this.layoutResult,
-//     required this.pageController,
-//     this.infoBarTextStyle,
-//     this.topBarTextStyle,
-//     this.bottomBarTextStyle,
-//     this.showInfoBar = true,
-//     this.topBarPadding,
-//     this.bottomBarPadding,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return PageView.builder(
-//       controller: pageController,
-//       itemCount: layoutResult.pages.length,
-//       itemBuilder: (context, index) {
-//         return ChineseLayoutView(
-//           layoutResult: layoutResult,
-//           pageIndex: index,
-//           infoBarTextStyle: infoBarTextStyle,
-//           topBarTextStyle: topBarTextStyle,
-//           bottomBarTextStyle: bottomBarTextStyle,
-//           showInfoBar: showInfoBar,
-//           topBarPadding: topBarPadding,
-//           bottomBarPadding: bottomBarPadding,
-//         );
-//       },
-//     );
-//   }
-// }
 
 /// 用于保存和恢复阅读进度的辅助类
 class ReadingProgress {
