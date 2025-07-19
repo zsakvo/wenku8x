@@ -862,8 +862,7 @@ class ChineseLayoutPainter extends CustomPainter {
       return;
     }
 
-    // 更严格的判断条件：只有当文本宽度非常接近maxWidth时才跳过对齐
-    // 将容差值从5降低到1，并且要求字符数量足够多才跳过对齐
+    // 只有当文本宽度非常接近maxWidth时才跳过对齐
     if (painter.width >= maxWidth - 1 && charCount >= 10) {
       painter.paint(canvas, position);
       return;
