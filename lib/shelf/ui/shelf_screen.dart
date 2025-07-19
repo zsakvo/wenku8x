@@ -7,6 +7,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 // import 'package:wenku8x/app/providers/user.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
@@ -148,7 +149,7 @@ class _ShelfScreenState extends ConsumerState<ShelfScreen> {
               return const SizedBox(height: 0);
             },
           ),
-          _ => const Center(child: CircularProgressIndicator()),
+          _ => Center(child: Center(child: LoadingIndicator.contained())),
         },
       ),
     );

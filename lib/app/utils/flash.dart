@@ -190,42 +190,49 @@ showSelectionDialog<T>({
                   Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
                 );
               },
-          child: Dialog(
-            alignment: Alignment.bottomCenter,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(12)),
-              side: BorderSide.none,
-            ),
-            insetPadding: EdgeInsets.only(left: 16, right: 16, bottom: 16),
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.surfaceContainerLowest,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: double.infinity,
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(top: 20, bottom: 24),
-                  child: Text(
-                    title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          child: Theme(
+            data: isDarkMode
+                ? FlexColorScheme.dark(
+                    useMaterial3: true,
+                    scheme: FlexScheme.shadBlue,
+                  ).toTheme
+                : FlexColorScheme.light(
+                    useMaterial3: true,
+                    scheme: FlexScheme.shadBlue,
+                  ).toTheme,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Dialog(
+                  alignment: Alignment.bottomCenter,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    side: BorderSide.none,
                   ),
-                ),
-                ...values.map((item) {
-                  final withDescription = item['description'] != null;
-                  return Theme(
-                    data: isDarkMode
-                        ? FlexColorScheme.dark(
-                            useMaterial3: true,
-                            scheme: FlexScheme.shadBlue,
-                          ).toTheme
-                        : FlexColorScheme.light(
-                            useMaterial3: true,
-                            scheme: FlexScheme.shadBlue,
-                          ).toTheme,
-                    child: LayoutBuilder(
-                      builder: (context, constraints) {
+                  insetPadding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerLowest,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        padding: EdgeInsets.only(top: 20, bottom: 24),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      ...values.map((item) {
+                        final withDescription = item['description'] != null;
                         return ListTile(
                           tileColor: value == item['value']
                               ? Theme.of(
@@ -282,12 +289,41 @@ showSelectionDialog<T>({
                             onSelected(item['value']);
                           },
                         );
-                      },
-                    ),
-                  );
-                }),
-                SizedBox(height: 14),
-              ],
+                      }),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 8,
+                          top: 2,
+                          left: 16,
+                          right: 16,
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            controller.dismiss();
+                          },
+                          style: TextButton.styleFrom(
+                            minimumSize: Size(double.infinity, 48),
+                            foregroundColor: Theme.of(
+                              context,
+                            ).colorScheme.onSurface,
+                            padding: EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 20,
+                            ),
+                          ),
+                          child: Text(
+                            "取消",
+                            style: TextStyle(
+                              fontSize: 17,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ),

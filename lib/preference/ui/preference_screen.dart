@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/providers/user.dart';
@@ -131,7 +132,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
           Padding(
             padding: EdgeInsets.only(left: 20, top: 16, right: 20),
             child: PreferenceSection(
-              title: "Account",
+              title: "Network",
               children: [
                 PreferenceSwitcherTile(
                   title: "自动签到",
@@ -143,7 +144,20 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                   },
                 ),
                 PreferenceTile(title: "强制同步书架", onTap: () async {}),
-                PreferenceTile(title: "退出登录"),
+                PreferenceTile(
+                  title: "退出登录",
+                  description: "这会清除你的登录凭证，但是并不会删除已经缓存的数据",
+                  titleStyle: TextStyle(
+                    color: Theme.of(context).colorScheme.error,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                  trailing: Icon(
+                    CupertinoIcons.delete,
+                    size: 18,
+                    color: Theme.of(context).colorScheme.error,
+                  ),
+                ),
               ],
             ),
           ),

@@ -14,7 +14,6 @@ class BottomNav extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colorScheme = Theme.of(context).colorScheme;
-    ref.read(userProvider);
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(

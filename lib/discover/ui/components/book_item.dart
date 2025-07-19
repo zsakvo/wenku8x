@@ -51,16 +51,44 @@ class _BookItemState extends ConsumerState<BookItem> {
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                     ),
-                    Text(
-                      widget.book.author!,
-                      style: TextStyle(
-                        color: Theme.of(
-                          context,
-                        ).colorScheme.onSurface.withAlpha(150),
-                        fontSize: 12,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
+                    Row(
+                      spacing: 8,
+                      children: [
+                        Text(
+                          widget.book.author!,
+                          style: TextStyle(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.onSurface.withAlpha(150),
+                            fontSize: 12,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(
+                              context,
+                            ).colorScheme.surfaceContainerLowest,
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            "${widget.book.status}",
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.normal,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(200),
+                              height: 1,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

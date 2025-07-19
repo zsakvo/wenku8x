@@ -35,13 +35,15 @@ class _PreferenceTileState extends ConsumerState<PreferenceTile> {
       contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
       title: Text(
         widget.title,
-        style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+        style:
+            widget.titleStyle ??
+            TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
       ),
       subtitle: widget.description != null
           ? Padding(
               padding: EdgeInsets.only(top: 0),
               child: Text(
-                "跟随系统",
+                widget.description!,
                 style: TextStyle(
                   fontSize: 13,
                   color: Theme.of(context).colorScheme.onSurface.withAlpha(140),
