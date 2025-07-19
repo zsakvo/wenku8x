@@ -337,6 +337,7 @@ showDescriptionAlertDialog({
   required String title,
   required String? description,
   required Function() onConfirm,
+  FlexScheme? flexScheme,
   Function()? onCancel,
   String confirmText = "确定",
   String cancelText = "取消",
@@ -344,6 +345,7 @@ showDescriptionAlertDialog({
   bool showConfirmButton = true,
 }) {
   final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  flexScheme ??= FlexScheme.shadBlue;
   rootNavigatorKey.currentContext!.showModalFlash(
     barrierColor: Theme.of(context).colorScheme.outline.withAlpha(120),
     builder: (context, controller) => Align(
@@ -368,11 +370,11 @@ showDescriptionAlertDialog({
             data: isDarkMode
                 ? FlexColorScheme.dark(
                     useMaterial3: true,
-                    scheme: FlexScheme.shadBlue,
+                    scheme: flexScheme,
                   ).toTheme
                 : FlexColorScheme.light(
                     useMaterial3: true,
-                    scheme: FlexScheme.shadBlue,
+                    scheme: flexScheme,
                   ).toTheme,
             child: LayoutBuilder(
               builder: (context, constraints) {

@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:flash/flash.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/models/user.dart';
 import 'package:wenku8x/app/services/path.dart';
+import 'package:wenku8x/app/utils/flash.dart';
 import 'package:xml/xml.dart';
 
 import 'dio.dart';
@@ -213,6 +215,11 @@ class Api {
       "action=book&do=text&aid=$aid&cid=$cid&t=0",
       isXml: false,
     );
+  }
+
+  static Future<String> doUserSign() async {
+    var res = await Ajax.post("action=block&do=sign", isXml: false);
+    return res.toString();
   }
 
   static BookModel _parseBookFromXml(XmlElement element, {String? aid}) {

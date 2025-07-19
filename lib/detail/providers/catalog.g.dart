@@ -47,7 +47,7 @@ final class CatalogProvider
   }
 }
 
-String _$catalogHash() => r'f613be6afe7d7a58f096634b05f8963731bf3657';
+String _$catalogHash() => r'38efc04c6718ea2d468018a3b657affde42a09fb';
 
 final class CatalogFamily extends $Family
     with

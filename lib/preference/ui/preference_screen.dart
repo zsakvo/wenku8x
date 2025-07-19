@@ -1,12 +1,19 @@
+import 'dart:io';
+
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:wenku8x/app/providers/user.dart';
+import 'package:wenku8x/app/services/path.dart';
 import 'package:wenku8x/app/ui/components/avatar.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/flash.dart';
 import 'package:wenku8x/preference/models/preference.dart';
 import 'package:wenku8x/preference/providers/preference.dart';
+import 'package:wenku8x/preference/providers/sign.dart';
 import 'package:wenku8x/preference/ui/components/section/section.dart';
 import 'package:wenku8x/preference/ui/components/tile/drop_down_tile.dart';
 import 'package:wenku8x/preference/ui/components/tile/switcher_tile.dart';
@@ -25,6 +32,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
   Widget build(BuildContext context) {
     final user = ref.watch(userProvider);
     final preference = ref.watch(preferenceProvider);
+    final signed = ref.watch(userSignProvider);
     return Scaffold(
       body: ListView(
         children: [
@@ -70,14 +78,16 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                   child: FilledButton(
                     style: FilledButton.styleFrom(
                       minimumSize: Size(54, 30),
-                      // maximumSize: Size(68, 30),
                       textStyle: TextStyle(fontSize: 13),
                       padding: EdgeInsets.symmetric(horizontal: 18),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      backgroundColor: Theme.of(context).colorScheme.tertiary,
                     ),
-                    onPressed: () {},
-                    child: Text("签到"),
+                    onPressed: signed
+                        ? null
+                        : () {
+                            ref.read(userSignProvider.notifier).sign();
+                          },
+                    child: Text(signed ? "已签到" : "签到"),
                   ),
                 ),
               ],
@@ -146,7 +156,6 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                 PreferenceTile(title: "强制同步书架", onTap: () async {}),
                 PreferenceTile(
                   title: "退出登录",
-                  description: "这会清除你的登录凭证，但是并不会删除已经缓存的数据",
                   titleStyle: TextStyle(
                     color: Theme.of(context).colorScheme.error,
                     fontWeight: FontWeight.bold,
@@ -162,7 +171,16 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                       context: context,
                       title: "退出账号",
                       description: "这会清除你的登录凭证，但是并不会删除已经缓存的数据",
-                      onConfirm: () {},
+                      flexScheme: FlexScheme.shadRed,
+                      onConfirm: () {
+                        final path = join(
+                          PathService().applicationSupportDirectory,
+                          '.cookies',
+                        );
+                        logger.debug("Deleting cookies at: $path");
+                        File(path).delete();
+                        context.go("/login");
+                      },
                     );
                   },
                 ),

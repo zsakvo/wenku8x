@@ -91,7 +91,7 @@ final class DiscoverDataProvider
   }
 }
 
-String _$discoverDataHash() => r'7e34c8a21725a359f425fc01eb18fa7068ae0e33';
+String _$discoverDataHash() => r'3daac1f00859136909e17a0020abcf0bd307c8f7';
 
 abstract class _$DiscoverData extends $Notifier<PagingState<int, BookModel>> {
   PagingState<int, BookModel> build();
