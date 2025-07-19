@@ -331,3 +331,154 @@ showSelectionDialog<T>({
     ),
   );
 }
+
+showDescriptionAlertDialog({
+  required BuildContext context,
+  required String title,
+  required String? description,
+  required Function() onConfirm,
+  Function()? onCancel,
+  String confirmText = "确定",
+  String cancelText = "取消",
+  bool showCancelButton = true,
+  bool showConfirmButton = true,
+}) {
+  final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+  rootNavigatorKey.currentContext!.showModalFlash(
+    barrierColor: Theme.of(context).colorScheme.outline.withAlpha(120),
+    builder: (context, controller) => Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        padding: EdgeInsets.only(bottom: 12),
+        child: Flash(
+          controller: controller,
+          position: FlashPosition.bottom,
+          dismissDirections: [FlashDismissDirection.vertical],
+          slideAnimationCreator:
+              (context, position, parent, curve, reverseCurve) {
+                return CurvedAnimation(
+                  parent: parent,
+                  curve: curve,
+                  reverseCurve: reverseCurve,
+                ).drive(
+                  Tween<Offset>(begin: Offset(0.0, 1.0), end: Offset.zero),
+                );
+              },
+          child: Theme(
+            data: isDarkMode
+                ? FlexColorScheme.dark(
+                    useMaterial3: true,
+                    scheme: FlexScheme.shadBlue,
+                  ).toTheme
+                : FlexColorScheme.light(
+                    useMaterial3: true,
+                    scheme: FlexScheme.shadBlue,
+                  ).toTheme,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Dialog(
+                  alignment: Alignment.bottomCenter,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(12)),
+                    side: BorderSide.none,
+                  ),
+                  insetPadding: EdgeInsets.only(
+                    left: 16,
+                    right: 16,
+                    bottom: 16,
+                  ),
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerLowest,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.centerLeft,
+                        padding: EdgeInsets.only(top: 20, left: 20),
+                        child: Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      if (description != null)
+                        Container(
+                          width: double.infinity,
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(
+                            top: 14,
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                          ),
+                          child: Text(
+                            description,
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal,
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(150),
+                            ),
+                          ),
+                        ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          bottom: 16,
+                          left: 16,
+                          right: 16,
+                        ),
+                        child: Row(
+                          spacing: 16,
+                          children: [
+                            if (showCancelButton)
+                              Expanded(
+                                child: FilledButton.tonal(
+                                  style: FilledButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    controller.dismiss();
+                                    if (onCancel != null) {
+                                      onCancel();
+                                    }
+                                  },
+                                  child: Text(cancelText),
+                                ),
+                              ),
+                            if (showConfirmButton)
+                              Expanded(
+                                child: FilledButton(
+                                  style: FilledButton.styleFrom(
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    controller.dismiss();
+                                    onConfirm();
+                                  },
+                                  child: Text(confirmText),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ),
+      ),
+    ),
+  );
+}

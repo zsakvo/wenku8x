@@ -157,6 +157,14 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                     size: 18,
                     color: Theme.of(context).colorScheme.error,
                   ),
+                  onTap: () {
+                    showDescriptionAlertDialog(
+                      context: context,
+                      title: "退出账号",
+                      description: "这会清除你的登录凭证，但是并不会删除已经缓存的数据",
+                      onConfirm: () {},
+                    );
+                  },
                 ),
               ],
             ),
