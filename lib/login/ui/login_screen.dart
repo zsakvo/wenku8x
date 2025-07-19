@@ -51,6 +51,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               right: 0,
               child: SvgPicture.asset(
                 "assets/svg/bg_flying.svg",
+                colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.onSurface,
+                  BlendMode.srcIn,
+                ),
                 alignment: Alignment.bottomLeft,
               ),
             ),
