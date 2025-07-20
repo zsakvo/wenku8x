@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
@@ -15,6 +16,11 @@ class SliderCore extends StatefulHookConsumerWidget {
 }
 
 class _SliderCoreState extends ConsumerState<SliderCore> {
+  PagingState<int, PageLayout> state = PagingState();
+  ScrollController scrollController = ScrollController(
+    initialScrollOffset: 0,
+    keepScrollOffset: true,
+  );
   late final PageController pageController;
   bool isAnimating = false;
   static const double menuTapWidth = 0.4; // 中间 40%区域用于菜单
@@ -33,6 +39,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
   void initState() {
     super.initState();
     pageController = PageController();
+    state = state.copyWith(pages: [widget.pages], keys: [0], isLoading: false);
   }
 
   _onTapUp(TapUpDetails details) {
@@ -214,22 +221,43 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
       onPanStart: _onPanStart,
       onPanUpdate: _onPanUpdate,
       onPanEnd: _onPanEnd,
-      child: PageView.builder(
-        controller: pageController,
-        itemCount: widget.pages.length,
-        // physics: const NeverScrollableScrollPhysics(),
-        // pageSnapping: false,
-        itemBuilder: (context, index) {
-          final page = widget.pages[index];
-          return CustomPaint(
-            foregroundPainter: ChineseLayoutPainter(page: page),
-            size: Size(
-              page.drawingArea.width + page.drawingArea.left * 2,
-              page.drawingArea.height + page.drawingArea.top * 2,
-            ),
-          );
-        },
+      child: PagedListView(
+        state: state,
+        scrollDirection: Axis.horizontal,
+        fetchNextPage: () {},
+        scrollController: scrollController,
+        builderDelegate: PagedChildBuilderDelegate(
+          itemBuilder: (context, item, index) {
+            final page = widget.pages[index];
+            return CustomPaint(
+              foregroundPainter: ChineseLayoutPainter(page: page),
+              size: Size(
+                page.drawingArea.width + page.drawingArea.left * 2,
+                page.drawingArea.height + page.drawingArea.top * 2,
+              ),
+            );
+          },
+          newPageProgressIndicatorBuilder: (context) {
+            return const SizedBox.shrink();
+          },
+        ),
       ),
+      // PageView.builder(
+      //   controller: pageController,
+      //   itemCount: widget.pages.length,
+      //   // physics: const NeverScrollableScrollPhysics(),
+      //   // pageSnapping: false,
+      //   itemBuilder: (context, index) {
+      //     final page = widget.pages[index];
+      //     return CustomPaint(
+      //       foregroundPainter: ChineseLayoutPainter(page: page),
+      //       size: Size(
+      //         page.drawingArea.width + page.drawingArea.left * 2,
+      //         page.drawingArea.height + page.drawingArea.top * 2,
+      //       ),
+      //     );
+      //   },
+      // ),
     );
   }
 }
