@@ -64,6 +64,7 @@ dependencies:
 
   material_shapes:
     git: https://github.com/ksokolovskyi/material_shapes.git
+  toastification: ^3.0.3
 
 dev_dependencies:
   flutter_test:

@@ -22,7 +22,6 @@ class Api {
     final passwordEncoded = Uri.encodeComponent(password);
     return await Ajax.post(
       "action=login&username=$usernameEncoded&password=$passwordEncoded&usecookie=315360000",
-      isXml: false,
     ).then((value) {
       final sp = SharedPreferencesAsync();
       if (value) {
@@ -63,12 +62,7 @@ class Api {
       logger.debug("头像已存在，删除旧头像");
       await File(path).delete();
     }
-    await Ajax.post(
-      "action=avatar",
-      isXml: false,
-      download: true,
-      savePath: path,
-    );
+    await Ajax.download("action=avatar");
     return path;
   }
 
@@ -149,10 +143,7 @@ class Api {
   }
 
   static Future<String> getNovelFullIntro(String aid) async {
-    var res = await Ajax.post(
-      "action=book&do=intro&aid=$aid&t=0",
-      isXml: false,
-    );
+    var res = await Ajax.post("action=book&do=intro&aid=$aid&t=0");
     return res.toString();
   }
 
@@ -211,14 +202,11 @@ class Api {
   }
 
   static getNovelContent(String aid, String cid) async {
-    return await Ajax.post(
-      "action=book&do=text&aid=$aid&cid=$cid&t=0",
-      isXml: false,
-    );
+    return await Ajax.post("action=book&do=text&aid=$aid&cid=$cid&t=0");
   }
 
   static Future<String> doUserSign() async {
-    var res = await Ajax.post("action=block&do=sign", isXml: false);
+    var res = await Ajax.post("action=block&do=sign");
     return res.toString();
   }
 

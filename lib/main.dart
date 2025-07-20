@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toastification/toastification.dart';
 import 'package:wenku8x/app/hooks/use_brightness.dart';
 import 'package:wenku8x/app/services/app.dart';
 import 'package:wenku8x/app/ui/router.dart';
@@ -38,12 +39,14 @@ class ReaderApp extends ConsumerWidget {
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarContrastEnforced: true,
       ),
-      child: MaterialApp.router(
-        title: '阅读',
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        themeMode: brightness,
-        routerConfig: router,
+      child: ToastificationWrapper(
+        child: MaterialApp.router(
+          title: '阅读',
+          theme: AppTheme.light,
+          darkTheme: AppTheme.dark,
+          themeMode: brightness,
+          routerConfig: router,
+        ),
       ),
     );
   }
