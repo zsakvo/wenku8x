@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
@@ -34,7 +35,12 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       child: switch (pages) {
         AsyncData(:final value) => Stack(
           children: [
-            SliderCore(pages: value.pages),
+            SliderCore(
+              pages: value,
+              fetchNextChapter: ref
+                  .read(ReaderProviderService().pagesProvider_.notifier)
+                  .fetchNextChapter,
+            ),
             // GestureDetector(
             //   // onPointerMove: PointerService().onPointerMove,
             //   // onPointerUp: PointerService().onPointerUp,
@@ -57,7 +63,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             MenuBottom(isVisible: menuVisible.bottom),
           ],
         ),
-        AsyncLoading() => const Center(child: CircularProgressIndicator()),
+        AsyncLoading() => Center(child: LoadingIndicator.contained()),
         _ => Container(
           color: colorScheme.surfaceContainer,
           child: Center(

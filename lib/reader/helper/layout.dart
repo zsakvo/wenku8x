@@ -6,8 +6,8 @@ final logger = Logger("LayoutHelper");
 
 /// 一个用于处理中文文本排版布局计算的辅助类
 class ChineseLayoutHelper {
-  /// 标题文字
-  final String? title;
+  // /// 标题文字
+  // final String? title;
 
   /// 标题样式
   final TextStyle titleStyle;
@@ -65,7 +65,7 @@ class ChineseLayoutHelper {
 
   /// 构造函数
   ChineseLayoutHelper({
-    this.title,
+    // this.title,
     this.titleStyle = const TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
@@ -107,7 +107,11 @@ class ChineseLayoutHelper {
   }
 
   /// 计算文本布局，返回分页结果
-  LayoutResult calculateLayout(String text, {BuildContext? context}) {
+  LayoutResult calculateLayout(
+    String text, {
+    BuildContext? context,
+    required String title,
+  }) {
     // 获取布局尺寸，如果未指定则使用屏幕尺寸
     final Size layoutSize = Size(
       width ??
@@ -232,6 +236,7 @@ class ChineseLayoutHelper {
         if (currentPageParagraphs.isNotEmpty) {
           _adjustLineSpacingForPage(
             currentPageParagraphs,
+            title,
             drawingArea,
             isFirstPage,
             isLastContent: false, // 这不是最后一页，因为有内容无法放下
@@ -293,6 +298,7 @@ class ChineseLayoutHelper {
           if (currentPageParagraphs.isNotEmpty) {
             _adjustLineSpacingForPage(
               currentPageParagraphs,
+              title,
               drawingArea,
               isFirstPage,
               isLastContent: false, // 这不是最后一页，因为有内容无法放下
@@ -388,6 +394,7 @@ class ChineseLayoutHelper {
       // 这是最后一页
       _adjustLineSpacingForPage(
         currentPageParagraphs,
+        title,
         drawingArea,
         isFirstPage,
         isLastContent: true, // 这是最后一页
@@ -469,6 +476,7 @@ class ChineseLayoutHelper {
   /// 调整行间距，确保最后一行紧贴底部
   void _adjustLineSpacingForPage(
     List<ParagraphLayout> paragraphs,
+    String title,
     Rect drawingArea,
     bool isFirstPage, {
     bool isLastContent = false,

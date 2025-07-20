@@ -8,7 +8,6 @@ import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/models/user.dart';
 import 'package:wenku8x/app/services/path.dart';
-import 'package:wenku8x/app/utils/flash.dart';
 import 'package:xml/xml.dart';
 
 import 'dio.dart';
@@ -23,12 +22,13 @@ class Api {
     return await Ajax.post(
       "action=login&username=$usernameEncoded&password=$passwordEncoded&usecookie=315360000",
     ).then((value) {
+      final success = value == "1";
       final sp = SharedPreferencesAsync();
-      if (value) {
+      if (success) {
         sp.setString("username", username);
         sp.setString("password", password);
       }
-      return value;
+      return success;
     });
   }
 

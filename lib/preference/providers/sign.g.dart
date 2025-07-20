@@ -37,7 +37,7 @@ final class UserSignProvider extends $NotifierProvider<UserSign, bool> {
   }
 }
 
-String _$userSignHash() => r'd4abea2727dbb3f491ef9019f5fe1e4c40c76ecb';
+String _$userSignHash() => r'58d8e99d9cc69d3be3feed811b419f40b3ca7b1b';
 
 abstract class _$UserSign extends $Notifier<bool> {
   bool build();

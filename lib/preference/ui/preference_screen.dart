@@ -178,7 +178,7 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
                           '.cookies',
                         );
                         logger.debug("Deleting cookies at: $path");
-                        File(path).delete();
+                        Directory(path).delete(recursive: true);
                         context.go("/login");
                       },
                     );

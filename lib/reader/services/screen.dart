@@ -40,36 +40,36 @@ class ReaderService {
         .asData
         ?.value;
     if (pages == null) return;
-    if (currentPage < pages.pageCount - 1) {
-      _animateToPage(currentPage + 1);
-    } else {
-      _animateToPage(currentPage); // 回弹效果
-    }
+    // if (currentPage < pages.pageCount - 1) {
+    //   _animateToPage(currentPage + 1);
+    // } else {
+    //   _animateToPage(currentPage); // 回弹效果
+    // }
   }
 
   void _animateToPage(int page) {
     if (isAnimating) return;
-    final pages = ref
-        .read(ReaderProviderService().pagesProvider_)
-        .asData
-        ?.value;
-    if (pages == null) return;
+    // final pages = ref
+    //     .read(ReaderProviderService().pagesProvider_)
+    //     .asData
+    //     ?.value;
+    // if (pages == null) return;
 
-    isAnimating = true;
-    final targetPage = page.clamp(0, pages.pageCount - 1);
+    // isAnimating = true;
+    // final targetPage = page.clamp(0, pages.pageCount - 1);
 
-    ReaderService().pageController
-        .animateToPage(
-          targetPage,
-          duration: animationDuration,
-          curve: Curves.easeOutCubic,
-        )
-        .then((_) {
-          isAnimating = false;
-          if (currentPage != targetPage) {
-            currentPage = targetPage;
-            // widget.onPageChanged?.call(_currentPage);
-          }
-        });
+    // ReaderService().pageController
+    //     .animateToPage(
+    //       targetPage,
+    //       duration: animationDuration,
+    //       curve: Curves.easeOutCubic,
+    //     )
+    //     .then((_) {
+    //       isAnimating = false;
+    //       if (currentPage != targetPage) {
+    //         currentPage = targetPage;
+    //         // widget.onPageChanged?.call(_currentPage);
+    //       }
+    //     });
   }
 }

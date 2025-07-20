@@ -13,14 +13,14 @@ part 'catalog.g.dart';
 
 final logger = Logger("CatalogProvider");
 
-@riverpod
+@Riverpod(keepAlive: true)
 class Catalog extends _$Catalog {
   @override
   Future<CatalogModel> build(String aid) async {
     late CatalogModel _cachedCatalog = CatalogModel(aid: aid, volumes: []);
-    if (await catalogFile.exists()) {
+    if (await _catalogFile.exists()) {
       try {
-        final content = await catalogFile.readAsString();
+        final content = await _catalogFile.readAsString();
         _cachedCatalog = CatalogModel.fromJson(jsonDecode(content));
       } catch (e) {
         logger.debug("Error reading catalog file: $e");
@@ -35,7 +35,7 @@ class Catalog extends _$Catalog {
     Api.getNovelIndex(aid)
         .then((catalog) {
           // Save to cache
-          catalogFile
+          _catalogFile
               .create(recursive: true)
               .then((file) {
                 state = AsyncValue.data(catalog);
@@ -55,6 +55,6 @@ class Catalog extends _$Catalog {
     _fetch();
   }
 
-  File get catalogFile =>
+  File get _catalogFile =>
       File(join(PathService().booksDirectory, aid, "catalog.json"));
 }

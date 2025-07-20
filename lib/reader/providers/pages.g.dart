@@ -9,7 +9,8 @@ part of 'pages.dart';
 @ProviderFor(Pages)
 const pagesProvider = PagesFamily._();
 
-final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
+final class PagesProvider
+    extends $AsyncNotifierProvider<Pages, Map<int, PageLayout>> {
   const PagesProvider._({
     required PagesFamily super.from,
     required BookModel super.argument,
@@ -46,15 +47,15 @@ final class PagesProvider extends $AsyncNotifierProvider<Pages, LayoutResult> {
   }
 }
 
-String _$pagesHash() => r'c81242e9a5cb62e4b45505f9108998c6ea636ccf';
+String _$pagesHash() => r'85c147c1b11e0a3761773f11f8c5c0df62d4ffff';
 
 final class PagesFamily extends $Family
     with
         $ClassFamilyOverride<
           Pages,
-          AsyncValue<LayoutResult>,
-          LayoutResult,
-          FutureOr<LayoutResult>,
+          AsyncValue<Map<int, PageLayout>>,
+          Map<int, PageLayout>,
+          FutureOr<Map<int, PageLayout>>,
           BookModel
         > {
   const PagesFamily._()
@@ -73,21 +74,26 @@ final class PagesFamily extends $Family
   String toString() => r'pagesProvider';
 }
 
-abstract class _$Pages extends $AsyncNotifier<LayoutResult> {
+abstract class _$Pages extends $AsyncNotifier<Map<int, PageLayout>> {
   late final _$args = ref.$arg as BookModel;
   BookModel get book => _$args;
 
-  FutureOr<LayoutResult> build(BookModel book);
+  FutureOr<Map<int, PageLayout>> build(BookModel book);
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build(_$args);
-    final ref = this.ref as $Ref<AsyncValue<LayoutResult>, LayoutResult>;
+    final ref =
+        this.ref
+            as $Ref<AsyncValue<Map<int, PageLayout>>, Map<int, PageLayout>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<LayoutResult>, LayoutResult>,
-              AsyncValue<LayoutResult>,
+              AnyNotifier<
+                AsyncValue<Map<int, PageLayout>>,
+                Map<int, PageLayout>
+              >,
+              AsyncValue<Map<int, PageLayout>>,
               Object?,
               Object?
             >;
