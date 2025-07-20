@@ -62,7 +62,7 @@ class Api {
       logger.debug("头像已存在，删除旧头像");
       await File(path).delete();
     }
-    await Ajax.download("action=avatar");
+    await Ajax.download("action=avatar", path);
     return path;
   }
 
@@ -77,7 +77,6 @@ class Api {
         var element = elements[i];
         var ec = element.children;
         String aid = element.getAttribute("aid")!;
-        logger.debug("获取书籍", element);
         books.add(
           BookModel(
             aid: aid,
@@ -98,7 +97,6 @@ class Api {
     XmlDocument? res = await Ajax.post(
       "action=novellist&sort=$sorter&page=$page&t=0",
     );
-    logger.debug("获取小说列表", res);
     if (res != null) {
       return res.findAllElements("item").map((element) {
         var elements = element.children
@@ -206,8 +204,12 @@ class Api {
   }
 
   static Future<String> doUserSign() async {
-    var res = await Ajax.post("action=block&do=sign");
-    return res.toString();
+    try {
+      var res = await Ajax.post("action=block&do=sign");
+      return res.toString();
+    } catch (_) {
+      return "";
+    }
   }
 
   static BookModel _parseBookFromXml(XmlElement element, {String? aid}) {

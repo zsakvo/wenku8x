@@ -1,6 +1,8 @@
 import 'dart:convert' as convert;
 
 import 'package:dio/dio.dart';
+import 'package:go_router/go_router.dart';
+import 'package:wenku8x/app/ui/router.dart';
 import 'package:xml/xml.dart';
 
 class Wenku8Interceptor extends Interceptor {
@@ -36,7 +38,21 @@ class Wenku8Interceptor extends Interceptor {
           ),
         );
       } catch (e) {
-        if (int.tryParse(response.data.toString()) != null) {
+        final code = int.tryParse(response.data.toString());
+        if (code == null || code == 1) {
+          handler.next(
+            Response(
+              requestOptions: response.requestOptions,
+              data: response.data,
+              statusCode: response.statusCode,
+              statusMessage: response.statusMessage,
+              headers: response.headers,
+              isRedirect: response.isRedirect,
+              redirects: response.redirects,
+              extra: response.extra,
+            ),
+          );
+        } else {
           handler.reject(
             DioException(
               requestOptions: response.requestOptions,
@@ -46,8 +62,6 @@ class Wenku8Interceptor extends Interceptor {
             ),
             true,
           );
-        } else {
-          handler.next(response);
         }
       }
     } else {
@@ -68,6 +82,9 @@ class Wenku8Interceptor extends Interceptor {
     if (err.error is int) {
       final errorCode = err.error as int;
       final errorMessage = _getErrorMessage(errorCode);
+      if (errorCode == 4) {
+        rootNavigatorKey.currentContext?.go("/login");
+      }
       handler.next(
         DioException(
           requestOptions: err.requestOptions,

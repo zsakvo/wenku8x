@@ -47,17 +47,17 @@ class Ajax {
           ..interceptors.add(LogsInterceptor());
   }
 
-  static post(String param) {
-    return _client.post("", data: param);
+  static post(String param) async {
+    return (await _client.post("", data: param)).data;
   }
 
-  static download(String param) {
-    return _client.download(
+  static download(String param, String savePath) async {
+    return (await _client.download(
       "",
-      "",
+      savePath,
       data: param,
       options: Options(method: "POST"),
-    );
+    )).data;
   }
 
   // static String _encrypt(String param) {
