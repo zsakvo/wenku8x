@@ -38,7 +38,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
   double currentOffset = 0;
   bool isDragging = false;
   // int currentPage = 0;
-  final Duration animationDuration = const Duration(milliseconds: 280);
+  final Duration animationDuration = const Duration(milliseconds: 500);
   // 滑动方向是否单一
   bool singleDirection = true;
   // 滑动方向变更时的坐标（如果未变更过则为滑动结束位置）
@@ -191,11 +191,11 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
         .asData
         ?.value;
     if (pages == null) return;
-    // if (currentPage < pages.pageCount - 1) {
-    //   _animateToPage(currentPage + 1);
-    // } else {
-    //   _animateToPage(currentPage); // 回弹效果
-    // }
+    if (_centerIndex - _minIndex < totalPages - 1) {
+      _animateToPage(_centerIndex + 1);
+    } else {
+      _animateToPage(_centerIndex); // 回弹效果
+    }
   }
 
   void _animateToPage(int page) {
