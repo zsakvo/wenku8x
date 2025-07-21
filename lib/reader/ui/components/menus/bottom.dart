@@ -4,187 +4,267 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
-class MenuBottom extends HookConsumerWidget {
-  final bool isVisible;
-  final Widget? child;
-  final double height;
-
+class MenuBottom extends StatefulHookConsumerWidget {
   const MenuBottom({
     super.key,
     this.isVisible = false,
     this.child,
-    this.height = 64, // 默认高度
+    this.height = 52,
   });
 
+  final bool isVisible;
+  final Widget? child;
+  final double height;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // 使用 hooks 监听 isVisible 变化
-    // final isVisibleState = useState(isVisible);
+  ConsumerState<ConsumerStatefulWidget> createState() => _MenuBottomState();
+}
+
+class _MenuBottomState extends ConsumerState<MenuBottom> {
+  @override
+  Widget build(BuildContext context) {
     final state = ref.watch(ReaderProviderService().menuProvider_);
-
-    // 当属性变化时更新状态
-    // useEffect(() {
-    //   isVisibleState.value = isVisible;
-    //   return null;
-    // }, [isVisible]);
-
     final bottomPadding = MediaQuery.of(context).padding.bottom;
-
-    return Stack(
-      clipBehavior: Clip.none,
-      children: [
-        AnimatedPositioned(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-          bottom: state.bottom ? 0 : -height - bottomPadding,
-          left: 0,
-          right: 0,
-          height: height + bottomPadding,
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.only(bottom: bottomPadding),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withAlpha(40),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
-                ),
-              ],
-            ),
-            child: Row(
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      bottom: state.bottom ? 0 : -widget.height - bottomPadding,
+      left: 0,
+      right: 0,
+      height: widget.height + bottomPadding,
+      child: Container(
+        width: double.infinity,
+        alignment: Alignment.center,
+        padding: EdgeInsets.only(left: 8, right: 8, bottom: bottomPadding),
+        decoration: BoxDecoration(color: Theme.of(context).colorScheme.surface),
+        child: Wrap(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Flexible(
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () {
-                        // ref.read(ReaderProviderService().menuProvider_.notifier).dispatch(
-                        //     menuTopVisible: ref
-                        //         .read(readerMenuStateProvider)
-                        //         .menuCatalogVisible,
-                        //     menuCatalogVisible: !ref
-                        //         .read(readerMenuStateProvider)
-                        //         .menuCatalogVisible,
-                        //     menuThemeVisible: false,
-                        //     menuTextVisible: false,
-                        //     menuConfigVisible: false);
-                        // ref
-                        //     .read(readerMenuStateProvider.notifier)
-                        //     .toggleBottomAndTop();
-                      },
-                      icon: SvgPicture.asset(
-                        "assets/svg/ic_bottom_bar_menu.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          state.catalog
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
+                _buildMenuButton(
+                  label: "目录",
+                  iconPath: "assets/svg/ic_menu_doc",
+                  isActive: state.catalog,
+                  onPressed: () {
+                    // ref.read(readerMenusProvider.notifier).toggleSubMenu("directoryVisible");
+                  },
                 ),
-                Flexible(
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () {
-                        // ref
-                        //     .read(readerMenuStateProvider.notifier)
-                        //     .dispatch(
-                        //       menuTopVisible: ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuThemeVisible,
-                        //       menuCatalogVisible: false,
-                        //       menuThemeVisible: !ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuThemeVisible,
-                        //       menuTextVisible: false,
-                        //       menuConfigVisible: false,
-                        //     );
-                      },
-                      icon: SvgPicture.asset(
-                        "assets/svg/ic_bottom_bar_palette.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          state.theme
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onBackground,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
+                _buildMenuButton(
+                  label: "书签",
+                  iconPath: "assets/svg/ic_menu_bookmark",
+                  isActive: state.config,
+                  onPressed: () {
+                    // ref.read(readerMenusProvider.notifier).toggleSubMenu("themeVisible");
+                  },
                 ),
-                Flexible(
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () {
-                        // ref
-                        //     .read(readerMenuStateProvider.notifier)
-                        //     .dispatch(
-                        //       menuTopVisible: ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuTextVisible,
-                        //       menuCatalogVisible: false,
-                        //       menuThemeVisible: false,
-                        //       menuTextVisible: !ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuTextVisible,
-                        //       menuConfigVisible: false,
-                        //     );
-                      },
-                      icon: SvgPicture.asset(
-                        "assets/svg/ic_bottom_bar_font.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          state.typography
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onBackground,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
+                _buildMenuButton(
+                  label: "排版",
+                  iconPath: "assets/svg/ic_menu_font",
+                  isActive: state.typography,
+                  onPressed: () {
+                    // ref.read(readerMenusProvider.notifier).toggleSubMenu("fontVisible");
+                  },
                 ),
-                Flexible(
-                  child: Center(
-                    child: IconButton(
-                      onPressed: () {
-                        // ref
-                        //     .read(readerMenuStateProvider.notifier)
-                        //     .dispatch(
-                        //       menuTopVisible: ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuConfigVisible,
-                        //       menuCatalogVisible: false,
-                        //       menuThemeVisible: false,
-                        //       menuTextVisible: false,
-                        //       menuConfigVisible: !ref
-                        //           .read(readerMenuStateProvider)
-                        //           .menuConfigVisible,
-                        //     );
-                      },
-                      icon: SvgPicture.asset(
-                        "assets/svg/ic_bottom_bar_setting.svg",
-                        width: 18,
-                        colorFilter: ColorFilter.mode(
-                          state.config
-                              ? Theme.of(context).colorScheme.primary
-                              : Theme.of(context).colorScheme.onSurface,
-                          BlendMode.srcIn,
-                        ),
-                      ),
-                    ),
-                  ),
+                _buildMenuButton(
+                  label: "设置",
+                  iconPath: "assets/svg/ic_menu_settings",
+                  isActive: state.config,
+                  onPressed: () {
+                    // ref.read(readerMenusProvider.notifier).toggleSubMenu("settingVisible");
+                  },
                 ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMenuButton({
+    required String label,
+    required String iconPath,
+    required bool isActive,
+    required Function() onPressed,
+  }) {
+    return
+    // Flexible(
+    //     child:
+    Center(
+      child: TextButton.icon(
+        onPressed: onPressed,
+        style: const ButtonStyle(
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: WidgetStatePropertyAll(Size(84, 36)),
+        ),
+        label: Text(
+          label,
+          style: TextStyle(
+            height: 1,
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            fontWeight: FontWeight.normal,
           ),
         ),
-      ],
+        icon: SvgPicture.asset(
+          isActive ? "${iconPath}_fill.svg" : "$iconPath.svg",
+          width: 20,
+          colorFilter: ColorFilter.mode(
+            isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurfaceVariant,
+            BlendMode.srcIn,
+          ),
+        ),
+      ),
+      // )
     );
   }
 }
+
+// class MenuBottom extends HookConsumerWidget {
+//   final bool isVisible;
+//   final Widget? child;
+//   final double height;
+
+//   const MenuBottom({
+//     super.key,
+//     this.isVisible = false,
+//     this.child,
+//     this.height = 64, // 默认高度
+//   });
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     // 使用 hooks 监听 isVisible 变化
+//     // final isVisibleState = useState(isVisible);
+//     final state = ref.watch(ReaderProviderService().menuProvider_);
+
+//     final iconWidget = useCallback((String iconName, bool isActive) {
+//       return SvgPicture.asset(
+//         "assets/svg/$iconName.svg",
+//         width: 24,
+//         colorFilter: ColorFilter.mode(
+//           isActive
+//               ? Theme.of(context).colorScheme.primary
+//               : Theme.of(context).colorScheme.onSurface,
+//           BlendMode.srcIn,
+//         ),
+//       );
+//     }, []);
+
+//     // 当属性变化时更新状态
+//     // useEffect(() {
+//     //   isVisibleState.value = isVisible;
+//     //   return null;
+//     // }, [isVisible]);
+
+//     final bottomPadding = MediaQuery.of(context).padding.bottom;
+
+//     return Stack(
+//       clipBehavior: Clip.none,
+//       children: [
+//         AnimatedPositioned(
+//           duration: const Duration(milliseconds: 300),
+//           curve: Curves.easeInOut,
+//           bottom: state.bottom ? 0 : -height - bottomPadding,
+//           left: 0,
+//           right: 0,
+//           height: height + bottomPadding,
+//           child: Container(
+//             width: double.infinity,
+//             padding: EdgeInsets.only(bottom: bottomPadding, left: 8, right: 8),
+//             decoration: BoxDecoration(
+//               color: Theme.of(context).colorScheme.surface,
+
+//               boxShadow: [
+//                 BoxShadow(
+//                   color: Colors.black.withAlpha(40),
+//                   blurRadius: 8,
+//                   offset: const Offset(0, -2),
+//                 ),
+//               ],
+//             ),
+//             child: Wrap(
+//               children: [
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     _buildMenuButton(
+//                       label: "目录",
+//                       iconPath: "assets/svg/ic_menu_doc",
+//                       isActive: state.catalog,
+//                       onPressed: () {
+//                         // ref.read(readerMenusProvider.notifier).toggleSubMenu("directoryVisible");
+//                       },
+//                     ),
+//                     _buildMenuButton(
+//                       label: "书签",
+//                       iconPath: "assets/svg/ic_menu_bookmark",
+//                       isActive: state.config,
+//                       onPressed: () {
+//                         // ref.read(readerMenusProvider.notifier).toggleSubMenu("themeVisible");
+//                       },
+//                     ),
+//                     _buildMenuButton(
+//                       label: "排版",
+//                       iconPath: "assets/svg/ic_menu_font",
+//                       isActive: state.typography,
+//                       onPressed: () {
+//                         // ref.read(readerMenusProvider.notifier).toggleSubMenu("fontVisible");
+//                       },
+//                     ),
+//                     _buildMenuButton(
+//                       label: "设置",
+//                       iconPath: "assets/svg/ic_menu_settings",
+//                       isActive: state.config,
+//                       onPressed: () {
+//                         // ref.read(readerMenusProvider.notifier).toggleSubMenu("settingVisible");
+//                       },
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+//     Widget _buildMenuButton({
+//     required String label,
+//     required String iconPath,
+//     required bool isActive,
+//     required Function() onPressed,
+//   }) {
+//     return
+//         // Flexible(
+//         //     child:
+//         Center(
+//       child: TextButton.icon(
+//           onPressed: onPressed,
+//           style: const ButtonStyle(
+//             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+//             minimumSize: WidgetStatePropertyAll(Size(84, 36)),
+//           ),
+//           label: Text(
+//             label,
+//             style: TextStyle(
+//                 height: 1,
+//                 color:
+//                     isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+//                 fontWeight: FontWeight.normal),
+//           ),
+//           icon: SvgPicture.asset(
+//             isActive ? "${iconPath}_fill.svg" : "$iconPath.svg",
+//             width: 20,
+//             colorFilter: ColorFilter.mode(
+//                 isActive ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurfaceVariant,
+//                 BlendMode.srcIn),
+//           )),
+//       // )
+//     );
+//   }
+// }
