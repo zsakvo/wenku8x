@@ -19,7 +19,7 @@ class Menu extends _$Menu {
   }
 
   void toggleCatalog() {
-    state = state.copyWith(catalog: !state.catalog);
+    state = state.copyWith(catalog: !state.catalog, top: state.catalog);
   }
 
   void toggleTypography() {

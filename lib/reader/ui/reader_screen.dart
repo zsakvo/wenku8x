@@ -11,6 +11,7 @@ import 'package:wenku8x/reader/services/screen.dart';
 import 'package:wenku8x/reader/ui/components/core/slider/slider.dart';
 import 'package:wenku8x/reader/ui/components/core/transformer/transformer.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
+import 'package:wenku8x/reader/ui/components/menus/catalog.dart';
 import 'package:wenku8x/reader/ui/components/menus/top.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
@@ -61,6 +62,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             //     },
             //   ),
             // ),
+            MenuCatalog(book: widget.book),
             MenuBottom(isVisible: menuVisible.bottom),
             MenuTop(bookName: widget.book.name),
           ],

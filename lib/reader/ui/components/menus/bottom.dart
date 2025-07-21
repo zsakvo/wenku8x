@@ -48,6 +48,9 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                   isActive: state.catalog,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("directoryVisible");
+                    ref
+                        .read(ReaderProviderService().menuProvider_.notifier)
+                        .toggleCatalog();
                   },
                 ),
                 _buildMenuButton(

@@ -105,7 +105,9 @@ class Pages extends _$Pages {
     final newPages = {...?state.asData?.value, ...pageMap};
     logger.debug(newPages);
     _latestChapterIndex++;
-    state = AsyncData(newPages);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      state = AsyncData(newPages);
+    });
     // 返回本次加载章节的页数，便于更新 maxIndex
     return pages.length;
   }
