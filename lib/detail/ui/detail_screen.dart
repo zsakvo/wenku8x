@@ -359,6 +359,7 @@ class _DetailScreenState extends ConsumerState<DetailScreen> {
                       child: Text(
                         bookDetail?.intro?.trim() ??
                             "这是一段用来撑开书籍详情骨架屏的占位文本，通常会包含书籍的简介、作者介绍等信息。",
+                        textAlign: TextAlign.justify,
                         style: TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.normal,

@@ -17,7 +17,7 @@ final class CatalogProvider
   }) : super(
          retry: null,
          name: r'catalogProvider',
-         isAutoDispose: true,
+         isAutoDispose: false,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
@@ -47,7 +47,7 @@ final class CatalogProvider
   }
 }
 
-String _$catalogHash() => r'9378205c49a0528099b8836d821c78ade819357e';
+String _$catalogHash() => r'982a89d13d7b9bc0c55b85ce1863e08ad50e2b14';
 
 final class CatalogFamily extends $Family
     with
@@ -64,7 +64,7 @@ final class CatalogFamily extends $Family
         name: r'catalogProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: true,
+        isAutoDispose: false,
       );
 
   CatalogProvider call(String aid) =>

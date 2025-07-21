@@ -233,7 +233,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
           }
 
           // 向后加载：当接近最大索引时
-          if (actualIndex == _maxIndex - 2 && !_isLoadingNext) {
+          if (actualIndex >= _maxIndex - 2 && !_isLoadingNext) {
             _loadNextData();
           }
         });

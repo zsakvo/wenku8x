@@ -47,7 +47,7 @@ final class PagesProvider
   }
 }
 
-String _$pagesHash() => r'85c147c1b11e0a3761773f11f8c5c0df62d4ffff';
+String _$pagesHash() => r'9a3e516fd8cb554ba6e2e2eb4323c675c7b90a46';
 
 final class PagesFamily extends $Family
     with
