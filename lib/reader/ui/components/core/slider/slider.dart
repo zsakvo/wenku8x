@@ -64,7 +64,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
     // 中央区域点击唤起菜单
     if (tapRatio > swipeAreaWidth && tapRatio < (1 - swipeAreaWidth)) {
       // widget.onMenuTap?.call();
-      ref.read(menuProvider.notifier).toggleParent();
+      ref.read(ReaderProviderService().menuProvider_.notifier).toggleParent();
       return;
     }
 

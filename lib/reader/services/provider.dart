@@ -1,5 +1,6 @@
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/detail/providers/catalog.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
 
 class ReaderProviderService {
@@ -10,9 +11,11 @@ class ReaderProviderService {
 
   late CatalogProvider catalogProvider_;
   late PagesProvider pagesProvider_;
+  late MenuProvider menuProvider_;
 
   init(BookModel book) {
     catalogProvider_ = catalogProvider(book.aid);
     pagesProvider_ = pagesProvider(book);
+    menuProvider_ = menuProvider;
   }
 }
