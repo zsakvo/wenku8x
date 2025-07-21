@@ -34,10 +34,11 @@ class _PreferenceScreenState extends ConsumerState<PreferenceScreen> {
     final preference = ref.watch(preferenceProvider);
     final signed = ref.watch(userSignProvider);
     return Scaffold(
+      appBar: AppTopBar(title: "设置"),
       body: ListView(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 32, left: 20),
+            padding: EdgeInsets.only(top: 12, left: 20),
             child: Row(
               spacing: 14,
               crossAxisAlignment: CrossAxisAlignment.center,

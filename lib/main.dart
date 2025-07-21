@@ -20,13 +20,7 @@ class ReaderApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // useBrightness(
-    //   context,
-    //   // autoDarkMode: preference.autoDarkMode,
-    //   // isDarkMode: preference.isDarkMode,
-    //   autoDarkMode: true,
-    //   isDarkMode: false,
-    // );
+    useBrightness(context);
     final brightness = ref.watch(
       preferenceProvider.select((value) => value.brightness),
     );
