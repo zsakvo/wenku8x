@@ -26,8 +26,8 @@ class Menu extends _$Menu {
     state = state.copyWith(typography: !state.typography);
   }
 
-  void toggleTheme() {
-    state = state.copyWith(theme: !state.theme);
+  void toggleBookmark() {
+    state = state.copyWith(bookmark: !state.bookmark);
   }
 
   void toggleConfig() {
@@ -44,7 +44,7 @@ class Menu extends _$Menu {
 
   void dispatch({
     bool? menuCatalogVisible,
-    bool? menuThemeVisible,
+    bool? menuBookmarkVisible,
     bool? menuTextVisible,
     bool? menuConfigVisible,
     bool? menuTopVisible,
@@ -52,7 +52,7 @@ class Menu extends _$Menu {
   }) {
     state = state.copyWith(
       catalog: menuCatalogVisible ?? state.catalog,
-      theme: menuThemeVisible ?? state.theme,
+      bookmark: menuBookmarkVisible ?? state.bookmark,
       typography: menuTextVisible ?? state.typography,
       config: menuConfigVisible ?? state.config,
       top: menuTopVisible ?? state.top,

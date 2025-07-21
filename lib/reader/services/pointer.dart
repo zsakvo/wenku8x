@@ -69,7 +69,7 @@ class PointerService {
           .read(menuProvider.notifier)
           .dispatch(
             menuCatalogVisible: false,
-            menuThemeVisible: false,
+            menuBookmarkVisible: false,
             menuTextVisible: false,
             menuConfigVisible: false,
             menuTopVisible: true,
@@ -94,7 +94,7 @@ class PointerService {
             .read(menuProvider.notifier)
             .dispatch(
               menuCatalogVisible: false,
-              menuThemeVisible: false,
+              menuBookmarkVisible: false,
               menuTextVisible: false,
               menuConfigVisible: false,
               menuTopVisible: true,

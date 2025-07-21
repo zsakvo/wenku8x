@@ -53,7 +53,7 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                 _buildMenuButton(
                   label: "书签",
                   iconPath: "assets/svg/ic_menu_bookmark",
-                  isActive: state.config,
+                  isActive: state.bookmark,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("themeVisible");
                   },

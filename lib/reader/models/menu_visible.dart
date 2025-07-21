@@ -10,7 +10,7 @@ abstract class MenuVisible with _$MenuVisible {
     @Default(false) bool top,
     @Default(false) bool catalog,
     @Default(false) bool typography,
-    @Default(false) bool theme,
+    @Default(false) bool bookmark,
     @Default(false) bool config,
   }) = _MenuVisible;
 
@@ -19,9 +19,9 @@ abstract class MenuVisible with _$MenuVisible {
   factory MenuVisible.fromJson(Map<String, dynamic> json) =>
       _$MenuVisibleFromJson(json);
 
-  bool get all => bottom || top || catalog || typography || theme || config;
+  bool get all => bottom || top || catalog || typography || bookmark || config;
 
-  bool get sub => catalog || typography || theme || config;
+  bool get sub => catalog || typography || bookmark || config;
 
   bool get parent => bottom || top;
 }

@@ -11,7 +11,7 @@ _MenuVisible _$MenuVisibleFromJson(Map<String, dynamic> json) => _MenuVisible(
   top: json['top'] as bool? ?? false,
   catalog: json['catalog'] as bool? ?? false,
   typography: json['typography'] as bool? ?? false,
-  theme: json['theme'] as bool? ?? false,
+  bookmark: json['bookmark'] as bool? ?? false,
   config: json['config'] as bool? ?? false,
 );
 
@@ -21,6 +21,6 @@ Map<String, dynamic> _$MenuVisibleToJson(_MenuVisible instance) =>
       'top': instance.top,
       'catalog': instance.catalog,
       'typography': instance.typography,
-      'theme': instance.theme,
+      'bookmark': instance.bookmark,
       'config': instance.config,
     };
