@@ -68,12 +68,12 @@ class PointerService {
       ref
           .read(menuProvider.notifier)
           .dispatch(
-            menuCatalogVisible: false,
-            menuBookmarkVisible: false,
-            menuTextVisible: false,
-            menuConfigVisible: false,
-            menuTopVisible: true,
-            menuBottomVisible: true,
+            catalog: false,
+            bookmark: false,
+            typography: false,
+            config: false,
+            top: true,
+            bottom: true,
           );
       return;
     }
@@ -93,12 +93,12 @@ class PointerService {
         ref
             .read(menuProvider.notifier)
             .dispatch(
-              menuCatalogVisible: false,
-              menuBookmarkVisible: false,
-              menuTextVisible: false,
-              menuConfigVisible: false,
-              menuTopVisible: true,
-              menuBottomVisible: true,
+              catalog: false,
+              bookmark: false,
+              typography: false,
+              config: false,
+              top: true,
+              bottom: true,
             );
         return;
       } else {

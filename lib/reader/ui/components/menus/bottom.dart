@@ -59,6 +59,9 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                   isActive: state.bookmark,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("themeVisible");
+                    ref
+                        .read(ReaderProviderService().menuProvider_.notifier)
+                        .toggleBookmark();
                   },
                 ),
                 _buildMenuButton(

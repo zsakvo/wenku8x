@@ -19,7 +19,14 @@ class Menu extends _$Menu {
   }
 
   void toggleCatalog() {
-    state = state.copyWith(catalog: !state.catalog, top: state.catalog);
+    dispatch(
+      bookmark: state.catalog,
+      bottom: true,
+      catalog: !state.catalog,
+      typography: state.catalog,
+      config: state.catalog,
+      top: state.catalog,
+    );
   }
 
   void toggleTypography() {
@@ -27,7 +34,15 @@ class Menu extends _$Menu {
   }
 
   void toggleBookmark() {
-    state = state.copyWith(bookmark: !state.bookmark);
+    // state = state.copyWith(bookmark: !state.bookmark);
+    dispatch(
+      bookmark: !state.bookmark,
+      bottom: true,
+      catalog: state.bookmark,
+      typography: state.bookmark,
+      config: state.bookmark,
+      top: state.bookmark,
+    );
   }
 
   void toggleConfig() {
@@ -43,20 +58,20 @@ class Menu extends _$Menu {
   }
 
   void dispatch({
-    bool? menuCatalogVisible,
-    bool? menuBookmarkVisible,
-    bool? menuTextVisible,
-    bool? menuConfigVisible,
-    bool? menuTopVisible,
-    bool? menuBottomVisible,
+    bool? catalog,
+    bool? bookmark,
+    bool? typography,
+    bool? config,
+    bool? top,
+    bool? bottom,
   }) {
     state = state.copyWith(
-      catalog: menuCatalogVisible ?? state.catalog,
-      bookmark: menuBookmarkVisible ?? state.bookmark,
-      typography: menuTextVisible ?? state.typography,
-      config: menuConfigVisible ?? state.config,
-      top: menuTopVisible ?? state.top,
-      bottom: menuBottomVisible ?? state.bottom,
+      catalog: catalog ?? state.catalog,
+      bookmark: bookmark ?? state.bookmark,
+      typography: typography ?? state.typography,
+      config: config ?? state.config,
+      top: top ?? state.top,
+      bottom: bottom ?? state.bottom,
     );
   }
 }

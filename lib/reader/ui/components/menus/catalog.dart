@@ -146,7 +146,7 @@ class _MenuCatalogState extends ConsumerState<MenuCatalog> {
                                 vertical: 0,
                               ),
                               visualDensity: VisualDensity.compact,
-                              title: Text("${index + 1}.\t\t${chapter.title}"),
+                              title: Text(chapter.title),
                               titleTextStyle: TextStyle(
                                 fontSize: 13,
                                 color: Theme.of(context).colorScheme.onSurface,
