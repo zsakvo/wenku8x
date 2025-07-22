@@ -14,6 +14,7 @@ import 'package:wenku8x/reader/ui/components/menus/bookmark.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 import 'package:wenku8x/reader/ui/components/menus/catalog.dart';
 import 'package:wenku8x/reader/ui/components/menus/top.dart';
+import 'package:wenku8x/reader/ui/components/menus/typography.dart';
 
 class ReaderScreen extends StatefulHookConsumerWidget {
   const ReaderScreen({super.key, required this.book});
@@ -65,6 +66,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             // ),
             MenuCatalog(book: widget.book),
             MenuBookmark(),
+            MenuTypography(),
             MenuBottom(isVisible: menuVisible.bottom),
             MenuTop(bookName: widget.book.name),
           ],

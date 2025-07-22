@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
-class MenuBookmark extends StatefulHookConsumerWidget {
-  const MenuBookmark({super.key, this.bottomHeight = 52});
+class MenuTypography extends StatefulHookConsumerWidget {
+  const MenuTypography({super.key, this.bottomHeight = 52});
   final double bottomHeight;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _MenuBookmarkState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MenuTypographyState();
 }
 
-class _MenuBookmarkState extends ConsumerState<MenuBookmark> {
+class _MenuTypographyState extends ConsumerState<MenuTypography> {
   @override
   Widget build(BuildContext context) {
     final menuState = ref.watch(ReaderProviderService().menuProvider_);
@@ -22,7 +22,7 @@ class _MenuBookmarkState extends ConsumerState<MenuBookmark> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       left: 0,
-      bottom: menuState.bookmark ? 0 : -screenHeight,
+      bottom: menuState.typography ? 0 : -screenHeight,
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(bottom: bottomPadding + 16),

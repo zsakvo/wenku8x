@@ -70,6 +70,9 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                   isActive: state.typography,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("fontVisible");
+                    ref
+                        .read(ReaderProviderService().menuProvider_.notifier)
+                        .toggleTypography();
                   },
                 ),
                 _buildMenuButton(

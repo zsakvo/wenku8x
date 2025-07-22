@@ -30,7 +30,15 @@ class Menu extends _$Menu {
   }
 
   void toggleTypography() {
-    state = state.copyWith(typography: !state.typography);
+    // state = state.copyWith(typography: !state.typography);
+    dispatch(
+      bookmark: state.typography,
+      bottom: true,
+      catalog: state.typography,
+      typography: !state.typography,
+      config: state.typography,
+      top: state.typography,
+    );
   }
 
   void toggleBookmark() {
