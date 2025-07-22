@@ -13,6 +13,7 @@ import 'package:wenku8x/reader/ui/components/core/transformer/transformer.dart';
 import 'package:wenku8x/reader/ui/components/menus/bookmark.dart';
 import 'package:wenku8x/reader/ui/components/menus/bottom.dart';
 import 'package:wenku8x/reader/ui/components/menus/catalog.dart';
+import 'package:wenku8x/reader/ui/components/menus/config.dart';
 import 'package:wenku8x/reader/ui/components/menus/top.dart';
 import 'package:wenku8x/reader/ui/components/menus/typography.dart';
 
@@ -67,6 +68,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
             MenuCatalog(book: widget.book),
             MenuBookmark(),
             MenuTypography(),
+            MenuConfig(),
             MenuBottom(isVisible: menuVisible.bottom),
             MenuTop(bookName: widget.book.name),
           ],

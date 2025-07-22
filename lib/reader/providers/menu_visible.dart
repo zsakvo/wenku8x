@@ -20,11 +20,11 @@ class Menu extends _$Menu {
 
   void toggleCatalog() {
     dispatch(
-      bookmark: state.catalog,
+      bookmark: false,
       bottom: true,
       catalog: !state.catalog,
-      typography: state.catalog,
-      config: state.catalog,
+      typography: false,
+      config: false,
       top: state.catalog,
     );
   }
@@ -32,11 +32,11 @@ class Menu extends _$Menu {
   void toggleTypography() {
     // state = state.copyWith(typography: !state.typography);
     dispatch(
-      bookmark: state.typography,
+      bookmark: false,
       bottom: true,
-      catalog: state.typography,
+      catalog: false,
       typography: !state.typography,
-      config: state.typography,
+      config: false,
       top: state.typography,
     );
   }
@@ -46,15 +46,23 @@ class Menu extends _$Menu {
     dispatch(
       bookmark: !state.bookmark,
       bottom: true,
-      catalog: state.bookmark,
-      typography: state.bookmark,
-      config: state.bookmark,
+      catalog: false,
+      typography: false,
+      config: false,
       top: state.bookmark,
     );
   }
 
   void toggleConfig() {
-    state = state.copyWith(config: !state.config);
+    // state = state.copyWith(config: !state.config);
+    dispatch(
+      bookmark: false,
+      bottom: true,
+      catalog: false,
+      typography: false,
+      config: !state.config,
+      top: state.config,
+    );
   }
 
   void reset() {

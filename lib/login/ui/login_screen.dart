@@ -134,47 +134,66 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 32),
-                    SizedBox(
-                      width: double.infinity,
-                      child: FilledButton(
-                        onPressed: canLogin.value
-                            ? () async {
-                                FlashHelper.showLoading();
-                                var res = await Api.login(
-                                  usernameController.text,
-                                  passwordController.text,
-                                );
-                                logger.debug(res);
-                                Future.delayed(
-                                  const Duration(milliseconds: 500),
-                                ).then((_) {
-                                  context.pop();
-                                  if (res) {
-                                    // sp.setString(
-                                    //   "username",
-                                    //   usernameController.text,
-                                    // );
-                                    // sp.setString(
-                                    //   "password",
-                                    //   passwordController.text,
-                                    // );
-                                    if (!mounted) return;
-                                    context.go("/shelf");
-                                  } else {
-                                    FlashHelper.showError("登录失败，用户名或密码错误");
-                                  }
-                                });
-                              }
-                            : null,
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                          ),
-                          padding: EdgeInsets.symmetric(vertical: 12),
+                    Padding(
+                      padding: EdgeInsets.only(top: 32, bottom: 28),
+                      child: Divider(indent: 16, endIndent: 16),
+                    ),
+                    Row(
+                      children: [
+                        Checkbox.adaptive(
+                          value: true,
+                          onChanged: (value) {},
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: Text("登录", style: TextStyle(fontSize: 16)),
-                      ),
+                        Text("记住密码"),
+                        SizedBox(width: 56),
+                        Expanded(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: FilledButton(
+                              onPressed: canLogin.value
+                                  ? () async {
+                                      FlashHelper.showLoading();
+                                      var res = await Api.login(
+                                        usernameController.text,
+                                        passwordController.text,
+                                      );
+                                      logger.debug(res);
+                                      Future.delayed(
+                                        const Duration(milliseconds: 500),
+                                      ).then((_) {
+                                        context.pop();
+                                        if (res) {
+                                          // sp.setString(
+                                          //   "username",
+                                          //   usernameController.text,
+                                          // );
+                                          // sp.setString(
+                                          //   "password",
+                                          //   passwordController.text,
+                                          // );
+                                          if (!mounted) return;
+                                          context.go("/shelf");
+                                        } else {
+                                          FlashHelper.showError(
+                                            "登录失败，用户名或密码错误",
+                                          );
+                                        }
+                                      });
+                                    }
+                                  : null,
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                ),
+                                padding: EdgeInsets.symmetric(vertical: 12),
+                              ),
+                              child: Text("登录", style: TextStyle(fontSize: 16)),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

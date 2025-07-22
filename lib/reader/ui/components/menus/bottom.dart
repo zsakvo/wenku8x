@@ -81,6 +81,9 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                   isActive: state.config,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("settingVisible");
+                    ref
+                        .read(ReaderProviderService().menuProvider_.notifier)
+                        .toggleConfig();
                   },
                 ),
               ],

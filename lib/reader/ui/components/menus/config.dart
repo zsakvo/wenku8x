@@ -1,0 +1,44 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/reader/services/provider.dart';
+
+class MenuConfig extends StatefulHookConsumerWidget {
+  const MenuConfig({super.key, this.bottomHeight = 52});
+  final double bottomHeight;
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MenuConfigState();
+}
+
+class _MenuConfigState extends ConsumerState<MenuConfig> {
+  @override
+  Widget build(BuildContext context) {
+    final menuState = ref.watch(ReaderProviderService().menuProvider_);
+    final screenHeight = MediaQuery.of(context).size.height;
+    final bottomPadding =
+        MediaQuery.of(context).padding.bottom + widget.bottomHeight;
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      left: 0,
+      bottom: menuState.config ? 0 : -screenHeight,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.only(bottom: bottomPadding + 16),
+        height: screenHeight - 300,
+        constraints: BoxConstraints(maxHeight: screenHeight),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withAlpha(20),
+              blurRadius: 8,
+              offset: const Offset(0, -8),
+            ),
+          ],
+        ),
+        child: CustomScrollView(slivers: []),
+      ),
+    );
+  }
+}
