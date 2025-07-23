@@ -55,6 +55,12 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
 
   _onTapUp(TapUpDetails details) {
     if (isAnimating) return;
+    if (ref.read(ReaderProviderService().menuProvider_).sub) {
+      ref
+          .read(ReaderProviderService().menuProvider_.notifier)
+          .forceTopAndBottom();
+      return;
+    }
     final screenWidth = MediaQuery.of(context).size.width;
     final tapX = details.globalPosition.dx;
     final tapRatio = tapX / screenWidth;

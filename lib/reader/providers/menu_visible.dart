@@ -73,6 +73,17 @@ class Menu extends _$Menu {
     state = state.copyWith(bottom: !state.bottom, top: !state.top);
   }
 
+  void forceTopAndBottom() {
+    state = state.copyWith(
+      bottom: true,
+      top: true,
+      catalog: false,
+      bookmark: false,
+      typography: false,
+      config: false,
+    );
+  }
+
   void dispatch({
     bool? catalog,
     bool? bookmark,
