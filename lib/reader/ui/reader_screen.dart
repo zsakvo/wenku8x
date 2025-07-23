@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
@@ -35,58 +36,75 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
     final menuVisible = ref.watch(menuProvider);
     final colorScheme = Theme.of(context).colorScheme;
     // final _pageController = PageController();
-    return Material(
-      color: colorScheme.surfaceContainer,
-      child: switch (pages) {
-        AsyncData(:final value) => Stack(
-          children: [
-            SliderCore(
-              pages: value,
-              fetchNextChapter: ref
-                  .read(ReaderProviderService().pagesProvider_.notifier)
-                  .fetchNextChapter,
-            ),
-            // GestureDetector(
-            //   // onPointerMove: PointerService().onPointerMove,
-            //   // onPointerUp: PointerService().onPointerUp,
-            //   // onPointerDown: PointerService().onPointerDown,
-            //   onTapDown: PointerService().onTapDown,
-            //   onTapUp: PointerService().onTapUp,
-            //   onPanStart: PointerService().onPanStart,
-            //   onPanUpdate: PointerService().onPanUpdate,
-            //   onPanEnd: PointerService().onPanEnd,
-            //   child: PageView.builder(
-            //     controller: ReaderService().pageController,
-            //     itemCount: value.pageCount,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     pageSnapping: false,
-            //     itemBuilder: (context, index) {
-            //       return ChineseLayoutView(page: value.pages[index]);
-            //     },
-            //   ),
-            // ),
-            MenuCatalog(book: widget.book),
-            MenuBookmark(),
-            MenuTypography(),
-            MenuConfig(),
-            MenuBottom(isVisible: menuVisible.bottom),
-            MenuTop(bookName: widget.book.name),
-          ],
-        ),
-        AsyncLoading() => Center(child: LoadingIndicator.contained()),
-        _ => Container(
-          color: colorScheme.surfaceContainer,
-          child: Center(
-            child: Text(
-              "加载失败，请稍后再试",
-              style: TextStyle(
-                color: colorScheme.onSurface.withAlpha(150),
-                fontSize: 16,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        final menuState = ref.read(ReaderProviderService().menuProvider_);
+        if (menuState.sub) {
+          ref
+              .read(ReaderProviderService().menuProvider_.notifier)
+              .forceTopAndBottom();
+        } else if (menuState.parent) {
+          ref
+              .read(ReaderProviderService().menuProvider_.notifier)
+              .toggleParent();
+        } else {
+          context.pop();
+        }
+      },
+      child: Material(
+        color: colorScheme.surfaceContainer,
+        child: switch (pages) {
+          AsyncData(:final value) => Stack(
+            children: [
+              SliderCore(
+                pages: value,
+                fetchNextChapter: ref
+                    .read(ReaderProviderService().pagesProvider_.notifier)
+                    .fetchNextChapter,
+              ),
+              // GestureDetector(
+              //   // onPointerMove: PointerService().onPointerMove,
+              //   // onPointerUp: PointerService().onPointerUp,
+              //   // onPointerDown: PointerService().onPointerDown,
+              //   onTapDown: PointerService().onTapDown,
+              //   onTapUp: PointerService().onTapUp,
+              //   onPanStart: PointerService().onPanStart,
+              //   onPanUpdate: PointerService().onPanUpdate,
+              //   onPanEnd: PointerService().onPanEnd,
+              //   child: PageView.builder(
+              //     controller: ReaderService().pageController,
+              //     itemCount: value.pageCount,
+              //     physics: const NeverScrollableScrollPhysics(),
+              //     pageSnapping: false,
+              //     itemBuilder: (context, index) {
+              //       return ChineseLayoutView(page: value.pages[index]);
+              //     },
+              //   ),
+              // ),
+              MenuCatalog(book: widget.book),
+              MenuBookmark(),
+              MenuTypography(),
+              MenuConfig(),
+              MenuBottom(isVisible: menuVisible.bottom),
+              MenuTop(bookName: widget.book.name),
+            ],
+          ),
+          AsyncLoading() => Center(child: LoadingIndicator.contained()),
+          _ => Container(
+            color: colorScheme.surfaceContainer,
+            child: Center(
+              child: Text(
+                "加载失败，请稍后再试",
+                style: TextStyle(
+                  color: colorScheme.onSurface.withAlpha(150),
+                  fontSize: 16,
+                ),
               ),
             ),
           ),
-        ),
-      },
+        },
+      ),
     );
   }
 }
