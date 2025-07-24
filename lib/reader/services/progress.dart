@@ -1,10 +1,10 @@
-import 'package:wenku8x/app/models/book.dart';
+import 'package:wenku8x/reader/models/progress.dart';
 
 class ReaderProgressService {
   static final ReaderProgressService _instance =
       ReaderProgressService._internal();
 
-  BookModel? _book;
+  ProgressModel? _progress;
 
   // Private constructor
   ReaderProgressService._internal();
@@ -13,17 +13,38 @@ class ReaderProgressService {
   factory ReaderProgressService() => _instance;
 
   // Method to initialize with book
-  void init(BookModel book) {
-    _book = book;
+  void init(ProgressModel progress) {
+    _progress = progress;
   }
 
   // Getter for book
-  BookModel? get book => _book;
+  ProgressModel? get progress => _progress;
 
-  double getCurrentProgress() {
-    if (_book == null) {
-      throw Exception('ReaderProgressService not initialized with a book');
+  // int getCurrentProgress() {
+  //   if (_progress == null) {
+  //     throw Exception('ReaderProgressService not initialized with a progress');
+  //   }
+  //   return _progress!.paragraphIndex;
+  // }
+
+  String get chapterId {
+    if (_progress == null) {
+      throw Exception('ReaderProgressService not initialized with a progress');
     }
-    return 0.0;
+    return _progress!.chapterId;
+  }
+
+  int get paragraphIndex {
+    if (_progress == null) {
+      throw Exception('ReaderProgressService not initialized with a progress');
+    }
+    return _progress!.paragraphIndex;
+  }
+
+  int get lineIndex {
+    if (_progress == null) {
+      throw Exception('ReaderProgressService not initialized with a progress');
+    }
+    return _progress!.lineIndex;
   }
 }
