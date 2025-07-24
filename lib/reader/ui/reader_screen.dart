@@ -62,6 +62,9 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                 fetchNextChapter: ref
                     .read(ReaderProviderService().pagesProvider_.notifier)
                     .fetchNextChapter,
+                onPageChanged: (index) {
+                  //
+                },
               ),
               // GestureDetector(
               //   // onPointerMove: PointerService().onPointerMove,

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
-import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class SliderCore extends StatefulHookConsumerWidget {
@@ -11,10 +8,12 @@ class SliderCore extends StatefulHookConsumerWidget {
     super.key,
     required this.pages,
     required this.fetchNextChapter,
+    this.onPageChanged,
   });
 
   final Map<int, PageLayout> pages;
   final Future<int> Function() fetchNextChapter;
+  final void Function(int index)? onPageChanged;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SliderCoreState();
