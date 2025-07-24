@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -12,6 +13,7 @@ import 'package:wenku8x/app/models/catalog.dart';
 import 'package:wenku8x/app/services/path.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
+import 'package:wenku8x/reader/models/progress.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 part 'pages.g.dart';
@@ -27,9 +29,31 @@ class Pages extends _$Pages {
     final catalog = await ref.watch(
       ReaderProviderService().catalogProvider_.future,
     );
-    final ChapterModel lastRead = catalog.volumes
-        .expand((volume) => volume.chapters)
-        .first;
+    final expandedChapters = catalog.volumes.expand(
+      (volume) => volume.chapters,
+    );
+    late ChapterModel lastRead;
+    if (await _progressFile.exists()) {
+      try {
+        final cid = ProgressModel.fromJson(
+          jsonDecode(await _progressFile.readAsString()),
+        ).chapterId;
+        lastRead =
+            expandedChapters.firstWhereOrNull(
+              (chapter) => chapter.cid == cid,
+            ) ??
+            expandedChapters.first;
+      } catch (e) {
+        logger.error("Failed to read progress file: $e");
+        lastRead = expandedChapters.first;
+      }
+    } else {
+      logger.debug("Progress file not found, using first chapter.");
+      lastRead = expandedChapters.first;
+    }
+    // final ChapterModel lastRead = catalog.volumes
+    //     .expand((volume) => volume.chapters)
+    //     .first;
     final txt = await _fetchChapterContent(lastRead.cid);
     _layoutHelper = ChineseLayoutHelper(
       bookName: book.name,
@@ -128,5 +152,9 @@ class Pages extends _$Pages {
       await chapterFile.writeAsString(content);
       return content;
     }
+  }
+
+  File get _progressFile {
+    return File(join(PathService().booksDirectory, book.aid, "progress.json"));
   }
 }
