@@ -22,13 +22,14 @@ class Api {
     return await Ajax.post(
       "action=login&username=$usernameEncoded&password=$passwordEncoded&usecookie=315360000",
     ).then((value) {
-      final success = value == "1";
-      final sp = SharedPreferencesAsync();
-      if (success) {
-        sp.setString("username", username);
-        sp.setString("password", password);
-      }
-      return success;
+      // final success = value == "1";
+      // final sp = SharedPreferencesAsync();
+      // if (success) {
+      //   sp.setString("username", username);
+      //   sp.setString("password", password);
+      // }
+      // return success;
+      return value == "1";
     });
   }
 

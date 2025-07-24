@@ -1,10 +1,15 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path/path.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
 import 'package:wenku8x/app/libs/request/apis.dart';
+import 'package:wenku8x/app/services/path.dart';
 import 'package:wenku8x/app/ui/components/top_bar.dart';
 import 'package:wenku8x/app/utils/flash.dart';
 
@@ -17,12 +22,24 @@ class LoginScreen extends StatefulHookConsumerWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final logger = Logger("LoginScreen");
+  File get loginFile =>
+      File(join(PathService().applicationSupportDirectory, "login.json"));
   @override
   Widget build(BuildContext context) {
     final usernameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final canLogin = useState(false);
     final showPassword = useState(false);
+    final savePassword = useState(loginFile.existsSync());
+
+    useEffect(() {
+      if (savePassword.value) {
+        final loginInfo = jsonDecode(loginFile.readAsStringSync());
+        usernameController.text = loginInfo['username'];
+        passwordController.text = loginInfo['password'];
+      }
+      return null;
+    }, [usernameController, passwordController]);
 
     void updateCanLogin() {
       canLogin.value =
@@ -140,13 +157,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                     Row(
                       children: [
-                        Checkbox.adaptive(
-                          value: true,
-                          onChanged: (value) {},
-                          materialTapTargetSize:
-                              MaterialTapTargetSize.shrinkWrap,
+                        GestureDetector(
+                          child: Row(
+                            children: [
+                              Checkbox.adaptive(
+                                tristate: true,
+                                value: savePassword.value,
+                                onChanged: (value) {
+                                  savePassword.value = value ?? false;
+                                },
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.shrinkWrap,
+                              ),
+                              Text("记住密码"),
+                            ],
+                          ),
+                          onTap: () {
+                            savePassword.value = !savePassword.value;
+                          },
                         ),
-                        Text("记住密码"),
                         SizedBox(width: 56),
                         Expanded(
                           child: SizedBox(
@@ -163,22 +192,34 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                       Future.delayed(
                                         const Duration(milliseconds: 500),
                                       ).then((_) {
-                                        context.pop();
-                                        if (res) {
-                                          // sp.setString(
-                                          //   "username",
-                                          //   usernameController.text,
-                                          // );
-                                          // sp.setString(
-                                          //   "password",
-                                          //   passwordController.text,
-                                          // );
-                                          if (!mounted) return;
-                                          context.go("/shelf");
-                                        } else {
-                                          FlashHelper.showError(
-                                            "登录失败，用户名或密码错误",
-                                          );
+                                        if (context.mounted) {
+                                          context.pop();
+                                          if (res) {
+                                            // sp.setString(
+                                            //   "username",
+                                            //   usernameController.text,
+                                            // );
+                                            // sp.setString(
+                                            //   "password",
+                                            //   passwordController.text,
+                                            // );
+
+                                            loginFile.createSync(
+                                              recursive: true,
+                                            );
+                                            if (savePassword.value) {
+                                              loginFile.writeAsStringSync(
+                                                '{"username": "${usernameController.text}", "password": "${passwordController.text}"}',
+                                              );
+                                            } else {
+                                              loginFile.deleteSync();
+                                            }
+                                            context.go("/shelf");
+                                          } else {
+                                            FlashHelper.showError(
+                                              "登录失败，用户名或密码错误",
+                                            );
+                                          }
                                         }
                                       });
                                     }
