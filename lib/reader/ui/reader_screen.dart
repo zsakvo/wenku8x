@@ -4,9 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
+import 'package:wenku8x/reader/models/progress.dart';
 import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/providers/pages.dart';
 import 'package:wenku8x/reader/services/pointer.dart';
+import 'package:wenku8x/reader/services/progress.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 import 'package:wenku8x/reader/services/screen.dart';
 import 'package:wenku8x/reader/ui/components/core/slider/slider.dart';
@@ -62,8 +64,12 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
                 fetchNextChapter: ref
                     .read(ReaderProviderService().pagesProvider_.notifier)
                     .fetchNextChapter,
-                onPageChanged: (index) {
-                  //
+                onPageChanged: (page) {
+                  logger.debug("Page content: $page");
+                  logger.debug(
+                    "Page content: ${page.paragraphs.first.lines.first}",
+                  );
+                  ReaderProgressService().update(page);
                 },
               ),
               // GestureDetector(

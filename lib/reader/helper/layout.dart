@@ -111,6 +111,7 @@ class ChineseLayoutHelper {
     String text, {
     BuildContext? context,
     required String title,
+    required String chapterId,
   }) {
     // 获取布局尺寸，如果未指定则使用屏幕尺寸
     final Size layoutSize = Size(
@@ -245,6 +246,7 @@ class ChineseLayoutHelper {
           // 添加当前页面到结果中
           pages.add(
             PageLayout(
+              chapterId: chapterId,
               paragraphs: List.from(currentPageParagraphs),
               drawingArea: drawingArea,
               title: title,
@@ -307,6 +309,7 @@ class ChineseLayoutHelper {
             // 添加当前页面到结果中
             pages.add(
               PageLayout(
+                chapterId: chapterId,
                 paragraphs: List.from(currentPageParagraphs),
                 drawingArea: drawingArea,
                 titleTopSpacing: titleTopSpacing,
@@ -402,6 +405,7 @@ class ChineseLayoutHelper {
 
       pages.add(
         PageLayout(
+          chapterId: chapterId,
           paragraphs: currentPageParagraphs,
           drawingArea: drawingArea,
           titleTopSpacing: titleTopSpacing,
@@ -634,6 +638,9 @@ class LayoutResult {
 
 /// 页面布局信息
 class PageLayout {
+  /// 该页面的 chapterId
+  final String chapterId;
+
   /// 该页包含的段落
   final List<ParagraphLayout> paragraphs;
 
@@ -680,6 +687,7 @@ class PageLayout {
   int pageCount;
 
   PageLayout({
+    required this.chapterId,
     required this.paragraphs,
     required this.drawingArea,
     required this.titleTopSpacing,
@@ -696,6 +704,11 @@ class PageLayout {
     this.topBarTextStyle,
     this.bottomBarTextStyle,
   });
+
+  @override
+  String toString() {
+    return 'PageLayout(chapterId: $chapterId, index: $index, pageCount: $pageCount, title: $title, paragraphs: ${paragraphs.length}, drawingArea: $drawingArea)';
+  }
 }
 
 /// 段落布局信息
@@ -741,6 +754,11 @@ class LineLayout {
     this.isLastLineInParagraph = false,
     this.isFirstLineInParagraph = false,
   });
+
+  @override
+  toString() {
+    return 'LineLayout(paragraphIndex: $paragraphIndex, lineIndex: $lineIndex, text: "$text", bounds: $bounds, isLastLineInParagraph: $isLastLineInParagraph, isFirstLineInParagraph: $isFirstLineInParagraph)';
+  }
 }
 
 /// 用于绘制布局结果的自定义画布

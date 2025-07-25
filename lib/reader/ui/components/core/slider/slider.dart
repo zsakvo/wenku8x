@@ -13,7 +13,7 @@ class SliderCore extends StatefulHookConsumerWidget {
 
   final Map<int, PageLayout> pages;
   final Future<int> Function() fetchNextChapter;
-  final void Function(int index)? onPageChanged;
+  final void Function(PageLayout page)? onPageChanged;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SliderCoreState();
@@ -226,12 +226,12 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
           isAnimating = false;
           if (_centerIndex != targetPage) {
             _centerIndex = targetPage;
-            // widget.onPageChanged?.call(_currentPage);
           }
           final actualIndex = pageController.page?.round() ?? 0 + _minIndex;
           logger.debug(
             "Page changed to: $actualIndex, Center index: $_centerIndex",
           );
+          widget.onPageChanged?.call(widget.pages[actualIndex]!);
           // 向前加载：当接近最小索引时
           if (actualIndex <= _minIndex + 2 && !_isLoadingPrev) {
             _loadPreviousData();

@@ -14,6 +14,7 @@ import 'package:wenku8x/app/services/path.dart';
 import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
 import 'package:wenku8x/reader/models/progress.dart';
+import 'package:wenku8x/reader/services/progress.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 part 'pages.g.dart';
@@ -32,25 +33,37 @@ class Pages extends _$Pages {
     final expandedChapters = catalog.volumes.expand(
       (volume) => volume.chapters,
     );
-    late ChapterModel lastRead;
+    late ProgressModel progress;
     if (await _progressFile.exists()) {
       try {
-        final cid = ProgressModel.fromJson(
+        progress = ProgressModel.fromJson(
           jsonDecode(await _progressFile.readAsString()),
-        ).chapterId;
-        lastRead =
-            expandedChapters.firstWhereOrNull(
-              (chapter) => chapter.cid == cid,
-            ) ??
-            expandedChapters.first;
+        );
       } catch (e) {
         logger.error("Failed to read progress file: $e");
-        lastRead = expandedChapters.first;
+        // lastRead = expandedChapters.first;
+        progress = ProgressModel(
+          bookId: book.aid,
+          chapterId: expandedChapters.first.cid,
+          paragraphIndex: 0,
+          lineIndex: 0,
+        );
       }
     } else {
       logger.debug("Progress file not found, using first chapter.");
-      lastRead = expandedChapters.first;
+      progress = ProgressModel(
+        bookId: book.aid,
+        chapterId: expandedChapters.first.cid,
+        paragraphIndex: 0,
+        lineIndex: 0,
+      );
     }
+    ReaderProgressService().init(progress);
+    final lastRead =
+        expandedChapters.firstWhereOrNull(
+          (chapter) => chapter.cid == progress.chapterId,
+        ) ??
+        expandedChapters.first;
     // final ChapterModel lastRead = catalog.volumes
     //     .expand((volume) => volume.chapters)
     //     .first;
@@ -97,7 +110,7 @@ class Pages extends _$Pages {
       ),
     );
     final pages = _layoutHelper
-        .calculateLayout(txt, title: lastRead.title)
+        .calculateLayout(txt, title: lastRead.title, chapterId: lastRead.cid)
         .pages;
     logger.debug(
       "Calculated ${pages.length} pages for book: ${book.name}, last read chapter: ${lastRead.title}",
@@ -121,7 +134,7 @@ class Pages extends _$Pages {
     final chapter = flatCatalogRes[_latestChapterIndex + 1];
     final txt = await _fetchChapterContent(chapter.cid);
     final pages = _layoutHelper
-        .calculateLayout(txt, title: chapter.title)
+        .calculateLayout(txt, title: chapter.title, chapterId: chapter.cid)
         .pages;
     final pageMap = pages.asMap().map(
       (index, element) => MapEntry(exsitingPageNum + index, element),
