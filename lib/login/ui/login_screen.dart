@@ -37,6 +37,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         final loginInfo = jsonDecode(loginFile.readAsStringSync());
         usernameController.text = loginInfo['username'];
         passwordController.text = loginInfo['password'];
+        canLogin.value =
+            usernameController.text.isNotEmpty &&
+            passwordController.text.isNotEmpty;
       }
       return null;
     }, [usernameController, passwordController]);
