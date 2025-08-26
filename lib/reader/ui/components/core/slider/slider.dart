@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wenku8x/reader/helper/layout.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class SliderCore extends StatefulHookConsumerWidget {
@@ -54,10 +55,10 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
 
   _onTapUp(TapUpDetails details) {
     if (isAnimating) return;
-    if (ref.read(ReaderProviderService().menuProvider_).sub) {
+    if (ref.read(ReaderProviderService().menuProvider_).subMenuVisible) {
       ref
           .read(ReaderProviderService().menuProvider_.notifier)
-          .forceTopAndBottom();
+          .disposeSubMenus();
       return;
     }
     final screenWidth = MediaQuery.of(context).size.width;
@@ -69,6 +70,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
     // 中央区域点击唤起菜单
     if (tapRatio > swipeAreaWidth && tapRatio < (1 - swipeAreaWidth)) {
       // widget.onMenuTap?.call();
+      logger.debug("Toggle menu");
       ref.read(ReaderProviderService().menuProvider_.notifier).toggleParent();
       return;
     }

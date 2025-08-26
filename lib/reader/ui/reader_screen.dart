@@ -42,11 +42,11 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         final menuState = ref.read(ReaderProviderService().menuProvider_);
-        if (menuState.sub) {
+        if (menuState.subMenuVisible) {
           ref
               .read(ReaderProviderService().menuProvider_.notifier)
-              .forceTopAndBottom();
-        } else if (menuState.parent) {
+              .disposeSubMenus();
+        } else if (menuState.bottomAndTopVisible) {
           ref
               .read(ReaderProviderService().menuProvider_.notifier)
               .toggleParent();
@@ -95,7 +95,7 @@ class _ReaderScreenState extends ConsumerState<ReaderScreen> {
               MenuBookmark(),
               MenuTypography(),
               MenuConfig(),
-              MenuBottom(isVisible: menuVisible.bottom),
+              MenuBottom(isVisible: menuVisible.bottomVisible),
               MenuTop(bookName: widget.book.name),
             ],
           ),

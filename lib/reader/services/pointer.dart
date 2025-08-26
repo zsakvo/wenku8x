@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:ubuntu_logger/ubuntu_logger.dart';
-import 'package:wenku8x/app/ui/router.dart';
 import 'package:wenku8x/reader/providers/menu_visible.dart';
-import 'package:wenku8x/reader/services/provider.dart';
 import 'package:wenku8x/reader/services/screen.dart';
 
 class PointerService {
@@ -37,10 +35,10 @@ class PointerService {
   void onPointerMove(PointerMoveEvent event) {
     final menuVisible = ref.read(menuProvider);
     // Handle pointer move events
-    if (menuVisible.sub) {
+    if (menuVisible.subMenuVisible) {
       return;
     }
-    if (menuVisible.parent) {
+    if (menuVisible.bottomAndTopVisible) {
       return;
     }
     // // 当移动距离 posX 大于 5 个像素的时候开始跟随
@@ -64,22 +62,13 @@ class PointerService {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     // 如果子菜单开启，则不响应翻页 只关闭子菜单
-    if (menuVisible.sub) {
-      ref
-          .read(menuProvider.notifier)
-          .dispatch(
-            catalog: false,
-            bookmark: false,
-            typography: false,
-            config: false,
-            top: true,
-            bottom: true,
-          );
+    if (menuVisible.subMenuVisible) {
+      ref.read(menuProvider.notifier).disposeSubMenus();
       return;
     }
     // // 如果父菜单开启，则不响应翻页，只关闭父菜单
-    if (menuVisible.parent) {
-      ref.read(menuProvider.notifier).reset();
+    if (menuVisible.bottomAndTopVisible) {
+      ref.read(menuProvider.notifier).disposeAll();
       return;
     }
     final dx = event.position.dx;
@@ -89,20 +78,11 @@ class PointerService {
     // // 检测 dx 绝对值
     if (deltaX.abs() < 5) {
       // 如果开启了子菜单，则隐藏子菜单
-      if (ref.read(menuProvider).sub) {
-        ref
-            .read(menuProvider.notifier)
-            .dispatch(
-              catalog: false,
-              bookmark: false,
-              typography: false,
-              config: false,
-              top: true,
-              bottom: true,
-            );
+      if (ref.read(menuProvider).bottomAndTopVisible) {
+        ref.read(menuProvider.notifier).disposeSubMenus();
         return;
       } else {
-        if (menuVisible.bottom) {
+        if (menuVisible.bottomVisible) {
           // ref.read(readerMenuStateProvider.notifier).toggleBottomAndTop();
           ref.read(menuProvider.notifier).toggleParent();
         } else {

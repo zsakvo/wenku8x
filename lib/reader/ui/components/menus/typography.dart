@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class MenuTypography extends StatefulHookConsumerWidget {
@@ -22,7 +23,7 @@ class _MenuTypographyState extends ConsumerState<MenuTypography> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       left: 0,
-      bottom: menuState.typography ? 0 : -screenHeight,
+      bottom: menuState.typographyVisible ? 0 : -screenHeight,
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(bottom: bottomPadding + 16),

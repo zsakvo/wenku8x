@@ -1,104 +1,56 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:wenku8x/reader/models/menu_visible.dart';
 
 part 'menu_visible.g.dart';
+
+int SHOW_BOTTOM_MENU = 1 << 1;
+int SHOW_TOP_MENU = 1 << 2;
+int SHOW_CATALOG_MENU = 1 << 3;
+int SHOW_BOOKMARK_MENU = 1 << 4;
+int SHOW_TYPOGRAPHY_MENU = 1 << 5;
+int SHOW_CONFIG_MENU = 1 << 6;
 
 @riverpod
 class Menu extends _$Menu {
   @override
-  MenuVisible build() {
-    return MenuVisible();
+  int build() {
+    return 0;
   }
 
-  void toggleBottom() {
-    state = state.copyWith(bottom: !state.bottom);
+  toggleSubMenu(int menu) {
+    if (state & menu == 0) {
+      state = 0 | SHOW_BOTTOM_MENU | menu;
+    } else {
+      disposeSubMenus();
+    }
   }
 
-  void toggleTop() {
-    state = state.copyWith(top: !state.top);
+  disposeSubMenus() {
+    state = 0 | SHOW_BOTTOM_MENU | SHOW_TOP_MENU;
   }
 
-  void toggleCatalog() {
-    dispatch(
-      bookmark: false,
-      bottom: true,
-      catalog: !state.catalog,
-      typography: false,
-      config: false,
-      top: state.catalog,
-    );
+  disposeAll() {
+    state = 0;
   }
 
-  void toggleTypography() {
-    // state = state.copyWith(typography: !state.typography);
-    dispatch(
-      bookmark: false,
-      bottom: true,
-      catalog: false,
-      typography: !state.typography,
-      config: false,
-      top: state.typography,
-    );
+  toggleParent() {
+    state ^= (SHOW_BOTTOM_MENU | SHOW_TOP_MENU);
   }
+}
 
-  void toggleBookmark() {
-    // state = state.copyWith(bookmark: !state.bookmark);
-    dispatch(
-      bookmark: !state.bookmark,
-      bottom: true,
-      catalog: false,
-      typography: false,
-      config: false,
-      top: state.bookmark,
-    );
-  }
-
-  void toggleConfig() {
-    // state = state.copyWith(config: !state.config);
-    dispatch(
-      bookmark: false,
-      bottom: true,
-      catalog: false,
-      typography: false,
-      config: !state.config,
-      top: state.config,
-    );
-  }
-
-  void reset() {
-    state = MenuVisible();
-  }
-
-  void toggleParent() {
-    state = state.copyWith(bottom: !state.bottom, top: !state.top);
-  }
-
-  void forceTopAndBottom() {
-    state = state.copyWith(
-      bottom: true,
-      top: true,
-      catalog: false,
-      bookmark: false,
-      typography: false,
-      config: false,
-    );
-  }
-
-  void dispatch({
-    bool? catalog,
-    bool? bookmark,
-    bool? typography,
-    bool? config,
-    bool? top,
-    bool? bottom,
-  }) {
-    state = state.copyWith(
-      catalog: catalog ?? state.catalog,
-      bookmark: bookmark ?? state.bookmark,
-      typography: typography ?? state.typography,
-      config: config ?? state.config,
-      top: top ?? state.top,
-      bottom: bottom ?? state.bottom,
-    );
-  }
+extension MenuStateExtension on int {
+  bool get bottomVisible => this & SHOW_BOTTOM_MENU != 0;
+  bool get topVisible => this & SHOW_TOP_MENU != 0;
+  bool get catalogVisible => this & SHOW_CATALOG_MENU != 0;
+  bool get typographyVisible => this & SHOW_TYPOGRAPHY_MENU != 0;
+  bool get bookmarkVisible => this & SHOW_BOOKMARK_MENU != 0;
+  bool get configVisible => this & SHOW_CONFIG_MENU != 0;
+  bool get bottomAndTopVisible =>
+      this & (SHOW_BOTTOM_MENU | SHOW_TOP_MENU) != 0;
+  bool get subMenuVisible =>
+      this &
+          (SHOW_CATALOG_MENU |
+              SHOW_BOOKMARK_MENU |
+              SHOW_TYPOGRAPHY_MENU |
+              SHOW_CONFIG_MENU) !=
+      0;
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class MenuBookmark extends StatefulHookConsumerWidget {
@@ -22,7 +23,7 @@ class _MenuBookmarkState extends ConsumerState<MenuBookmark> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       left: 0,
-      bottom: menuState.bookmark ? 0 : -screenHeight,
+      bottom: menuState.bookmarkVisible ? 0 : -screenHeight,
       child: Container(
         width: MediaQuery.of(context).size.width,
         padding: EdgeInsets.only(bottom: bottomPadding + 16),

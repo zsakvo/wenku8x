@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class MenuTop extends StatefulHookConsumerWidget {
@@ -29,7 +30,7 @@ class _MenuTopState extends ConsumerState<MenuTop> {
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      bottom: state.top ? bottomPadding : -widget.height - bottomPadding,
+      bottom: state.topVisible ? bottomPadding : -widget.height - bottomPadding,
       left: 0,
       right: 0,
       child: Container(

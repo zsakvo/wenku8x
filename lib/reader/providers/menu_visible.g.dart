@@ -9,7 +9,7 @@ part of 'menu_visible.dart';
 @ProviderFor(Menu)
 const menuProvider = MenuProvider._();
 
-final class MenuProvider extends $NotifierProvider<Menu, MenuVisible> {
+final class MenuProvider extends $NotifierProvider<Menu, int> {
   const MenuProvider._()
     : super(
         from: null,
@@ -29,28 +29,28 @@ final class MenuProvider extends $NotifierProvider<Menu, MenuVisible> {
   Menu create() => Menu();
 
   /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(MenuVisible value) {
+  Override overrideWithValue(int value) {
     return $ProviderOverride(
       origin: this,
-      providerOverride: $SyncValueProvider<MenuVisible>(value),
+      providerOverride: $SyncValueProvider<int>(value),
     );
   }
 }
 
-String _$menuHash() => r'f556f000b03647a934fbb2716290e7040f7b3947';
+String _$menuHash() => r'a968df3101eced8f56fcdddce218ab5cbfc42efe';
 
-abstract class _$Menu extends $Notifier<MenuVisible> {
-  MenuVisible build();
+abstract class _$Menu extends $Notifier<int> {
+  int build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<MenuVisible, MenuVisible>;
+    final ref = this.ref as $Ref<int, int>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<MenuVisible, MenuVisible>,
-              MenuVisible,
+              AnyNotifier<int, int>,
+              int,
               Object?,
               Object?
             >;

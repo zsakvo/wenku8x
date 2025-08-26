@@ -6,6 +6,7 @@ import 'package:wenku8x/app/models/book.dart';
 import 'package:wenku8x/app/services/variable.dart';
 import 'package:wenku8x/app/ui/components/loading/loading_indicator.dart';
 import 'package:wenku8x/reader/providers/catalog.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class MenuCatalog extends StatefulHookConsumerWidget {
@@ -27,7 +28,7 @@ class _MenuCatalogState extends ConsumerState<MenuCatalog> {
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
       left: 0,
-      bottom: menuState.catalog ? 0 : -screenHeight,
+      bottom: menuState.catalogVisible ? 0 : -screenHeight,
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: screenHeight - 100,

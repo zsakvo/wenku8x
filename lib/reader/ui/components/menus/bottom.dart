@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wenku8x/reader/providers/menu_visible.dart';
 import 'package:wenku8x/reader/services/provider.dart';
 
 class MenuBottom extends StatefulHookConsumerWidget {
@@ -28,7 +29,7 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
     return AnimatedPositioned(
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeInOut,
-      bottom: state.bottom ? 0 : -widget.height - bottomPadding,
+      bottom: state.bottomVisible ? 0 : -widget.height - bottomPadding,
       left: 0,
       right: 0,
       height: widget.height + bottomPadding,
@@ -45,45 +46,45 @@ class _MenuBottomState extends ConsumerState<MenuBottom> {
                 _buildMenuButton(
                   label: "目录",
                   iconPath: "assets/svg/ic_menu_doc",
-                  isActive: state.catalog,
+                  isActive: state.catalogVisible,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("directoryVisible");
                     ref
                         .read(ReaderProviderService().menuProvider_.notifier)
-                        .toggleCatalog();
+                        .toggleSubMenu(SHOW_CATALOG_MENU);
                   },
                 ),
                 _buildMenuButton(
                   label: "书签",
                   iconPath: "assets/svg/ic_menu_bookmark",
-                  isActive: state.bookmark,
+                  isActive: state.bookmarkVisible,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("themeVisible");
                     ref
                         .read(ReaderProviderService().menuProvider_.notifier)
-                        .toggleBookmark();
+                        .toggleSubMenu(SHOW_BOOKMARK_MENU);
                   },
                 ),
                 _buildMenuButton(
                   label: "排版",
                   iconPath: "assets/svg/ic_menu_font",
-                  isActive: state.typography,
+                  isActive: state.typographyVisible,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("fontVisible");
                     ref
                         .read(ReaderProviderService().menuProvider_.notifier)
-                        .toggleTypography();
+                        .toggleSubMenu(SHOW_TYPOGRAPHY_MENU);
                   },
                 ),
                 _buildMenuButton(
                   label: "设置",
                   iconPath: "assets/svg/ic_menu_settings",
-                  isActive: state.config,
+                  isActive: state.configVisible,
                   onPressed: () {
                     // ref.read(readerMenusProvider.notifier).toggleSubMenu("settingVisible");
                     ref
                         .read(ReaderProviderService().menuProvider_.notifier)
-                        .toggleConfig();
+                        .toggleSubMenu(SHOW_CONFIG_MENU);
                   },
                 ),
               ],
