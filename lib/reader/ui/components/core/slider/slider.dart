@@ -61,6 +61,10 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
           .disposeSubMenus();
       return;
     }
+    if (ref.read(ReaderProviderService().menuProvider_).bottomAndTopVisible) {
+      ref.read(ReaderProviderService().menuProvider_.notifier).disposeAll();
+      return;
+    }
     final screenWidth = MediaQuery.of(context).size.width;
     final tapX = details.globalPosition.dx;
     final tapRatio = tapX / screenWidth;
@@ -70,7 +74,6 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
     // 中央区域点击唤起菜单
     if (tapRatio > swipeAreaWidth && tapRatio < (1 - swipeAreaWidth)) {
       // widget.onMenuTap?.call();
-      logger.debug("Toggle menu");
       ref.read(ReaderProviderService().menuProvider_.notifier).toggleParent();
       return;
     }
