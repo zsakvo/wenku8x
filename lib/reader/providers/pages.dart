@@ -112,10 +112,20 @@ class Pages extends _$Pages {
     final pages = _layoutHelper
         .calculateLayout(txt, title: lastRead.title, chapterId: lastRead.cid)
         .pages;
+    final pageIndex = ReaderProgressService().getPage(pages);
     logger.debug(
       "Calculated ${pages.length} pages for book: ${book.name}, last read chapter: ${lastRead.title}",
     );
-    final res = pages.asMap().map((index, element) => MapEntry(index, element));
+    logger.debug(
+      "Last read chapter ID: ${lastRead.cid}, page index: $pageIndex",
+    );
+    var res = pages.asMap().map((index, element) => MapEntry(index, element));
+    // 针对 res 中每个 key 都减少 pageIndex 的值
+    if (pageIndex > 0) {
+      res = res.map((key, value) {
+        return MapEntry(key - pageIndex, value);
+      });
+    }
     return res;
   }
 

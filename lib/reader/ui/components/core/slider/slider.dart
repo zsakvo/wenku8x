@@ -48,7 +48,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
   void initState() {
     super.initState();
     pageController = PageController();
-    _minIndex = 0;
+    _minIndex = widget.pages.keys.first;
     _maxIndex = widget.pages.length - 1;
     // pageController.addListener(_onPageChanged);
   }
@@ -115,7 +115,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
 
       double offset = pageController.offset - details.delta.dx;
       if (offset <= 0) {
-        offset = 0;
+        // offset = 0;
       } else {
         offset = offset > pageController.position.maxScrollExtent
             ? pageController.position.maxScrollExtent
@@ -151,7 +151,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
       targetPage = (_centerIndex + 1).clamp(0, widget.pages.length - 1);
     } else if (totalDragDistance < -5) {
       // 向右滑动超过阈值，翻到上一页
-      targetPage = (_centerIndex - 1).clamp(0, widget.pages.length - 1);
+      targetPage = (_centerIndex - 1).clamp(_minIndex, widget.pages.length - 1);
     }
 
     logger.debug("当前是否单一滑动方向: $singleDirection");
@@ -292,7 +292,7 @@ class _SliderCoreState extends ConsumerState<SliderCore> {
         physics: const NeverScrollableScrollPhysics(),
         pageSnapping: false,
         itemBuilder: (context, index) {
-          final actualIndex = index + _minIndex;
+          final actualIndex = index - _minIndex;
           logger.debug("Building page at index: $actualIndex");
           final page = widget.pages[actualIndex]!;
           return CustomPaint(
