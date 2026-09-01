@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plist version="1.0">
+    <dict>
+        <key>method</key>
+        <string>ad-hoc</string>  <!-- 可以根据需要选择不同的method，如app-store, enterprise等 -->
+        
+        <key>provisioningProfiles</key>
+        <dict>
+            <key>cc.zsakvo.wenku8</key>
+            <string>None</string>  <!-- 跳过签名配置 -->
+        </dict>
+
+        <key>signingStyle</key>
+        <string>manual</string>  <!-- 强制使用手动签名，不依赖于Xcode默认签名 -->
+        
+        <key>teamID</key>
+        <string>YOUR_TEAM_ID</string>  <!-- 你的开发团队ID，可以忽略此项 -->
+    </dict>
+</plist>

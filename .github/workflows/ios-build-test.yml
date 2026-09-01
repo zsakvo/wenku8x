@@ -1,0 +1,76 @@
+name: Flutter_iOS
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+
+jobs:
+  build_ios:
+    runs-on: macos-13
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Install and set Flutter version
+        uses: subosito/flutter-action@v2
+        with:
+           channel: 'stable'
+
+      - name: Disable Flutter Analytics
+        run: flutter config --no-analytics
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build iOS app
+      
+        run: |
+          flutter devices
+          flutter build ios --release --no-codesign -d macos
+      
+      - name: Upload app artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Runner.app
+          path: build/ios/iphoneos/
+                   
+      - name: Export IPA
+        run: |
+         mkdir -p build/ios/ipa/Payload
+          
+         # 将 .app 文件复制到 Payload 文件夹中
+         cp -r build/ios/iphoneos/Runner.app build/ios/ipa/Payload/
+         # 进入 build/ios/ipa 目录
+         cd build/ios/ipa
+         # 将 Payload 文件夹压缩为 Runner.ipa
+         zip -r Runner.ipa Payload
+         #xcrun -sdk iphoneos PackageApplication -v build/ios/iphoneos/Runner.app -o build/ios/ipa/Runner.ipa
+     
+      - name: Upload IPA artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Runner IPA
+          path: build/ios
+         
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ github.event.inputs.target }}"  # 指定的更新版本号
+          release_name: "iOS Release ${{ github.event.inputs.target }}"
+          draft: false
+          prerelease: false
+
+      - name: Upload IPA to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/ios/ipa/Runner.ipa  # 确认 Runner.ipa 文件路径
+          asset_name: iOS_${{ github.event.inputs.target }}.ipa
+          asset_content_type: application/octet-stream

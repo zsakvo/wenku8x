@@ -1,0 +1,64 @@
+name: Flutter_APK
+
+on:
+  workflow_dispatch:  # 支持手动触发
+    inputs:
+      target:
+      draft:
+      prerelease:
+
+
+jobs:
+  build_apk:
+    runs-on: macos-13  # 使用 macOS 运行环境，适用于跨平台构建
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v2
+
+      - name: Install and set Flutter version
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.16.5
+      - run: flutter --version
+
+      - name: Disable Flutter Analytics
+        run: flutter config --no-analytics
+
+      - name: Install dependencies
+        run: flutter pub get
+
+     # - name: Run the app (optional)
+     #   run: flutter devices # 可选步骤，用于在模拟器或设备上运行应用
+
+      - name: Build APK for release
+        run: flutter build apk --release --target-platform=android-arm64 --verbose # 构建 APK 文件
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: MyApp-APK
+          path: build/app/outputs/flutter-apk/app-release.apk  # 上传生成的 APK 文件
+     
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: "${{ github.event.inputs.target }}" # 指定的更新版本号
+          release_name: "APK Release ${{ github.event.inputs.target }}"
+          draft: ${{ github.event.inputs.draft }}
+          prerelease: ${{ github.event.inputs.prerelease }}
+
+      - name: Upload APK to Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: build/app/outputs/flutter-apk/app-release.apk
+          asset_name: Android_${{ github.event.inputs.target }}.apk
+          asset_content_type: application/vnd.android.package-archive
+

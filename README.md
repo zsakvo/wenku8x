@@ -1,3 +1,6 @@
+# 关于本仓库
+这是根据原仓库，添加了Action云编译并存放Release成品的地方，为了能通过编译而修订了部分代码，我并不参与任何维护，也不处理任何与代码相关的问题。
+新的继任者将在此发布，本仓库将被废弃，随缘再见：https://github.com/RainThings-Team/wenku8
 # wenku8x
 
 基于 flutter 制作的第三方 `轻小说文库` 客户端.
@@ -49,15 +52,17 @@ flutter build apk --release --target-platform=android-arm64 // 编译
 
 ### 平台支持情况
 
-[x] Android13 —— 主要运行
+[x] Android13 —— 主要运行，Flutter版本3.16.5
 
-[x] iPadOS17 —— 简单测试，大致可运行
+[x] iPadOS17 —— 已测试，可运行 Flutteer 3.24.4
 
-[x] macOS13+ —— 简单测试，可运行
+[x] macOS13+ —— 简单测试，可运行（作者说的）
 
 [ ] Linux —— 未测试，理论可运行
 
-[ ] Windows —— 未测试，理论可运行
+[x] Windows —— 已测试，可运行，但并非为键鼠操作设计 Flutter 3.24.2
+
+[ ] Web —— 已测试，可编译，但数值超过Js上限，修改后可通过但不能运行 Flutter 3.24.2
 
 ## 声明
 
