@@ -1,5 +1,6 @@
 # 关于本仓库
 这是根据原仓库，添加了Action云编译并存放Release成品的地方，为了能通过编译而修订了部分代码，我并不参与任何维护，也不处理任何与代码相关的问题。
+新的继任者将在此发布，本仓库将被废弃，随缘再见：https://github.com/RainThings-Team/wenku8
 # wenku8x
 
 基于 flutter 制作的第三方 `轻小说文库` 客户端.
